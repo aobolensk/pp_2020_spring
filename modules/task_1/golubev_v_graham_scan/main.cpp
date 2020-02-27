@@ -1,6 +1,5 @@
-// Copyright 2018 Nesterov Alexander
+// Copyright 2020 Golubev Vladislav
 #include <gtest/gtest.h>
-#include <vector>
 #include "./golubev_v_graham_scan.h"
 
 TEST(Sequential_graham_scan, Test_1) {
