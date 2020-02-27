@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../arch/libtest_mpi_mpi_lib.a  CMakeFiles/test_mpi_mpi_lib.dir/main.cpp.o CMakeFiles/test_mpi_mpi_lib.dir/ops_mpi.cpp.o
-/usr/bin/ranlib ../../../arch/libtest_mpi_mpi_lib.a

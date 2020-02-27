@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../arch/libtest_tbb_tbb_lib.a  CMakeFiles/test_tbb_tbb_lib.dir/main.cpp.o CMakeFiles/test_tbb_tbb_lib.dir/ops_tbb.cpp.o
-/usr/bin/ranlib ../../../arch/libtest_tbb_tbb_lib.a
