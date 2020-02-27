@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Werror -fopenmp    -rdynamic CMakeFiles/test_omp_omp.dir/main.cpp.o CMakeFiles/test_omp_omp.dir/ops_omp.cpp.o  -o ../../../bin/test_omp_omp ../../../arch/libtest_omp_omp_lib.a ../../../lib/libgtest.a ../../../lib/libgtest_main.a ../../../lib/libgtest.a -lpthread 

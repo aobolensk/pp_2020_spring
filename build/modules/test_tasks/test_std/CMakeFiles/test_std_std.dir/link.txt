@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Werror -fopenmp    -rdynamic CMakeFiles/test_std_std.dir/main.cpp.o CMakeFiles/test_std_std.dir/ops_std.cpp.o  -o ../../../bin/test_std_std ../../../arch/libtest_std_std_lib.a ../../../lib/libgtest.a ../../../lib/libgtest_main.a ../../../lib/libgtest.a -lpthread 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../arch/libtest_omp_omp_lib.a  CMakeFiles/test_omp_omp_lib.dir/main.cpp.o CMakeFiles/test_omp_omp_lib.dir/ops_omp.cpp.o
+/usr/bin/ranlib ../../../arch/libtest_omp_omp_lib.a
