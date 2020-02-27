@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../../../arch/libtest_std_std_lib.a  CMakeFiles/test_std_std_lib.dir/main.cpp.o CMakeFiles/test_std_std_lib.dir/ops_std.cpp.o
-/usr/bin/ranlib ../../../arch/libtest_std_std_lib.a

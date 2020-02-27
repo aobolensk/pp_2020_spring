@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Werror -fopenmp    -rdynamic CMakeFiles/test_tbb_tbb.dir/main.cpp.o CMakeFiles/test_tbb_tbb.dir/ops_tbb.cpp.o  -o ../../../bin/test_tbb_tbb ../../../arch/libtest_tbb_tbb_lib.a -ltbb ../../../lib/libgtest.a ../../../lib/libgtest_main.a ../../../lib/libgtest.a -lpthread 
