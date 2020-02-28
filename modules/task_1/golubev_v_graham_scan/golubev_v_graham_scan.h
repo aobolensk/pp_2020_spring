@@ -7,6 +7,8 @@
 double get_polar_r(const std::pair<double, double>& point);
 double get_polar_grad(const std::pair<double, double>& point);
 
+std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double, double> > v);
+
 std::vector<std::pair<double, double> > generate_points(size_t size);
 std::vector<std::pair<double, double> >& graham_scan(std::vector<std::pair<double, double> > points);
 

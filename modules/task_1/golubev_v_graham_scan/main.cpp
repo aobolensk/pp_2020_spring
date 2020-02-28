@@ -6,28 +6,39 @@
 #include <algorithm>
 #include "./golubev_v_graham_scan.h"
 
-TEST(Sequential_graham_scan, Test_1) {
-  std::vector<std::pair<double, double> > check = generate_points(5);
-  std::sort(check.begin(), check.end(),
-            [&check](const std::pair<double, double>& a, const std::pair<double, double>& b) {
-    double grad_a = get_polar_grad(a);
-    double grad_b = get_polar_grad(b);
+TEST(Sequential_graham_scan, test_polar_sort_small_points) {
+  std::vector<std::pair<double, double> > result_sort(5);
+  result_sort[0] = std::make_pair(0, 0);
+  result_sort[1] = std::make_pair(1, 5);
+  result_sort[2] = std::make_pair(2, 4);
+  result_sort[3] = std::make_pair(3, 3);
+  result_sort[4] = std::make_pair(4, 1);
 
-    if (grad_a < grad_b) {
-      return true;
-    } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (get_polar_r(a) <= get_polar_r(b))) {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  std::vector<std::pair<double, double> > result(5);
+  result[0] = std::make_pair(0, 0);
+  result[1] = std::make_pair(4, 1);
+  result[2] = std::make_pair(3, 3);
+  result[3] = std::make_pair(2, 4);
+  result[4] = std::make_pair(1, 5);
 
-  std::cout << check[1].first << std::endl;
-  ASSERT_EQ(1, 1);
+  result_sort = polar_sort(result_sort);
+
+  ASSERT_EQ(result_sort, result);
 }
 
-TEST(Sequential_graham_scan, Test_2) {
-  ASSERT_EQ(1, 1);
+TEST(Sequential_graham_scan, test_polar_sort_many_points) {
+  size_t size = 10000;
+  std::vector<std::pair<double, double> > result_sort = generate_points(size);
+
+  std::vector<std::pair<double, double> > res(size);
+  res[0] = std::make_pair(0, 0);
+  for (int i = 1; i < size; ++i) {
+    res[i] = std::make_pair(size - i, 10);
+  }
+
+  result_sort = polar_sort(result_sort);
+
+  ASSERT_EQ(result_sort, res);
 }
 
 TEST(Sequential_graham_scan, Test_3) {
