@@ -27,7 +27,7 @@ TEST(Sequential_graham_scan, test_polar_sort_small_points) {
 }
 
 TEST(Sequential_graham_scan, test_polar_sort_many_points) {
-  size_t size = 10000;
+  std::size_t size = 10000;
   std::vector<std::pair<double, double> > result_sort = generate_points(size);
 
   std::vector<std::pair<double, double> > res(size);

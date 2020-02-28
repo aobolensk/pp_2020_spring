@@ -7,11 +7,10 @@
 #include <cmath>
 
 
-std::vector<std::pair<double, double> > generate_points(size_t size) {
+std::vector<std::pair<double, double> > generate_points(std::size_t size) {
   std::vector<std::pair<double, double> > result(size);
-
   result[0] = std::make_pair(0, 0);
-  for (size_t i = 1; i < size; ++i) {
+  for (std::size_t i = 1; i < size; ++i) {
     result[i] = std::make_pair(i, 10);
   }
 
@@ -43,6 +42,6 @@ std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double,
   return v;
 }
 
-std::vector<std::pair<double, double> >& graham_scan(std::vector<std::pair<double, double> > points) {
+std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> > points) {
   return points;
 }
