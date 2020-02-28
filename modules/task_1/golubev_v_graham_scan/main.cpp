@@ -6,7 +6,18 @@
 #include <algorithm>
 #include "./golubev_v_graham_scan.h"
 
-TEST(Sequential_graham_scan, test_polar_sort_small_points) {
+TEST(Sequential_graham_scan, Test_lex_min) {
+  std::size_t size = 10000;
+  std::vector<std::pair<double, double> > v = generate_points(size);
+  auto res = v[0];
+  std::swap(v[0], v[time(0) % size]);
+
+  auto min = get_lex_min(v);
+
+  ASSERT_EQ(min, res);
+}
+
+TEST(Sequential_graham_scan, Test_polar_sort_small_points) {
   std::vector<std::pair<double, double> > result_sort(5);
   result_sort[0] = std::make_pair(0, 0);
   result_sort[1] = std::make_pair(1, 5);
@@ -26,13 +37,13 @@ TEST(Sequential_graham_scan, test_polar_sort_small_points) {
   ASSERT_EQ(result_sort, result);
 }
 
-TEST(Sequential_graham_scan, test_polar_sort_many_points) {
+TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
   std::size_t size = 10000;
   std::vector<std::pair<double, double> > result_sort = generate_points(size);
 
   std::vector<std::pair<double, double> > res(size);
   res[0] = std::make_pair(0, 0);
-  for (int i = 1; i < size; ++i) {
+  for (std::size_t i = 1; i < size; ++i) {
     res[i] = std::make_pair(size - i, 10);
   }
 
@@ -41,9 +52,6 @@ TEST(Sequential_graham_scan, test_polar_sort_many_points) {
   ASSERT_EQ(result_sort, res);
 }
 
-TEST(Sequential_graham_scan, Test_3) {
-  ASSERT_EQ(1, 1);
-}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

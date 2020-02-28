@@ -7,6 +7,7 @@
 double get_polar_r(const std::pair<double, double>& point);
 double get_polar_grad(const std::pair<double, double>& point);
 
+std::pair<double, double> get_lex_min(std::vector<std::pair<double, double> > v);
 std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double, double> > v);
 
 std::vector<std::pair<double, double> > generate_points(std::size_t size);

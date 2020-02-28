@@ -25,6 +25,14 @@ double get_polar_grad(const std::pair<double, double>& point) {
   return std::atan(point.second / point.first);
 }
 
+std::pair<double, double> get_lex_min(std::vector<std::pair<double, double>> v) {
+  std::pair<double, double> lex_min = v[0];
+  for (std::size_t i = 1; i < v.size(); ++i) {
+    lex_min = std::min(lex_min, v[i]);
+  }
+  return lex_min;
+}
+
 std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double, double> > v) {
   std::sort(v.begin() + 1, v.end(),
     [&v](const std::pair<double, double>& a, const std::pair<double, double>& b) {
@@ -43,5 +51,10 @@ std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double,
 }
 
 std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> > points) {
+  // lex_min
+  std::pair<double, double> lex_min = points[0];
+  for (std::size_t i = 1; i < points.size(); ++i) {
+    lex_min = std::min(lex_min, points[i]);
+  }
   return points;
 }
