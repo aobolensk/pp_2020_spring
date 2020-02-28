@@ -14,7 +14,7 @@ TEST(Sequential_graham_scan, Test_lex_min) {
 
   auto min = get_lex_min(v);
 
-  ASSERT_EQ(min, res);
+  ASSERT_EQ(v[min], res);
 }
 
 TEST(Sequential_graham_scan, Test_polar_sort_small_points) {
@@ -47,9 +47,9 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
     res[i] = std::make_pair(size - i, 10);
   }
 
-  result_sort = polar_sort(result_sort);
+  auto res1 = polar_sort(result_sort);
 
-  ASSERT_EQ(result_sort, res);
+  ASSERT_EQ(res1, res);
 }
 
 
