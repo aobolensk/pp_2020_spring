@@ -35,7 +35,7 @@ std::pair<double, double> get_lex_min(std::vector<std::pair<double, double>> v) 
 
 std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double, double> > v) {
   std::sort(v.begin() + 1, v.end(),
-    [&v](const std::pair<double, double>& a, const std::pair<double, double>& b) {
+    [&](const std::pair<double, double>& a, const std::pair<double, double>& b) {
       double grad_a = get_polar_grad(a);
       double grad_b = get_polar_grad(b);
 
