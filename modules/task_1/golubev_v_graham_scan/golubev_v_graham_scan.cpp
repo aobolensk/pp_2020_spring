@@ -69,7 +69,7 @@ std::vector<std::pair<double, double> > get_test_set_2() {
   return result;
 }
 
-std::vector<std::pair<double, double> > get_test_set_3(){
+std::vector<std::pair<double, double> > get_test_set_3() {
   std::vector<std::pair<double, double> > result(17);
   result[0] = std::make_pair(-6, -2);
   result[1] = std::make_pair(-6, 2);
@@ -88,7 +88,7 @@ std::vector<std::pair<double, double> > get_test_set_3(){
   result[14] = std::make_pair(1, -1);
   result[15] = std::make_pair(2, -2);
   result[16] = std::make_pair(3, -3);
-  return result;  
+  return result;
 }
 
 double get_polar_r(const std::pair<double, double>& point) {
