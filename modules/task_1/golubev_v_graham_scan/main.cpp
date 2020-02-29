@@ -4,6 +4,8 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <numeric>
+//#include <random>
 #include "./golubev_v_graham_scan.h"
 
 TEST(Sequential_graham_scan, Test_lex_min) {
@@ -67,16 +69,51 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
   ASSERT_EQ(res1, res);
 }
 
-TEST(Sequential_graham_scan, Test_polar_sort_with_set_size_15) {
-  std::vector<std::pair<double, double> > trash(8);
-  std::vector<std::pair<double, double> > res(8);
+TEST(Sequential_graham_scan, Test_graham_scan_with_set_1) {
+  auto area = get_test_set_1();
+  auto res = graham_scan(area);
+  std::vector<std::pair<double, double> > check(res.size());
+  check[0] = std::make_pair(2, 6);
+  check[1] = std::make_pair(5, 5);
+  check[2] = std::make_pair(8, 3);
+  check[3] = std::make_pair(7, -2);
+  check[4] = std::make_pair(6, -4);
+  check[5] = std::make_pair(1, -3);
+  check[6] = std::make_pair(0, 0);
 
-  auto area = get_test_set();
-  res = graham_scan(area);
-
-  ASSERT_EQ(res, trash);
+  ASSERT_EQ(res, check);
 }
 
+TEST(Sequential_graham_scan, Test_graham_scan_with_set_2) {
+  auto area = get_test_set_2();
+  auto res = graham_scan(area);
+  std::vector<std::pair<double, double> > check(res.size());
+  check[0] = std::make_pair(1, 2);
+  check[1] = std::make_pair(3, 5);
+  check[2] = std::make_pair(9, 5);
+  check[3] = std::make_pair(10, 2);
+  check[4] = std::make_pair(10, -4);
+  check[5] = std::make_pair(5, -6);
+  check[6] = std::make_pair(1, -6);
+  check[7] = std::make_pair(0, 0);
+
+  ASSERT_EQ(res, check);
+}
+
+TEST(Sequential_graham_scan, Test_graham_scan_with_set_3) {
+  std::vector<std::pair<double, double> > area(10);
+  for (std::size_t i = 0; i < area.size(); ++i) {
+    area[i] = std::make_pair((double)i, (double)i);
+  }
+  std::vector<std::pair<double, double> > check(2);
+  check[1] = std::make_pair(0, 0);
+  check[0] = std::make_pair(area.size() - 1, area.size() - 1);
+
+  auto res = graham_scan(area);
+
+
+  ASSERT_EQ(res, check);
+}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

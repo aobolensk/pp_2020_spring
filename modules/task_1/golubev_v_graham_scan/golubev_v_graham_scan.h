@@ -6,7 +6,8 @@
 
 
 std::vector<std::pair<double, double> > generate_points(std::size_t size);
-std::vector<std::pair<double, double> > get_test_set();
+std::vector<std::pair<double, double> > get_test_set_1();
+std::vector<std::pair<double, double> > get_test_set_2();
 
 double get_polar_r(const std::pair<double, double>& point);
 double get_polar_grad(const std::pair<double, double>& point);

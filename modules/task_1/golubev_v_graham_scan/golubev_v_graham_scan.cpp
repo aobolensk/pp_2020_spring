@@ -19,7 +19,7 @@ std::vector<std::pair<double, double> > generate_points(std::size_t size) {
   return result;
 }
 
-std::vector<std::pair<double, double> > get_test_set() {
+std::vector<std::pair<double, double> > get_test_set_1() {
   std::vector<std::pair<double, double> > result(16);
   result[0] = std::make_pair(0, 0);
   result[1] = std::make_pair(1, -3);
@@ -37,6 +37,35 @@ std::vector<std::pair<double, double> > get_test_set() {
   result[13] = std::make_pair(5, -2);
   result[14] = std::make_pair(7, 1);
   result[15] = std::make_pair(5, 3);
+
+  return result;
+}
+
+std::vector<std::pair<double, double>> get_test_set_2()
+{
+  std::vector<std::pair<double, double> > result(22);
+  result[0] = std::make_pair(0, 1);
+  result[1] = std::make_pair(0, -5);
+  result[2] = std::make_pair(0, -6);
+  result[3] = std::make_pair(4, -6);
+  result[4] = std::make_pair(2, -4);
+  result[5] = std::make_pair(4, -2);
+  result[6] = std::make_pair(7, -2);
+  result[7] = std::make_pair(5, -1);
+  result[8] = std::make_pair(5, 2);
+  result[9] = std::make_pair(2, 1);
+  result[10] = std::make_pair(3, 3);
+  result[11] = std::make_pair(7, 2);
+  result[12] = std::make_pair(9, 2);
+  result[13] = std::make_pair(9, -4);
+  result[14] = std::make_pair(8, 5);
+  result[15] = std::make_pair(6, 4);
+  result[16] = std::make_pair(3, 4);
+  result[17] = std::make_pair(2, 5);
+  result[18] = std::make_pair(1, 3);
+  result[19] = std::make_pair(0, 2);
+  result[20] = std::make_pair(0, 0);
+  result[21] = std::make_pair(-1, 0);
 
   return result;
 }
@@ -85,7 +114,6 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   // lex_min
   std::size_t min_idx = get_lex_min(points);
   std::swap(points[0], points[min_idx]);
-  std::cout << min_idx << std::endl;
 
   // sdvig koordinat
   for (std::size_t i = points.size(); i > 0; --i) {
@@ -123,7 +151,8 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   }
 
   std::vector<std::pair<double, double> > res_vec(res.size());
-  for (std::size_t i = 0; i < res.size(); ++i) {
+  for (std::size_t i = 0; i < stack_size; ++i) {
+
     res_vec[i] = res.top();
     res.pop();
   }
