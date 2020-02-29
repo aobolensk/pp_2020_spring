@@ -21,7 +21,7 @@ std::vector<std::pair<double, double> > generate_points(std::size_t size) {
 
 std::vector<std::pair<double, double> > get_test_set() {
   std::vector<std::pair<double, double> > result(16);
-  result[0] = std::make_pair(1, 0);
+  result[0] = std::make_pair(0, 0);
   result[1] = std::make_pair(1, -3);
   result[2] = std::make_pair(3, -2);
   result[3] = std::make_pair(6, -4);
@@ -101,12 +101,13 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   res.push(sorted_points[0]);
   res.push(sorted_points[1]);
 
-  std::pair<double, double> x, y;
-  for (std::size_t i = 0; i < sorted_points.size(); ++i) {
+  std::pair<double, double> x, y, z;
+  for (std::size_t i = 2; i < sorted_points.size(); ++i) {
     y = res.top();
     res.pop();
     x = res.top();
-    double det = get_det(x, y, sorted_points[i]);
+    z = sorted_points[i];
+    double det = get_det(x, y, z);
 
     if (det > 0) {
       res.push(y);

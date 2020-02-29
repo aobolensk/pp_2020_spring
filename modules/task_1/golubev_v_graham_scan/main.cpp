@@ -17,7 +17,7 @@ TEST(Sequential_graham_scan, Test_lex_min) {
   ASSERT_EQ(v[min], res);
 }
 
-TEST(Sequential_graham_scan, Test_get_determinant) {
+TEST(Sequential_graham_scan,Test_get_determinant) {
   std::pair<double, double> x(0, 5);
   std::pair<double, double> y(-0.33, -0.35);
   std::pair<double, double> z(1.15, 6.17);
@@ -67,9 +67,14 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
   ASSERT_EQ(res1, res);
 }
 
-TEST(Sequential_graham_scan, Test_polar_sort_with_set_size_15) {
+TEST(Sequential_graham_scan, DISABLED_Test_polar_sort_with_set_size_15) {
   std::vector<std::pair<double, double> > trash(8);
   std::vector<std::pair<double, double> > res(8);
+
+  auto area = get_test_set();
+  res = graham_scan(area);
+
+  ASSERT_EQ(res, trash);
 }
 
 
