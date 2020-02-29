@@ -51,7 +51,7 @@ double get_polar_grad(const std::pair<double, double>& point) {
 
 double get_det(const std::pair<double, double>& x,
                 const std::pair<double, double>& y, const std::pair<double, double>& z) {
-  return (x.first - y.first) * (z.second - x.second) - (z.first - x.first) * (x.second - y.second);
+  return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
 }
 
 std::size_t get_lex_min(std::vector<std::pair<double, double> > v) {
@@ -98,11 +98,13 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
 
   // scan
   std::stack<std::pair<double, double>> res;
+  std::size_t stack_size = res.size();
   res.push(sorted_points[0]);
   res.push(sorted_points[1]);
 
   std::pair<double, double> x, y, z;
   for (std::size_t i = 2; i < sorted_points.size(); ++i) {
+    stack_size = res.size();
     y = res.top();
     res.pop();
     x = res.top();
@@ -112,10 +114,11 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     if (det > 0) {
       res.push(y);
       res.push(sorted_points[i]);
-    } else if (res.size() < 3) {
+    } else if (stack_size < 3) {
     res.push(sorted_points[i]);
     } else {
     --i;
+
     }
   }
 

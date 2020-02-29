@@ -22,7 +22,7 @@ TEST(Sequential_graham_scan, Test_get_determinant) {
   std::pair<double, double> y(-0.33, -0.35);
   std::pair<double, double> z(1.15, 6.17);
 
-  ASSERT_DOUBLE_EQ(get_det(x, y, z), -5.7664);
+  ASSERT_DOUBLE_EQ(get_det(x, y, z), 5.7664);
 }
 TEST(Sequential_graham_scan, Test_get_zero_determinant) {
   std::pair<double, double> x(0, 5);
@@ -67,7 +67,7 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
   ASSERT_EQ(res1, res);
 }
 
-TEST(Sequential_graham_scan, DISABLED_Test_polar_sort_with_set_size_15) {
+TEST(Sequential_graham_scan, Test_polar_sort_with_set_size_15) {
   std::vector<std::pair<double, double> > trash(8);
   std::vector<std::pair<double, double> > res(8);
 
