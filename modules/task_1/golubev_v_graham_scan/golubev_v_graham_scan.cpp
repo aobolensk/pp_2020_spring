@@ -41,8 +41,7 @@ std::vector<std::pair<double, double> > get_test_set_1() {
   return result;
 }
 
-std::vector<std::pair<double, double>> get_test_set_2()
-{
+std::vector<std::pair<double, double>> get_test_set_2() {
   std::vector<std::pair<double, double> > result(22);
   result[0] = std::make_pair(0, 1);
   result[1] = std::make_pair(0, -5);
@@ -146,13 +145,11 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     res.push(sorted_points[i]);
     } else {
     --i;
-
     }
   }
 
   std::vector<std::pair<double, double> > res_vec(res.size());
   for (std::size_t i = 0; i < stack_size; ++i) {
-
     res_vec[i] = res.top();
     res.pop();
   }

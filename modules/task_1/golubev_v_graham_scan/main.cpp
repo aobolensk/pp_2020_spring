@@ -5,7 +5,7 @@
 #include <utility>
 #include <algorithm>
 #include <numeric>
-//#include <random>
+
 #include "./golubev_v_graham_scan.h"
 
 TEST(Sequential_graham_scan, Test_lex_min) {
@@ -103,7 +103,7 @@ TEST(Sequential_graham_scan, Test_graham_scan_with_set_2) {
 TEST(Sequential_graham_scan, Test_graham_scan_with_set_3) {
   std::vector<std::pair<double, double> > area(10);
   for (std::size_t i = 0; i < area.size(); ++i) {
-    area[i] = std::make_pair((double)i, (double)i);
+    area[i] = std::make_pair(static_cast<double>(i), static_cast<double>(i));
   }
   std::vector<std::pair<double, double> > check(2);
   check[1] = std::make_pair(0, 0);
