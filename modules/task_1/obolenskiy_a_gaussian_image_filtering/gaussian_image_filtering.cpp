@@ -1,5 +1,6 @@
 // Copyright 2020 Obolenskiy Arseniy
 #include <algorithm>
+#include <cmath>
 #include <ctime>
 #include <numeric>
 #include <random>
@@ -21,7 +22,7 @@ static std::vector <double> generateGaussianKernel(int dim) {
     double sum = 0.;
     for (int x = -shift; x <= shift; ++x) {
         for (int y = -shift; y <= shift; ++y) {
-            sum += res[(x + shift) * dim + y + shift] = (exp(-(x * x + y * y) / s)) / (M_PI * s);
+            sum += res[(x + shift) * dim + y + shift] = (exp(-(x * x + y * y) / s)) / (acos(-1.) * s);
         }
     }
     for (int i = 0; i < dim * dim; ++i) {
