@@ -5,6 +5,7 @@
 #include <utility>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 
 std::vector<std::pair<double, double> > generate_points(std::size_t size) {
@@ -13,6 +14,28 @@ std::vector<std::pair<double, double> > generate_points(std::size_t size) {
   for (std::size_t i = 1; i < size; ++i) {
     result[i] = std::make_pair(i, 10);
   }
+
+  return result;
+}
+
+std::vector<std::pair<double, double> > get_test_set() {
+  std::vector<std::pair<double, double> > result(16);
+  result[0] = std::make_pair(1, 0);
+  result[1] = std::make_pair(1, -3);
+  result[2] = std::make_pair(3, -2);
+  result[3] = std::make_pair(6, -4);
+  result[4] = std::make_pair(7, -2);
+  result[5] = std::make_pair(5, 1);
+  result[6] = std::make_pair(8, 3);
+  result[7] = std::make_pair(2, 6);
+  result[8] = std::make_pair(1, 3);
+  result[9] = std::make_pair(2, 1);
+  result[10] = std::make_pair(3, 3);
+  result[11] = std::make_pair(5, 5);
+  result[12] = std::make_pair(4, -1);
+  result[13] = std::make_pair(5, -2);
+  result[14] = std::make_pair(7, 1);
+  result[15] = std::make_pair(5, 3);
 
   return result;
 }
@@ -43,7 +66,7 @@ std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double,
 
       if (grad_a < grad_b) {
         return true;
-      } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (get_polar_r(a) < get_polar_r(b))) {
+      } else if ((std::abs(grad_a - grad_b) <= 1e-8) && (get_polar_r(a) < get_polar_r(b))) {
         return true;
       } else {
         return false;
@@ -56,14 +79,19 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   // lex_min
   std::size_t min_idx = get_lex_min(points);
   std::swap(points[0], points[min_idx]);
+  std::cout << min_idx << std::endl;
 
   // sdvig koordinat
-  for (std::size_t i = 0; i < points.size(); ++i) {
-    points[i].first -= points[0].first;
-    points[i].second -= points[0].second;
+  for (std::size_t i = points.size(); i > 0; --i) {
+    points[i - 1].first -= points[0].first;
+    points[i - 1].second -= points[0].second;
   }
 
   // sort
+  auto res = polar_sort(points);
 
-  return points;
+  //scan
+
+
+  return res;
 }

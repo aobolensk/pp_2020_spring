@@ -52,6 +52,9 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
   ASSERT_EQ(res1, res);
 }
 
+TEST(Sequential_graham_scan, Test_polar_sort_with_set_size_15) {
+}
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
