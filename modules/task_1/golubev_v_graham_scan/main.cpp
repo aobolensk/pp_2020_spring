@@ -17,7 +17,7 @@ TEST(Sequential_graham_scan, Test_lex_min) {
   ASSERT_EQ(v[min], res);
 }
 
-TEST(Sequential_graham_scan,Test_get_determinant) {
+TEST(Sequential_graham_scan, Test_get_determinant) {
   std::pair<double, double> x(0, 5);
   std::pair<double, double> y(-0.33, -0.35);
   std::pair<double, double> z(1.15, 6.17);
