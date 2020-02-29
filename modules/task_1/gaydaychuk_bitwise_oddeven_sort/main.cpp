@@ -17,14 +17,14 @@ TEST(Sequential, Test_UnSorted) {
 
 TEST(Sequential, Test_FirstSort) {
     std::vector<int> vec = {1, 3, 4, 2};
-    bitwiseSort(vec);
+    bitwiseSort(&vec);
     bool k = checkAscending(vec);
     ASSERT_EQ(true, k);
 }
 
 TEST(Sequential, Test_SecondSort) {
     std::vector<int> vec = {4, 3, 2, 1};
-    bitwiseSort(vec);
+    bitwiseSort(&vec);
     bool k = checkAscending(vec);
     ASSERT_EQ(true, k);
 }
