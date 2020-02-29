@@ -73,13 +73,13 @@ TEST(Sequential_graham_scan, Test_graham_scan_with_set_1) {
   auto area = get_test_set_1();
   auto res = graham_scan(area);
   std::vector<std::pair<double, double> > check(res.size());
-  check[0] = std::make_pair(2, 6);
-  check[1] = std::make_pair(5, 5);
-  check[2] = std::make_pair(8, 3);
+  check[6] = std::make_pair(2, 6);
+  check[5] = std::make_pair(5, 5);
+  check[4] = std::make_pair(8, 3);
   check[3] = std::make_pair(7, -2);
-  check[4] = std::make_pair(6, -4);
-  check[5] = std::make_pair(1, -3);
-  check[6] = std::make_pair(0, 0);
+  check[2] = std::make_pair(6, -4);
+  check[1] = std::make_pair(1, -3);
+  check[0] = std::make_pair(0, 0);
 
   ASSERT_EQ(res, check);
 }
@@ -88,14 +88,14 @@ TEST(Sequential_graham_scan, Test_graham_scan_with_set_2) {
   auto area = get_test_set_2();
   auto res = graham_scan(area);
   std::vector<std::pair<double, double> > check(res.size());
-  check[0] = std::make_pair(1, 2);
-  check[1] = std::make_pair(3, 5);
-  check[2] = std::make_pair(9, 5);
-  check[3] = std::make_pair(10, 2);
-  check[4] = std::make_pair(10, -4);
-  check[5] = std::make_pair(5, -6);
-  check[6] = std::make_pair(1, -6);
-  check[7] = std::make_pair(0, 0);
+  check[7] = std::make_pair(0, 2);
+  check[6] = std::make_pair(2, 5);
+  check[5] = std::make_pair(8, 5);
+  check[4] = std::make_pair(9, 2);
+  check[3] = std::make_pair(9, -4);
+  check[2] = std::make_pair(4, -6);
+  check[1] = std::make_pair(0, -6);
+  check[0] = std::make_pair(-1, 0);
 
   ASSERT_EQ(res, check);
 }
@@ -106,11 +106,24 @@ TEST(Sequential_graham_scan, Test_graham_scan_with_set_3) {
     area[i] = std::make_pair(static_cast<double>(i), static_cast<double>(i));
   }
   std::vector<std::pair<double, double> > check(2);
-  check[1] = std::make_pair(0, 0);
-  check[0] = std::make_pair(area.size() - 1, area.size() - 1);
+  check[0] = std::make_pair(0, 0);
+  check[1] = std::make_pair(area.size() - 1, area.size() - 1);
 
   auto res = graham_scan(area);
 
+
+  ASSERT_EQ(res, check);
+}
+
+TEST(Sequential_graham_scan, Test_graham_scan_with_set_4) {
+  auto area = get_test_set_3();
+  auto res = graham_scan(area);
+  std::vector<std::pair<double, double> > check(res.size());
+  check[0] = std::make_pair(-6, -6);
+  check[1] = std::make_pair(3, -3);
+  check[2] = std::make_pair(3, 3);
+  check[3] = std::make_pair(-3, 3);
+  check[4] = std::make_pair(-6, 2);
 
   ASSERT_EQ(res, check);
 }
