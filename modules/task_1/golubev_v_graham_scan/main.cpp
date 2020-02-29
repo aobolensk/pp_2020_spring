@@ -26,6 +26,7 @@ TEST(Sequential_graham_scan, Test_get_determinant) {
 
   ASSERT_DOUBLE_EQ(get_det(x, y, z), 5.7664);
 }
+
 TEST(Sequential_graham_scan, Test_get_zero_determinant) {
   std::pair<double, double> x(0, 5);
   std::pair<double, double> y(-0.33, -0.35);
