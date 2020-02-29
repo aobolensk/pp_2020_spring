@@ -68,6 +68,8 @@ TEST(Sequential_graham_scan, Test_polar_sort_many_points) {
 }
 
 TEST(Sequential_graham_scan, Test_polar_sort_with_set_size_15) {
+  std::vector<std::pair<double, double> > trash(8);
+  std::vector<std::pair<double, double> > res(8);
 }
 
 
