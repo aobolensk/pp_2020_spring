@@ -17,6 +17,21 @@ TEST(Sequential_graham_scan, Test_lex_min) {
   ASSERT_EQ(v[min], res);
 }
 
+TEST(Sequential_graham_scan, Test_get_determinant) {
+  std::pair<double, double> x(0, 5);
+  std::pair<double, double> y(-0.33, -0.35);
+  std::pair<double, double> z(1.15, 6.17);
+
+  ASSERT_DOUBLE_EQ(get_det(x, y, z), -5.7664);
+}
+TEST(Sequential_graham_scan, Test_get_zero_determinant) {
+  std::pair<double, double> x(0, 5);
+  std::pair<double, double> y(-0.33, -0.35);
+  std::pair<double, double> z(0, 5);
+
+  ASSERT_DOUBLE_EQ(get_det(x, y, z), 0);
+}
+
 TEST(Sequential_graham_scan, Test_polar_sort_small_points) {
   std::vector<std::pair<double, double> > result_sort(5);
   result_sort[0] = std::make_pair(0, 0);

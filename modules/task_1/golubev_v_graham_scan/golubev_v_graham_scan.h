@@ -10,10 +10,12 @@ std::vector<std::pair<double, double> > get_test_set();
 
 double get_polar_r(const std::pair<double, double>& point);
 double get_polar_grad(const std::pair<double, double>& point);
-double get_det();
+double get_det(const std::pair<double, double>& x,
+              const std::pair<double, double>& y, const std::pair<double, double>& z);
 
 std::size_t get_lex_min(std::vector<std::pair<double, double> > v);
 std::vector<std::pair<double, double> > polar_sort(std::vector<std::pair<double, double> > v);
+
 
 std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> > points);
 

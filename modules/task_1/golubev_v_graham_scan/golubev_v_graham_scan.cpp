@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <stack>
 
 
 std::vector<std::pair<double, double> > generate_points(std::size_t size) {
@@ -48,6 +49,11 @@ double get_polar_grad(const std::pair<double, double>& point) {
   return std::atan(point.second / point.first);
 }
 
+double get_det(const std::pair<double, double>& x,
+                const std::pair<double, double>& y, const std::pair<double, double>& z) {
+  return (x.first - y.first) * (z.second - x.second) - (z.first - x.first) * (x.second - y.second);
+}
+
 std::size_t get_lex_min(std::vector<std::pair<double, double> > v) {
   std::size_t min_idx = 0;
   for (std::size_t i = 1; i < v.size(); ++i) {
@@ -88,10 +94,35 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   }
 
   // sort
-  auto res = polar_sort(points);
+  auto sorted_points = polar_sort(points);
 
   // scan
+  std::stack<std::pair<double, double>> res;
+  res.push(sorted_points[0]);
+  res.push(sorted_points[1]);
 
+  std::pair<double, double> x, y;
+  for (std::size_t i = 0; i < sorted_points.size(); ++i) {
+    y = res.top();
+    res.pop();
+    x = res.top();
+    double det = get_det(x, y, sorted_points[i]);
 
-  return res;
+    if (det > 0) {
+      res.push(y);
+      res.push(sorted_points[i]);
+    } else if (res.size() < 3) {
+    res.push(sorted_points[i]);
+    } else {
+    --i;
+    }
+  }
+
+  std::vector<std::pair<double, double> > res_vec(res.size());
+  for (std::size_t i = 0; i < res.size(); ++i) {
+    res_vec[i] = res.top();
+    res.pop();
+  }
+
+  return res_vec;
 }
