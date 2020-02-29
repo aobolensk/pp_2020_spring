@@ -90,7 +90,7 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   // sort
   auto res = polar_sort(points);
 
-  //scan
+  // scan
 
 
   return res;
