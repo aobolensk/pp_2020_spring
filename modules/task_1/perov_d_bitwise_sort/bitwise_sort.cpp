@@ -40,7 +40,7 @@ int GetMaxMantis(std::vector<double> my_vector, int start, int end) {
 int GetMaxPower(std::vector<double> my_vector) {
   int max_power = 0;
   int power = 0;
-  for (int i = 0; i < my_vector.size(); ++i) {
+  for (unsigned int i = 0; i < my_vector.size(); ++i) {
     power = 0;
     int tmp = static_cast<int>(my_vector[i]);
     while (tmp != 0) {
@@ -79,7 +79,7 @@ void BitSortMantis(std::vector<double>* my_vector, int start, int end,
   std::vector<int> counter(10, 0);
   int on_power = 0;
 
-  for (int i = 0; i < tmp_vector.size(); ++i) {
+  for (unsigned int i = 0; i < tmp_vector.size(); ++i) {
     on_power = GetOnPowerMantis(tmp_vector[i], power, max_power);
     counter[on_power]++;
   }
@@ -92,7 +92,7 @@ void BitSortMantis(std::vector<double>* my_vector, int start, int end,
     }
   }
 
-  for (int i = 0; i < tmp_vector.size(); ++i) {
+  for (unsigned int i = 0; i < tmp_vector.size(); ++i) {
     res_vector[counter_tmp[GetOnPowerMantis(tmp_vector[i], power,
                                             max_power)]++] = tmp_vector[i];
   }
@@ -110,7 +110,7 @@ void BitSort(std::vector<double>* my_vector, int power) {
   std::vector<int> counter(10, 0);
   int on_power = 0;
 
-  for (int i = 0; i < my_vector->size(); ++i) {
+  for (unsigned int i = 0; i < my_vector->size(); ++i) {
     on_power = GetOnPower(my_vector->at(i), power);
     counter[on_power]++;
   }
@@ -123,18 +123,18 @@ void BitSort(std::vector<double>* my_vector, int power) {
     }
   }
 
-  for (int i = 0; i < my_vector->size(); i++) {
+  for (unsigned int i = 0; i < my_vector->size(); i++) {
     res_vector[counter_tmp[GetOnPower(my_vector->at(i), power)]++] =
         my_vector->at(i);
   }
 
-  for (int i = 0; i < my_vector->size(); i++) {
+  for (unsigned int i = 0; i < my_vector->size(); i++) {
     my_vector->at(i) = res_vector[i];
   }
 }
 
 void DoppelgangerSort(std::vector<double>* my_vector) {
-  for (int i = 0; i < my_vector->size() - 1; i++) {
+  for (unsigned int i = 0; i < my_vector->size() - 1; i++) {
     int doppelganger = 0;
     int start;
     int end;
@@ -169,7 +169,7 @@ std::vector<double> BitwiseSort(std::vector<double> my_vector) {
 
   int power = GetMaxPower(my_vector);
 
-  for (int i = 0; i < my_vector.size(); ++i) {
+  for (unsigned int i = 0; i < my_vector.size(); ++i) {
     if (my_vector[i] >= 0)
       positiv_vector.push_back(my_vector[i]);
     else
@@ -190,7 +190,7 @@ std::vector<double> BitwiseSort(std::vector<double> my_vector) {
     my_vector[id++] = negativ_vector[i];
   }
 
-  for (int i = 0; i < positiv_vector.size(); i++) {
+  for (unsigned int i = 0; i < positiv_vector.size(); i++) {
     my_vector[id++] = positiv_vector[i];
   }
 
@@ -202,7 +202,7 @@ bool IsSorted(std::vector<double>* old_vector,
   std::sort(old_vector->begin(), old_vector->end());
 
   bool flag = true;
-  for (int i = 0; i < old_vector->size(); i++) {
+  for (unsigned int i = 0; i < old_vector->size(); i++) {
     if (old_vector->at(i) != new_vector->at(i)) {
       flag = false;
       break;
