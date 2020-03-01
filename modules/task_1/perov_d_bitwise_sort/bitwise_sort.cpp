@@ -1,9 +1,9 @@
 // Copyright 2020 diper1998
-#include <vector>
-#include <random>
-#include <ctime>
-#include <algorithm>
 #include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
+#include <algorithm>
+#include <ctime>
+#include <random>
+#include <vector>
 
 std::vector<double> GetRandomVector(int size) {
   std::mt19937 gen;
@@ -21,7 +21,8 @@ int GetMaxMantis(std::vector<double> my_vector, int start, int end) {
   int power = 0;
   for (int i = start; i <= end; ++i) {
     power = 0;
-    double mantis = abs(my_vector[i]) - static_cast<int>(abs(my_vector[i]));
+    double mantis =
+        std::abs(my_vector[i]) - static_cast<int>(std::abs(my_vector[i]));
     double dif = mantis;
     while (dif != 0 && power != 8) {
       power++;
@@ -55,9 +56,9 @@ int GetMaxPower(std::vector<double> my_vector) {
 }
 
 int GetOnPower(double value, int power) {
-  return abs(static_cast<int>(static_cast<int>(value) %
-                              (static_cast<int>(pow(10, power))) /
-                              (pow(10, power - 1))));
+  return std::abs(static_cast<int>(static_cast<int>(value) %
+                                   (static_cast<int>(pow(10, power))) /
+                                   (pow(10, power - 1))));
 }
 
 int GetOnPowerMantis(double value, int power, int max_power) {
