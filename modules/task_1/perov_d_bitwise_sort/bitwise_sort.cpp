@@ -1,4 +1,7 @@
 // Copyright 2020 diper1998
+#include <vector>
+#include <random>
+#include <ctime>
 #include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
 
 std::vector<double> GetRandomVector(int size) {

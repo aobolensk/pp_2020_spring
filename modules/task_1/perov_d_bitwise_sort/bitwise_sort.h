@@ -8,8 +8,6 @@
 #include <random>
 #include <vector>
 
-using namespace std;
-
 std::vector<double> GetRandomVector(int size);
 std::vector<double> BitwiseSort(std::vector<double> my_vector);
 void BitSort(std::vector<double>* my_vector, int power);
