@@ -177,15 +177,21 @@ std::vector<double> BitwiseSort(std::vector<double> my_vector) {
       negativ_vector.push_back(my_vector[i]);
   }
 
-  for (int i = 1; i <= power; ++i) {
-    BitSort(&positiv_vector, i);
-    BitSort(&negativ_vector, i);
+  if (negativ_vector.size() != 0) {
+    for (int i = 1; i <= power; ++i) {
+      BitSort(&negativ_vector, i);
+    }
+    DoppelgangerSort(&negativ_vector);
+  }
+
+  if (positiv_vector.size() != 0) {
+    for (int i = 1; i <= power; ++i) {
+      BitSort(&positiv_vector, i);
+    }
+    DoppelgangerSort(&positiv_vector);
   }
 
   int id = 0;
-
-  DoppelgangerSort(&positiv_vector);
-  DoppelgangerSort(&negativ_vector);
 
   for (int i = negativ_vector.size() - 1; i >= 0; --i) {
     my_vector[id++] = negativ_vector[i];
