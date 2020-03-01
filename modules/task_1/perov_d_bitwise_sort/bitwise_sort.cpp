@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
+#include <algorithm>
 #include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
 
 std::vector<double> GetRandomVector(int size) {
