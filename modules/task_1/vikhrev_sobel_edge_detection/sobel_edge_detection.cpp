@@ -2,72 +2,36 @@
 
 #include "sobel_edge_detection.h"
 
-template<class T>
-image<T>::image(size_t c, size_t r) {
-	size = r * c;
-	rows = r;
-	cols = c;
-	data.resize(size);
-
-	std::random_device rnd_device;
-	std::mt19937 mersenne_engine{ rnd_device() };
-	std::uniform_int_distribution<int> uint_dist{ 0,256 };
-	auto gen = [&uint_dist, &mersenne_engine]() {
-		return uint_dist(mersenne_engine);
-	};
-
-	generate(begin(data), end(data), gen);
-	for (auto a : data) {
-		std::cout << static_cast<int>(a) << " ";
-	}
-}
-
-template<class T>
-image<T>::image(size_t c, size_t r, std::vector<T> d) {
-	size = r * c;
-	rows = r;
-	cols = c;
-	data = d;
-}
-
-template<class T>
-image<T>::image(const image<T> &img) {
-	size = img.size;
-	rows = img.rows;
-	cols = img.cols;
-	data = img.data;
-}
-
-//std::vector<uint8_t> randImg(size_t rows, size_t cols){
-//    std::random_device rnd_device;
-//    std::mt19937 mersenne_engine{rnd_device()};
-//	std::uniform_int_distribution<int> uint_dist{ 0,256 };
-//    
-//	auto gen = [&uint_dist, &mersenne_engine](){
-//                   return uint_dist(mersenne_engine);
-//               };
-//
-//    std::vector<uint8_t> img(rows*cols);
-//    generate(begin(img), end(img), gen);
-//    // Optional
-//	for (auto a : img) {
-//			std::cout << static_cast<int>(a) << " ";
-//	}
-//    return img;
-//}
-
-imageU sobel(imageU img) {
+imageU sobel(imageU& img) {
 	imageS kernX(3, 3, { 1, 0, -1, 2, 0, -2, 1, 0, -1 });
 	
 	imageS kernY(3, 3, { 1, 2, 1, 0, 0, 0, -1, -2, -1 });
-	imageU res;
+	int x{0}, y{0};
+	imageU res{ img.rows, img.cols };
 
-	for (size_t i = 0; i < img.rows; ++i) {
-		for (size_t j = 0; j < img.cols; ++j) {
-
+	for (int i = 0; i < img.rows; ++i) {
+		for (int j = 0; j < img.cols; ++j) {
+			int id = i * img.cols + j;
+			int idk = 0;
+			for (int n = kernX.rows/(-2); n <= kernX.rows / 2; ++n) {
+				for (int m = kernX.cols/(-2); m <= kernX.cols/2; ++m) {
+					int row = i + n;
+					int col = j + m;
+					if (row >= 0 && col >= 0 && row < img.rows && col < img.cols) {
+						x +=  kernX.data[idk] * img.data[row * img.cols + col] ;
+						y +=  kernY.data[idk] * img.data[row * img.cols + col];
+						
+					}
+					++idk;
+				}
+			}
+			res.data[id] = sqrt(x*x + y * y);
+			x = 0;
+			y = 0;
 		}
 	}
 
 
-    return {};
+    return res;
 }
+
