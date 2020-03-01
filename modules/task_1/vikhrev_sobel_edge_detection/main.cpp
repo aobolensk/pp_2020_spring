@@ -40,7 +40,7 @@ TEST(sequential_edge_detection, can_copy_image) {
 }
 
 TEST(sequential_edge_detection, sobel) {
-	imageU a{ 3, 3, {1,1,1,1,1,1,1,1,1} };
+	imageU a{ 3,3, {1, 1,1, 1, 1,1, 1, 1,1} };
 	imageU res =  sobel(a);
 	std::vector<uint8_t> b;
 	b.assign(9, sqrt(18));

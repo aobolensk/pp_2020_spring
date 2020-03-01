@@ -31,7 +31,7 @@ struct image {
 
 /*----------------------------------------------------------------------*/
 template<class T>
-image<T>::image(int c, int r) {
+image<T>::image(int r, int c) {
 	size = r * c;
 	rows = r;
 	cols = c;
@@ -50,7 +50,7 @@ image<T>::image(int c, int r) {
 }
 
 template<class T>
-image<T>::image(int c, int r, std::vector<T> d) {
+image<T>::image(int r, int c, std::vector<T> d) {
 	size = r * c;
 	rows = r;
 	cols = c;
