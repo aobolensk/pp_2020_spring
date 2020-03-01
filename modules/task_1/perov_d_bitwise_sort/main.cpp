@@ -6,35 +6,35 @@
 TEST(Sequential, Random_Sorted) {
   std::vector<double> my_vector = GetRandomVector(100);
   std::vector<double> res = BitwiseSort(my_vector);
-  bool flag = IsSorted(my_vector, res);
+  bool flag = IsSorted(&my_vector, &res);
   ASSERT_EQ(true, flag);
 }
 
 TEST(Sequential, Negativ_Sorted) {
   std::vector<double> my_vector = {-1, -6.45, -5, -0.99, -0.998};
   std::vector<double> res = BitwiseSort(my_vector);
-  bool flag = IsSorted(my_vector, res);
+  bool flag = IsSorted(&my_vector, &res);
   ASSERT_EQ(true, flag);
 }
 
 TEST(Sequential, Positiv_Sort) {
   std::vector<double> my_vector = {1.0, 3.489, 4.47, 4.54, 8.4445, 123};
   std::vector<double> res = BitwiseSort(my_vector);
-  bool flag = IsSorted(my_vector, res);
+  bool flag = IsSorted(&my_vector, &res);
   ASSERT_EQ(true, flag);
 }
 
 TEST(Sequential, Negativ_Positiv_Sort) {
   std::vector<double> my_vector = {-3.489, 4.54, 0, -5.44, -3.412, 8.4445, 123};
   std::vector<double> res = BitwiseSort(my_vector);
-  bool flag = IsSorted(my_vector, res);
+  bool flag = IsSorted(&my_vector, &res);
   ASSERT_EQ(true, flag);
 }
 
 TEST(Sequential, Mantissa_Sort) {
   std::vector<double> my_vector = {0.45, -0.45, 0.1, 0, 0.89, -0.44, 0};
   std::vector<double> res = BitwiseSort(my_vector);
-  bool flag = IsSorted(my_vector, res);
+  bool flag = IsSorted(&my_vector, &res);
   ASSERT_EQ(true, flag);
 }
 
