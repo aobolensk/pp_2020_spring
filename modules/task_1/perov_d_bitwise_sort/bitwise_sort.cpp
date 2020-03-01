@@ -1,5 +1,5 @@
 // Copyright 2020 diper1998
-#include "bitwise_sort.h"
+#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
 
 std::vector<double> GetRandomVector(int size) {
   std::mt19937 gen;
@@ -38,7 +38,7 @@ int GetMaxPower(std::vector<double> my_vector) {
   int power = 0;
   for (int i = 0; i < my_vector.size(); ++i) {
     power = 0;
-    int tmp = int(my_vector[i]);
+    int tmp = static_cast<int>(my_vector[i]);
     while (tmp != 0) {
       power++;
       tmp = tmp / 10;
@@ -135,14 +135,15 @@ void DoppelgangerSort(std::vector<double>* my_vector) {
     int start;
     int end;
 
-    if (int(my_vector->at(i)) == static_cast<int>(my_vector->at(i + 1))) {
+    if (static_cast<int>(my_vector->at(i)) ==
+        static_cast<int>(my_vector->at(i + 1))) {
       start = i;
       i++;
       doppelganger++;
 
-      while (
-          i < my_vector->size() - 1 &&
-          (int(my_vector->at(i)) == static_cast<int>(my_vector->at(i + 1)))) {
+      while (i < my_vector->size() - 1 &&
+             (static_cast<int>(my_vector->at(i)) ==
+              static_cast<int>(my_vector->at(i + 1)))) {
         i++;
         doppelganger++;
       }
