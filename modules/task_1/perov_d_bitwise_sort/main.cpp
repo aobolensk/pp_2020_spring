@@ -1,4 +1,5 @@
-﻿// Copyright 2020 diper1998
+﻿//  Copyright 2020 diper1998
+
 #include <gtest/gtest.h>
 #include <vector>
 #include "./bitwise_sort.h"
