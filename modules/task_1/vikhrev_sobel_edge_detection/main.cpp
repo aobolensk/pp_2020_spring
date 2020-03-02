@@ -1,7 +1,8 @@
 // Copyright 2020 Vikhrev Ivan
 #include <vector>
-#include "gtest/gtest.h"
 #include "./sobel_edge_detection.h"
+#ifndef OPENCV
+#include "gtest/gtest.h"
 
 TEST(sequential_edge_detection, can_create_image) {
     imageU a;
@@ -68,9 +69,24 @@ TEST(sequential_edge_detection, image_change_after_applying_sobel) {
     imageU res =  sobel(a);
     ASSERT_NE(a, res);
 }
-
+#else
+#include "opencv2/core.hpp"
+#include "opencv2/highgui.hpp"
+#endif  // opencv
 
 int main(int argc, char **argv) {
+#ifndef OPENCV
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
+#else
+    cv::Mat src = cv::imread("C:/MyProjects/1.png", 2);
+    cv::imshow("origin", src);
+    std::vector<uchar> vec(src.data, src.data + src.cols*src.rows);
+    imageU img{ src.rows, src.cols, vec };
+    imageU res = sobel(img);
+    cv::Mat r{ res.rows, res.cols, CV_8UC1, &res.data[0] };
+    cv::imshow("res", r);
+    cv::waitKey(0);
+    return 0;
+#endif  // opencv
 }

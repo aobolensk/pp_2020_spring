@@ -70,9 +70,6 @@ void image<T>::randImage(int r, int c) {
         return uint_dist(mersenne_engine);
     };
     generate(begin(data), end(data), gen);
-    for (auto a : data) {
-        std::cout << static_cast<int>(a) << " ";
-    }
 }
 
 
