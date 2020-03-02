@@ -1,6 +1,5 @@
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-
 if ( USE_SEQ )
     set(ProjectId "${ProjectId}_seq")
     project( ${ProjectId} )
@@ -18,7 +17,6 @@ if ( USE_SEQ )
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-
 
 else( USE_SEQ )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )

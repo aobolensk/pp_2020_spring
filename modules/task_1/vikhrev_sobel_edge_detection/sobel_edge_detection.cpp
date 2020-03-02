@@ -4,11 +4,9 @@
 
 imageU sobel(const imageU& img) {
     imageS kernX(3, 3, { 1, 0, -1, 2, 0, -2, 1, 0, -1 });
-
     imageS kernY(3, 3, { 1, 2, 1, 0, 0, 0, -1, -2, -1 });
     int x{0}, y{0};
     imageU res{ img.rows, img.cols };
-
     for (int i = 0; i < img.rows; ++i) {
         for (int j = 0; j < img.cols; ++j) {
             int id = i * img.cols + j;
@@ -29,8 +27,6 @@ imageU sobel(const imageU& img) {
             y = 0;
         }
     }
-
-
     return res;
 }
 
