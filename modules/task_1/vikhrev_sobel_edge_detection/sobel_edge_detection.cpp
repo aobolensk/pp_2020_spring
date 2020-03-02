@@ -1,6 +1,6 @@
 // Copyright 2020 Vikhrev Ivan
 
-#include "modules/task_1/vikhrev_sobel_edge_detection/sobel_edge_detection.h"
+#include "../../../modules/task_1/vikhrev_sobel_edge_detection/sobel_edge_detection.h"
 
 imageU sobel(const imageU& img) {
     imageS kernX(3, 3, { 1, 0, -1, 2, 0, -2, 1, 0, -1 });

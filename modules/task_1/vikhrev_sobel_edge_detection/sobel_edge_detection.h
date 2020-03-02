@@ -17,6 +17,7 @@ struct image {
         image(int r, int c);
         image(int r, int c, std::vector<T> d);
         image(const image<T>& img);
+        randImage(int r, int c);
 };
 
 /*----------------------------------------------------------------------*/
@@ -44,6 +45,22 @@ image<T>::image(const image<T> &img) {
     data = img.data;
 }
 
+template<class T>
+image<T>::randImage(int r, int c) {
+    size = r * c;
+    rows = r;
+    cols = c;
+    data.resize(size);
+    std::random_device rnd_device;
+    std::mt19937 mersenne_engine{ rnd_device() };
+    std::uniform_int_distribution<int> uint_dist{ 0, 256 };
+    auto gen = [&uint_dist, &mersenne_engine]() {
+        return uint_dist(mersenne_engine);
+    };
+    generate(begin(data), end(data), gen);
+    for (auto a : data) {
+        std::cout << static_cast<int>(a) << " ";
+}
 using imageU = image<uint8_t>;
 using imageS = image<char>;
 
