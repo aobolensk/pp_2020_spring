@@ -18,6 +18,8 @@ struct image {
         image(int r, int c, std::vector<T> d);
         image(const image<T>& img);
         void randImage(int r, int c);
+        bool operator== (const image<T>& img) const;
+        bool operator!= (const image<T>& img) const { return !(*this == img); }
 };
 
 /*----------------------------------------------------------------------*/
@@ -43,6 +45,16 @@ image<T>::image(const image<T> &img) {
     rows = img.rows;
     cols = img.cols;
     data = img.data;
+}
+
+template<class T>
+bool image<T>::operator==(const image<T>& img) const {
+    if (rows == img.rows && cols == img.cols &&
+        size == img.size && data == img.data) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 template<class T>

@@ -18,7 +18,7 @@ TEST(sequential_edge_detection, can_create_image_with_two_parameters) {
     ASSERT_EQ(a.cols, 2);
     ASSERT_EQ(a.rows, 2);
     ASSERT_EQ(a.size, 4);
-    ASSERT_EQ(a.data.size(), 4);
+    ASSERT_EQ(a.data.size(), static_cast <size_t>(4));
     ASSERT_EQ(a.data, b);
 }
 
@@ -27,25 +27,46 @@ TEST(sequential_edge_detection, can_create_image_with_three_parameters) {
     ASSERT_EQ(a.cols, 1);
     ASSERT_EQ(a.rows, 1);
     ASSERT_EQ(a.size, 1);
-    ASSERT_EQ(a.data.size(), 1);
+    ASSERT_EQ(a.data.size(), static_cast <size_t>(1));
     ASSERT_EQ(a.data[0], 1);
+}
+
+TEST(sequential_edge_detection, is_equal_to_yourself) {
+    imageU a{ 1, 1 };
+    ASSERT_EQ(a, a);
+}
+
+TEST(sequential_edge_detection, equal_images_is_equal) {
+    imageU a{ 1, 1, {1} };
+    imageU b{ 1, 1, {1} };
+    ASSERT_EQ(a, b);
+}
+
+TEST(sequential_edge_detection, not_equal_images_is_not_equal) {
+    imageU a{ 1, 1, {1} };
+    imageU b{ 1, 1, {2} };
+    ASSERT_NE(a, b);
 }
 
 TEST(sequential_edge_detection, can_copy_image) {
     imageU a{ 1, 1, {1} };
     imageU b{ a };
-    ASSERT_EQ(a.cols, b.cols);
-    ASSERT_EQ(a.rows, b.rows);
-    ASSERT_EQ(a.size, b.rows);
-    ASSERT_EQ(a.data, b.data);
+    ASSERT_EQ(a, b);
 }
 
-TEST(sequential_edge_detection, sobel) {
+TEST(sequential_edge_detection, can_randomize_image) {
+    imageU a;
+    a.randImage(2, 2);
+    ASSERT_EQ(a.cols, 2);
+    ASSERT_EQ(a.rows, 2);
+    ASSERT_EQ(a.size, 4);
+    ASSERT_EQ(a.data.size(), static_cast <size_t>(4));
+}
+
+TEST(sequential_edge_detection, image_change_after_applying_sobel) {
     imageU a{ 3, 3, {1, 1, 1, 1, 1, 1, 1, 1, 1} };
     imageU res =  sobel(a);
-    std::vector<uint8_t> b;
-    b.assign(9, sqrt(18));
-    ASSERT_EQ(res.data, b);
+    ASSERT_NE(a, res);
 }
 
 
