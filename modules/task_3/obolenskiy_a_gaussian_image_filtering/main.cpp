@@ -1,9 +1,9 @@
 // Copyright 2020 Obolenskiy Arseniy
 #include <gtest/gtest.h>
-#include <omp.h>
+#include "tbb/tbb.h"
 #include "./gaussian_image_filtering.h"
 
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Filter_Small_Image) {
     const int width = 10;
     const int height = 10;
 
@@ -13,7 +13,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
     ASSERT_NE(res, img);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Big_Image) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Filter_Big_Image) {
     const int width = 1000;
     const int height = 1000;
 
@@ -23,7 +23,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Filter_Big_Image) {
     ASSERT_NE(res, img);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Empty_Image) {
     const int width = 0;
     const int height = 0;
 
@@ -32,7 +32,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
     ASSERT_EQ(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
     const int width = 2;
     const int height = 480;
 
@@ -41,7 +41,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Width_Less_Than_Kernel
     ASSERT_NE(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
     const int width = 480;
     const int height = 2;
 
@@ -50,7 +50,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Height_Less_Than_Kerne
     ASSERT_NE(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Height) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Incorrect_Image_Height) {
     const int width = 100;
     const int height = 100;
 
@@ -59,7 +59,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Height) {
     ASSERT_ANY_THROW(gaussianFilter(img, width, height - 1));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Width) {
+TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Incorrect_Image_Width) {
     const int width = 100;
     const int height = 100;
 
@@ -69,6 +69,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Width) {
 }
 
 int main(int argc, char** argv) {
+    tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
