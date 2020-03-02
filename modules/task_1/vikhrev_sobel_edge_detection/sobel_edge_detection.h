@@ -17,7 +17,7 @@ struct image {
         image(int r, int c);
         image(int r, int c, std::vector<T> d);
         image(const image<T>& img);
-        randImage(int r, int c);
+        void randImage(int r, int c);
 };
 
 /*----------------------------------------------------------------------*/
@@ -46,7 +46,7 @@ image<T>::image(const image<T> &img) {
 }
 
 template<class T>
-image<T>::randImage(int r, int c) {
+void image<T>::randImage(int r, int c) {
     size = r * c;
     rows = r;
     cols = c;
@@ -60,7 +60,10 @@ image<T>::randImage(int r, int c) {
     generate(begin(data), end(data), gen);
     for (auto a : data) {
         std::cout << static_cast<int>(a) << " ";
+    }
 }
+
+
 using imageU = image<uint8_t>;
 using imageS = image<char>;
 
