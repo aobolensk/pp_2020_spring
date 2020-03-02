@@ -1,10 +1,10 @@
 // Copyright 2020 diper1998
-#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
+//#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
+#include "bitwise_sort.h"
 #include <algorithm>
 #include <ctime>
 #include <random>
 #include <vector>
-
 std::vector<double> GetRandomVector(int size) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
@@ -38,12 +38,13 @@ int GetMaxMantis(std::vector<double> my_vector, int start, int end) {
   return max_power;
 }
 
-int GetMaxPower(std::vector<double> my_vector) {
+int GetMaxPower(std::vector<double>::iterator first,
+                std::vector<double>::iterator last) {
   int max_power = 0;
   int power = 0;
-  for (unsigned int i = 0; i < my_vector.size(); ++i) {
+  for (auto i = first; i != last; ++i) {
     power = 0;
-    int tmp = static_cast<int>(my_vector[i]);
+    int tmp = static_cast<int>(*i);
     while (tmp != 0) {
       power++;
       tmp = tmp / 10;
@@ -163,18 +164,18 @@ void DoppelgangerSort(std::vector<double>* my_vector) {
   }
 }
 
-std::vector<double> BitwiseSort(std::vector<double> my_vector) {
-  std::vector<double> tmp_vector(my_vector);
+void BitwiseSort(std::vector<double>::iterator first,
+                                std::vector<double>::iterator last) {
   std::vector<double> positiv_vector;
   std::vector<double> negativ_vector;
 
-  int power = GetMaxPower(my_vector);
+  int power = GetMaxPower(first, last);
 
-  for (unsigned int i = 0; i < my_vector.size(); ++i) {
-    if (my_vector[i] >= 0)
-      positiv_vector.push_back(my_vector[i]);
+  for (auto i = first; i != last; ++i) {
+    if (*i >= 0)
+      positiv_vector.push_back(*i);
     else
-      negativ_vector.push_back(my_vector[i]);
+      negativ_vector.push_back(*i);
   }
 
   if (negativ_vector.size() != 0) {
@@ -191,17 +192,18 @@ std::vector<double> BitwiseSort(std::vector<double> my_vector) {
     DoppelgangerSort(&positiv_vector);
   }
 
-  int id = 0;
+  auto id = first;
 
   for (int i = negativ_vector.size() - 1; i >= 0; --i) {
-    my_vector[id++] = negativ_vector[i];
+    *id = negativ_vector[i];
+    id++;
   }
 
   for (unsigned int i = 0; i < positiv_vector.size(); i++) {
-    my_vector[id++] = positiv_vector[i];
+    *id = positiv_vector[i];
+    id++;
   }
 
-  return my_vector;
 }
 
 bool IsSorted(std::vector<double>* old_vector,

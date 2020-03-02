@@ -9,7 +9,8 @@
 #include <vector>
 
 std::vector<double> GetRandomVector(int size);
-std::vector<double> BitwiseSort(std::vector<double> my_vector);
+void BitwiseSort(std::vector<double>::iterator first,
+                                std::vector<double>::iterator last);
 void BitSort(std::vector<double>* my_vector, int power);
 int GetMaxPower(std::vector<double> my_vector);
 int GetOnPower(double value, int power);
