@@ -6,6 +6,7 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
+#define NOMINMAX
 #include "tbb/tbb.h"
 #include "../../modules/task_3/obolenskiy_a_gaussian_image_filtering/gaussian_image_filtering.h"
 
