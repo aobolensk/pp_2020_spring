@@ -14,8 +14,8 @@ TEST(Gaussian_Image_Filtering_tbb, Can_Filter_Small_Image) {
 }
 
 TEST(Gaussian_Image_Filtering_tbb, Can_Filter_Big_Image) {
-    const int width = 1000;
-    const int height = 1000;
+    const int width = 200;
+    const int height = 200;
 
     Image img = generateRandomImage(width, height);
     Image res = gaussianFilter(img, width, height);
@@ -34,7 +34,7 @@ TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Empty_Image) {
 
 TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
     const int width = 2;
-    const int height = 480;
+    const int height = 50;
 
     Image img = generateRandomImage(width, height);
 
@@ -42,7 +42,7 @@ TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Width_Less_Than_Kernel
 }
 
 TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
-    const int width = 480;
+    const int width = 50;
     const int height = 2;
 
     Image img = generateRandomImage(width, height);
@@ -51,8 +51,8 @@ TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Images_With_Height_Less_Than_Kerne
 }
 
 TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Incorrect_Image_Height) {
-    const int width = 100;
-    const int height = 100;
+    const int width = 10;
+    const int height = 10;
 
     Image img = generateRandomImage(width, height);
 
@@ -60,8 +60,8 @@ TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Incorrect_Image_Height) {
 }
 
 TEST(Gaussian_Image_Filtering_tbb, Can_Handle_Incorrect_Image_Width) {
-    const int width = 100;
-    const int height = 100;
+    const int width = 10;
+    const int height = 10;
 
     Image img = generateRandomImage(width, height);
 
