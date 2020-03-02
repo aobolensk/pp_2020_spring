@@ -106,7 +106,7 @@ Navigate to a source code folder.
 ## 3. How to submit you work
 * There are `task_1`, `task_2`, `task_3`,  `reports` folders in `modules` directory. There are 3 task and 1 report for the semester. Move to a folder of your task. Make a directory named `<last name>_<first letter of name>_<short task name>`. Example: `task1/nesterov_a_vector_sum`.
 * Go into the newly created folder and begin you work on the task. There must be only 4 files and 3 of them must be written by you:
-  - `main.cpp` - google tests for the task. The number of tests must be 4 or greater.
+  - `main.cpp` - google tests for the task. The number of tests must be 5 or greater.
   - `vector_sum.h`   - a header file with function prototypes, name it in the same way as `<short task name>`.
   - `vector_sum.cpp` - the task implementation, name it in the same way as `<short task name>`.
   - `CMakeLists.txt` - a file to configure your project. Examples for each configuration can be found in `test_tasks`.
