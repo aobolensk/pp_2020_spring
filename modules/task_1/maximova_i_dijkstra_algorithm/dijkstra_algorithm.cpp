@@ -4,6 +4,7 @@
 #include <ctime>
 #include <random>
 #include <stdexcept>
+#include <utility>
 
 graph::graph(int _numVertex, int _numEdges) {
   if (_numVertex <= 0)
@@ -63,44 +64,3 @@ void graph::getRandLinkGraph() {
   this->getTree();
   if (numEdges > numVertex - 1) this->getRandEdges();
 }
-
-// int getParallelOperations(std::vector<int> vec, std::string ops) {
-//    const int  sz = vec.size();
-//    int reduction_elem = 1;
-//    if (ops == "+") {
-//        #pragma omp parallel for reduction(+:reduction_elem)
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem += vec[i];
-//        }
-//    } else if (ops == "-") {
-//        #pragma omp parallel for reduction(-:reduction_elem)
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem -= vec[i];
-//        }
-//    } else if (ops == "*") {
-//        #pragma omp parallel for reduction(*:reduction_elem)
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem *= vec[i];
-//        }
-//    }
-//    return reduction_elem;
-//}
-//
-// int getSequentialOperations(std::vector<int> vec, std::string ops) {
-//    const int  sz = vec.size();
-//    int reduction_elem = 1;
-//    if (ops == "+") {
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem += vec[i];
-//        }
-//    } else if (ops == "-") {
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem -= vec[i];
-//        }
-//    } else if (ops == "*") {
-//        for (int  i = 0; i < sz; i++) {
-//            reduction_elem *= vec[i];
-//        }
-//    }
-//    return reduction_elem;
-//}
