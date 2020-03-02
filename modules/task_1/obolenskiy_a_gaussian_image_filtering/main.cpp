@@ -13,16 +13,6 @@ TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
     ASSERT_NE(res, img);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Big_Image) {
-    const int width = 200;
-    const int height = 200;
-
-    Image img = generateRandomImage(width, height);
-    Image res = gaussianFilter(img, width, height);
-
-    ASSERT_NE(res, img);
-}
-
 TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
     const int width = 0;
     const int height = 0;
