@@ -1,10 +1,11 @@
 // Copyright 2020 diper1998
-//#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
-#include "bitwise_sort.h"
+// #include "bitwise_sort.h"
+#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
 #include <algorithm>
 #include <ctime>
 #include <random>
 #include <vector>
+
 std::vector<double> GetRandomVector(int size) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
@@ -165,7 +166,7 @@ void DoppelgangerSort(std::vector<double>* my_vector) {
 }
 
 void BitwiseSort(std::vector<double>::iterator first,
-                                std::vector<double>::iterator last) {
+                 std::vector<double>::iterator last) {
   std::vector<double> positiv_vector;
   std::vector<double> negativ_vector;
 
@@ -203,7 +204,6 @@ void BitwiseSort(std::vector<double>::iterator first,
     *id = positiv_vector[i];
     id++;
   }
-
 }
 
 bool IsSorted(std::vector<double>* old_vector,
