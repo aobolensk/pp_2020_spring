@@ -84,10 +84,11 @@ Navigate to a source code folder.
 
   ```
   mkdir build && cd build
-  cmake -D USE_MPI=ON -D USE_OMP=ON -D USE_TBB=ON -D USE_STD=ON -D USE_LATEX=ON ..
+  cmake -D USE_SEQ=ON -D USE_MPI=ON -D USE_OMP=ON -D USE_TBB=ON -D USE_STD=ON -D USE_LATEX=ON ..
   ```
 *Help on CMake keys:*
-- `-D USE_MPI=ON` enbale `MPI` labs.
+- `-D USE_SEQ=ON` enable `Sequential` labs (based on OpenMP's CMakeLists.txt).
+- `-D USE_MPI=ON` enable `MPI` labs.
 - `-D USE_OMP=ON` enable `OpenMP` labs.
 - `-D USE_TBB=ON` enable `TBB` labs.
 - `-D USE_STD=ON` enable `std::thread` labs.
