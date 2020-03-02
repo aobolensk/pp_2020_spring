@@ -4,8 +4,6 @@
 #include <ctime>
 #include <random>
 #include <stdexcept>
-#include <string>
-#include <vector>
 
 graph::graph(int _numVertex, int _numEdges) {
   if (_numVertex <= 0)

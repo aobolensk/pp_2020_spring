@@ -15,7 +15,7 @@ class graph {
   void getRandEdges();
 
  public:
-  graph(int _numVertex = 0, int _numEdges = 0);
+  explicit graph(int _numVertex = 0, int _numEdges = 0);
   void getRandLinkGraph();
 };
 
