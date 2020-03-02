@@ -1,7 +1,7 @@
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-if ( USE_STD )
-    set(ProjectId "${ProjectId}_std")
+if ( USE_SEQ )
+    set(ProjectId "${ProjectId}_seq")
     project( ${ProjectId} )
     message( STATUS "-- " ${ProjectId} )
 
@@ -14,10 +14,9 @@ if ( USE_STD )
 
     target_link_libraries(${ProjectId} ${PACK_LIB})
     target_link_libraries(${ProjectId} gtest gtest_main)
-    target_link_libraries (${ProjectId} Threads::Threads)
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-else( USE_STD )
+else( USE_SEQ )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
-endif( USE_STD )
+endif( USE_SEQ )
