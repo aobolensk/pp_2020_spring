@@ -1,4 +1,6 @@
 // Copyright 2020 Savkin Yuriy
+#include <cstring>
+#include <cstddef>
 #include <vector>
 #include <array>
 #include <limits>
