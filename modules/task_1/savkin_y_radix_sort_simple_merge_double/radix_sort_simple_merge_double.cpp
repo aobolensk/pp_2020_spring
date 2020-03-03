@@ -1,4 +1,9 @@
 // Copyright 2020 Savkin Yuriy
+#include <vector>
+#include <array>
+#include <limits>
+#include <utility>
+#include <stack>
 #include "../../../modules/task_1/savkin_y_radix_sort_simple_merge_double/radix_sort_simple_merge_double.h"
 
 std::vector<double> getRandomVector(size_t size) {
@@ -28,7 +33,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class RadixTask {
-    public:
+     public:
         virtual ~RadixTask() {
         }
 
@@ -42,13 +47,13 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class SortFunctor: public RadixTask {
-    private:
+     private:
         radixDouble* arr;
         size_t size;
         radixDouble* buf;
         size_t layer;
 
-    public:
+     public:
         SortFunctor(radixDouble* arr_, size_t size_, radixDouble* buf_, size_t layer_):
             RadixTask(), arr(arr_), size(size_), buf(buf_), layer() {
         }
@@ -101,12 +106,12 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class RewriteFunctor: public RadixTask {
-    private:
+     private:
         double* arr;
         double* out;
         size_t size;
 
-    public:
+     public:
         RewriteFunctor(double* arr_, double* out_, size_t size_) :
             RadixTask(), arr(arr_), out(out_), size(size_) {
         }
@@ -118,14 +123,14 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class MergeFunctor: public RadixTask {
-    private:
+     private:
         double* arr1;
         double* arr2;
         size_t size1;
         size_t size2;
         double* out;
 
-    public:
+     public:
         MergeFunctor(double* arr1_, double* arr2_, double* out_, size_t size1_, size_t size2_) :
             RadixTask(), arr1(arr1_), arr2(arr2_), out(out_), size1(size1_), size2(size2_) {
         }
@@ -147,14 +152,14 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class ScheduleInit {
-    private:
+     private:
         double** arr;
         double** out;
         size_t* parts_sizes;
         size_t parts_count;
         std::vector<RadixTaskInfo>* vec;
 
-    public:
+     public:
         ScheduleInit(double** arr_, double** out_, size_t* parts_sizes_, size_t parts_count_,
             std::vector<RadixTaskInfo>* vec_) : arr(arr_), out(out_), parts_sizes(parts_sizes_),
                 parts_count(parts_count_), vec(vec_) {
