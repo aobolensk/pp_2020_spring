@@ -3,56 +3,86 @@
 #include <vector>
 #include "./dijkstra_algorithm.h"
 
-TEST(Dijkstra_Algorithm, Test_Create_Graph_Error_Zero_Vertex) {
+TEST(Dijkstra_Algorithm, Test_Ñonstructor_Graph_Error_Zero_Vertex) {
   int numVertex = 0;
   int numEdges = 45;
 
-  ASSERT_ANY_THROW(graph Graph(numVertex, numEdges));
+  ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Create_Graph_Error_Negative_Vertex) {
+TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Negative_Vertex) {
   int numVertex = -3;
   int numEdges = 45;
 
-  ASSERT_ANY_THROW(graph Graph(numVertex, numEdges));
+  ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Create_Graph_Error_Graph_Is_Not_Connected) {
+TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Graph_Is_Not_Connected) {
   int numVertex = 10;
   int numEdges = 8;
 
-  ASSERT_ANY_THROW(graph Graph(numVertex, numEdges));
+  ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Create_Graph_Too_Many_Edges) {
+TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Too_Many_Edges) {
   int numVertex = 10;
   int numEdges = 50;
 
-  ASSERT_ANY_THROW(graph Graph(numVertex, numEdges));
+  ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Get_Random_Linked_Graph) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph) {
   int numVertex = 10;
   int numEdges = 30;
-  graph Graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(Graph.getRandLinkGraph());
+  Graph graph(numVertex, numEdges);
+
+  ASSERT_NO_THROW(graph.createRandLinkGraph());
 }
 
-TEST(Dijkstra_Algorithm, Test_Min_Edges_Get_Tree) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph_Min_Edges) {
   int numVertex = 10;
   int numEdges = 9;
-  graph Graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(Graph.getRandLinkGraph());
+  Graph graph(numVertex, numEdges);
+
+  ASSERT_NO_THROW(graph.createRandLinkGraph());
 }
 
-TEST(Dijkstra_Algorithm, Test_Max_Edges_Generate_Random_Linked_Graph) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph_Max_Edges) {
   int numVertex = 10;
   int numEdges = 45;
-  graph Graph(numVertex, numEdges);
+  Graph graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(Graph.getRandLinkGraph());
+  ASSERT_NO_THROW(graph.createRandLinkGraph());
+}
+
+TEST(Dijkstra_Algorithm, Test_No_Throw_Execute_Seq_Dijkstra_Alg) {
+  int numVertex = 10;
+  int numEdges = 30;
+  int sourceVertex = 0;
+
+  Graph graph(numVertex, numEdges);
+  graph.createRandLinkGraph();
+
+  ASSERT_NO_THROW(SeqDijkstraAlg(graph, sourceVertex));
+}
+
+TEST(Dijkstra_Algorithm, Test_Right_Execute_Seq_Dijkstra_Alg) {
+  int numVertex = 5;
+  int numEdges = 5;
+  int sourceVertex = 1;
+
+  Graph graph(numVertex, numEdges);
+  graph.putEdge(0, 1, 3);
+  graph.putEdge(4, 1, 2);
+  graph.putEdge(4, 2, 1);
+  graph.putEdge(4, 3, 1);
+  graph.putEdge(3, 2, 4);
+  std::vector<int> algRes = SeqDijkstraAlg(graph, sourceVertex);
+  std::vector<int> currentRes = {3, 0, 3, 3, 2};
+
+  ASSERT_EQ(algRes, currentRes);
 }
 
 int main(int argc, char **argv) {
