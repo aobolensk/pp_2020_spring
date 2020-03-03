@@ -1,4 +1,5 @@
 // Copyright 2020 Kornev Nikita
+#include <numeric>
 #include <utility>
 #include <algorithm>
 #include "gtest/gtest.h"
@@ -9,22 +10,13 @@ TEST(seq_qs, corr_res) {
   double* a = new double[n], *b = new double[n];
   get_rand_arr(a, n);
 
-  for (int i = 0; i < n; i++) {
-    b[i] = a[i];
-  }
+  std::memcpy(b, &a[0], sizeof(double) * n);
 
   std::sort(&b[0], &b[n]);
   qs(a, 0, n - 1);
 
-  bool flag = 0;
-  for (int i = 0; i < n; i++) {
-    if (a[i] != b[i]) {
-      flag = 1;
-      break;
-    }
-  }
-
-  ASSERT_EQ(flag, 0);
+  bool res = std::equal(&a[0], &a[n], &b[0]);
+  ASSERT_EQ(res, 1);
 }
 
 TEST(seq_qs, sorted_arr) {
@@ -34,20 +26,12 @@ TEST(seq_qs, sorted_arr) {
 
   std::sort(&a[0], &a[n]);
 
-  for (int i = 0; i < n; i++) {
-    b[i] = a[i];
-  }
+  std::memcpy(b, &a[0], sizeof(double) * n);
+
   qs(a, 0, n - 1);
 
-  bool flag = 0;
-  for (int i = 0; i < n; i++) {
-    if (a[i] != b[i]) {
-      flag = 1;
-      break;
-    }
-  }
-
-  ASSERT_EQ(flag, 0);
+  bool res = std::equal(&a[0], &a[n], &b[0]);
+  ASSERT_EQ(res, 1);
 }
 
 TEST(seq_qs, inverted_arr) {
@@ -56,9 +40,7 @@ TEST(seq_qs, inverted_arr) {
   get_rand_arr(a, n);
 
   std::sort(&a[0], &a[n]);
-  for (int i = 0; i < n; i++) {
-    b[i] = a[i];
-  }
+  std::memcpy(b, &a[0], sizeof(double) * n);
 
   for (int i = 0; i < n / 2; i++) {
     std::swap(a[i], a[n - i - 1]);
@@ -66,24 +48,15 @@ TEST(seq_qs, inverted_arr) {
 
   qs(a, 0, n - 1);
 
-  bool flag = 0;
-  for (int i = 0; i < n; i++) {
-    if (a[i] != b[i]) {
-      flag = 1;
-      break;
-    }
-  }
-
-  ASSERT_EQ(flag, 0);
+  bool res = std::equal(&a[0], &a[n], &b[0]);
+  ASSERT_EQ(res, 1);
 }
 
 TEST(seq_qs, almost_empty_arr) {
   int n = 100000;
   double* a = new double[n];
-  a[n - 1] = 1;
-
+  a[0] = 1;
   qs(a, 0, n - 1);
-
   ASSERT_EQ(a[n - 1], 1);
 }
 
@@ -97,10 +70,7 @@ TEST(seq_qs, empty_arr) {
 
   qs(a, 0, n - 1);
 
-  double sum = 0;
-  for (int i = 0; i < n; i++) {
-    sum += a[i];
-  }
+  double sum = std::accumulate(&a[0], &a[n], 0);
 
   ASSERT_EQ(sum, 0);
 }
