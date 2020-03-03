@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <vector>
 #include <utility>
+#include <limits.h>
 
 Graph::Graph(int _numVertex, int _numEdges) {
   if (_numVertex <= 0)
@@ -18,7 +19,7 @@ Graph::Graph(int _numVertex, int _numEdges) {
     throw std::runtime_error("Too many edges in the graph");
   numEdges = _numEdges;
 
-  std::vector<int> vecEx(numVertex, inf);
+  std::vector<int> vecEx(numVertex, INT_MAX);
   linkedList.resize(numVertex);
   for (int i = 0; i < numVertex; ++i) linkedList[i] = vecEx;
 }
@@ -65,8 +66,8 @@ std::vector<std::vector<int>> Graph::getLinkedList() const {
 
 int minDistVertex(const std::vector<int>& dist, const std::vector<bool>& mark) {
   int minDistV;
-  int minDist = inf;
-  for (int i = 0; i < dist.size(); ++i)
+  int minDist = INT_MAX;
+  for (size_t i = 0; i < dist.size(); ++i)
     if (mark[i] == false && dist[i] < minDist) {
       minDist = dist[i];
       minDistV = i;
@@ -78,7 +79,7 @@ std::vector<int> SeqDijkstraAlg(const Graph& graph, int sourceVertex) {
   std::vector<std::vector<int>> linkedList = graph.getLinkedList();
   int numVertex = linkedList.size();
 
-  std::vector<int> dist(numVertex, inf);
+  std::vector<int> dist(numVertex, INT_MAX);
   std::vector<bool> mark(numVertex, false);
   int vertex;
   dist[sourceVertex] = 0;
@@ -87,7 +88,7 @@ std::vector<int> SeqDijkstraAlg(const Graph& graph, int sourceVertex) {
     vertex = minDistVertex(dist, mark);
     mark[vertex] = 1;
     for (int j = 0; j < numVertex; ++j)
-      if (!mark[j] && linkedList[vertex][j] != inf &&
+      if (!mark[j] && linkedList[vertex][j] != INT_MAX &&
           (dist[vertex] + linkedList[vertex][j] < dist[j]))
         dist[j] = dist[vertex] + linkedList[vertex][j];
   }

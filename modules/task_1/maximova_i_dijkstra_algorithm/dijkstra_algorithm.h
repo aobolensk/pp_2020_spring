@@ -4,8 +4,6 @@
 
 #include <vector>
 
-const int inf = INT_MAX;
-
 class Graph {
  private:
   std::vector<std::vector<int>> linkedList;
