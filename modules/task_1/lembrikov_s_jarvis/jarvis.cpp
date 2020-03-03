@@ -50,7 +50,7 @@ std::vector<std::pair<double, double>> Jarvis(std::vector<std::pair<double, doub
 
     double len1;
     double len2;
-    double max_len;
+    double max_len = 0;
     double scalar;
     double cur_cos;
     double min_cos = 1.1;
