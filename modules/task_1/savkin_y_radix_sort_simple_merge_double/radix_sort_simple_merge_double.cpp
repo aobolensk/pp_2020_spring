@@ -51,11 +51,10 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
         radixDouble* arr;
         size_t size;
         radixDouble* buf;
-        size_t layer;
 
      public:
-        SortFunctor(radixDouble* arr_, size_t size_, radixDouble* buf_, size_t layer_):
-            RadixTask(), arr(arr_), size(size_), buf(buf_), layer() {
+        SortFunctor(radixDouble* arr_, size_t size_, radixDouble* buf_):
+            RadixTask(), arr(arr_), size(size_), buf(buf_) {
         }
 
         void execute() {
@@ -131,8 +130,8 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
         double* out;
 
      public:
-        MergeFunctor(double* arr1_, double* arr2_, double* out_, size_t size1_, size_t size2_) :
-            RadixTask(), arr1(arr1_), arr2(arr2_), out(out_), size1(size1_), size2(size2_) {
+        MergeFunctor(double* arr1_, double* arr2_, size_t size1_, size_t size2_, double* out_) :
+            RadixTask(), arr1(arr1_), arr2(arr2_), size1(size1_), size2(size2_), out(out_) {
         }
 
         void execute() {
@@ -194,7 +193,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
             double* output = out[0];
 
             std::vector<size_t> v;
-            RadixTaskInfo rti {new MergeFunctor(arr1, arr2, output, size1, size2), v, ref_count};
+            RadixTaskInfo rti {new MergeFunctor(arr1, arr2, size1, size2, output), v, ref_count};
             vec->push_back(rti);
 
             std::swap(arr[0], out[0]);
@@ -221,7 +220,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
 
     for (ptrdiff_t i = 0; i < num_threads; ++i) {
         SortFunctor sf(reinterpret_cast<radixDouble*>(arr_ptr[i]), size_ptr[i],
-            reinterpret_cast<radixDouble*>(out_ptr[i]), 0);
+            reinterpret_cast<radixDouble*>(out_ptr[i]));
         sf.execute();
     }
 
