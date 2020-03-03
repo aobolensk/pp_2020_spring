@@ -248,7 +248,6 @@ void MPSort(std::vector<double>::iterator first,
 
     int iam;
     int i = log(num_th) / log(2);
-    int count = i;
     int h = 2;
 #pragma omp parallel private(iam)
     {
