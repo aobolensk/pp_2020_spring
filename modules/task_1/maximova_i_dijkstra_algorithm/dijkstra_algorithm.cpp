@@ -4,6 +4,7 @@
 #include <ctime>
 #include <random>
 #include <stdexcept>
+#include <vector>
 #include <utility>
 
 Graph::Graph(int _numVertex, int _numEdges) {

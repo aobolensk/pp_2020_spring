@@ -3,7 +3,7 @@
 #include <vector>
 #include "./dijkstra_algorithm.h"
 
-TEST(Dijkstra_Algorithm, Test_Ñonstructor_Graph_Error_Zero_Vertex) {
+TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Zero_Vertex) {
   int numVertex = 0;
   int numEdges = 45;
 
