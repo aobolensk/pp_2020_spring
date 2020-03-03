@@ -5,28 +5,30 @@
 
 TEST(Sequential, Test_Sorted) {
     std::vector<int> vec = {1, 2, 3, 4};
-    bool k = checkAscending(vec);
-    ASSERT_EQ(true, k);
+    ASSERT_EQ(true, checkAscending(vec));
 }
 
 TEST(Sequential, Test_UnSorted) {
     std::vector<int> vec = {1, 2, 3, 0};
-    bool k = checkAscending(vec);
-    ASSERT_EQ(false, k);
+    ASSERT_EQ(true, checkAscending(vec));
 }
 
 TEST(Sequential, Test_FirstSort) {
     std::vector<int> vec = {1, 3, 4, 2};
     bitwiseSort(&vec);
-    bool k = checkAscending(vec);
-    ASSERT_EQ(true, k);
+    ASSERT_EQ(true, checkAscending(vec));
 }
 
 TEST(Sequential, Test_SecondSort) {
     std::vector<int> vec = {4, 3, 2, 1};
     bitwiseSort(&vec);
-    bool k = checkAscending(vec);
-    ASSERT_EQ(true, k);
+    ASSERT_EQ(true, checkAscending(vec));
+}
+
+TEST(Sequential, Test_ThirdSort) {
+    std::vector<int> vec = {4, 3, 3, 2, 1};
+    bitwiseSort(&vec);
+    ASSERT_EQ(true, checkAscending(vec));
 }
 
 int main(int argc, char **argv) {
