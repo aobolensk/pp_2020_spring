@@ -66,7 +66,7 @@ std::vector<std::vector<int>> Graph::getLinkedList() const {
 }
 
 int minDistVertex(const std::vector<int>& dist, const std::vector<bool>& mark) {
-  int minDistV;
+  int minDistV = -1;
   int minDist = INT8_MAX;
   for (size_t i = 0; i < dist.size(); ++i)
     if (mark[i] == false && dist[i] < minDist) {
@@ -87,7 +87,7 @@ std::vector<int> SeqDijkstraAlg(const Graph& graph, int sourceVertex) {
 
   for (int i = 0; i < numVertex - 1; ++i) {
     vertex = minDistVertex(dist, mark);
-    mark[vertex] = 1;
+    mark[vertex] = true;
     for (int j = 0; j < numVertex; ++j)
       if (!mark[j] && linkedList[vertex][j] != INT8_MAX &&
           (dist[vertex] + linkedList[vertex][j] < dist[j]))
