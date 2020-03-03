@@ -12,7 +12,7 @@ class Graph {
 
  public:
   explicit Graph(int _numVertex, int _numEdges);
-  void createRandLinkGraph();
+  void createRandGraph();
   void putEdge(int a, int b, int weightEdge);
   std::vector<std::vector<int>> getLinkedList() const;
 };

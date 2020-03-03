@@ -17,13 +17,6 @@ TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Negative_Vertex) {
   ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Graph_Is_Not_Connected) {
-  int numVertex = 10;
-  int numEdges = 8;
-
-  ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
-}
-
 TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Too_Many_Edges) {
   int numVertex = 10;
   int numEdges = 50;
@@ -31,30 +24,30 @@ TEST(Dijkstra_Algorithm, Test_Constructor_Graph_Error_Too_Many_Edges) {
   ASSERT_ANY_THROW(Graph graph(numVertex, numEdges));
 }
 
-TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Graph) {
   int numVertex = 5;
   int numEdges = 9;
 
   Graph graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(graph.createRandLinkGraph());
+  ASSERT_NO_THROW(graph.createRandGraph());
 }
 
-TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph_Min_Edges) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Graph_Min_Edges) {
   int numVertex = 5;
   int numEdges = 4;
 
   Graph graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(graph.createRandLinkGraph());
+  ASSERT_NO_THROW(graph.createRandGraph());
 }
 
-TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Linked_Graph_Max_Edges) {
+TEST(Dijkstra_Algorithm, Test_Can_Create_Random_Graph_Max_Edges) {
   int numVertex = 5;
   int numEdges = 10;
   Graph graph(numVertex, numEdges);
 
-  ASSERT_NO_THROW(graph.createRandLinkGraph());
+  ASSERT_NO_THROW(graph.createRandGraph());
 }
 
 TEST(Dijkstra_Algorithm, Test_No_Throw_Execute_Seq_Dijkstra_Alg) {
@@ -63,7 +56,7 @@ TEST(Dijkstra_Algorithm, Test_No_Throw_Execute_Seq_Dijkstra_Alg) {
   int sourceVertex = 0;
 
   Graph graph(numVertex, numEdges);
-  graph.createRandLinkGraph();
+  graph.createRandGraph();
 
   ASSERT_NO_THROW(SeqDijkstraAlg(graph, sourceVertex));
 }

@@ -5,17 +5,14 @@
 #include <ctime>
 #include <random>
 #include <stdexcept>
-#include <vector>
 #include <utility>
-
+#include <vector>
 
 Graph::Graph(int _numVertex, int _numEdges) {
   if (_numVertex <= 0)
     throw std::runtime_error("The number of vertex must be > 0");
   numVertex = _numVertex;
 
-  if (_numEdges < numVertex - 1)
-    throw std::runtime_error("The graph is not connected");
   if (_numEdges > (numVertex * (numVertex - 1)) / 2)
     throw std::runtime_error("Too many edges in the graph");
   numEdges = _numEdges;
@@ -29,27 +26,19 @@ void Graph::putEdge(int a, int b, int weightEdge) {
   linkedList[a][b] = linkedList[b][a] = weightEdge;
 }
 
-void Graph::createRandLinkGraph() {
+void Graph::createRandGraph() {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
-  int weightEdge;
 
-  for (int i = 0; i < numVertex - 1; ++i) {
-    weightEdge = gen() % 100 + 1;
-    this->putEdge(i, i + 1, weightEdge);
-  }
-
-  if (numEdges == numVertex - 1) return;
-
-  double numEdgesNow = numVertex - 1;
-  double numEdgestNeedAdd = numEdges - numEdgesNow;
-  double maxEdgesNeedAdd = (numVertex * (numVertex - 1)) / 2 - numEdgesNow;
-  double probability = numEdgestNeedAdd / maxEdgesNeedAdd;
+  double maxEdges = (numVertex * (numVertex - 1)) / 2;
+  double probability = static_cast<double>(numEdges) / maxEdges;
   double randProbability;
   double genMax = static_cast<double>(gen.max());
+  double numEdgesNow = 0;
+  int weightEdge;
 
   for (int i = 0; i < numVertex; ++i)
-    for (int j = i + 2; j < numVertex; ++j) {
+    for (int j = i + 1; j < numVertex; ++j) {
       randProbability = static_cast<double>(gen()) / genMax;
       if (randProbability <= probability && numEdgesNow < numEdges) {
         weightEdge = gen() % 100 + 1;
@@ -87,6 +76,7 @@ std::vector<int> SeqDijkstraAlg(const Graph& graph, int sourceVertex) {
 
   for (int i = 0; i < numVertex - 1; ++i) {
     vertex = minDistVertex(dist, mark);
+    if (vertex == -1) break;
     mark[vertex] = true;
     for (int j = 0; j < numVertex; ++j)
       if (!mark[j] && linkedList[vertex][j] != INT8_MAX &&
