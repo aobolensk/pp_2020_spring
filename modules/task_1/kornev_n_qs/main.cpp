@@ -10,8 +10,7 @@ TEST(seq_qs, corr_res) {
   double* a = new double[n], *b = new double[n];
   get_rand_arr(a, n);
 
-  std::memcpy(b, &a[0], sizeof(double) * n);
-
+  arrcpy(a, b, n);
   std::sort(&b[0], &b[n]);
   qs(a, 0, n - 1);
 
@@ -25,9 +24,7 @@ TEST(seq_qs, sorted_arr) {
   get_rand_arr(a, n);
 
   std::sort(&a[0], &a[n]);
-
-  std::memcpy(b, &a[0], sizeof(double) * n);
-
+  arrcpy(a, b, n);
   qs(a, 0, n - 1);
 
   bool res = std::equal(&a[0], &a[n], &b[0]);
@@ -40,7 +37,7 @@ TEST(seq_qs, inverted_arr) {
   get_rand_arr(a, n);
 
   std::sort(&a[0], &a[n]);
-  std::memcpy(b, &a[0], sizeof(double) * n);
+  arrcpy(a, b, n);
 
   for (int i = 0; i < n / 2; i++) {
     std::swap(a[i], a[n - i - 1]);

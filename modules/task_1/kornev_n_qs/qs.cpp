@@ -33,3 +33,9 @@ void get_rand_arr(double* a, int n) {
     a[i] = uid(gen);
   }
 }
+
+void arrcpy(double* a, double* b, int n) {
+  for (int i = 0; i < n; i++) {
+    b[i] = a[i];
+  }
+}
