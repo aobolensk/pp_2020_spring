@@ -61,7 +61,7 @@ TEST(Dijkstra_Algorithm, Test_No_Throw_Execute_Seq_Dijkstra_Alg) {
   ASSERT_NO_THROW(SeqDijkstraAlg(graph, sourceVertex));
 }
 
-TEST(Dijkstra_Algorithm, Test_Right_Execute_Seq_Dijkstra_Alg) {
+TEST(Dijkstra_Algorithm, Test_Right_Execute_Seq_Dijkstra_Alg_Linked_Graph) {
   int numVertex = 5;
   int numEdges = 5;
   int sourceVertex = 1;
@@ -74,6 +74,22 @@ TEST(Dijkstra_Algorithm, Test_Right_Execute_Seq_Dijkstra_Alg) {
   graph.putEdge(3, 2, 4);
   std::vector<int> algRes = SeqDijkstraAlg(graph, sourceVertex);
   std::vector<int> currentRes = {3, 0, 3, 3, 2};
+
+  ASSERT_EQ(algRes, currentRes);
+}
+
+TEST(Dijkstra_Algorithm, Test_Right_Execute_Seq_Dijkstra_Alg_Unlinked_Graph) {
+  int numVertex = 5;
+  int numEdges = 5;
+  int sourceVertex = 1;
+
+  Graph graph(numVertex, numEdges);
+  graph.putEdge(4, 1, 2);
+  graph.putEdge(4, 2, 1);
+  graph.putEdge(4, 3, 1);
+  graph.putEdge(3, 2, 4);
+  std::vector<int> algRes = SeqDijkstraAlg(graph, sourceVertex);
+  std::vector<int> currentRes = {INT8_MAX, 0, 3, 3, 2};
 
   ASSERT_EQ(algRes, currentRes);
 }
