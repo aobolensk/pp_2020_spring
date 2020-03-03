@@ -1,7 +1,8 @@
 // Copyright 2020 Lembrikov Stepan
+#include <../../../modules/task_1/lembrikov_s_jarvis/jarvis.h>
 #include <omp.h>
 #include <vector>
-#include <../../../modules/task_1/lembrikov_s_jarvis/jarvis.h>
+#include <utility>
 
 std::vector<std::pair<double, double>> getRandomPoints(int n) {
     std::mt19937 engine;
@@ -37,8 +38,7 @@ std::vector<std::pair<double, double>> Jarvis(std::vector<std::pair<double, doub
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
             base_id = i;
-        }
-        else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
+        } else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
             base_id = i;
         }
     }

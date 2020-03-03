@@ -1,6 +1,7 @@
 // Copyright 2020 Lembrikov Stepan
 #include <gtest/gtest.h>
 #include <vector>
+#include <utility>
 #include "./jarvis.h"
 
 TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
