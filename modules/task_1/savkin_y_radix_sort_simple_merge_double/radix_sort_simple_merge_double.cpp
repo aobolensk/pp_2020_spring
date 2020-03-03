@@ -64,7 +64,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
             constexpr size_t counts_size = static_cast<size_t>(std::numeric_limits<unsigned char>::max()) + 1;
             std::array<size_t, counts_reserve> counts;
 
-            for (ptrdiff_t i = 0; i < slice_num - 1; ++i) {
+            for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(slice_num - 1); ++i) {
                 memset(counts.data(), 0, sizeof(size_t) * counts_size);
 
                 for (size_t j = 0; j < size; ++j)
@@ -220,7 +220,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
         out_ptr[i] = out_ptr[i - 1] + size_ptr[i - 1];
     }
 
-    for (ptrdiff_t i = 0; i < num_threads; ++i) {
+    for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(num_threads); ++i) {
         SortFunctor sf(reinterpret_cast<radixDouble*>(arr_ptr[i]), size_ptr[i],
             reinterpret_cast<radixDouble*>(out_ptr[i]));
         sf.execute();
@@ -267,7 +267,7 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     }
 
     if (arr != arr_ptr[0]) {
-        for (ptrdiff_t i = 0; i < count; ++i)
+        for (ptrdiff_t i = 0; i < static_cast<ptrdiff_t>(count); ++i)
             arr[i] = arr_ptr[0][i];
     }
 
