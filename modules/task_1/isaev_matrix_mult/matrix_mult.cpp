@@ -5,34 +5,34 @@
 #include <exception>
 #include "matrix_mult.h"
 
-std::vector<std::vector<double> > getRandomMatrix(const int& n, const int& m) {
-    if (n <= 0 || m <= 0) {
+Matrix getRandomMatrix(const int& n) {
+    if (n <= 0) {
         throw std::exception();
     }
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0, 100);
     
-    std::vector<std::vector<double> > res(n, std::vector<double>(m));
+    Matrix res(n, std::vector<double>(n));
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+        for (int j = 0; j < n; ++j) {
             res[i][j] = dis(gen);
         }
     }
     return res;
 }
 
-std::vector<std::vector<double> > operator*(const std::vector<std::vector<double> >& mat1, const std::vector<std::vector<double> >& mat2) {
-    if (mat1.size() != mat2[0].size())
+Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1[0].size() != mat2.size())
         throw std::exception();
     
-    int n = static_cast<int>(mat1.size());
-    int m = static_cast<int>(mat2[0].size());
-    std::vector<std::vector<double> > res(n, std::vector<double>(m, 0));
+    size_t n = mat1.size();
+    size_t m = mat2[0].size();
+    Matrix res(n, std::vector<double>(n, 0));
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
-            for (int k = 0; k < n; ++k) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
+            for (size_t k = 0; k < mat2.size(); ++k) {
                 res[i][j] += mat1[i][k]*mat2[k][j];
             }
         }
@@ -40,14 +40,21 @@ std::vector<std::vector<double> > operator*(const std::vector<std::vector<double
     return res;
 }
 
-bool matrixComparison(const std::vector<std::vector<double> >& mat1, const std::vector<std::vector<double> >& mat2) {
-    bool isequal = true;
-    int n = static_cast<int>(mat1.size());
-    if (n != static_cast<int>(mat2.size()) || n != static_cast<int>(mat1[0].size()))
+Matrix foxMultiplication(const Matrix& mat1, const Matrix& mat2) {
+    if (!isSquared(mat1) || !isSquared(mat2) || mat1.size() != mat2.size())
         throw std::exception();
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j)
+    size_t n = mat1.size();
+    Matrix res(n, std::vector<double>(n, 0));
+    return res;
+}
+
+bool matrixComparison(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1.size() != mat2.size() || mat1[0].size() != mat2[0].size())
+        throw std::exception();
+    bool isequal = true;
+    for (size_t i = 0; i < mat1.size(); ++i) {
+        for (size_t j = 0; j < mat1[0].size(); ++j)
             if (!doubleComparison(mat1[i][j], mat2[i][j]))
                 isequal = false;
     }
@@ -56,4 +63,8 @@ bool matrixComparison(const std::vector<std::vector<double> >& mat1, const std::
 
 bool doubleComparison(const double& a, const double& b) {
     return std::abs(a-b) <= std::numeric_limits<double>::epsilon()*std::max(std::abs(a),std::abs(b));
+}
+
+bool isSquared(const Matrix& mat) {
+    return mat.size() == mat[0].size();
 }

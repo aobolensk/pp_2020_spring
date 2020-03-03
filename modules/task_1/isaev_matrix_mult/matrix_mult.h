@@ -4,10 +4,13 @@
 
 #include <vector>
 
-std::vector<std::vector<double> > getRandomMatrix(const int& n, const int& m);
-std::vector<std::vector<double> > operator*(const std::vector<std::vector<double> >& mat1,
-                                            const std::vector<std::vector<double> >& mat2);
-bool matrixComparison(const std::vector<std::vector<double> >& mat1, const std::vector<std::vector<double> >& mat2);
+using Matrix = std::vector<std::vector<double>>;
+
+Matrix getRandomMatrix(const int& n);
+Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2);
+Matrix foxMultiplication(const Matrix& mat1, const Matrix& mat2);
+bool isSquared(const Matrix& mat);
+bool matrixComparison(const Matrix& mat1, const Matrix& mat2);
 bool doubleComparison(const double& a, const double& b);
 
 #endif // MODULES_TASK_1_ISAEV_MATRIX_MULT_MATRIX_MULT_H_
