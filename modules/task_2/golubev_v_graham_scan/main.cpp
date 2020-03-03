@@ -11,26 +11,45 @@
 
 
 
-TEST(Sequential_graham_scan, Test_graham_scan_with_big_set) {
-  /*int size = 40000000;
+TEST(DISABLED_Sequential_graham_scan, omp_sort) {
+  int size = 100000000;
   std::vector<double> res_omp(size);
   std::vector<double> trash(size);
-  for (int i = 0; i < res_omp.size(); ++i) {
+  /*for (int i = 0; i < res_omp.size(); ++i) {
     res_omp[i] = rand();
-  }
+  }*/
   std::vector<double> res_seq(res_omp);
 
   double t1 = omp_get_wtime();
-  res_omp = mp_sort(res_omp);
+  mp_sort(res_omp.begin(), res_omp.end());
+  merge(res_omp.begin(), res_omp.begin() + size / 2, res_omp.end());
   double t2 = omp_get_wtime();
-  std::cout << t2 - t1 << std::endl;
+  std::cout << "omp_sort " << t2 - t1 << std::endl;
 
   double t3 = omp_get_wtime();
   std::sort(res_seq.begin(), res_seq.end());
   double t4 = omp_get_wtime();
-  std::cout << t4 - t3 << std::endl;
+  std::cout << "std_sort " << t4 - t3 << std::endl;
 
-  EXPECT_EQ(res_omp, trash);*/
+  EXPECT_EQ(res_omp, trash);
+}
+
+TEST(Sequential_graham_scan, Test_merge) {
+  int size = 10000000;
+  std::mt19937 gen;
+  std::vector<double> v(size);
+  for (int i = 0; i < v.size(); ++i) {
+    v[i] = gen() % 1000;
+  }
+  std::vector<double> check(v);
+
+  std::sort(check.begin(), check.end());
+
+  std::sort(v.begin(), v.begin() + size / 2);
+  std::sort(v.begin() + size / 2, v.end());
+  merge(v.begin(), v.begin() + size / 2, v.end());
+
+  EXPECT_EQ(v, check);
 }
 
 int main(int argc, char **argv) {
