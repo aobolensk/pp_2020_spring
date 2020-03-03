@@ -2,19 +2,11 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include <algorithm>
 #include "../../../modules/task_1/gaydaychuk_bitwise_oddeven_sort/bitwise_oddeven_sort.h"
 
 bool checkAscending(std::vector<int> vec) {
-    int n = vec.size();
-    if (n == 0 || n == 1) {
-        return true;
-    }
-    for (int i = 1; i < n; i++) {
-        if (vec[i - 1] > vec[i]) {
-            return false;
-        }
-    }
-    return true;
+    return std::is_sorted(std::begin(vec), std::end(vec));
 }
 
 int getMax(std::vector<int> *vec) {
