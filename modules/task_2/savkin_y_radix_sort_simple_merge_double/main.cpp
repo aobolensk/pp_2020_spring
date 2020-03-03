@@ -1,9 +1,9 @@
 // Copyright 2020 Savkin Yuriy
-#include <gtest/gtest.h>
 #include <omp.h>
-#include "./radix_sort_simple_merge_double.h"
+#include <gtest/gtest.h>
 #include <algorithm>
 #include <vector>
+#include "./radix_sort_simple_merge_double.h"
 
 TEST(Radix_Sort, Simple_Test) {
     double a[] = {1, -2, 0.5, 128.3, 0, 654, -22222222, 88.88, -3777};

@@ -2,8 +2,8 @@
 #ifndef MODULES_TASK_2_SAVKIN_Y_RADIX_SORT_SIMPLE_MERGE_DOUBLE_RADIX_SORT_SIMPLE_MERGE_DOUBLE_H_
 #define MODULES_TASK_2_SAVKIN_Y_RADIX_SORT_SIMPLE_MERGE_DOUBLE_RADIX_SORT_SIMPLE_MERGE_DOUBLE_H_
 
-#include <random>
 #include <omp.h>
+#include <random>
 #include <cstdlib>
 #include <ctime>
 #include <vector>
