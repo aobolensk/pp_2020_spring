@@ -1,7 +1,10 @@
 // Copyright 2020 Andronov Maxim
+
 #include <gtest/gtest.h>
 #include <vector>
 #include <utility>
+#include <functional>
+#include <cmath>
 #include "./monte_carlo_integration.h"
 
 const size_t N = 10000;
