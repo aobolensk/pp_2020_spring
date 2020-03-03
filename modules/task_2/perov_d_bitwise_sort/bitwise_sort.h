@@ -1,6 +1,6 @@
 // Copyright diper1998
-#ifndef MODULES_TASK_1_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
-#define MODULES_TASK_1_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
+#ifndef MODULES_TASK_2_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
+#define MODULES_TASK_2_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
 
 #include <omp.h>
 #include <algorithm>
@@ -34,4 +34,4 @@ void OMPSort(std::vector<double>::iterator first,
 
 bool IsSorted(std::vector<double>* old_vector, std::vector<double>* new_vector);
 
-#endif  // MODULES_TASK_1_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
+#endif  // MODULES_TASK_2_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_

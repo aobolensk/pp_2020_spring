@@ -1,6 +1,6 @@
 // Copyright 2020 diper1998
 // #include "bitwise_sort.h"
-#include "../../../modules/task_1/perov_d_bitwise_sort/bitwise_sort.h"
+#include "../../../modules/task_2/perov_d_bitwise_sort/bitwise_sort.h"
 #include <omp.h>
 #include <algorithm>
 #include <ctime>
