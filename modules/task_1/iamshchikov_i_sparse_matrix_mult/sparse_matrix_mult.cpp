@@ -45,8 +45,8 @@ double scalarMultiplication(const CcsMatrix* transposed_m, const CcsMatrix* m,
                             int i, int j) {
     double res = 0;
     int k = 0;
-    for(k = transposed_m->colIndex[i]; k < transposed_m->colIndex[i+1]; k++)
-        for(int l = m->colIndex[j]; l < m->colIndex[j+1]; l++)
+    for (k = transposed_m->colIndex[i]; k < transposed_m->colIndex[i+1]; k++)
+        for (int l = m->colIndex[j]; l < m->colIndex[j+1]; l++)
             if (transposed_m->row[k] == m->row[l]) {
                 res += transposed_m->value[k] * m->value[l];
                 break;
