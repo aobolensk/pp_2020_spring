@@ -32,7 +32,7 @@ TEST(sparse_matrix_mult_seq, multiply_vector_by_vector) {
 
     CcsMatrix m3(5, 4, 2);
     m3.value = { 6, 3};
-    m3.row = { 1,2 };
+    m3.row = { 1, 2 };
     m3.colIndex = { 0, 0, 0, 2, 2 };
 
     EXPECT_EQ(m3, matrixMultiplicate(&m1, &m2));
@@ -58,7 +58,6 @@ TEST(sparse_matrix_mult_seq, multiply_matrix_by_vector) {
 }
 
 TEST(sparse_matrix_mult_seq, multiply_vector_by_matrix) {
-
     CcsMatrix m1(1, 4, 2);
     m1.value = { 2, 1 };
     m1.row = { 0, 0 };
@@ -95,7 +94,7 @@ TEST(sparse_matrix_mult_seq, multiply_matrix_by_matrix) {
 
     EXPECT_EQ(m3, matrixMultiplicate(&m1, &m2));
 }
-    
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

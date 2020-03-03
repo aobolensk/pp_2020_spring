@@ -14,6 +14,7 @@ struct CcsMatrix {
     CcsMatrix(int _M, int _N, int nz);
 };
 
+bool operator==(const CcsMatrix& m1, const CcsMatrix& m2);
 CcsMatrix transposeMatrix(const CcsMatrix* m);
 double scalarMultiplication(const CcsMatrix* transposed_m, const CcsMatrix* m,
                             int i, int j);

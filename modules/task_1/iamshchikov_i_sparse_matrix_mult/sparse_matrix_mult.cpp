@@ -3,6 +3,7 @@
 #include "../../modules/task_1/iamshchikov_i_sparse_matrix_mult/sparse_matrix_mult.h"
 
 CcsMatrix::CcsMatrix(int _M, int _N, int nz) {
+    if (_M <= 0 || _N <= 0) throw "wrong size";
     M = _M;
     N = _N;
     colIndex.resize(_N + 1);
@@ -11,11 +12,16 @@ CcsMatrix::CcsMatrix(int _M, int _N, int nz) {
     row.resize(nz);
 }
 
+bool operator==(const CcsMatrix& m1, const CcsMatrix& m2) {
+    return m1.value == m2.value && m1.row == m2.row &&
+        m1.colIndex == m2.colIndex && m1.M == m2.M;
+}
+
 CcsMatrix transposeMatrix(const CcsMatrix* m) {
     int i, j, k1, k2, iindex, rindex, row, tmp, s = 0;
     double v;
     CcsMatrix res(m->N, m->M, m->not_zero_number);
-    
+
     for (i = 0; i < m->not_zero_number; i++)
         res.colIndex[m->row[i] + 1]++;
 
@@ -61,9 +67,9 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
     CcsMatrix res(m1->M, m2->N, 0);
     CcsMatrix transposed_m1(transposeMatrix(m1));
 
-    for (int j = 0; j < transposed_m1.N; j++) {
+    for (int j = 0; j < m2->N; j++) {
         colNZ = 0;
-        for (int i = 0; i < m2->N; i++) {
+        for (int i = 0; i < transposed_m1.N; i++) {
             value_tmp = scalarMultiplication(&transposed_m1, m2, i, j);
             if (value_tmp != 0) {
                 res.value.push_back(value_tmp);
