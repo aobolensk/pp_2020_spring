@@ -42,6 +42,7 @@ TEST(OpenMP, Random_Sorted_Multi_Multi) {
   OMPSort(my_vector.begin(), my_vector.end(), 32);
   bool flag = IsSorted(&copy_vector, &my_vector);
   ASSERT_EQ(true, flag);
+}
 
   int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
