@@ -10,7 +10,7 @@ TEST(Sequential, Test_Sorted) {
 
 TEST(Sequential, Test_UnSorted) {
     std::vector<int> vec = {1, 2, 3, 0};
-    ASSERT_EQ(true, checkAscending(vec));
+    ASSERT_EQ(false, checkAscending(vec));
 }
 
 TEST(Sequential, Test_FirstSort) {
