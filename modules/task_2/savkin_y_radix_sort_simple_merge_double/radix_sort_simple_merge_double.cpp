@@ -1,4 +1,5 @@
 // Copyright 2020 Savkin Yuriy
+#include <omp.h>
 #include <cstring>
 #include <cstddef>
 #include <vector>
@@ -6,7 +7,6 @@
 #include <limits>
 #include <utility>
 #include <stack>
-#include "omp.h"
 #include "../../../modules/task_2/savkin_y_radix_sort_simple_merge_double/radix_sort_simple_merge_double.h"
 
 std::vector<double> getRandomVector(size_t size) {

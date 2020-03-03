@@ -1,8 +1,8 @@
 // Copyright 2020 Savkin Yuriy
 #include <gtest/gtest.h>
+#include <omp.h>
 #include <algorithm>
 #include <vector>
-#include "omp.h"
 #include "./radix_sort_simple_merge_double.h"
 
 TEST(Radix_Sort, Simple_Test) {

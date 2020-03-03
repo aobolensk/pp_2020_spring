@@ -3,6 +3,7 @@
 #define MODULES_TASK_2_SAVKIN_Y_RADIX_SORT_SIMPLE_MERGE_DOUBLE_RADIX_SORT_SIMPLE_MERGE_DOUBLE_H_
 
 #include <random>
+#include <omp.h>
 #include <cstdlib>
 #include <ctime>
 #include <vector>
@@ -10,7 +11,6 @@
 #include <limits>
 #include <utility>
 #include <stack>
-#include "omp.h"
 
 std::vector<double> getRandomVector(size_t size);
 std::vector<double> getRandomVector2(size_t size);
