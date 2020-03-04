@@ -54,7 +54,7 @@ CRS_Matrix CRS_Matrix::transpose() {
     size_t size = 0;
     res.rowIndex.push_back(0);
     for (size_t i = 0; i < col; ++i) {
-        for(size_t j = 0; j < index[i].size(); ++j) {
+        for (size_t j = 0; j < index[i].size(); ++j) {
             res.val.push_back(values[i][j]);
             res.colIndex.push_back(index[i][j]);
         }

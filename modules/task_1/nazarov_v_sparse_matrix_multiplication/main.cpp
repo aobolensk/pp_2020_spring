@@ -62,7 +62,7 @@ TEST(Sparce_Matrix_Multiplication, Test_Matrix_Multiplication) {
         { cpx(4, 5), cpx(0, 0), cpx(0, 0), cpx(-12, 40) },
         { cpx(59, 125), cpx(0, 0), cpx(0, 0), cpx(0, 0) },
         { cpx(262, 49), cpx(0, 0), cpx(12, 9), cpx(0, 0) },
-    }); 
+    });
     // EXPECT_EQ(multRes, resMatrix);
 }
 
