@@ -26,8 +26,7 @@ double f5(std::vector<double> x) {
 
 TEST(multi_integration_simpson, test1_n_is_negative) {
   double a = 0.0, b = 3.0;
-  if (rank == 0)
-    ASSERT_ANY_THROW(getIntegralSimpsonSequentional(f1, { a }, { b }, -1000));
+  ASSERT_ANY_THROW(getIntegralSimpsonSequentional(f1, { a }, { b }, -1000));
 }
 
 TEST(multi_integration_simpson, test2_multiplicity_is_1) {
@@ -40,7 +39,6 @@ TEST(multi_integration_simpson, test3_multiplicity_is_2) {
   std::vector<double>a = { 0.0, 2.5 };
   std::vector<double>b = { 1.534, 3.12 };
   double res = getIntegralSimpsonSequentional(f2, a, b, 1000);
-  17.6554426708896
   ASSERT_NEAR(res, 17.65544267, 1e-5);
 }
 
