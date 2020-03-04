@@ -1,7 +1,6 @@
 // Copyright 2020 Maximova Irina
 #include "../../../modules/task_1/maximova_i_dijkstra_algorithm/dijkstra_algorithm.h"
 #include <limits.h>
-#include <omp.h>
 #include <ctime>
 #include <random>
 #include <stdexcept>
