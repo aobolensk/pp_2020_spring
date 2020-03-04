@@ -40,12 +40,26 @@ Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2) {
     return res;
 }
 
-Matrix foxMultiplication(const Matrix& mat1, const Matrix& mat2) {
-    if (!isSquared(mat1) || !isSquared(mat2) || mat1.size() != mat2.size())
+Matrix blockMultiplication(const Matrix& mat1, const Matrix& mat2) {
+    if (mat1[0].size() != mat2.size())
         throw std::exception();
-
     size_t n = mat1.size();
+    size_t q = n / std::sqrt(n);
+    size_t block_size = n / q;
     Matrix res(n, std::vector<double>(n, 0));
+
+    for (size_t jj = 0; jj < n; jj+=block_size) {
+        for (size_t kk = 0; kk < n; kk+=block_size) {
+            for (size_t i = 0; i < n; ++i) {
+                for (size_t j = jj; j < std::min(jj+block_size, n); ++j) {
+                    for (size_t k = kk; k < std::min(kk+block_size, n); ++k) {
+                        res[i][j] += mat1[i][k] * mat2[k][j];
+                    }
+                }
+            }
+        }
+    }
+
     return res;
 }
 

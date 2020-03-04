@@ -29,7 +29,7 @@ TEST(Matrix_Mult, Naive_Multiplication_Is_Correct_Size_3x3) {
     ASSERT_EQ(matrixComparison(res, answer), true);
 }
 
-TEST(Matrix_Mult, Fox_Multiplication_Is_Correct_Size_3x3) {
+TEST(Matrix_Mult, Block_Multiplication_Is_Correct_Size_3x3) {
     Matrix mat1 = {{1.5, 1.5, 1.5},
                    {2.7, 2.7, 2.7},
                    {3.6, 3.6, 3.6}};
@@ -39,13 +39,13 @@ TEST(Matrix_Mult, Fox_Multiplication_Is_Correct_Size_3x3) {
     Matrix answer = {{28.2, 28.2, 28.2},
                     {50.76, 50.76, 50.76},
                     {67.68, 67.68, 67.68}};
-    auto res = foxMultiplication(mat1, mat2);
+    auto res = blockMultiplication(mat1, mat2);
 
     ASSERT_EQ(matrixComparison(res, answer), true);
 }
 
-TEST(Matrix_Mult, Fox_And_Naive_Have_The_Same_Answer) {
+TEST(Matrix_Mult, Block_And_Naive_Have_The_Same_Answer) {
     auto mat1 = getRandomMatrix(5);
     auto mat2 = getRandomMatrix(5);
-    ASSERT_EQ(matrixComparison(naiveMultiplication(mat1, mat2), foxMultiplication(mat1, mat2)), true);
+    ASSERT_EQ(matrixComparison(naiveMultiplication(mat1, mat2), blockMultiplication(mat1, mat2)), true);
 }

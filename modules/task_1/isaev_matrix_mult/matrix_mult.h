@@ -8,7 +8,7 @@ using Matrix = std::vector<std::vector<double>>;
 
 Matrix getRandomMatrix(const int& n);
 Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2);
-Matrix foxMultiplication(const Matrix& mat1, const Matrix& mat2);
+Matrix blockMultiplication(const Matrix& mat1, const Matrix& mat2);
 bool isSquared(const Matrix& mat);
 bool matrixComparison(const Matrix& mat1, const Matrix& mat2);
 bool doubleComparison(const double& a, const double& b);
