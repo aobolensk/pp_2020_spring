@@ -7,4 +7,4 @@
 double getIntegralSimpsonSequentional(double(*f)(std::vector<double>), const std::vector<double>& a,
   const std::vector<double>& b, int n);
 
-#endif  // MODULES_TASK_3_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
+#endif  // MODULES_TASK_1_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_

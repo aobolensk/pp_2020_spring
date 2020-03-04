@@ -28,6 +28,5 @@ double getIntegralSimpsonSequentional(double(*f)(std::vector<double>), const std
     res *= b[i] - a[i];
   }
   res /= 3.0 * n;
-
   return res;
 }
