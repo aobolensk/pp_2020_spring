@@ -21,7 +21,7 @@ TEST(DISABLED_Sequential_graham_scan, omp_sort) {
   std::vector<double> res_seq(res_omp);
 
   double t1 = omp_get_wtime();
-  mp_sort(res_omp.begin(), res_omp.end());
+  mp_sort(res_omp.begin(), res_omp.end(), 2);
   merge(res_omp.begin(), res_omp.begin() + size / 2, res_omp.end());
   double t2 = omp_get_wtime();
   std::cout << "omp_sort " << t2 - t1 << std::endl;
@@ -35,7 +35,7 @@ TEST(DISABLED_Sequential_graham_scan, omp_sort) {
 }
 
 TEST(Sequential_graham_scan, Test_merge) {
-  int size = 10000000;
+  int size = 11111114;
   std::mt19937 gen;
   std::vector<double> v(size);
   for (int i = 0; i < v.size(); ++i) {
@@ -43,11 +43,15 @@ TEST(Sequential_graham_scan, Test_merge) {
   }
   std::vector<double> check(v);
 
+  double t1 = omp_get_wtime();
   std::sort(check.begin(), check.end());
+  double t2 = omp_get_wtime();
+  std::cout << "std_sort " << t2 - t1 << std::endl;
 
-  std::sort(v.begin(), v.begin() + size / 2);
-  std::sort(v.begin() + size / 2, v.end());
-  merge(v.begin(), v.begin() + size / 2, v.end());
+  t1 = omp_get_wtime();
+  mp_sort(v.begin(), v.end(), 3);
+  t2 = omp_get_wtime();
+  std::cout << "omp_sort " << t2 - t1 << std::endl;
 
   EXPECT_EQ(v, check);
 }

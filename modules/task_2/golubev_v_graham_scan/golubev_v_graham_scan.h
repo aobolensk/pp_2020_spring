@@ -6,7 +6,7 @@
 #include <algorithm>
 
 
-void mp_sort(std::vector<double>::iterator first, std::vector<double>::iterator last);
+void mp_sort(std::vector<double>::iterator first, std::vector<double>::iterator last, int num_threads);
 void merge(std::vector<double>::iterator left, std::vector<double>::iterator mid, std::vector<double>::iterator right);
 
 #endif  // MODULES_TASK_2_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_

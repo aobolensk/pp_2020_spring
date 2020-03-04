@@ -8,29 +8,45 @@
 #include <utility>
 #include "../../../modules/task_2/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
-void mp_sort(std::vector<double>::iterator begin, std::vector<double>::iterator end) {
-  int num_threads = 0;
-#pragma omp parallel num_threads(2)
+void mp_sort(std::vector<double>::iterator begin, std::vector<double>::iterator end, int num_threads) {
+  int st = std::log2(num_threads);
+  num_threads = std::pow(2, st);
+#pragma omp parallel num_threads(num_threads)
   {
     int n_thread = omp_get_thread_num();
-    num_threads = omp_get_num_threads();
     int step = (end - begin) / num_threads;
-
 
     auto left = begin + n_thread * step;
     auto right = left + step;
 
-    if (n_thread == num_threads - 1) {
-      std::sort(left, right + (end - begin) % num_threads);
-    } else {
-      std::sort(left, right);
+    std::sort(left, right);
+
+
+    int log = std::log2(num_threads);
+    int h = 2;
+    int sorted_size;
+
+    while (log != 0) {
+      sorted_size = step;
+      step += step;
+
+#pragma omp barrier
+
+      if (n_thread < num_threads / h) {
+        merge(begin + step * n_thread,
+          begin + n_thread * step + sorted_size,
+          begin + n_thread * step + step);
+      }
+      --log;
+      h *= 2;
     }
   }
-  /*num_threads = std::ceil(static_cast<double>(num_threads) / 2.0);
-#pragma omp parallel num_threads(num_threads)
-  {
 
-  }*/
+  int ostatok = (end - begin) % num_threads;
+  if (ostatok != 0) {
+    std::sort(begin + (end - begin) / num_threads * num_threads, end);
+    merge(begin, begin + (end - begin) / num_threads * num_threads, end);
+  }
 }
 
 void merge(std::vector<double>::iterator left, std::vector<double>::iterator mid, std::vector<double>::iterator right) {
