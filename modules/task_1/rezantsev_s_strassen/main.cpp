@@ -19,9 +19,9 @@ TEST(Strassen, correct_size) {
   int n = 64;
   int m = 50;
   int l = 31;
-  ASSERT_TRUE(checkSize(n), 64);
-  ASSERT_TRUE(checkSize(m), 64);
-  ASSERT_TRUE(checkSize(l), 32);
+  ASSERT_EQ(checkSize(n), 64);
+  ASSERT_EQ(checkSize(m), 64);
+  ASSERT_EQ(checkSize(l), 32);
 }
 
 TEST(Strassen, correct_resize) {

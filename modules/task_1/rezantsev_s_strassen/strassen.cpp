@@ -10,7 +10,7 @@ double* sumMatrix(double* a, double* b, int n) {
 
 int checkSize(int n) {
   int m = 2;
-  while (n >= m) m = m * 2;
+  while (n > m) m = m * 2;
   return m;
 }
 
