@@ -108,6 +108,15 @@ double* strassen(double* a, double* b, int n) {
   double* p6 = strassen(subtMatrix(a21, a11, n), sumMatrix(b11, b12, n), n);
   double* p7 = strassen(subtMatrix(a12, a22, n), sumMatrix(b21, b22, n), n);
 
+  delete[] a11;
+  delete[] a22;
+  delete[] a21;
+  delete[] a12;
+  delete[] b11;
+  delete[] b22;
+  delete[] b21;
+  delete[] b12;
+
   double* c11 = sumMatrix(sumMatrix(p1, p4, n), subtMatrix(p7, p5, n), n);
   double* c12 = sumMatrix(p3, p5, n);
   double* c21 = sumMatrix(p2, p4, n);

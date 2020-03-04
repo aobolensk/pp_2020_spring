@@ -13,6 +13,10 @@ TEST(Strassen, correct_sum) {
   }
   res = sumMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] res;
 }
 
 TEST(Strassen, correct_size) {
@@ -33,6 +37,7 @@ TEST(Strassen, correct_resize) {
   }
   a = resizeMatrix(a, n);
   ASSERT_TRUE(isEqMatrix(a, b, n));
+  delete[] a;
 }
 
 TEST(Strassen, correct_subt) {
@@ -46,6 +51,10 @@ TEST(Strassen, correct_subt) {
   }
   res = subtMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] res;
 }
 
 TEST(Strassen, correct_mult) {
@@ -62,6 +71,10 @@ TEST(Strassen, correct_mult) {
   c[3] = 50;
   res = multMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] res;
 }
 
 TEST(Strassen, correct_split) {
@@ -84,6 +97,11 @@ TEST(Strassen, correct_split) {
   ASSERT_TRUE(isEqMatrix(b12, a12, m));
   ASSERT_TRUE(isEqMatrix(b22, a22, m));
   ASSERT_TRUE(isEqMatrix(b21, a21, m));
+  delete[] a;
+  delete[] a11;
+  delete[] a22;
+  delete[] a21;
+  delete[] a12;
 }
 
 TEST(Strassen, correct_collect) {
@@ -100,6 +118,8 @@ TEST(Strassen, correct_collect) {
   }
   b = collectMatrix(b11, b22, b12, b21, m);
   ASSERT_TRUE(isEqMatrix(b, a, n));
+  delete[] a;
+  delete[] b;
 }
 
 TEST(Strassen, correct_strassen_4x4) {
@@ -115,6 +135,10 @@ TEST(Strassen, correct_strassen_4x4) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 TEST(Strassen, correct_strassen_8x8) {
@@ -130,6 +154,10 @@ TEST(Strassen, correct_strassen_8x8) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 TEST(Strassen, correct_strassen_16x16) {
@@ -145,6 +173,10 @@ TEST(Strassen, correct_strassen_16x16) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 TEST(Strassen, correct_strassen_16x16_1) {
@@ -160,6 +192,10 @@ TEST(Strassen, correct_strassen_16x16_1) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 TEST(Strassen, correct_strassen_16x16_2) {
@@ -175,6 +211,10 @@ TEST(Strassen, correct_strassen_16x16_2) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 TEST(Strassen, correct_strassen_10x10) {
@@ -193,6 +233,10 @@ TEST(Strassen, correct_strassen_10x10) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
+  delete[] a;
+  delete[] b;
+  delete[] c;
+  delete[] d;
 }
 
 int main(int argc, char** argv) {
