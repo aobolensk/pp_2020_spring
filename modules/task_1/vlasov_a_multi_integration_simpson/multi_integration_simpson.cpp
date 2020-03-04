@@ -11,7 +11,7 @@ double getIntegralSimpsonSequentional(double(*f)(std::vector<double>), const std
   int multiplicity = a.size();
   std::vector<double> h(multiplicity);
   for (int i = 0; i < multiplicity; i++) {
-    h[i] = (b[i] - a[i]) / static_cast<double>(n);
+    h[i] = (b[i] - a[i]) / n;
   }
   double s1 = 0.0, s2 = 0.0;
   std::vector <double> part = a;
