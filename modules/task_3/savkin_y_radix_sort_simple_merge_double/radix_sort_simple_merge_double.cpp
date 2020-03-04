@@ -97,13 +97,13 @@ void radixSortForDouble(double* arr, size_t count, size_t num_threads) {
     };
 
     class MergeFunctor: public tbb::task {
-    private:
+     private:
         double** arr;
         double** out;
         size_t* parts_sizes;
         size_t parts_count;
 
-    public:
+     public:
         MergeFunctor(double** arr_, double** out_, size_t* parts_sizes_, size_t parts_count_) :
             tbb::task(), arr(arr_), out(out_), parts_sizes(parts_sizes_), parts_count(parts_count_) {
         }
