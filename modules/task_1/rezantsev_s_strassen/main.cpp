@@ -15,6 +15,26 @@ TEST(Strassen, correct_sum) {
   ASSERT_TRUE(isEqMatrix(c, res, n));
 }
 
+TEST(Strassen, correct_size) {
+  int n = 64;
+  int m = 50;
+  int l = 31;
+  ASSERT_TRUE(checkSize(n), 64);
+  ASSERT_TRUE(checkSize(m), 64);
+  ASSERT_TRUE(checkSize(l), 32);
+}
+
+TEST(Strassen, correct_resize) {
+  int n = 3;
+  double *a = new double[n * n];
+  double b[16] = {0, 1, 2, 0, 3, 4, 5, 0, 6, 7, 8, 0, 0, 0, 0, 0};
+  for (int i = 0; i < n * n; i++) {
+    a[i] = i;
+  }
+  a = resizeMatrix(a, n);
+  ASSERT_TRUE(isEqMatrix(a, b, n));
+}
+
 TEST(Strassen, correct_subt) {
   int n = 2;
   double *a = new double[n * n], *b = new double[n * n], *c = new double[n * n],
@@ -60,7 +80,6 @@ TEST(Strassen, correct_split) {
     a[i] = i;
   }
   splitMatrix(a, a11, a22, a12, a21, n);
-  
   ASSERT_TRUE(isEqMatrix(b11, a11, m));
   ASSERT_TRUE(isEqMatrix(b12, a12, m));
   ASSERT_TRUE(isEqMatrix(b22, a22, m));
@@ -153,6 +172,24 @@ TEST(Strassen, correct_strassen_16x16_2) {
     a[i] = i * n;
     b[i] = n * n - i;
   }
+  c = multMatrix(a, b, n);
+  d = strassen(a, b, n);
+  ASSERT_TRUE(isEqMatrix(c, d, n));
+}
+
+TEST(Strassen, correct_strassen_10x10) {
+  int n = 10;
+  double *a = new double[n * n];
+  double *b = new double[n * n];
+  double *c;
+  double *d;
+  for (int i = 0; i < n * n; i++) {
+    a[i] = i * n;
+    b[i] = n * n - i;
+  }
+  a = resizeMatrix(a, n);
+  b = resizeMatrix(b, n);
+  n = checkSize(n);
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));

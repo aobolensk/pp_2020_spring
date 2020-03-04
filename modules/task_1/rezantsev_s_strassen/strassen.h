@@ -8,6 +8,8 @@ void splitMatrix(double* a, double* a11, double* a22, double* a12, double* a21,
 double* collectMatrix(double* a11, double* a22, double* a12, double* a21,
                       int m);
 double* strassen(double* a, double* b, int n);
+int checkSize(int n);
+double* resizeMatrix(double* a, int n);
 double* sumMatrix(double* a, double* b, int n);
 double* subtMatrix(double* a, double* b, int n);
 double* multMatrix(double* a, double* b, int n);

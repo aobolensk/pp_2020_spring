@@ -8,6 +8,24 @@ double* sumMatrix(double* a, double* b, int n) {
   return res;
 }
 
+int checkSize(int n) {
+  int m = 2;
+  while (n >= m) m = m * 2;
+  return m;
+}
+
+double* resizeMatrix(double* a, int n) {
+  int m = checkSize(n);
+  double* b = new double[m * m];
+  for (int i = 0; i < m * m; i++) b[i] = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      b[i * m + j] = a[i * n + j];
+    }
+  }
+  return b;
+}
+
 double* subtMatrix(double* a, double* b, int n) {
   double* res = new double[n * n];
   for (int i = 0; i < n * n; i++) res[i] = a[i] - b[i];
