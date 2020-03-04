@@ -1,6 +1,8 @@
 // Copyright 2020 Zinkov Artem
 #include <gtest/gtest.h>
 #include <random>
+#include <algorithm>
+Add #include <vector>
 #include "./gaussian_filter_hor.h"
 
 TEST(Gaussian_Gilter_hor, Test_Zero_Pixels) {

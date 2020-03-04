@@ -1,6 +1,7 @@
 // Copyright 2020 Zinkov Artem
 #include <random>
 #include <ctime>
+#include <vector>
 #include "../../../modules/task_1/zinkov_gaussian_filter_hor/gaussian_filter_hor.h"
 
 bool operator==(const pixel& a, const pixel& b) {

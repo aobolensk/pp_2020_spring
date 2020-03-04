@@ -2,9 +2,10 @@
 #ifndef MODULES_TASK_1_ZINKOV_GAUSSIAN_FILTER_HOR_GAUSSIAN_FILTER_HOR_H_
 #define MODULES_TASK_1_ZINKOV_GAUSSIAN_FILTER_HOR_GAUSSIAN_FILTER_HOR_H_
 
+#include <vector>
+
 struct pixel {
   unsigned char r, g, b;
-
 };
 bool operator==(const pixel& a, const pixel& b);
 
