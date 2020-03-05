@@ -305,7 +305,7 @@ class BitWiseTBB {
  public:
   BitWiseTBB() {}
 
-  void operator()(const blocked_range<std::vector<double>::iterator>& r) const {
+  void operator()(const tbb::blocked_range<std::vector<double>::iterator>& r) const {
     std::vector<double>::iterator begin = r.begin(), end = r.end();
 
     BitwiseSort(begin, end);
@@ -318,7 +318,7 @@ class MergeTBB {
  public:
   MergeTBB() {}
 
-  void operator()(const blocked_range<std::vector<double>::iterator>& r) const {
+  void operator()(const tbb::blocked_range<std::vector<double>::iterator>& r) const {
     std::vector<double>::iterator begin = r.begin(), end = r.end();
     std::vector<double>::iterator middle = begin + (end - begin) / 2;
 
@@ -332,7 +332,7 @@ void TBBSort(std::vector<double>::iterator first,
 
   tbb::task_scheduler_init init(num_th);
 
-  tbb::parallel_for(blocked_range<std::vector<double>::iterator>(
+  tbb::parallel_for(tbb::blocked_range<std::vector<double>::iterator>(
                    first, end, (first - end) / num_th),
                BitWiseTBB());
 
@@ -340,7 +340,7 @@ void TBBSort(std::vector<double>::iterator first,
 
   while (i != 0) {
     tbb::parallel_for(
-        blocked_range<std::vector<double>::iterator>(first, end, piece),
+        tbb::blocked_range<std::vector<double>::iterator>(first, end, piece),
         MergeTBB());
     piece *= 2;
     i--;
