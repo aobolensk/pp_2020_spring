@@ -130,7 +130,7 @@ std::vector<std::vector<cpx>> naiveMultiplication(const std::vector<std::vector<
 }
 
 std::vector<std::vector<cpx>> getRandomSparseMatrix(const size_t& col, const size_t& row, const double& percent) {
-    if ((percent > 1) || (percent < 0) || (col < 0) || (row < 0))
+    if ((percent > 1) || (percent < 0))
         throw std::runtime_error("Invalid parameters");
     std::random_device rd;
     std::mt19937 gen(rd());
