@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <iostream>
-#include "./matrix_mult.h"
+#include "../../../modules/task_1/isaev_matrix_mult/matrix_mult.h"
 
 TEST(Matrix_Mult, Matrix_Gen_Throws_On_Negative_Size) {
     ASSERT_ANY_THROW(getRandomMatrix(-1));

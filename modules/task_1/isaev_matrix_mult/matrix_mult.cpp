@@ -2,8 +2,11 @@
 
 #include <random>
 #include <iostream>
+#include <limits>
+#include <algorithm>
 #include <exception>
-#include "matrix_mult.h"
+#include <vector>
+#include "../../../modules/task_1/isaev_matrix_mult/matrix_mult.h"
 
 Matrix getRandomMatrix(const int& n) {
     if (n <= 0) {
@@ -12,7 +15,7 @@ Matrix getRandomMatrix(const int& n) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0, 100);
-    
+
     Matrix res(n, std::vector<double>(n));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -25,7 +28,7 @@ Matrix getRandomMatrix(const int& n) {
 Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2) {
     if (mat1[0].size() != mat2.size())
         throw std::exception();
-    
+
     size_t n = mat1.size();
     size_t m = mat2[0].size();
     Matrix res(n, std::vector<double>(n, 0));
@@ -73,10 +76,10 @@ bool matrixComparison(const Matrix& mat1, const Matrix& mat2) {
                 isequal = false;
     }
     return isequal;
-};
+}
 
 bool doubleComparison(const double& a, const double& b) {
-    return std::abs(a-b) <= std::numeric_limits<double>::epsilon()*std::max(std::abs(a),std::abs(b));
+    return std::abs(a-b) <= std::numeric_limits<double>::epsilon()*std::max(std::abs(a), std::abs(b));
 }
 
 bool isSquared(const Matrix& mat) {
