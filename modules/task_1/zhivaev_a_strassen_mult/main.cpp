@@ -4,20 +4,91 @@
 
 #include <array>
 #include <vector>
+#include <climits>
 #include <stdexcept>
 
 #include "./strassen_mult.h"
 
-TEST(Sequential, Assert_true) { ASSERT_TRUE(true); }
-
-TEST(Sequential, Matrix_64x64) {
-  const size_t kSize = 64;
+TEST(Sequential, Matrix_256x256) {
+  const unsigned int kSize = 256;
   std::vector<double> a(kSize * kSize);
   std::vector<double> b(kSize * kSize);
   std::vector<double> result(kSize * kSize);
   std::vector<double> resultExpected(kSize * kSize);
 
-  for (size_t i = 0; i < kSize * kSize; i++) {
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
+    a[i] = i + 1;
+    b[i] = kSize * kSize - i;
+  }
+  multSeq(kSize, a.data(), b.data(), resultExpected.data());
+
+  strassenMultSeq(kSize, a.data(), b.data(), result.data());
+
+  ASSERT_EQ(resultExpected, result);
+}
+
+TEST(Sequential, Matrix_128x128) {
+  const unsigned int kSize = 128;
+  std::vector<double> a(kSize * kSize);
+  std::vector<double> b(kSize * kSize);
+  std::vector<double> result(kSize * kSize);
+  std::vector<double> resultExpected(kSize * kSize);
+
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
+    a[i] = i + 1;
+    b[i] = kSize * kSize - i;
+  }
+  multSeq(kSize, a.data(), b.data(), resultExpected.data());
+
+  strassenMultSeq(kSize, a.data(), b.data(), result.data());
+
+  ASSERT_EQ(resultExpected, result);
+}
+
+TEST(Sequential, Matrix_64x64) {
+  const unsigned int kSize = 64;
+  std::vector<double> a(kSize * kSize);
+  std::vector<double> b(kSize * kSize);
+  std::vector<double> result(kSize * kSize);
+  std::vector<double> resultExpected(kSize * kSize);
+
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
+    a[i] = i + 1;
+    b[i] = kSize * kSize - i;
+  }
+  multSeq(kSize, a.data(), b.data(), resultExpected.data());
+
+  strassenMultSeq(kSize, a.data(), b.data(), result.data());
+
+  ASSERT_EQ(resultExpected, result);
+}
+
+TEST(Sequential, Matrix_32x32) {
+  const unsigned int kSize = 32;
+  std::vector<double> a(kSize * kSize);
+  std::vector<double> b(kSize * kSize);
+  std::vector<double> result(kSize * kSize);
+  std::vector<double> resultExpected(kSize * kSize);
+
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
+    a[i] = i + 1;
+    b[i] = kSize * kSize - i;
+  }
+  multSeq(kSize, a.data(), b.data(), resultExpected.data());
+
+  strassenMultSeq(kSize, a.data(), b.data(), result.data());
+
+  ASSERT_EQ(resultExpected, result);
+}
+
+TEST(Sequential, Matrix_8x8) {
+  const unsigned int kSize = 8;
+  std::vector<double> a(kSize * kSize);
+  std::vector<double> b(kSize * kSize);
+  std::vector<double> result(kSize * kSize);
+  std::vector<double> resultExpected(kSize * kSize);
+
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
     a[i] = i + 1;
     b[i] = kSize * kSize - i;
   }
@@ -29,7 +100,7 @@ TEST(Sequential, Matrix_64x64) {
 }
 
 TEST(Sequential, Throw_if_size_is_not_power_of_2) {
-  const size_t kSize = 63;
+  const unsigned int kSize = 63;
   std::vector<double> a(kSize * kSize);
   std::vector<double> b(kSize * kSize);
   std::vector<double> result(kSize * kSize);
@@ -39,15 +110,15 @@ TEST(Sequential, Throw_if_size_is_not_power_of_2) {
 }
 
 TEST(Helper_Functions, Power_of_2) {
-  size_t number = 1;
-  for (int i = 0; i < sizeof(size_t) * CHAR_BIT; i++) {
+  unsigned int number = 1;
+  for (int i = 0; i < 16; i++) {
     ASSERT_EQ(i, powerOf2(number));
     number *= 2;
   }
 }
 
 TEST(Helper_Functions, Split_matrix) {
-  const size_t kSize = 8;
+  const unsigned int kSize = 8;
   std::vector<double> a(kSize * kSize);
   std::vector<double> a11(kSize * kSize / 4);
   std::vector<double> a12(kSize * kSize / 4);
@@ -58,7 +129,7 @@ TEST(Helper_Functions, Split_matrix) {
   std::vector<double> a21Expected(kSize * kSize / 4);
   std::vector<double> a22Expected(kSize * kSize / 4);
 
-  for (size_t i = 0; i < kSize * kSize; i++) {
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
     a[i] = i + 1;
   }
   a11Expected = {1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28};
@@ -75,7 +146,7 @@ TEST(Helper_Functions, Split_matrix) {
 }
 
 TEST(Helper_Functions, Assemble_matrix) {
-  const size_t kSize = 8;
+  const unsigned int kSize = 8;
   std::vector<double> a(kSize * kSize);
   std::vector<double> a11(kSize * kSize / 4);
   std::vector<double> a12(kSize * kSize / 4);
@@ -83,7 +154,7 @@ TEST(Helper_Functions, Assemble_matrix) {
   std::vector<double> a22(kSize * kSize / 4);
   std::vector<double> aExpected(kSize * kSize);
 
-  for (size_t i = 0; i < kSize * kSize; i++) {
+  for (unsigned int i = 0; i < kSize * kSize; i++) {
     aExpected[i] = i + 1;
   }
   a11 = {1, 2, 3, 4, 9, 10, 11, 12, 17, 18, 19, 20, 25, 26, 27, 28};
@@ -93,7 +164,7 @@ TEST(Helper_Functions, Assemble_matrix) {
 
   assembleMatrix(kSize, a.data(), a11.data(), a12.data(), a21.data(),
                  a22.data());
-  
+
   ASSERT_EQ(aExpected, a);
 }
 
