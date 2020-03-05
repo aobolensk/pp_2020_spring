@@ -6,6 +6,9 @@
 #include <ctime>
 #include <random>
 #include <vector>
+#include "tbb/blocked_range.h"
+#include "tbb/parallel_for.h"
+#include "tbb/task_scheduler_init.h"
 
 std::vector<double> GetRandomVector(int size) {
   std::mt19937 gen;
@@ -327,16 +330,16 @@ void TBBSort(std::vector<double>::iterator first,
              std::vector<double>::iterator end, int num_th) {
   int i = log(num_th) / log(2);
 
-  task_scheduler_init init(num_th);
+  tbb::task_scheduler_init init(num_th);
 
-  parallel_for(blocked_range<std::vector<double>::iterator>(
+  tbb::parallel_for(blocked_range<std::vector<double>::iterator>(
                    first, end, (first - end) / num_th),
                BitWiseTBB());
 
   int piece = 2 * num_th;
 
   while (i != 0) {
-    parallel_for(
+    tbb::parallel_for(
         blocked_range<std::vector<double>::iterator>(first, end, piece),
         MergeTBB());
     piece *= 2;
