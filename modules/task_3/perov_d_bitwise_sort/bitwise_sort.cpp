@@ -248,17 +248,17 @@ void MergeSort(std::vector<double>::iterator first,
 //     int task_size = (end - first) / num_th;
 //     int task_size_old = task_size;
 //     omp_set_num_threads(num_th);
-// 
+
 //     int iam;
 //     int i = log(num_th) / log(2);
 //     int h = 2;
 // #pragma omp parallel private(iam)
 //     {
 //       iam = omp_get_thread_num();
-// 
+
 //       BitwiseSort(first + iam * task_size, first + (iam + 1) * task_size);
 // #pragma omp barrier
-// 
+ 
 //       while (i != 0) {
 // #pragma omp barrier
 //         if (iam == 0) {
@@ -266,13 +266,13 @@ void MergeSort(std::vector<double>::iterator first,
 //           task_size += task_size;
 //         }
 // #pragma omp barrier
-// 
+
 //         if (iam < num_th / h) {
 //           MergeSort(first + iam * task_size,
 //                     first + iam * task_size + task_size_old,
 //                     first + iam * task_size + task_size);
 //         }
-// 
+ 
 // #pragma omp barrier
 //         if (iam == 0) {
 //           --i;
