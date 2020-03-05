@@ -258,7 +258,7 @@ void MergeSort(std::vector<double>::iterator first,
 
 //       BitwiseSort(first + iam * task_size, first + (iam + 1) * task_size);
 // #pragma omp barrier
- 
+
 //       while (i != 0) {
 // #pragma omp barrier
 //         if (iam == 0) {
@@ -272,7 +272,7 @@ void MergeSort(std::vector<double>::iterator first,
 //                     first + iam * task_size + task_size_old,
 //                     first + iam * task_size + task_size);
 //         }
- 
+
 // #pragma omp barrier
 //         if (iam == 0) {
 //           --i;
