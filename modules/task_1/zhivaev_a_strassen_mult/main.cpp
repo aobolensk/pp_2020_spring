@@ -110,11 +110,21 @@ TEST(Sequential, Throw_if_size_is_not_power_of_2) {
 }
 
 TEST(Helper_Functions, Power_of_2) {
-  unsigned int number = 1;
-  for (int i = 0; i < 16; i++) {
-    ASSERT_EQ(i, powerOf2(number));
-    number *= 2;
-  }
+  ASSERT_EQ(1, powerOf2(2));
+  ASSERT_EQ(2, powerOf2(4));
+  ASSERT_EQ(3, powerOf2(8));
+  ASSERT_EQ(4, powerOf2(16));
+  ASSERT_EQ(5, powerOf2(32));
+  ASSERT_EQ(6, powerOf2(64));
+  ASSERT_EQ(7, powerOf2(128));
+  ASSERT_EQ(8, powerOf2(256));
+  ASSERT_EQ(9, powerOf2(512));
+  ASSERT_EQ(10, powerOf2(1024));
+  ASSERT_EQ(11, powerOf2(2048));
+  ASSERT_EQ(12, powerOf2(4096));
+  ASSERT_EQ(13, powerOf2(8192));
+  ASSERT_EQ(14, powerOf2(16384));
+  ASSERT_EQ(15, powerOf2(32768));
 }
 
 TEST(Helper_Functions, Split_matrix) {
