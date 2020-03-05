@@ -30,11 +30,11 @@ void MergeSort(std::vector<double>::iterator first,
                std::vector<double>::iterator middle,
                std::vector<double>::iterator end);
 
-void MPSort(std::vector<double>::iterator first,
-            std::vector<double>::iterator end, int num_th);
+// void MPSort(std::vector<double>::iterator first,
+//            std::vector<double>::iterator end, int num_th);
 
-void OMPSort(std::vector<double>::iterator first,
-             std::vector<double>::iterator end, int num_th);
+// void OMPSort(std::vector<double>::iterator first,
+//             std::vector<double>::iterator end, int num_th);
 
 void TBBSort(std::vector<double>::iterator first,
              std::vector<double>::iterator end, int num_th);
