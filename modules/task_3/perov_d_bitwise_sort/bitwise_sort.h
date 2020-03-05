@@ -12,7 +12,6 @@
 #include "tbb/blocked_range.h"
 #include "tbb/parallel_for.h"
 #include "tbb/task_scheduler_init.h"
-using namespace tbb;
 
 std::vector<double> GetRandomVector(int size);
 void BitwiseSort(std::vector<double>::iterator first,
