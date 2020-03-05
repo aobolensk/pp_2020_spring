@@ -31,4 +31,8 @@ class CRS_Matrix {
     void print();
 };
 
+std::vector<std::vector<cpx>> naiveMultiplication(const std::vector<std::vector<cpx>>& matrix1,
+    const std::vector<std::vector<cpx>>& matrix2);
+std::vector<std::vector<cpx>> getRandomSparseMatrix(const size_t& col, const size_t& row, const double& percent);
+
 #endif  // MODULES_TASK_1_NAZAROV_V_SPARSE_MATRIX_MULTIPLICATION_SPARSE_MATRIX_MULTIPLICATION_H_

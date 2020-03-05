@@ -56,17 +56,29 @@ TEST(Sparce_Matrix_Multiplication, Test_Matrix_Multiplication) {
         { cpx(0, 0), cpx(0, 0), cpx(12, 9), cpx(0, 0) },
     });
     CRS_Matrix trans = matrix2.transpose();
-    // CRS_Matrix multRes = matrix1 * matrix2;
+    CRS_Matrix multRes = matrix1 * trans;
     CRS_Matrix resMatrix({
-        { cpx(0, 0), cpx(0, 0), cpx(-45, 135), cpx(-36, 0) },
-        { cpx(4, 5), cpx(0, 0), cpx(0, 0), cpx(-12, 40) },
+        { cpx(0, 0), cpx(0, 0), cpx(-45, 135), cpx(-36, 0)},
+        { cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(-12, 40) },
         { cpx(59, 125), cpx(0, 0), cpx(0, 0), cpx(0, 0) },
-        { cpx(262, 49), cpx(0, 0), cpx(12, 9), cpx(0, 0) },
+        { cpx(262, 49), cpx(0, 0), cpx(0, 0), cpx(0, 0) },
     });
-    // EXPECT_EQ(multRes, resMatrix);
+    EXPECT_EQ(multRes, resMatrix);
 }
 
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+TEST(Sparce_Matrix_Multiplication, Test_Naive_and_CRS_Multiplication) {
+    std::vector<std::vector<cpx>> mat1({
+        { cpx(0, 0), cpx(3, 4), cpx(0, 0), cpx(7, 2) },
+        { cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(0, 0) },
+        { cpx(0, 0), cpx(4, 5), cpx(0, 0), cpx(0, 0) },
+    });
+    std::vector<std::vector<cpx>> mat2({
+        { cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(0, 0) },
+        { cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(4, 3), cpx(0, 0) },
+        { cpx(5, 9), cpx(0, 0), cpx(0, 0), cpx(0, 0), cpx(3, 1) },
+        { cpx(0, 0), cpx(0, 0), cpx(8, 1), cpx(0, 0), cpx(0, 0) },
+    });
+    CRS_Matrix multCRS = CRS_Matrix(mat1) * CRS_Matrix(mat2).transpose();
+    CRS_Matrix multNaive(naiveMultiplication(mat1, mat2));
+    EXPECT_EQ(multCRS, multNaive);
 }

@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <stdexcept>
+#include <random>
+#include <set>
+#include <utility>
 #include "../../../modules/task_1/nazarov_v_sparse_matrix_multiplication/sparse_matrix_multiplication.h"
 
 CRS_Matrix::CRS_Matrix(const std::vector<std::vector<cpx>>& matrix) {
@@ -36,9 +39,44 @@ bool CRS_Matrix::operator== (const CRS_Matrix& mat) const& {
     return true;
 }
 
-// CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
-
-// }
+CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
+    CRS_Matrix res;
+    res.rowIndex.push_back(0);
+    res.row = row;
+    res.col = mat.row;
+    size_t NonZeroCounter = 0;
+    if (col != mat.col)
+        throw std::runtime_error("Different numbers of cols");
+    for (size_t i = 1; i < rowIndex.size(); ++i) {
+        std::vector<cpx> tmpVec;
+        std::vector<size_t> tmpCol;
+        for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
+            cpx sum = 0;
+            size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
+            while ((lhsIter < rowIndex[i]) && (rhsIter < mat.rowIndex[j])) {
+                if (colIndex[lhsIter] == mat.colIndex[rhsIter]) {
+                    sum += val[lhsIter++] * mat.val[rhsIter++];
+                } else {
+                    if (colIndex[lhsIter] < mat.colIndex[rhsIter])
+                        lhsIter++;
+                    else
+                        rhsIter++;
+                }
+            }
+            if (std::abs(sum.real()) > pow(10, -9) || std::abs(sum.imag()) > pow(10, -9)) {
+                tmpVec.push_back(sum);
+                tmpCol.push_back(j-1);
+                NonZeroCounter++;
+            }
+        }
+        for (const auto& elem : tmpVec)
+            res.val.push_back(elem);
+        for (const auto& elem : tmpCol)
+            res.colIndex.push_back(elem);
+        res.rowIndex.push_back(NonZeroCounter);
+    }
+    return res;
+}
 
 CRS_Matrix CRS_Matrix::transpose() {
     std::vector<std::vector<size_t>> index(col);
@@ -61,16 +99,6 @@ CRS_Matrix CRS_Matrix::transpose() {
         size += index[i].size();
         res.rowIndex.push_back(size);
     }
-    // for (auto& elem : index) {
-    //     for(auto& elem1 : elem)
-    //         std::cout << elem1<<" ";
-    //     std::cout<<std::endl;
-    // }
-    // for (auto& elem : values) {
-    //     for(auto& elem1 : elem)
-    //         std::cout << elem1<<" ";
-    //     std::cout<<std::endl;
-    // }
     return res;
 }
 
@@ -85,4 +113,38 @@ void CRS_Matrix::print() {
     for (const auto& elem : rowIndex)
         std::cout << elem << " ";
     std::cout << "] " << std::endl;
+}
+
+std::vector<std::vector<cpx>> naiveMultiplication(const std::vector<std::vector<cpx>>& matrix1,
+    const std::vector<std::vector<cpx>>& matrix2) {
+    if (matrix1[0].size() != matrix2.size())
+    throw std::runtime_error("Different numbers of cols");
+    std::vector<std::vector<cpx>> res(matrix1.size(), std::vector<cpx>(matrix2[0].size()));
+    for (size_t i = 0; i < matrix1.size(); ++i)
+        for (size_t j = 0; j < matrix2[0].size(); ++j) {
+            res[i][j] = 0;
+            for (size_t k = 0; k < matrix1[0].size(); ++k)
+                res[i][j] += matrix1[i][k] * matrix2[k][j];
+        }
+    return res;
+}
+
+std::vector<std::vector<cpx>> getRandomSparseMatrix(const size_t& col, const size_t& row, const double& percent) {
+    if ((percent > 1) || (percent < 0) || (col < 0) || (row < 0))
+        throw std::runtime_error("Invalid parameters");
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> disComplex(0, 10);
+    std::uniform_int_distribution<> disRow(0, row-1);
+    std::uniform_int_distribution<> disCol(0, col-1);
+    std::set<std::pair<int, int>> index;
+    size_t num = static_cast<size_t>(col*row*percent);
+    if (num < 1)
+        num++;
+    while (index.size() < num)
+        index.insert(std::pair<int, int>(disRow(gen), disCol(gen)));
+    std::vector<std::vector<cpx>> res(row, std::vector<cpx>(col, cpx(0, 0)));
+    for (const std::pair<int, int>& elem : index)
+        res[elem.first][elem.second] = cpx(disComplex(gen), disComplex(gen));
+    return res;
 }
