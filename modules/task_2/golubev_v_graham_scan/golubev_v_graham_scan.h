@@ -6,13 +6,15 @@
 #include <algorithm>
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size);
+std::vector<std::pair<double, double> > generate_points(std::size_t size);
 
-double get_polar_r(const std::pair<double, double>& point);
-double get_polar_grad(const std::pair<double, double>& point);
-double get_det(const std::pair<double, double>& x,
+double omp_get_polar_r(const std::pair<double, double>& point);
+double omp_get_polar_grad(const std::pair<double, double>& point);
+double omp_get_det(const std::pair<double, double>& x,
   const std::pair<double, double>& y, const std::pair<double, double>& z);
 
-std::size_t get_lex_min(std::vector<std::pair<double, double> > v);
+std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_threads);
+
 
 void mp_sort(std::vector<std::pair<double, double> >::iterator first,
   std::vector<std::pair<double, double> >::iterator last,

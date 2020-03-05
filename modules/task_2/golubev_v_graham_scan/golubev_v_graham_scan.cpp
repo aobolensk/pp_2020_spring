@@ -18,25 +18,47 @@ std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
   }
   return result;
 }
+std::vector<std::pair<double, double> > generate_points(std::size_t size) {
+  std::vector<std::pair<double, double> > result(size);
+  result[0] = std::make_pair(0, 0);
+  for (std::size_t i = 1; i < size; ++i) {
+    result[i] = std::make_pair(i, 10);
+  }
 
-double get_polar_r(const std::pair<double, double>& point) {
+  return result;
+}
+
+double omp_get_polar_r(const std::pair<double, double>& point) {
   return std::sqrt(point.second * point.second + point.first * point.first);
 }
 
-double get_polar_grad(const std::pair<double, double>& point) {
+double omp_get_polar_grad(const std::pair<double, double>& point) {
   return std::atan(point.second / point.first);
 }
 
-double get_det(const std::pair<double, double>& x,
+double omp_get_det(const std::pair<double, double>& x,
   const std::pair<double, double>& y, const std::pair<double, double>& z) {
   return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
 }
 
-std::size_t get_lex_min(std::vector<std::pair<double, double> > v) {
-  std::size_t min_idx = 0;
-  for (std::size_t i = 1; i < v.size(); ++i) {
-    if (v[min_idx] > v[i]) {
-      min_idx = i;
+std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_threads) {
+  std::vector<std::size_t> res(num_threads);
+
+#pragma omp parallel num_threads(num_threads)
+  {
+    int n_thread = omp_get_thread_num();
+    int size = v.size();
+#pragma omp for
+    for (int i = 1; i < size; ++i) {
+      if (v[res[n_thread]] > v[i]) {
+        res[n_thread] = i;
+      }
+    }
+  }
+  std::size_t min_idx = res[0];
+  for (std::size_t i = 1; i < res.size(); ++i) {
+    if (v[min_idx] > v[res[i]]) {
+      min_idx = res[i];
     }
   }
   return min_idx;
