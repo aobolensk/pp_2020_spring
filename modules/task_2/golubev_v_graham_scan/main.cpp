@@ -11,47 +11,35 @@
 
 
 
-TEST(DISABLED_Sequential_graham_scan, omp_sort) {
-  int size = 100000000;
-  std::vector<double> res_omp(size);
-  std::vector<double> trash(size);
-  std::vector<double> res_seq(res_omp);
+TEST(Sequential_graham_scan, omp_sort) {
+  int size = 10000;
+  std::vector<std::pair<double, double> > res = get_rand_set(size);
+  std::vector<std::pair<double, double> > check(res);
+
+  mp_sort(res.begin(), res.end(), 2);
+  std::sort(check.begin(), check.end());
+
+  EXPECT_EQ(res, check);
+}
+
+TEST(Sequential_graham_scan, DISABLED_omp_sort) {
+  int size = 10000000;
+  std::vector<std::pair<double, double> > res = get_rand_set(size);
+  std::vector<std::pair<double, double> > check(res);
 
   double t1 = omp_get_wtime();
-  mp_sort(res_omp.begin(), res_omp.end(), 2);
-  merge(res_omp.begin(), res_omp.begin() + size / 2, res_omp.end());
+  mp_sort(res.begin(), res.end(), 2);
   double t2 = omp_get_wtime();
   std::cout << "omp_sort " << t2 - t1 << std::endl;
 
   double t3 = omp_get_wtime();
-  std::sort(res_seq.begin(), res_seq.end());
+  std::sort(check.begin(), check.end());
   double t4 = omp_get_wtime();
   std::cout << "std_sort " << t4 - t3 << std::endl;
 
-  EXPECT_EQ(res_omp, trash);
+  EXPECT_EQ(res, check);
 }
 
-TEST(Sequential_graham_scan, Test_merge) {
-  int size = 11111114;
-  std::mt19937 gen;
-  std::vector<double> v(size);
-  for (std::size_t i = 0; i < v.size(); ++i) {
-    v[i] = gen() % 1000;
-  }
-  std::vector<double> check(v);
-
-  double t1 = omp_get_wtime();
-  std::sort(check.begin(), check.end());
-  double t2 = omp_get_wtime();
-  std::cout << "std_sort " << t2 - t1 << std::endl;
-
-  t1 = omp_get_wtime();
-  mp_sort(v.begin(), v.end(), 2);
-  t2 = omp_get_wtime();
-  std::cout << "omp_sort " << t2 - t1 << std::endl;
-
-  EXPECT_EQ(v, check);
-}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

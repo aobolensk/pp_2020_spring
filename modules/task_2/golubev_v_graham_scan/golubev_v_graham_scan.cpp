@@ -6,11 +6,47 @@
 #include <vector>
 #include <iostream>
 #include <utility>
+#include <random>
 #include "../../../modules/task_2/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
-void mp_sort(std::vector<double>::iterator begin, std::vector<double>::iterator end, int num_threads) {
+std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
+  std::mt19937 gen;
+
+  std::vector<std::pair<double, double> > result(size);
+  for (std::size_t i = 0; i < size; ++i) {
+    result[i] = std::make_pair(gen() % 1000, gen() % 1000);
+  }
+  return result;
+}
+
+double get_polar_r(const std::pair<double, double>& point) {
+  return std::sqrt(point.second * point.second + point.first * point.first);
+}
+
+double get_polar_grad(const std::pair<double, double>& point) {
+  return std::atan(point.second / point.first);
+}
+
+double get_det(const std::pair<double, double>& x,
+  const std::pair<double, double>& y, const std::pair<double, double>& z) {
+  return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
+}
+
+std::size_t get_lex_min(std::vector<std::pair<double, double> > v) {
+  std::size_t min_idx = 0;
+  for (std::size_t i = 1; i < v.size(); ++i) {
+    if (v[min_idx] > v[i]) {
+      min_idx = i;
+    }
+  }
+  return min_idx;
+}
+
+void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
+            std::vector<std::pair<double, double> >::iterator end, int num_threads) {
   int st = std::log2(num_threads);
   num_threads = std::pow(2, st);
+
 #pragma omp parallel num_threads(num_threads)
   {
     int n_thread = omp_get_thread_num();
@@ -49,11 +85,13 @@ void mp_sort(std::vector<double>::iterator begin, std::vector<double>::iterator 
   }
 }
 
-void merge(std::vector<double>::iterator left, std::vector<double>::iterator mid, std::vector<double>::iterator right) {
+void merge(std::vector<std::pair<double, double> >::iterator left,
+  std::vector<std::pair<double, double> >::iterator mid,
+  std::vector<std::pair<double, double> >::iterator right) {
   auto lidx = left;
   auto ridx = mid;
   std::size_t idx = 0;
-  std::vector<double> tmp(right - left);
+  std::vector<std::pair<double, double> > tmp(right - left);
 
   while (lidx != mid || ridx != right) {
     if (*lidx < *ridx) {
@@ -78,7 +116,8 @@ void merge(std::vector<double>::iterator left, std::vector<double>::iterator mid
       break;
     }
   }
-  std::copy(tmp.begin(), tmp.end(), left);
+  std::copy(std::make_move_iterator(tmp.begin()),
+    std::make_move_iterator(tmp.end()), left);
 }
 
 
