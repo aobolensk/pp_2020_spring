@@ -33,6 +33,9 @@ void MergeSort(std::vector<double>::iterator first,
 void TBBSort(std::vector<double>::iterator first,
              std::vector<double>::iterator end, int num_th);
 
+void SortTBB(std::vector<double>::iterator first,
+             std::vector<double>::iterator end, int num_th);
+
 bool IsSorted(std::vector<double>* old_vector, std::vector<double>* new_vector);
 
 #endif  // MODULES_TASK_3_PEROV_D_BITWISE_SORT_BITWISE_SORT_H_
