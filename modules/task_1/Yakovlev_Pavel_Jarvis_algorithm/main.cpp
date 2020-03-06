@@ -101,13 +101,13 @@ int main(int argc, char **argv) {
     for (auto p : points) {
         uint x = static_cast<uint>(p.first);
         uint y = 600 - static_cast<uint>(p.second);
-        circle(src, cv::Point(x,y), 5, cv::Scalar(255,255,255), CV_FILLED, 8, 0);
+        circle(src, cv::Point(x, y), 5, cv::Scalar(255, 255, 255), CV_FILLED, 8, 0);
     }
     auto  res = ConvexHull_Jarvis(points);
     for (auto p : res) {
         uint x = static_cast<uint>(p.first);
         uint y = 600 - static_cast<uint>(p.second);
-        circle(src, cv::Point(x,y), 5, cv::Scalar(0,255,0), CV_FILLED, 8, 0);
+        circle(src, cv::Point(x, y), 5, cv::Scalar(0, 255, 0), CV_FILLED, 8, 0);
     }
     cv::imshow("Image", src);
     cv::waitKey(0);
