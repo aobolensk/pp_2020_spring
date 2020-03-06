@@ -28,6 +28,75 @@ std::vector<std::pair<double, double> > generate_points(std::size_t size) {
 
   return result;
 }
+std::vector<std::pair<double, double> > get_test_set_1() {
+  std::vector<std::pair<double, double> > result(16);
+  result[0] = std::make_pair(0, 0);
+  result[1] = std::make_pair(1, -3);
+  result[2] = std::make_pair(3, -2);
+  result[3] = std::make_pair(6, -4);
+  result[4] = std::make_pair(7, -2);
+  result[5] = std::make_pair(5, 1);
+  result[6] = std::make_pair(8, 3);
+  result[7] = std::make_pair(2, 6);
+  result[8] = std::make_pair(1, 3);
+  result[9] = std::make_pair(2, 1);
+  result[10] = std::make_pair(3, 3);
+  result[11] = std::make_pair(5, 5);
+  result[12] = std::make_pair(4, -1);
+  result[13] = std::make_pair(5, -2);
+  result[14] = std::make_pair(7, 1);
+  result[15] = std::make_pair(5, 3);
+
+  return result;
+}
+std::vector<std::pair<double, double> > get_test_set_2() {
+  std::vector<std::pair<double, double> > result(22);
+  result[0] = std::make_pair(0, 1);
+  result[1] = std::make_pair(0, -5);
+  result[2] = std::make_pair(0, -6);
+  result[3] = std::make_pair(4, -6);
+  result[4] = std::make_pair(2, -4);
+  result[5] = std::make_pair(4, -2);
+  result[6] = std::make_pair(7, -2);
+  result[7] = std::make_pair(5, -1);
+  result[8] = std::make_pair(5, 2);
+  result[9] = std::make_pair(2, 1);
+  result[10] = std::make_pair(3, 3);
+  result[11] = std::make_pair(7, 2);
+  result[12] = std::make_pair(9, 2);
+  result[13] = std::make_pair(9, -4);
+  result[14] = std::make_pair(8, 5);
+  result[15] = std::make_pair(6, 4);
+  result[16] = std::make_pair(3, 4);
+  result[17] = std::make_pair(2, 5);
+  result[18] = std::make_pair(1, 3);
+  result[19] = std::make_pair(0, 2);
+  result[20] = std::make_pair(0, 0);
+  result[21] = std::make_pair(-1, 0);
+
+  return result;
+}
+std::vector<std::pair<double, double> > get_test_set_3() {
+  std::vector<std::pair<double, double> > result(17);
+  result[0] = std::make_pair(-6, -2);
+  result[1] = std::make_pair(-6, 2);
+  result[2] = std::make_pair(-4, 1);
+  result[3] = std::make_pair(-6, -6);
+  result[4] = std::make_pair(-4, -1);
+  result[5] = std::make_pair(-3, 3);
+  result[6] = std::make_pair(-2, 2);
+  result[7] = std::make_pair(-1, 1);
+  result[8] = std::make_pair(-1, -1);
+  result[9] = std::make_pair(-2, -2);
+  result[10] = std::make_pair(-3, -3);
+  result[11] = std::make_pair(1, 1);
+  result[12] = std::make_pair(2, 2);
+  result[13] = std::make_pair(3, 3);
+  result[14] = std::make_pair(1, -1);
+  result[15] = std::make_pair(2, -2);
+  result[16] = std::make_pair(3, -3);
+  return result;
+}
 
 bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b) {
   double grad_a = omp_get_polar_grad(a);
@@ -51,8 +120,6 @@ double omp_get_det(const std::pair<double, double>& x,
   const std::pair<double, double>& y, const std::pair<double, double>& z) {
   return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
 }
-
-
 std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_threads) {
   std::vector<std::size_t> res(num_threads);
 
@@ -75,6 +142,7 @@ std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_t
   }
   return min_idx;
 }
+
 void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
             std::vector<std::pair<double, double> >::iterator end, int num_threads) {
   int st = std::log2(num_threads);

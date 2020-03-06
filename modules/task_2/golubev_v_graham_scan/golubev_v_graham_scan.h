@@ -7,6 +7,10 @@
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size);
 std::vector<std::pair<double, double> > generate_points(std::size_t size);
+std::vector<std::pair<double, double> > get_test_set_1();
+std::vector<std::pair<double, double> > get_test_set_2();
+std::vector<std::pair<double, double> > get_test_set_3();
+
 
 bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b);
 double omp_get_polar_r(const std::pair<double, double>& point);
@@ -22,6 +26,7 @@ void mp_sort(std::vector<std::pair<double, double> >::iterator first,
 void merge(std::vector<std::pair<double, double> >::iterator left,
   std::vector<std::pair<double, double> >::iterator mid,
   std::vector<std::pair<double, double> >::iterator right);
+
 
 std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> > points,
   int num_threads);
