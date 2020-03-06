@@ -34,11 +34,9 @@ bool is_less(const std::pair<double, double>& a, const std::pair<double, double>
 
   if (grad_a < grad_b) {
     return true;
-  }
-  else if ((std::abs(grad_a - grad_b) <= 1e-15) && (omp_get_polar_r(a) < omp_get_polar_r(b))) {
+  } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (omp_get_polar_r(a) < omp_get_polar_r(b))) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }

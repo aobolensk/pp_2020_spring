@@ -9,7 +9,7 @@
 #include <random>
 #include "./golubev_v_graham_scan.h"
 
-void omp_sdvig(std::vector<std::pair<double, double> >& v) {
+/*void omp_sdvig(std::vector<std::pair<double, double> >& v) {
   std::pair<double, double> sdvig(1.25, -3);
   int size = v.size();
 
@@ -18,7 +18,7 @@ void omp_sdvig(std::vector<std::pair<double, double> >& v) {
     v[i].first -= sdvig.first;
     v[i].second -= sdvig.second;
   }
-}
+}*/
 
 TEST(OMP_graham_scan, omp_lex_min) {
   std::size_t size = 10000;
@@ -52,12 +52,11 @@ TEST(OMP_graham_scan, DISABLED_omp_sort_with_time) {
   double t2 = omp_get_wtime();
   std::cout << "omp_sort " << t2 - t1 << std::endl;
 
-
   double t3 = omp_get_wtime();
   std::sort(check.begin(), check.end(), is_less);
   double t4 = omp_get_wtime();
   std::cout << "std_sort " << t4 - t3 << std::endl;
-  
+
   EXPECT_EQ(res, check);
 }
 
