@@ -6,6 +6,7 @@
 #ifndef OPENCV
 #include <gtest/gtest.h>
 
+
 TEST(Sequential_algorithm, Test_default_hull) {
     std::vector<std::pair<double, double>> points {
         std::make_pair(4.0, 2.0),
