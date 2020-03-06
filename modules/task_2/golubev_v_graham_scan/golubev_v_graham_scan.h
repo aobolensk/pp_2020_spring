@@ -8,6 +8,7 @@
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size);
 std::vector<std::pair<double, double> > generate_points(std::size_t size);
 
+bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b);
 double omp_get_polar_r(const std::pair<double, double>& point);
 double omp_get_polar_grad(const std::pair<double, double>& point);
 double omp_get_det(const std::pair<double, double>& x,

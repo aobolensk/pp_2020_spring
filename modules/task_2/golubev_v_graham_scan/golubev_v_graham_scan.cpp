@@ -14,7 +14,7 @@ std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
 
   std::vector<std::pair<double, double> > result(size);
   for (std::size_t i = 0; i < size; ++i) {
-    result[i] = std::make_pair(gen() % 1000, gen() % 1000);
+    result[i] = std::make_pair(gen() % 10000, gen() % 10000);
   }
   return result;
 }
@@ -28,18 +28,31 @@ std::vector<std::pair<double, double> > generate_points(std::size_t size) {
   return result;
 }
 
+bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b) {
+  double grad_a = omp_get_polar_grad(a);
+  double grad_b = omp_get_polar_grad(b);
+
+  if (grad_a < grad_b) {
+    return true;
+  }
+  else if ((std::abs(grad_a - grad_b) <= 1e-15) && (omp_get_polar_r(a) < omp_get_polar_r(b))) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 double omp_get_polar_r(const std::pair<double, double>& point) {
   return std::sqrt(point.second * point.second + point.first * point.first);
 }
-
 double omp_get_polar_grad(const std::pair<double, double>& point) {
   return std::atan(point.second / point.first);
 }
-
 double omp_get_det(const std::pair<double, double>& x,
   const std::pair<double, double>& y, const std::pair<double, double>& z) {
   return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
 }
+
 
 std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_threads) {
   std::vector<std::size_t> res(num_threads);
@@ -63,7 +76,6 @@ std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_t
   }
   return min_idx;
 }
-
 void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
             std::vector<std::pair<double, double> >::iterator end, int num_threads) {
   int st = std::log2(num_threads);
@@ -77,7 +89,7 @@ void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
     auto left = begin + n_thread * step;
     auto right = left + step;
 
-    std::sort(left, right);
+    std::sort(left, right, is_less);
 
 
     int log = std::log2(num_threads);
@@ -102,7 +114,7 @@ void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
 
   int ostatok = (end - begin) % num_threads;
   if (ostatok != 0) {
-    std::sort(begin + (end - begin) / num_threads * num_threads, end);
+    std::sort(begin + (end - begin) / num_threads * num_threads, end, is_less);
     merge(begin, begin + (end - begin) / num_threads * num_threads, end);
   }
 }
@@ -116,7 +128,7 @@ void merge(std::vector<std::pair<double, double> >::iterator left,
   std::vector<std::pair<double, double> > tmp(right - left);
 
   while (lidx != mid || ridx != right) {
-    if (*lidx < *ridx) {
+    if (is_less((*lidx), (*ridx))) {
       tmp[idx++] = std::move(*lidx);
       lidx++;
     } else {
