@@ -7,6 +7,7 @@
 #include <iostream>
 #include <utility>
 #include <random>
+#include <stack>
 #include "../../../modules/task_2/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
@@ -153,6 +154,62 @@ void merge(std::vector<std::pair<double, double> >::iterator left,
 }
 
 
+
+std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> > points,
+  int num_threads) {
+  // lex_min
+  std::size_t min_idx = omp_get_lex_min(points, num_threads);
+  std::swap(points[0], points[min_idx]);
+  auto lex_min = points[0];
+
+  // sdvig koordinat
+  int size = points.size();
+#pragma omp parallel for if (size > 10'000'000)
+  for (int i = 0; i < size; ++i) {
+    points[i].first -= lex_min.first;
+    points[i].second -= lex_min.second;
+  }
+
+  // sort
+  mp_sort(points.begin() + 1, points.end(), num_threads);
+
+  // scan
+  std::stack<std::pair<double, double>> res;
+  std::size_t stack_size = res.size();
+  res.push(points[0]);
+  res.push(points[1]);
+
+  std::pair<double, double> x, y, z;
+  for (std::size_t i = 2; i < size; ++i) {
+    stack_size = res.size();
+    y = res.top();
+    res.pop();
+    x = res.top();
+    z = points[i];
+    double det = omp_get_det(x, y, z);
+
+    if (det > 0) {
+      res.push(y);
+      res.push(points[i]);
+    } else if (stack_size < 3) {
+      res.push(points[i]);
+    } else {
+      --i;
+    }
+  }
+
+  std::vector<std::pair<double, double> > res_vec(res.size());
+  std::size_t i = res.size() - 1;
+  while (!res.empty()) {
+    res_vec[i] = res.top();
+    res_vec[i].first += lex_min.first;
+    res_vec[i].second += lex_min.second;
+    res.pop();
+    --i;
+  }
+
+  return res_vec;
+}
 /*void omp_sort(std::vector<double>::iterator first, std::vector<double>::iterator last) {
   auto i = first;
   auto j = last - 1;

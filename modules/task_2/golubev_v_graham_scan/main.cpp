@@ -9,17 +9,6 @@
 #include <random>
 #include "./golubev_v_graham_scan.h"
 
-/*void omp_sdvig(std::vector<std::pair<double, double> >& v) {
-  std::pair<double, double> sdvig(1.25, -3);
-  int size = v.size();
-
-#pragma omp parallel for if(size > 10'000'000)
-  for (int i = 0; i < size; ++i) {
-    v[i].first -= sdvig.first;
-    v[i].second -= sdvig.second;
-  }
-}*/
-
 TEST(OMP_graham_scan, omp_lex_min) {
   std::size_t size = 10000;
   std::vector<std::pair<double, double> > v = generate_points(size);
