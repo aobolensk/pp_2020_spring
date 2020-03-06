@@ -5,8 +5,8 @@
 #include <utility>
 
 double calcIntegral(const std::vector<std::pair<double, double>>& scope,
-        std::function<double(const std::vector<double>)> f, int accurancy,
-        int level, std::vector<double> fix_var) {
+        std::function<double(const std::vector<double>)> f, size_t accurancy,
+        size_t level, std::vector<double> fix_var) {
     if (scope.size() == 0)
         throw "Bad scope";
     if (fix_var.size() == 0)
