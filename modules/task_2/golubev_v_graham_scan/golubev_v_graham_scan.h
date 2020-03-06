@@ -29,6 +29,6 @@ void merge(std::vector<std::pair<double, double> >::iterator left,
 
 
 std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> > points,
-  int num_threads);
+  int num_threads = 4);
 
 #endif  // MODULES_TASK_2_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_

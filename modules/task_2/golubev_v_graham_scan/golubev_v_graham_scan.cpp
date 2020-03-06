@@ -232,7 +232,7 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
 
   // sdvig koordinat
   int size = points.size();
-#pragma omp parallel for if (size > 10'000'000)
+#pragma omp parallel for /*if (size >= 10'000'000)*/
   for (int i = 0; i < size; ++i) {
     points[i].first -= lex_min.first;
     points[i].second -= lex_min.second;
@@ -242,7 +242,7 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
   mp_sort(points.begin() + 1, points.end(), num_threads);
 
   // scan
-  std::stack<std::pair<double, double>> res;
+  std::stack<std::pair<double, double> > res;
   std::size_t stack_size = res.size();
   res.push(points[0]);
   res.push(points[1]);
@@ -278,27 +278,4 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
 
   return res_vec;
 }
-/*void omp_sort(std::vector<double>::iterator first, std::vector<double>::iterator last) {
-  auto i = first;
-  auto j = last - 1;
-  double pivot = *(first + (last - first) / 2);
 
-  do {
-    while (*i < pivot)
-      i++;
-    while (*j > pivot)
-      j--;
-    if (i <= j) {
-      if (i < j) {
-        std::swap(*i, *j);
-      }
-      i++;
-      j--;
-    }
-  } while (i <= j);
-
-  if (i < last)
-    omp_sort(i, last);
-  if (first < j)
-    omp_sort(first, j + 1);
-}*/
