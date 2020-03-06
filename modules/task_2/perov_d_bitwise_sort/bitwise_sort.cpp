@@ -246,11 +246,11 @@ void MPSort(std::vector<double>::iterator first,
     int task_size_old = task_size;
     omp_set_num_threads(num_th);
 
-    int iam;
-    int i = log(num_th) / log(2);
-    int h = 2;
-#pragma omp parallel private(iam)
+#pragma omp parallel
     {
+      int iam;
+      int i = log(num_th) / log(2);
+      int h = 2;
       iam = omp_get_thread_num();
 
       BitwiseSort(first + iam * task_size, first + (iam + 1) * task_size);
