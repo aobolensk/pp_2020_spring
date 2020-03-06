@@ -12,7 +12,7 @@ std::vector<std::pair<double, double>> getRandomVectorOfPair(size_t sz) {
     std::mt19937 gen(static_cast<unsigned int>(time(0)));
     std::uniform_real_distribution<> distr(100, 500);
     std::vector<std::pair<double, double>> vec(sz);
-    for (size_t i = 0; i < sz; i++) { vec[i] = std::make_pair<double,double>(distr(gen), distr(gen)); }
+    for (size_t i = 0; i < sz; i++) { vec[i] = std::make_pair(distr(gen), distr(gen)); }
     return vec;
 }
 
@@ -23,8 +23,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis(std::vector<std::pair<d
     for (size_t i = 1; i < sz; i++) {
         if (points[i].second < points[firstP].second) {
             firstP = i;
-        }
-        else if (points[i].second == points[firstP].second) {
+        } else if (points[i].second == points[firstP].second) {
             if (points[i].first <= points[firstP].first) {
                 firstP = i;
             }
