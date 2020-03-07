@@ -25,19 +25,19 @@ double getIntegralMonteCarloSeq(const std::function<double(const std::vector<dou
 
     // Prepare random-generation
     std::vector<std::uniform_real_distribution<double> > randPoints(countDims);
-    for (auto i = 0; i < countDims; i++)
+    for (unsigned int i = 0; i < countDims; i++)
         randPoints[i] = std::uniform_real_distribution<double>(lowLimInt[i], highLimInt[i]);
 
     // Monte-Carlo random
     std::vector<double> point(countDims);
-    for (auto i = 0; i < numberPoints; i++) {
-        for (auto j = 0; j < countDims; j++)
+    for (unsigned int i = 0; i < numberPoints; i++) {
+        for (unsigned int j = 0; j < countDims; j++)
             point[j] = randPoints[j](generator);
         result += func(point);
     }
 
     // Monte-Carlo calc
-    for (auto i = 0; i < countDims; i++) {
+    for (unsigned int i = 0; i < countDims; i++) {
         result *= (highLimInt[i] - lowLimInt[i]);
     }
     result /= numberPoints;
