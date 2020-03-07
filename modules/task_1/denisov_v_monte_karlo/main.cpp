@@ -84,9 +84,9 @@ TEST(monte_carlo_seq, integral_third_dim_func) {
         return (x[0] * x[0] + x[1] * x[1] + x[2] * x[2]); };
 
     std::vector<double> lowLimInt = { 1, 1, 1 };
-    std::vector<double> highLimInt = { 2, 2, 2 };
+    std::vector<double> highLimInt = { 1.5, 1.5, 1.5 };
 
     double result = getIntegralMonteCarloSeq(func, lowLimInt, highLimInt, NUMBER_POINTS, 10);
-
-    EXPECT_NEAR(result, 7.0, 0.05);
+    std::cout << result;
+    EXPECT_NEAR(result, 0.59375, 0.05);
 }
