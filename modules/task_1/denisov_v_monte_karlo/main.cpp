@@ -4,7 +4,7 @@
 #include <vector>
 #include "./monte_karlo.h"
 
-#define NUMBER_POINTS 1000000
+#define NUMBER_POINTS 100000
 
 TEST(monte_carlo_seq, throw_when_number_points_zero) {
     // f = x
