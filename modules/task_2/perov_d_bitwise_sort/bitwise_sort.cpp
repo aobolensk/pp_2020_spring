@@ -242,12 +242,12 @@ void MergeSort(std::vector<double>::iterator first,
 void MPSort(std::vector<double>::iterator first,
             std::vector<double>::iterator end, int num_th) {
   if ((end - first) % num_th == 0) {
-    int task_size = (end - first) / num_th;
-    int task_size_old = task_size;
     omp_set_num_threads(num_th);
 
 #pragma omp parallel
     {
+      int task_size = (end - first) / num_th;
+      int task_size_old = task_size;
       int iam;
       int i = log(num_th) / log(2);
       int h = 2;
@@ -257,12 +257,9 @@ void MPSort(std::vector<double>::iterator first,
 #pragma omp barrier
 
       while (i != 0) {
-#pragma omp barrier
-        if (iam == 0) {
-          task_size_old = task_size;
-          task_size += task_size;
-        }
-#pragma omp barrier
+
+         task_size_old = task_size;
+         task_size += task_size;
 
         if (iam < num_th / h) {
           MergeSort(first + iam * task_size,
@@ -270,11 +267,9 @@ void MPSort(std::vector<double>::iterator first,
                     first + iam * task_size + task_size);
         }
 
-#pragma omp barrier
-        if (iam == 0) {
-          --i;
-          h *= 2;
-        }
+        --i;
+        h *= 2;
+        
 #pragma omp barrier
       }
     }
