@@ -1,16 +1,17 @@
 // Copyright 2020 Rezantsev Sergey
+#include <vector>
 #include "../../modules/task_1/rezantsev_s_strassen/strassen.h"
 #include "gtest/gtest.h"
 
 TEST(Strassen, correct_sum) {
   int n = 20;
-  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
     c[i] = n * n;
   }
-   res = sumMatrix(a, b, n);
+  res = sumMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
 }
 
@@ -25,8 +26,8 @@ TEST(Strassen, correct_size) {
 
 TEST(Strassen, correct_resize) {
   int n = 3;
-  vector<double> a(n * n);
-  vector<double> b(16);
+  std::vector<double> a(n * n);
+  std::vector<double> b(16);
   b[0] = 0;
   b[1] = 1;
   b[2] = 2;
@@ -43,18 +44,16 @@ TEST(Strassen, correct_resize) {
   b[13] = 0;
   b[14] = 0;
   b[15] = 0;
- 
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
   }
   a = resizeMatrix(a, n);
   ASSERT_TRUE(isEqMatrix(a, b, n));
-
 }
 
 TEST(Strassen, correct_subt) {
   int n = 2;
-  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = i;
@@ -62,12 +61,11 @@ TEST(Strassen, correct_subt) {
   }
   res = subtMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
- 
 }
 
 TEST(Strassen, correct_mult) {
   int n = 2;
-  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i + 1;
     b[i] = i + n * n + 1;
@@ -78,22 +76,20 @@ TEST(Strassen, correct_mult) {
   c[3] = 50;
   res = multMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
-  
 }
 
 TEST(Strassen, correct_split) {
   int n = 4;
   int m = 2;
-  vector<double> a(n * n);
-  vector<double> a11(m * m);
-  vector<double> a12(m * m);
-  vector<double> a21(m * m);
-  vector<double> a22(m * m);
-
-  vector<double> b11(m * m);
-  vector<double> b12(m * m);
-  vector<double> b21(m * m);
-  vector<double> b22(m * m);
+  std::vector<double> a(n * n);
+  std::vector<double> a11(m * m);
+  std::vector<double> a12(m * m);
+  std::vector<double> a21(m * m);
+  std::vector<double> a22(m * m);
+  std::vector<double> b11(m * m);
+  std::vector<double> b12(m * m);
+  std::vector<double> b21(m * m);
+  std::vector<double> b22(m * m);
 
   b11[0] = 0;
   b11[1] = 1;
@@ -118,22 +114,21 @@ TEST(Strassen, correct_split) {
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
   }
-  splitMatrix(a, a11, a22, a12, a21, n);
+  splitMatrix(a, &a11, &a22, &a12, &a21, n);
   ASSERT_TRUE(isEqMatrix(b11, a11, m));
   ASSERT_TRUE(isEqMatrix(b12, a12, m));
   ASSERT_TRUE(isEqMatrix(b22, a22, m));
   ASSERT_TRUE(isEqMatrix(b21, a21, m));
- 
 }
 
 TEST(Strassen, correct_collect) {
   int n = 4;
   int m = 2;
-  vector<double> a(n * n), b(n * n);
-  vector<double> b11(m * m);
-  vector<double> b12(m * m);
-  vector<double> b21(m * m);
-  vector<double> b22(m * m);
+  std::vector<double> a(n * n), b(n * n);
+  std::vector<double> b11(m * m);
+  std::vector<double> b12(m * m);
+  std::vector<double> b21(m * m);
+  std::vector<double> b22(m * m);
   b11[0] = 0;
   b11[1] = 1;
   b11[2] = 4;
@@ -158,12 +153,11 @@ TEST(Strassen, correct_collect) {
   }
   b = collectMatrix(b11, b22, b12, b21, m);
   ASSERT_TRUE(isEqMatrix(b, a, n));
- 
 }
 
 TEST(Strassen, correct_strassen_4x4) {
   int n = 4;
-  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = 2;
     b[i] = 1;
@@ -171,12 +165,11 @@ TEST(Strassen, correct_strassen_4x4) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  
 }
 
 TEST(Strassen, correct_strassen_8x8) {
   int n = 8;
-  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
@@ -184,12 +177,11 @@ TEST(Strassen, correct_strassen_8x8) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  
 }
 
 TEST(Strassen, correct_strassen_16x16) {
   int n = 16;
-  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
@@ -197,12 +189,11 @@ TEST(Strassen, correct_strassen_16x16) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
- 
 }
 
 TEST(Strassen, correct_strassen_16x16_1) {
   int n = 16;
-  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = (n * n - i) * 2;
@@ -210,12 +201,11 @@ TEST(Strassen, correct_strassen_16x16_1) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  
 }
 
 TEST(Strassen, correct_strassen_16x16_2) {
   int n = 16;
-  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
+  std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i * n;
     b[i] = n * n - i;
@@ -223,15 +213,14 @@ TEST(Strassen, correct_strassen_16x16_2) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  
 }
 
 TEST(Strassen, correct_strassen_10x10) {
   int n = 16;
-  vector<double> a(n * n);
-  vector<double> b(n * n);
-  vector<double> c;
-  vector<double> d;
+  std::vector<double> a(n * n);
+  std::vector<double> b(n * n);
+  std::vector<double> c;
+  std::vector<double> d;
   for (int i = 0; i < n * n; i++) {
     a[i] = 10;
     b[i] = 5;
