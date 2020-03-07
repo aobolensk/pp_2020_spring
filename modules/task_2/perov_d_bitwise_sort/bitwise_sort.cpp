@@ -257,9 +257,8 @@ void MPSort(std::vector<double>::iterator first,
 #pragma omp barrier
 
       while (i != 0) {
-
-         task_size_old = task_size;
-         task_size += task_size;
+        task_size_old = task_size;
+        task_size += task_size;
 
         if (iam < num_th / h) {
           MergeSort(first + iam * task_size,
