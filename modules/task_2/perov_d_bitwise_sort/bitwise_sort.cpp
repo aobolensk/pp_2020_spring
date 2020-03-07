@@ -269,7 +269,7 @@ void MPSort(std::vector<double>::iterator first,
 
         --i;
         h *= 2;
-        
+
 #pragma omp barrier
       }
     }
