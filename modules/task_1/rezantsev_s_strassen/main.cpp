@@ -3,20 +3,15 @@
 #include "gtest/gtest.h"
 
 TEST(Strassen, correct_sum) {
-  int n = 2;
-  double *a = new double[n * n], *b = new double[n * n], *c = new double[n * n],
-         *res = new double[n * n];
+  int n = 20;
+  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
-    c[i] = 4;
+    c[i] = n * n;
   }
-  res = sumMatrix(a, b, n);
+   res = sumMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] res;
 }
 
 TEST(Strassen, correct_size) {
@@ -30,20 +25,36 @@ TEST(Strassen, correct_size) {
 
 TEST(Strassen, correct_resize) {
   int n = 3;
-  double *a = new double[n * n];
-  double b[16] = {0, 1, 2, 0, 3, 4, 5, 0, 6, 7, 8, 0, 0, 0, 0, 0};
+  vector<double> a(n * n);
+  vector<double> b(16);
+  b[0] = 0;
+  b[1] = 1;
+  b[2] = 2;
+  b[3] = 0;
+  b[4] = 3;
+  b[5] = 4;
+  b[6] = 5;
+  b[7] = 0;
+  b[8] = 6;
+  b[9] = 7;
+  b[10] = 8;
+  b[11] = 0;
+  b[12] = 0;
+  b[13] = 0;
+  b[14] = 0;
+  b[15] = 0;
+ 
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
   }
   a = resizeMatrix(a, n);
   ASSERT_TRUE(isEqMatrix(a, b, n));
-  delete[] a;
+
 }
 
 TEST(Strassen, correct_subt) {
   int n = 2;
-  double *a = new double[n * n], *b = new double[n * n], *c = new double[n * n],
-         *res = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = i;
@@ -51,16 +62,12 @@ TEST(Strassen, correct_subt) {
   }
   res = subtMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] res;
+ 
 }
 
 TEST(Strassen, correct_mult) {
   int n = 2;
-  double *a = new double[n * n], *b = new double[n * n], *c = new double[n * n],
-         *res = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), res(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i + 1;
     b[i] = i + n * n + 1;
@@ -71,24 +78,43 @@ TEST(Strassen, correct_mult) {
   c[3] = 50;
   res = multMatrix(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, res, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] res;
+  
 }
 
 TEST(Strassen, correct_split) {
   int n = 4;
   int m = 2;
-  double *a = new double[n * n];
-  double *a11 = new double[m * m];
-  double *a12 = new double[m * m];
-  double *a21 = new double[m * m];
-  double *a22 = new double[m * m];
-  double b11[4] = {0, 1, 4, 5};
-  double b12[4] = {2, 3, 6, 7};
-  double b21[4] = {8, 9, 12, 13};
-  double b22[4] = {10, 11, 14, 15};
+  vector<double> a(n * n);
+  vector<double> a11(m * m);
+  vector<double> a12(m * m);
+  vector<double> a21(m * m);
+  vector<double> a22(m * m);
+
+  vector<double> b11(m * m);
+  vector<double> b12(m * m);
+  vector<double> b21(m * m);
+  vector<double> b22(m * m);
+
+  b11[0] = 0;
+  b11[1] = 1;
+  b11[2] = 4;
+  b11[3] = 5;
+
+  b12[0] = 2;
+  b12[1] = 3;
+  b12[2] = 6;
+  b12[3] = 7;
+
+  b21[0] = 8;
+  b21[1] = 9;
+  b21[2] = 12;
+  b21[3] = 13;
+
+  b22[0] = 10;
+  b22[1] = 11;
+  b22[2] = 14;
+  b22[3] = 15;
+
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
   }
@@ -97,56 +123,60 @@ TEST(Strassen, correct_split) {
   ASSERT_TRUE(isEqMatrix(b12, a12, m));
   ASSERT_TRUE(isEqMatrix(b22, a22, m));
   ASSERT_TRUE(isEqMatrix(b21, a21, m));
-  delete[] a;
-  delete[] a11;
-  delete[] a22;
-  delete[] a21;
-  delete[] a12;
+ 
 }
 
 TEST(Strassen, correct_collect) {
   int n = 4;
   int m = 2;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double b11[4] = {0, 1, 4, 5};
-  double b12[4] = {2, 3, 6, 7};
-  double b21[4] = {8, 9, 12, 13};
-  double b22[4] = {10, 11, 14, 15};
+  vector<double> a(n * n), b(n * n);
+  vector<double> b11(m * m);
+  vector<double> b12(m * m);
+  vector<double> b21(m * m);
+  vector<double> b22(m * m);
+  b11[0] = 0;
+  b11[1] = 1;
+  b11[2] = 4;
+  b11[3] = 5;
+
+  b12[0] = 2;
+  b12[1] = 3;
+  b12[2] = 6;
+  b12[3] = 7;
+
+  b21[0] = 8;
+  b21[1] = 9;
+  b21[2] = 12;
+  b21[3] = 13;
+
+  b22[0] = 10;
+  b22[1] = 11;
+  b22[2] = 14;
+  b22[3] = 15;
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
   }
   b = collectMatrix(b11, b22, b12, b21, m);
   ASSERT_TRUE(isEqMatrix(b, a, n));
-  delete[] a;
-  delete[] b;
+ 
 }
 
 TEST(Strassen, correct_strassen_4x4) {
-  int n = 4;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c = new double[n * n];
-  double *d = new double[n * n];
+  int n = 1024;
+  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
-    a[i] = i;
-    b[i] = n * n - i;
+    a[i] = 2;
+    b[i] = 1;
   }
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
+  
 }
 
 TEST(Strassen, correct_strassen_8x8) {
   int n = 8;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c = new double[n * n];
-  double *d = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
@@ -154,18 +184,12 @@ TEST(Strassen, correct_strassen_8x8) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
+  
 }
 
 TEST(Strassen, correct_strassen_16x16) {
   int n = 16;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c = new double[n * n];
-  double *d = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
@@ -173,18 +197,12 @@ TEST(Strassen, correct_strassen_16x16) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
+ 
 }
 
 TEST(Strassen, correct_strassen_16x16_1) {
   int n = 16;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c = new double[n * n];
-  double *d = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = (n * n - i) * 2;
@@ -192,18 +210,12 @@ TEST(Strassen, correct_strassen_16x16_1) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
+  
 }
 
 TEST(Strassen, correct_strassen_16x16_2) {
   int n = 16;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c = new double[n * n];
-  double *d = new double[n * n];
+  vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i * n;
     b[i] = n * n - i;
@@ -211,21 +223,18 @@ TEST(Strassen, correct_strassen_16x16_2) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
+  
 }
 
 TEST(Strassen, correct_strassen_10x10) {
-  int n = 10;
-  double *a = new double[n * n];
-  double *b = new double[n * n];
-  double *c;
-  double *d;
+  int n = 16;
+  vector<double> a(n * n);
+  vector<double> b(n * n);
+  vector<double> c;
+  vector<double> d;
   for (int i = 0; i < n * n; i++) {
-    a[i] = i * n;
-    b[i] = n * n - i;
+    a[i] = 10;
+    b[i] = 5;
   }
   a = resizeMatrix(a, n);
   b = resizeMatrix(b, n);
@@ -233,13 +242,9 @@ TEST(Strassen, correct_strassen_10x10) {
   c = multMatrix(a, b, n);
   d = strassen(a, b, n);
   ASSERT_TRUE(isEqMatrix(c, d, n));
-  delete[] a;
-  delete[] b;
-  delete[] c;
-  delete[] d;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
