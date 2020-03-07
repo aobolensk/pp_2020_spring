@@ -162,7 +162,7 @@ TEST(Strassen, correct_collect) {
 }
 
 TEST(Strassen, correct_strassen_4x4) {
-  int n = 1024;
+  int n = 4;
   vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = 2;
