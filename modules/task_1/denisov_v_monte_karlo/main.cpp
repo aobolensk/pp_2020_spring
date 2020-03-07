@@ -1,8 +1,8 @@
 // Copyright 2020 Denisov Vladislav
 #include <gtest/gtest.h>
-#include "./monte_karlo.h"
-
+#include <functional>
 #include <vector>
+#include "./monte_karlo.h"
 
 #define NUMBER_POINTS 1000000
 
