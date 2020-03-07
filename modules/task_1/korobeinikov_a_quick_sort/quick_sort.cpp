@@ -2,25 +2,26 @@
 #include <algorithm>
 #include <vector>
 #include <ctime>
+#include <utility>
 #include <random>
 #include "../../modules/task_1/korobeinikov_a_quick_sort/quick_sort.h"
 
 
-void quickSort(int left, int right, std::vector <double>& arr) {
+void quickSort(int left, int right, std::vector <double>* arr) {
     while (right > left) {
         int it_l = left;
         int it_r = right;
-        double pivot = arr[(left + right) / 2];
+        double pivot = arr -> at((left + right) / 2);
         // partition
         while (it_l <= it_r) {
-            while (arr[it_l] < pivot) {
+            while (arr -> at(it_l) < pivot) {
                 it_l++;
             }
-            while (arr[it_r] > pivot) {
+            while (arr -> at(it_r) > pivot) {
                 it_r--;
             }
             if (it_l <= it_r) {
-                std::swap(arr[it_l], arr[it_r]);
+                std::swap(arr -> at(it_l), arr -> at(it_r));
                 it_l++;
                 it_r--;
             }
@@ -47,6 +48,6 @@ std::vector <double> getRandomVector(int size) {
     return vec;
 }
 
-bool checkCorrectnessOfSort(std::vector <double>& vec) {
-    return std::is_sorted(vec.begin(), vec.end());
+bool checkCorrectnessOfSort(std::vector <double>* vec) {
+    return std::is_sorted((*vec).begin(), (*vec).end());
 }

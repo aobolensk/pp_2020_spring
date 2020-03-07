@@ -10,16 +10,16 @@ TEST(Quick_Sort_seq, Can_Sort_Zero_Array) {
     std::vector <double> vec(n);
     vec[888] = 1;
 
-    quickSort(0, n - 1, vec);
-    ASSERT_EQ(1, checkCorrectnessOfSort(vec));
+    quickSort(0, n - 1, &vec);
+    ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
 TEST(Quick_Sort_seq, Can_Sort_Random_Array) {
     int n = 10000;
     std::vector <double> vec = getRandomVector(n);
 
-    quickSort(0, n - 1, vec);
-    ASSERT_EQ(1, checkCorrectnessOfSort(vec));
+    quickSort(0, n - 1, &vec);
+    ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
 TEST(Quick_Sort_seq, Can_Sort_With_Double_Elems) {
@@ -27,8 +27,8 @@ TEST(Quick_Sort_seq, Can_Sort_With_Double_Elems) {
     std::vector <double> vec = getRandomVector(n);
     vec[999] = -23.335;
     vec[560] = 2354.52;
-    quickSort(0, n - 1, vec);
-    ASSERT_EQ(1, checkCorrectnessOfSort(vec));
+    quickSort(0, n - 1, &vec);
+    ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
 TEST(Quick_Sort_seq, Can_Sort_With_Rotation_Elems) {
@@ -38,8 +38,8 @@ TEST(Quick_Sort_seq, Can_Sort_With_Rotation_Elems) {
         vec[i] = -vec[i - 1];
     }
 
-    quickSort(0, n - 1, vec);
-    ASSERT_EQ(1, checkCorrectnessOfSort(vec));
+    quickSort(0, n - 1, &vec);
+    ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
 TEST(Quick_Sort_seq, Can_Sort_Full_Double_Array) {
@@ -49,8 +49,8 @@ TEST(Quick_Sort_seq, Can_Sort_Full_Double_Array) {
         vec[i] *= 1.7475;
     }
 
-    quickSort(0, n - 1, vec);
-    ASSERT_EQ(1, checkCorrectnessOfSort(vec));
+    quickSort(0, n - 1, &vec);
+    ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
 int main(int argc, char** argv) {
