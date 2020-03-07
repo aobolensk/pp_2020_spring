@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include "./monte_karlo.h"
 
+#include <vector>
+
 #define NUMBER_POINTS 1000000
 
 TEST(monte_carlo_seq, throw_when_number_points_zero) {
