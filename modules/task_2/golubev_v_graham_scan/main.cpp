@@ -56,7 +56,7 @@ TEST(OMP_graham_scan, Test_OMP_graham_scan_with_set_3) {
 }
 
 TEST(OMP_graham_scan, DISABLED_Test_OMP_graham_scan_with_rand_set) {
-  int size = 10'000'000;
+  int size = 10000000;
   auto area = get_rand_set(size);
   std::vector<std::pair<double, double> > check(size);
 
