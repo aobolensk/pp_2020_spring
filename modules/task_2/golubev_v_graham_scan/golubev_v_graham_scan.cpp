@@ -19,15 +19,6 @@ std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
   }
   return result;
 }
-std::vector<std::pair<double, double> > generate_points(std::size_t size) {
-  std::vector<std::pair<double, double> > result(size);
-  result[0] = std::make_pair(0, 0);
-  for (std::size_t i = 1; i < size; ++i) {
-    result[i] = std::make_pair(i, 10);
-  }
-
-  return result;
-}
 std::vector<std::pair<double, double> > get_test_set_1() {
   std::vector<std::pair<double, double> > result(16);
   result[0] = std::make_pair(0, 0);
@@ -98,163 +89,74 @@ std::vector<std::pair<double, double> > get_test_set_3() {
   return result;
 }
 
-bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b) {
-  double grad_a = omp_get_polar_grad(a);
-  double grad_b = omp_get_polar_grad(b);
-
-  if (grad_a < grad_b) {
-    return true;
-  } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (omp_get_polar_r(a) < omp_get_polar_r(b))) {
-    return true;
-  } else {
-    return false;
-  }
-}
-double omp_get_polar_r(const std::pair<double, double>& point) {
+double get_polar_r(const std::pair<double, double>& point) {
   return std::sqrt(point.second * point.second + point.first * point.first);
 }
-double omp_get_polar_grad(const std::pair<double, double>& point) {
+
+double get_polar_grad(const std::pair<double, double>& point) {
   return std::atan(point.second / point.first);
 }
-double omp_get_det(const std::pair<double, double>& x,
+
+double get_det(const std::pair<double, double>& x,
   const std::pair<double, double>& y, const std::pair<double, double>& z) {
   return (y.first - x.first) * (z.second - x.second) - (z.first - x.first) * (y.second - x.second);
 }
-std::size_t omp_get_lex_min(std::vector<std::pair<double, double> > v, int num_threads) {
-  std::vector<std::size_t> res(num_threads);
 
-#pragma omp parallel num_threads(num_threads)
-  {
-    int n_thread = omp_get_thread_num();
-    int size = v.size();
-#pragma omp for
-    for (int i = 1; i < size; ++i) {
-      if (v[res[n_thread]] > v[i]) {
-        res[n_thread] = i;
-      }
-    }
-  }
-  std::size_t min_idx = res[0];
-  for (std::size_t i = 1; i < res.size(); ++i) {
-    if (v[min_idx] > v[res[i]]) {
-      min_idx = res[i];
+std::size_t get_lex_min(std::vector<std::pair<double, double> > v) {
+  std::size_t min_idx = 0;
+  for (std::size_t i = 1; i < v.size(); ++i) {
+    if (v[min_idx] > v[i]) {
+      min_idx = i;
     }
   }
   return min_idx;
 }
 
-void mp_sort(std::vector<std::pair<double, double> >::iterator begin,
-            std::vector<std::pair<double, double> >::iterator end, int num_threads) {
-  int st = std::log2(num_threads);
-  num_threads = std::pow(2, st);
+bool is_less(const std::pair<double, double>& a, const std::pair<double, double>& b) {
+  double grad_a = get_polar_grad(a);
+  double grad_b = get_polar_grad(b);
 
-#pragma omp parallel num_threads(num_threads)
-  {
-    int n_thread = omp_get_thread_num();
-    int step = (end - begin) / num_threads;
-
-    auto left = begin + n_thread * step;
-    auto right = left + step;
-
-    std::sort(left, right, is_less);
-
-
-    int log = std::log2(num_threads);
-    int h = 2;
-    int sorted_size;
-
-    while (log != 0) {
-      sorted_size = step;
-      step += step;
-
-#pragma omp barrier
-
-      if (n_thread < num_threads / h) {
-        merge(begin + step * n_thread,
-          begin + n_thread * step + sorted_size,
-          begin + n_thread * step + step);
-      }
-      --log;
-      h *= 2;
-    }
-  }
-
-  int ostatok = (end - begin) % num_threads;
-  if (ostatok != 0) {
-    std::sort(begin + (end - begin) / num_threads * num_threads, end, is_less);
-    merge(begin, begin + (end - begin) / num_threads * num_threads, end);
+  if (grad_a < grad_b) {
+    return true;
+  } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (get_polar_r(a) < get_polar_r(b))) {
+    return true;
+  } else {
+    return false;
   }
 }
 
-void merge(std::vector<std::pair<double, double> >::iterator left,
-  std::vector<std::pair<double, double> >::iterator mid,
-  std::vector<std::pair<double, double> >::iterator right) {
-  auto lidx = left;
-  auto ridx = mid;
-  std::size_t idx = 0;
-  std::vector<std::pair<double, double> > tmp(right - left);
-
-  while (lidx != mid || ridx != right) {
-    if (is_less((*lidx), (*ridx))) {
-      tmp[idx++] = std::move(*lidx);
-      lidx++;
-    } else {
-      tmp[idx++] = std::move(*ridx);
-      ridx++;
-    }
-
-    if (lidx == mid) {
-      std::copy(std::make_move_iterator(ridx),
-        std::make_move_iterator(right),
-        &tmp[idx]);
-      break;
-    }
-
-    if (ridx == right) {
-      std::copy(std::make_move_iterator(lidx),
-        std::make_move_iterator(mid),
-        &tmp[idx]);
-      break;
-    }
-  }
-  std::copy(std::make_move_iterator(tmp.begin()),
-    std::make_move_iterator(tmp.end()), left);
-}
-
-
-
-std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> > points,
-  int num_threads) {
+std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> >::iterator begin,
+  std::vector<std::pair<double, double> >::iterator end) {
+  std::vector<std::pair<double, double> > points(end - begin);
+  std::copy(begin, end, points.begin());
   // lex_min
-  std::size_t min_idx = omp_get_lex_min(points, num_threads);
+  std::size_t min_idx = get_lex_min(points);
   std::swap(points[0], points[min_idx]);
   auto lex_min = points[0];
 
   // sdvig koordinat
-  int size = points.size();
-#pragma omp parallel for /*if (size >= 10'000'000)*/
-  for (int i = 0; i < size; ++i) {
+  for (std::size_t i = 0; i < points.size(); ++i) {
     points[i].first -= lex_min.first;
     points[i].second -= lex_min.second;
   }
 
   // sort
-  mp_sort(points.begin() + 1, points.end(), num_threads);
+  std::sort(points.begin() + 1, points.end(), is_less);
 
   // scan
-  std::stack<std::pair<double, double> > res;
+  std::stack<std::pair<double, double>> res;
   std::size_t stack_size = res.size();
   res.push(points[0]);
   res.push(points[1]);
 
   std::pair<double, double> x, y, z;
-  for (std::size_t i = 2; i < size; ++i) {
+  for (std::size_t i = 2; i < points.size(); ++i) {
     stack_size = res.size();
     y = res.top();
     res.pop();
     x = res.top();
     z = points[i];
-    double det = omp_get_det(x, y, z);
+    double det = get_det(x, y, z);
 
     if (det > 0) {
       res.push(y);
@@ -276,6 +178,29 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
     --i;
   }
 
-  return res_vec;
+  return std::move(res_vec);
 }
 
+std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> >::iterator begin,
+  std::vector<std::pair<double, double> >::iterator end,
+  int n_threads) {
+  int step = (end - begin) / n_threads;
+  std::vector<std::pair<double, double> > last_points;
+
+#pragma omp parallel num_threads(n_threads)
+  {
+    int t_number = omp_get_thread_num();
+    std::vector<std::pair<double, double> > local_scan;
+    if (t_number == n_threads - 1) {
+      local_scan = graham_scan(begin + step * t_number, end);
+    } else {
+      local_scan = graham_scan(begin + step * t_number, begin + step * (t_number + 1));
+    }
+
+    for (std::size_t i = 0; i < local_scan.size(); ++i) {
+      last_points.push_back(std::move(local_scan[i]));
+    }
+  }
+  auto res = graham_scan(last_points.begin(), last_points.end());
+  return std::move(res);
+}
