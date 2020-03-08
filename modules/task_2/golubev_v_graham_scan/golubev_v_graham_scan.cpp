@@ -177,7 +177,6 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     res.pop();
     --i;
   }
-
   return res_vec;
 }
 
@@ -191,16 +190,18 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
   {
     int t_number = omp_get_thread_num();
     std::vector<std::pair<double, double> > local_scan;
+
     if (t_number == n_threads - 1) {
       local_scan = graham_scan(begin + step * t_number, end);
     } else {
       local_scan = graham_scan(begin + step * t_number, begin + step * (t_number + 1));
     }
-
-    for (std::size_t i = 0; i < local_scan.size(); ++i) {
-      last_points.push_back(std::move(local_scan[i]));
+#pragma omp critical
+    {
+      for (std::size_t i = 0; i < local_scan.size(); ++i) {
+        last_points.push_back(local_scan[i]);
+      }
     }
   }
-  auto res = graham_scan(last_points.begin(), last_points.end());
-  return res;
+  return graham_scan(last_points.begin(), last_points.end());
 }
