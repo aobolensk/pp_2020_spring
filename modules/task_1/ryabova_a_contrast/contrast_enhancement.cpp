@@ -29,7 +29,7 @@ Image randomImage(int width, int height) {
 }
 
 Image contrastImage(Image initImage, int width, int height) {
-    if (initImage.size() != width * height) {
+    if (((width * height) > 0) && (initImage.size() != static_cast<size_t>(width * height))) {
         throw - 1;
     }
     Image result(initImage);
