@@ -1,6 +1,5 @@
 // Copyright 2020 Zhivaev Artem
 
-#include <Windows.h>
 #include <gtest/gtest.h>
 #include <omp.h>
 
@@ -291,29 +290,18 @@ TEST(Parallel, Matrix_512x512) {
     b[i] = kSize * kSize - i;
   }
 
-  SYSTEMTIME time;
-  LONG start, end;
-
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  double start = omp_get_wtime();
   multSeq(kSize, a.data(), b.data(), resultExpected.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  double end = omp_get_wtime();
 
-  long seqTime = end - start;
+  double seqTime = end - start;
   std::cout << "Sequential: " << seqTime << std::endl;
 
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  start = omp_get_wtime();
   strassenMultOmp(kSize, a.data(), b.data(), result.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  end = omp_get_wtime();
 
-  long parTime = end - start;
+  double parTime = end - start;
   std::cout << "Parallel: " << parTime << std::endl;
 
   std::cout << "x" << static_cast<double>(seqTime) / parTime << " faster"
@@ -334,29 +322,20 @@ TEST(Parallel, DISABLED_Matrix_1024x1024) {
     b[i] = kSize * kSize - i;
   }
 
-  SYSTEMTIME time;
-  LONG start, end;
+  double start, end;
 
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  start = omp_get_wtime();
   multSeq(kSize, a.data(), b.data(), resultExpected.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  end = omp_get_wtime();
 
-  long seqTime = end - start;
+  double seqTime = end - start;
   std::cout << "Sequential: " << seqTime << std::endl;
 
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  start = omp_get_wtime();
   strassenMultOmp(kSize, a.data(), b.data(), result.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  end = omp_get_wtime();
 
-  long parTime = end - start;
+  double parTime = end - start;
   std::cout << "Parallel: " << parTime << std::endl;
 
   std::cout << "x" << static_cast<double>(seqTime) / parTime << " faster"
@@ -377,29 +356,20 @@ TEST(Parallel, DISABLED_Matrix_2048x2048) {
     b[i] = kSize * kSize - i;
   }
 
-  SYSTEMTIME time;
-  LONG start, end;
+  double start, end;
 
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  start = omp_get_wtime();
   multSeq(kSize, a.data(), b.data(), resultExpected.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  end = omp_get_wtime();
 
-  long seqTime = end - start;
+  double seqTime = end - start;
   std::cout << "Sequential: " << seqTime << std::endl;
 
-  GetSystemTime(&time);
-  start = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-          time.wSecond * 1000 + time.wMilliseconds;
+  start = omp_get_wtime();
   strassenMultOmp(kSize, a.data(), b.data(), result.data());
-  GetSystemTime(&time);
-  end = time.wHour * 60 * 60 * 1000 + time.wMinute * 60 * 1000 +
-        time.wSecond * 1000 + time.wMilliseconds;
+  end = omp_get_wtime();
 
-  long parTime = end - start;
+  double parTime = end - start;
   std::cout << "Parallel: " << parTime << std::endl;
 
   std::cout << "x" << static_cast<double>(seqTime) / parTime << " faster"
