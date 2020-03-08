@@ -54,12 +54,12 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 }
 
 #else
+#include <string>
+#include <vector>
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/opencv.hpp"
-#include <string>
-#include <vector>
 
 void show_histogram(std::string const& name, cv::Mat1b const& image) {
     // histogram bins count
@@ -100,32 +100,32 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
     #else
-    cv::Mat src = cv::imread("C:/Users/User/Pictures/4.png");
-    cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
-    std::vector <int> vec(src.rows * src.cols);
-    cv::imshow("first", src);
+    cv::Mat img = cv::imread("C:/Users/User/Pictures/4.png");
+    cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+    std::vector <int> vec(img.rows * img.cols);
+    cv::imshow("first", img);
     cv::waitKey(0);
 
-    show_histogram("image1 hist", src);
+    show_histogram("image1 hist", img);
     cv::waitKey(0);
 
     int n = 0;
-    for (int j = 0; j < src.rows; j++) {
-        for (int i = 0; i < src.cols; i++) {
-            vec[n++] = static_cast<int>(src.at<uchar>(j, i));
+    for (int j = 0; j < img.rows; j++) {
+        for (int i = 0; i < img.cols; i++) {
+            vec[n++] = static_cast<int>(img.at<uchar>(j, i));
         }
     }
-    vec = contrastImage(vec, src.rows, src.cols);
+    vec = contrastImage(vec, img.rows, img.cols);
     n = 0;
-    for (int j = 0; j < src.rows; j++) {
-        for (int i = 0; i < src.cols; i++) {
-            src.at<uchar>(j, i) = vec[n++];
+    for (int j = 0; j < img.rows; j++) {
+        for (int i = 0; i < img.cols; i++) {
+            img.at<uchar>(j, i) = vec[n++];
         }
     }
-    cv::imshow("second", src);
+    cv::imshow("second", img);
     cv::waitKey(0);
 
-    show_histogram("image2 hist", src);
+    show_histogram("image2 hist", img);
 
     cv::waitKey();
 
