@@ -273,13 +273,13 @@ void TBBSort(std::vector<double>::iterator first,
              std::vector<double>::iterator end, int num_th) {
   int i = log(num_th) / log(2);
 
-  tbb::task_scheduler_init init(num_th);
+  // tbb::task_scheduler_init init(num_th);
 
   tbb::parallel_for(tbb::blocked_range<std::vector<double>::iterator>(
-                   first, end, (first - end) / num_th),
-               BitWiseTBB());
+                        first, end, (end - first) / num_th),
+                    BitWiseTBB());
 
-  int piece = 2 * num_th;
+  int piece = 2 * (end - first) / num_th;
 
   while (i != 0) {
     tbb::parallel_for(
@@ -289,7 +289,22 @@ void TBBSort(std::vector<double>::iterator first,
     i--;
   }
 
-  init.terminate();
+  // init.terminate();
+}
+
+void SortTBB(std::vector<double>::iterator first,
+             std::vector<double>::iterator end, int num_th) {
+  if ((end - first) % num_th != 0) {
+    std::vector<double>::iterator new_end = end;
+    while ((new_end - first) % num_th != 0) {
+      new_end--;
+    }
+    TBBSort(first, new_end, num_th);
+    BitwiseSort(new_end, end);
+    MergeSort(first, new_end, end);
+  } else {
+    TBBSort(first, end, num_th);
+  }
 }
 
 bool IsSorted(std::vector<double>* old_vector,
