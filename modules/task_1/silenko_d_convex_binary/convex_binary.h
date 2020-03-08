@@ -6,7 +6,7 @@
 
 int** getRandomMas(int n, int m);
 
-std::vector<int*> getComponent(int** mas, int n, int m, int** & convex_mas, int & num);
+std::vector<int*> getComponent(int** mas, int n, int m, int** *convex_mas, int *num);
 
 double length(int* p1, int* p2);
 double cosvec(int* p1, int* p2, int* p3);

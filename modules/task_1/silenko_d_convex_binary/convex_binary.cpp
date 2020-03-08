@@ -93,16 +93,14 @@ std::vector<int*> Jarvis(int** convex_mas, int n) {
       last = convex_mas[minind];
       if (last == convex_mas[m])
         break;
-      
       res.push_back(convex_mas[minind]);
     }
   }
   return res;
 }
 
-std::vector<int*> getComponent(int** mas, int n, int m, int** & convex_mas, int & num) {
+std::vector<int*> getComponent(int** mas, int n, int m, int** *convex_mas, int *num) {
   int kn = 0, km = 0, cur = 1;
-  num = 0;
   int A, B, C;
   for (int i = 0; i < n; i++)
     for (int j = 0; j < m; j++) {
@@ -123,9 +121,8 @@ std::vector<int*> getComponent(int** mas, int n, int m, int** & convex_mas, int 
       A = mas[i][j];
 
       if (A == 0) {
-        ;
       } else {
-        num++;
+        *num = *num + 1;
         if (B == 0 && C == 0) {
           cur++;
           mas[i][j] = cur;
@@ -150,23 +147,23 @@ std::vector<int*> getComponent(int** mas, int n, int m, int** & convex_mas, int 
       }
     }
 
-  convex_mas = new int*[num];
-  for (int i = 0; i < num; i++)
-    convex_mas[i] = new int[3];
+  (*convex_mas) = new int*[*num];
+  for (int i = 0; i < *num; i++)
+    (*convex_mas)[i] = new int[3];
 
   int tmp = 0;
   for (int i =0; i < n; i++)
     for (int j = 0; j < m; j++) {
       if (mas[i][j] != 0) {
-        convex_mas[tmp][0] = j;
-        convex_mas[tmp][1] = i;
-        convex_mas[tmp][2] = mas[i][j];
+        (*convex_mas)[tmp][0] = j;
+        (*convex_mas)[tmp][1] = i;
+        (*convex_mas)[tmp][2] = mas[i][j];
         tmp++;
       }
     }
 
   std::vector<int*> res;
-  res = Jarvis(convex_mas, num);
+  res = Jarvis(*convex_mas, *num);
   return res;
 }
 

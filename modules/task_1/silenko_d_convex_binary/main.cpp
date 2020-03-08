@@ -1,11 +1,7 @@
 // Copyright 2020 Silenko Dmitrii
 
-#include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
-#include <stack>
-#include <Windows.h>
-#include <fstream>
-#include <conio.h>
+#include <vector>
 #include "../../../modules/task_1/silenko_d_convex_binary/convex_binary.h"
 
 TEST(convex_binary_seq, test_one_point) {
@@ -21,7 +17,7 @@ TEST(convex_binary_seq, test_one_point) {
       mas[i][j] = 0;
   mas[2][7] = 1;
 
-  result = getComponent(mas, n, m, convex_mas, num);
+  result = getComponent(mas, n, m, &convex_mas, &num);
 
   int s = result.size();
   int** tmp = new int*[s];
@@ -66,7 +62,7 @@ TEST(convex_binary_seq, test_one_line) {
   mas[0][17] = 1;
 
 
-  result = getComponent(mas, n, m, convex_mas, num);
+  result = getComponent(mas, n, m, &convex_mas, &num);
 
   int** tmp = new int*[2];
   for (int i = 0; i < 2; i++)
@@ -117,7 +113,7 @@ TEST(convex_binary_seq, test_sq) {
   mas[1][2] = 1;
 
 
-  result = getComponent(mas, n, m, convex_mas, num);
+  result = getComponent(mas, n, m, &convex_mas, &num);
 
   int s = result.size();
   int** tmp = new int*[s];
@@ -171,7 +167,7 @@ TEST(convex_binary_seq, test_inside) {
   mas[3][5] = 1;
   mas[4][2] = 1;
 
-  result = getComponent(mas, n, m, convex_mas, num);
+  result = getComponent(mas, n, m, &convex_mas, &num);
   std::vector<int*> inl;
   inl = Inside(result, convex_mas, num);
 
@@ -210,7 +206,7 @@ TEST(convex_binary_seq, test_rand) {
 
   int** mas = getRandomMas(n, m);
 
-  EXPECT_NO_THROW(result = getComponent(mas, n, m, convex_mas, num));
+  EXPECT_NO_THROW(result = getComponent(mas, n, m, &convex_mas, &num));
 
   std::vector<int*> inside;
 
@@ -223,8 +219,6 @@ TEST(convex_binary_seq, test_rand) {
     delete[] convex_mas[i];
   delete[] convex_mas;
 }
-
-using namespace std;
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
