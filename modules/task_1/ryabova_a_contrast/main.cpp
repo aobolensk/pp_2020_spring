@@ -66,13 +66,13 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 
 void show_histogram(std::string const& name, cv::Mat1b const& image)
 {
-    // Set histogram bins count
+    // histogram bins count
     int bins = 256;
     int histSize[] = { bins };
-    // Set ranges for histogram bins
+    // ranges for histogram bins
     float lranges[] = { 0, 256 };
     const float* ranges[] = { lranges };
-    // create matrix for histogram
+    // matrix for histogram
     cv::Mat hist;
     int channels[] = { 0 };
 
