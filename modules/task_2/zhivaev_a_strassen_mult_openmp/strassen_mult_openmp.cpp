@@ -71,8 +71,6 @@ void strassen1(unsigned int size, const double* a1, const double* a2,
   int i;
   int length = size * size;
 
-#pragma omp parallel for shared(a1, a2, b1, b2, t1, t2) private(i) \
-    schedule(static)
   for (i = 0; i < length; i++) {
     t1[i] = a1[i] + a2[i];
     t2[i] = b1[i] + b2[i];
@@ -90,7 +88,6 @@ void strassen2(unsigned int size, const double* a1, const double* a2,
   int i;
   int length = size * size;
 
-#pragma omp parallel for shared(a1, a2, b, t) private(i) schedule(static)
   for (i = 0; i < length; i++) {
     t[i] = a1[i] + a2[i];
   }
@@ -107,7 +104,6 @@ void strassen3(unsigned int size, const double* a, const double* b1,
   int i;
   int length = size * size;
 
-#pragma omp parallel for shared(b1, b2, t) private(i) schedule(static)
   for (i = 0; i < length; i++) {
     t[i] = b1[i] - b2[i];
   }
@@ -125,8 +121,6 @@ void strassen4(unsigned int size, const double* a1, const double* a2,
   int i;
   int length = size * size;
 
-#pragma omp parallel for shared(a1, a2, b1, b2, t1, t2) private(i) \
-    schedule(static)
   for (i = 0; i < length; i++) {
     t1[i] = a1[i] - a2[i];
     t2[i] = b1[i] + b2[i];
@@ -201,25 +195,21 @@ void strassenMultRecursive(unsigned int size, const double* a, const double* b,
   }
 
 // C11 = M1 + M4 - M5 + M7
-#pragma omp parallel for shared(c11, m1, m4, m5, m7) private(i) schedule(static)
   for (i = 0; i < qLength; i++) {
     c11[i] = m1[i] + m4[i] - m5[i] + m7[i];
   }
 
 // C12 = M3 + M5
-#pragma omp parallel for shared(c12, m3, m5) private(i) schedule(static)
   for (i = 0; i < qLength; i++) {
     c12[i] = m3[i] + m5[i];
   }
 
 // C21 = M2 + M4
-#pragma omp parallel for shared(c21, m2, m4) private(i) schedule(static)
   for (i = 0; i < qLength; i++) {
     c21[i] = m2[i] + m4[i];
   }
 
 // C22 = M1 - M2 + M3 + M6
-#pragma omp parallel for shared(c22, m1, m2, m3, m6) private(i) schedule(static)
   for (i = 0; i < qLength; i++) {
     c22[i] = m1[i] - m2[i] + m3[i] + m6[i];
   }
