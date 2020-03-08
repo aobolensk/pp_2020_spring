@@ -178,7 +178,7 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     --i;
   }
 
-  return std::move(res_vec);
+  return res_vec;
 }
 
 std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> >::iterator begin,
@@ -202,5 +202,5 @@ std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<do
     }
   }
   auto res = graham_scan(last_points.begin(), last_points.end());
-  return std::move(res);
+  return res;
 }
