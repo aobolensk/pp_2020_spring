@@ -2,15 +2,15 @@
 #include <vector>
 #include "../../../modules/task_2/vlasov_a_multi_integration_simpson/multi_integration_simpson.h"
 
-double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n) {
+double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n) {
   if (n <= 0)
     throw "n is negative";
   if (a.size() != b.size())
     throw "integration limits are not equal";
   int multiplicity = static_cast<int> (a.size());
   double sum = 0;
-  # pragma omp parallel reduction(+: sum) 
+  # pragma omp parallel reduction(+: sum)
   {
     int count_thread = omp_get_num_threads();
     int id_thread = omp_get_thread_num();
@@ -36,8 +36,8 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
   return sum;
 }
 
-double getSum(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n) {
+double getSum(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n) {
   if (n <= 0)
     throw "n is negative";
   if (a.size() != b.size())

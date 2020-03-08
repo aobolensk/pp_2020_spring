@@ -6,10 +6,10 @@
 #include <vector>
 #include <functional>
 
-double getSum(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n);
+double getSum(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n);
 
-double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n);
+double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n);
 
 #endif  // MODULES_TASK_2_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_

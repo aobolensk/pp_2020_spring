@@ -9,19 +9,19 @@ std::function<double(const std::vector<double>&)> f1 = [](const std::vector<doub
 };
 
 std::function<double(const std::vector<double>&)> f2 = [](const std::vector<double>& x) {
-  return 3 * x[0] * x[0] * x[0] + 2 * x[1] * x[1]; 
+  return 3 * x[0] * x[0] * x[0] + 2 * x[1] * x[1];
 };
 
 std::function<double(const std::vector<double>&)> f3 = [](const std::vector<double>& x) {
-  return x[0] + x[1] + x[2]; 
+  return x[0] + x[1] + x[2];
 };
 
 std::function<double(const std::vector<double>&)> f4 = [](const std::vector<double>& x) {
-  return sin(x[0]) + 2 * x[1] + x[2] * x[2]; 
+  return sin(x[0]) + 2 * x[1] + x[2] * x[2];
 };
 
 std::function<double(const std::vector<double>&)> f5 = [](const std::vector<double>& x) {
-  return x[0] * x[0] + x[1] * x[1] + x[2] * x[2]; 
+  return x[0] * x[0] + x[1] * x[1] + x[2] * x[2];
 };
 
 
