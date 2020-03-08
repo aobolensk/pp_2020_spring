@@ -72,7 +72,7 @@ std::vector<int*> Jarvis(int** convex_mas, int n) {
 
     double mincos, cos;
     int minind = 0;
-    double maxlen;
+    double maxlen = 0;
     while (1) {
       mincos = 2;
       for (int i = 0; i < n; i++) {
