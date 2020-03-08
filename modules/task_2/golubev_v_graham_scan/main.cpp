@@ -10,6 +10,11 @@
 #include <stack>
 #include "./golubev_v_graham_scan.h"
 
+TEST(OMP_graham_scan, Exception_when_number_of_threads_is_zero) {
+  auto area = get_rand_set(10);
+  ASSERT_ANY_THROW(omp_graham_scan(area.begin(), area.end(), 0));
+}
+
 TEST(OMP_graham_scan, Test_OMP_graham_scan_with_set_1) {
   auto area = get_test_set_1();
   auto res = omp_graham_scan(area.begin(), area.end());
@@ -55,13 +60,24 @@ TEST(OMP_graham_scan, Test_OMP_graham_scan_with_set_3) {
   ASSERT_EQ(res, check);
 }
 
-TEST(OMP_graham_scan, DISABLED_Test_OMP_graham_scan_with_rand_set) {
+TEST(OMP_graham_scan, Test_OMP_graham_scan_with_big_rand_set) {
+  int size = 1000;
+  auto area = get_rand_set(size);
+  std::vector<std::pair<double, double> > check(size);
+
+  auto res_omp = omp_graham_scan(area.begin(), area.end());
+  auto res_std = graham_scan(area.begin(), area.end());
+
+  ASSERT_EQ(res_omp, res_std);
+}
+
+/*TEST(OMP_graham_scan, Test_OMP_graham_scan_with_rand_set) {
   int size = 10000000;
   auto area = get_rand_set(size);
   std::vector<std::pair<double, double> > check(size);
 
   double t1 = omp_get_wtime();
-  auto res_omp = omp_graham_scan(area.begin(), area.end(), 4);
+  auto res_omp = omp_graham_scan(area.begin(), area.end());
   double t2 = omp_get_wtime();
   std::cout << "omp_scan " << t2 - t1 << std::endl;
 
@@ -69,17 +85,10 @@ TEST(OMP_graham_scan, DISABLED_Test_OMP_graham_scan_with_rand_set) {
   auto res_std = graham_scan(area.begin(), area.end());
   double t4 = omp_get_wtime();
   std::cout << "std_scan " << t4 - t3 << std::endl;
+  std::cout << "acseleration " << (t4 - t3) / (t2 - t1) << std::endl;
 
   ASSERT_EQ(res_omp, res_std);
-}
-
-TEST(OMP_graham_scan, Test_OMP) {
-  auto area = get_rand_set(10);
-  auto res = omp_graham_scan(area.begin(), area.end());
-  auto check = graham_scan(area.begin(), area.end());
-  ASSERT_EQ(res, check);
-}
-
+}*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

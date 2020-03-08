@@ -180,9 +180,14 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   return res_vec;
 }
 
-std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> >::iterator begin,
+std::vector<std::pair<double, double> > omp_graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end,
-  int n_threads) {
+  std::size_t n_threads) {
+  if (n_threads == 0) {
+    throw "incorrect number of threads";
+  }
+
   int step = (end - begin) / n_threads;
   std::vector<std::pair<double, double> > last_points;
 

@@ -21,8 +21,9 @@ std::size_t get_lex_min(std::vector<std::pair<double, double> > v);
 
 std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end);
-std::vector<std::pair<double, double> > omp_graham_scan(std::vector<std::pair<double, double> >::iterator begin,
+std::vector<std::pair<double, double> > omp_graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end,
-  int n_threads = 2);
+  std::size_t n_threads = 2);
 
 #endif  // MODULES_TASK_2_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
