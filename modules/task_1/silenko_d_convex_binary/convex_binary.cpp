@@ -5,6 +5,7 @@
 #include <ctime>
 #include <numeric>
 #include <stdexcept>
+#include <algorithm>
 #include <vector>
 #include "../../../modules/task_1/silenko_d_convex_binary/convex_binary.h"
 

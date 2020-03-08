@@ -2,6 +2,7 @@
 #ifndef MODULES_TASK_1_SILENKO_D_CONVEX_BINARY_CONVEX_BINARY_H_
 #define MODULES_TASK_1_SILENKO_D_CONVEX_BINARY_CONVEX_BINARY_H_
 
+#include <algorithm>
 #include <vector>
 
 int** getRandomMas(int n, int m);

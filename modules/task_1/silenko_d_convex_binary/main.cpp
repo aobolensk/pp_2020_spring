@@ -1,6 +1,7 @@
 // Copyright 2020 Silenko Dmitrii
 
 #include <gtest/gtest.h>
+#include <algorithm>
 #include <vector>
 #include "../../../modules/task_1/silenko_d_convex_binary/convex_binary.h"
 
