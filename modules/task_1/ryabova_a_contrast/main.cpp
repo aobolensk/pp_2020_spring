@@ -50,7 +50,7 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 
     Image img = randomImage(width1, height);
 
-    ASSERT_ANY_THROW(img, contrastImage(img, width2, height));
+    ASSERT_ANY_THROW(contrastImage(img, width2, height));
 }
 
 #else
