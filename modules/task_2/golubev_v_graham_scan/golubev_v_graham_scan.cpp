@@ -193,7 +193,7 @@ std::vector<std::pair<double, double> > omp_graham_scan(
 
 #pragma omp parallel num_threads(n_threads)
   {
-    int t_number = omp_get_thread_num();
+    std::size_t t_number = omp_get_thread_num();
     std::vector<std::pair<double, double> > local_scan;
 
     if (t_number == n_threads - 1) {
