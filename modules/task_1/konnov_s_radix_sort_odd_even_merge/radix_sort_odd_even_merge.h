@@ -2,4 +2,6 @@
 
 #include <vector>
 
-std::vector<double> radix_sort_odd_even_merge(const std::vector<double>& array);
+std::vector<double> countingSort(std::vector<double> array, int byteNum);
+std::vector<double> radixSortOddEvenMerge(const std::vector<double>& array);
+std::vector<double> getRandomVector(int size, double lower_bound, double upper_bound, int seed = -1);
