@@ -6,7 +6,6 @@
 #include <gtest/gtest.h>
 
 TEST(contrast_enhancement, correct_calculate_by_formula) {
-
     int width = 2;
     int height = 2;
 
@@ -17,7 +16,6 @@ TEST(contrast_enhancement, correct_calculate_by_formula) {
 }
 
 TEST(contrast_enhancement, get_black_img_when_pix_are_the_same) {
-
     int width = 2;
     int height = 2;
 
@@ -28,7 +26,6 @@ TEST(contrast_enhancement, get_black_img_when_pix_are_the_same) {
 }
 
 TEST(contrast_enhancement, can_change_small_img) {
-
     int width = 10;
     int height = 10;
 
@@ -38,7 +35,6 @@ TEST(contrast_enhancement, can_change_small_img) {
 }
 
 TEST(contrast_enhancement, can_change_big_img) {
-
     int width = 945;
     int height = 345;
 
@@ -48,7 +44,6 @@ TEST(contrast_enhancement, can_change_big_img) {
 }
 
 TEST(contrast_enhancement, any_throw_when_error_size) {
-
     int width1 = 100;
     int width2 = 100;
     int height = 100;
@@ -63,9 +58,10 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/opencv.hpp"
+#include <string>
+#include <vector>
 
-void show_histogram(std::string const& name, cv::Mat1b const& image)
-{
+void show_histogram(std::string const& name, cv::Mat1b const& image) {
     // histogram bins count
     int bins = 256;
     int histSize[] = { bins };
@@ -92,13 +88,12 @@ void show_histogram(std::string const& name, cv::Mat1b const& image)
         cv::line
         (hist_image
             , cv::Point(b, hist_height - height), cv::Point(b, hist_height)
-            , cv::Scalar::all(255)
-        );
+            , cv::Scalar::all(255));
     }
     cv::imshow(name, hist_image);
 }
 
-#endif  
+#endif
 
 int main(int argc, char** argv) {
     #ifndef OPENCV
@@ -107,7 +102,7 @@ int main(int argc, char** argv) {
     #else
     cv::Mat src = cv::imread("C:/Users/User/Pictures/4.png");
     cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
-    std::vector <int> vec (src.rows * src.cols);
+    std::vector <int> vec(src.rows * src.cols);
     cv::imshow("first", src);
     cv::waitKey(0);
 
@@ -117,7 +112,7 @@ int main(int argc, char** argv) {
     int n = 0;
     for (int j = 0; j < src.rows; j++) {
         for (int i = 0; i < src.cols; i++) {
-            vec[n++] = (int)src.at<uchar>(j, i);
+            vec[n++] = static_cast<int>(src.at<uchar>(j, i));
         }
     }
     vec = contrastImage(vec, src.rows, src.cols);

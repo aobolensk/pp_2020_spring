@@ -11,15 +11,13 @@
 
 
 int F(int x, int xMax, int xMin) {
-
     if (xMax != xMin)
-        return (int)((255 * (x - xMin)) / (xMax - xMin));
+        return static_cast<int>((255 * (x - xMin)) / (xMax - xMin));
     else
         return 0;
 }
 
 Image randomImage(int width, int height) {
-
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
 
@@ -28,11 +26,9 @@ Image randomImage(int width, int height) {
         result[i] = gen() % 256;
     }
     return result;
-
 }
 
 Image contrastImage(Image initImage, int width, int height) {
-
     if (initImage.size() != width * height) {
         throw - 1;
     }
