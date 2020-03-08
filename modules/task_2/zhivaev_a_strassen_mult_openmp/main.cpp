@@ -20,38 +20,17 @@ void strassen4(unsigned int size, const double* a1, const double* a2,
 unsigned int nextPowerOf2(unsigned int number);
 
 TEST(Helper_Functions, Next_power_of_2) {
-  ASSERT_EQ(1u, nextPowerOf2(1));
-  ASSERT_EQ(2u, nextPowerOf2(2));
-  ASSERT_EQ(4u, nextPowerOf2(4));
-  ASSERT_EQ(8u, nextPowerOf2(8));
-  ASSERT_EQ(16u, nextPowerOf2(16));
-  ASSERT_EQ(32u, nextPowerOf2(32));
-  ASSERT_EQ(64u, nextPowerOf2(64));
-  ASSERT_EQ(128u, nextPowerOf2(128));
-  ASSERT_EQ(256u, nextPowerOf2(256));
-  ASSERT_EQ(512u, nextPowerOf2(512));
-  ASSERT_EQ(1024u, nextPowerOf2(1024));
-  ASSERT_EQ(2048u, nextPowerOf2(2048));
-  ASSERT_EQ(4096u, nextPowerOf2(4096));
-  ASSERT_EQ(4u, nextPowerOf2(3));
-  ASSERT_EQ(8u, nextPowerOf2(5));
-  ASSERT_EQ(8u, nextPowerOf2(7));
-  ASSERT_EQ(16u, nextPowerOf2(9));
-  ASSERT_EQ(16u, nextPowerOf2(15));
-  ASSERT_EQ(32u, nextPowerOf2(17));
-  ASSERT_EQ(32u, nextPowerOf2(31));
-  ASSERT_EQ(64u, nextPowerOf2(63));
-  ASSERT_EQ(64u, nextPowerOf2(33));
-  ASSERT_EQ(128u, nextPowerOf2(65));
-  ASSERT_EQ(128u, nextPowerOf2(127));
-  ASSERT_EQ(256u, nextPowerOf2(129));
-  ASSERT_EQ(256u, nextPowerOf2(255));
-  ASSERT_EQ(512u, nextPowerOf2(257));
-  ASSERT_EQ(512u, nextPowerOf2(511));
-  ASSERT_EQ(1024u, nextPowerOf2(513));
-  ASSERT_EQ(1024u, nextPowerOf2(1023));
-  ASSERT_EQ(2048u, nextPowerOf2(2047));
-  ASSERT_EQ(4096u, nextPowerOf2(4095));
+  unsigned int number = 1;
+  for (unsigned int i = 0; i < 12; i++) {
+    number *= 2;
+    ASSERT_EQ(number, nextPowerOf2(number));
+  }
+  number = 4;
+  for (unsigned int i = 0; i < 10; i++) {
+    ASSERT_EQ(number, nextPowerOf2(number - 1));
+    ASSERT_EQ(number, nextPowerOf2(number / 2 + 1));
+    number *= 2;
+  }
 }
 
 TEST(Helper_Functions, Strassen1) {
