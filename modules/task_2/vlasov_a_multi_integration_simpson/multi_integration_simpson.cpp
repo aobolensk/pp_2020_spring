@@ -11,7 +11,7 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
   int n = 2 * n_;
   int multiplicity = static_cast<int> (a.size());
   double sum = 0;
-# pragma omp parallel reduction(+: sum)
+  # pragma omp parallel reduction(+: sum)
   {
     int count_thread = omp_get_num_threads();
     int id_thread = omp_get_thread_num();
@@ -33,7 +33,7 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
     } else {
         sum = getSum_odd(f, local_a, local_b, local_n);
     }
-#pragma omp master
+    #pragma omp master
     {
       if ((n % count_thread) != 0) {
         for (int i = 0; i < multiplicity; i++) {
