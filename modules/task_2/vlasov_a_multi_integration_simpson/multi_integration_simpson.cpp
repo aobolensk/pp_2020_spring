@@ -30,9 +30,8 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
     }
     if ((local_n * id_thread) % 2 == 0) {
       sum = getSum(f, local_a, local_b, local_n);
-    }
-    else {
-      sum = getSum_odd(f, local_a, local_b, local_n);
+    } else {
+        sum = getSum_odd(f, local_a, local_b, local_n);
     }
 #pragma omp master
     {
@@ -42,9 +41,8 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
         }
         if ((local_n * count_thread) % 2 == 0) {
           sum += getSum(f, local_a, b, n % count_thread);
-        }
-        else {
-          sum += getSum_odd(f, local_a, b, n % count_thread);
+        } else {
+            sum += getSum_odd(f, local_a, b, n % count_thread);
         }
       }
     }
