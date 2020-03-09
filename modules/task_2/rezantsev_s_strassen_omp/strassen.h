@@ -1,10 +1,8 @@
 // Copyright 2020 Rezantsev Sergey
-#ifndef MODULES_TASK_2_REZANTSEV_S_STRASSEN_STRASSEN_H_
-#define MODULES_TASK_2_REZANTSEV_S_STRASSEN_STRASSEN_H_
-#include <time.h>
-#include <random>
-#include <vector>
+#ifndef MODULES_TASK_2_REZANTSEV_S_STRASSEN_OMP_STRASSEN_H_
+#define MODULES_TASK_2_REZANTSEV_S_STRASSEN_OMP_STRASSEN_H_
 #include <omp.h>
+#include <vector>
 void splitMatrix(std::vector<double> a, std::vector<double> *a11,
                  std::vector<double> *a22, std::vector<double> *a12,
                  std::vector<double> *a21, int n);
@@ -33,4 +31,4 @@ void multMatrix(const std::vector<double> &a, const std::vector<double> &b,
 bool isEqMatrix(std::vector<double> a, std::vector<double> b, int n);
 void strassen_omp(const std::vector<double> &a, const std::vector<double> &b,
               std::vector<double> *result);
-#endif  // MODULES_TASK_2_REZANTSEV_S_STRASSEN_STRASSEN_H_
+#endif  // MODULES_TASK_2_REZANTSEV_S_STRASSEN_OMP_STRASSEN_H_

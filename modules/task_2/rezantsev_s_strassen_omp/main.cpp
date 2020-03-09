@@ -1,6 +1,6 @@
 // Copyright 2020 Rezantsev Sergey
-#include <vector>
 #include <omp.h>
+#include <vector>
 #include "../../modules/task_2/rezantsev_s_strassen_omp/strassen.h"
 #include "gtest/gtest.h"
 

@@ -1,8 +1,8 @@
 // Copyright 2020 Rezantsev Sergey
-#include "../../modules/task_2/rezantsev_s_strassen_omp/strassen.h"
 #include <omp.h>
 #include <algorithm>
 #include <vector>
+#include "../../modules/task_2/rezantsev_s_strassen_omp/strassen.h"
 std::vector<double> sumMatrix(std::vector<double> a, std::vector<double> b,
                               int n) {
   std::vector<double> res(n * n);
@@ -82,7 +82,6 @@ std::vector<double> collectMatrix(std::vector<double> a11,
 void sumMatrix(const std::vector<double>& a, const std::vector<double>& b,
                std::vector<double> *c) {
   for (int i = 0; i < c->size(); i++) c->at(i) = a[i] + b[i];
-  
 }
 
 void subtMatrix(const std::vector<double>& a, const std::vector<double>& b,
@@ -196,68 +195,68 @@ void strassen_omp(const std::vector<double>& a, const std::vector<double>& b,
       std::vector<double> t1(h * h);
       std::vector<double> t2(h * h);
       sumMatrix(a11, a22, &t1);
-      sumMatrix(b11, b22, &t2);         
-      strassen_omp(t1, t2, &p1);  
+      sumMatrix(b11, b22, &t2);
+      strassen_omp(t1, t2, &p1);
   }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
-      sumMatrix(a21, a22, &t1);  
-      strassen_omp(t1, b11, &p2);  
+      sumMatrix(a21, a22, &t1);
+      strassen_omp(t1, b11, &p2);
     }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
-      subtMatrix(b12, b22, &t1);     
-      strassen_omp(a11, t1, &p3);  
+      subtMatrix(b12, b22, &t1);
+      strassen_omp(a11, t1, &p3);
     }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
-      subtMatrix(b21, b11, &t1);      
-      strassen_omp(a22, t1, &p4);  
+      subtMatrix(b21, b11, &t1);
+      strassen_omp(a22, t1, &p4);
     }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
-      sumMatrix(a11, a12, &t1);      
-      strassen_omp(t1, b22, &p5);  
-    }
-#pragma omp parallel default(shared)
-#pragma omp single
-    {
-      std::vector<double> t1(h * h);
-      std::vector<double> t2(h * h);
-      subtMatrix(a21, a11, &t1);         
-      sumMatrix(b11, b12, &t2);  
-      strassen_omp(t1, t2, &p6);  
+      sumMatrix(a11, a12, &t1);
+      strassen_omp(t1, b22, &p5);
     }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
       std::vector<double> t2(h * h);
-      subtMatrix(a12, a22, &t1);   
-      sumMatrix(b21, b22, &t2);    
-      strassen_omp(t1, t2, &p7);  
+      subtMatrix(a21, a11, &t1);
+      sumMatrix(b11, b12, &t2);
+      strassen_omp(t1, t2, &p6);
+    }
+#pragma omp parallel default(shared)
+#pragma omp single
+    {
+      std::vector<double> t1(h * h);
+      std::vector<double> t2(h * h);
+      subtMatrix(a12, a22, &t1);
+      sumMatrix(b21, b22, &t2);
+      strassen_omp(t1, t2, &p7);
     }
 #pragma omp parallel default(shared)
 #pragma omp single nowait
     {
-      sumMatrix(p3, p5, &r12);  
-      sumMatrix(p2, p4, &r21);  
+      sumMatrix(p3, p5, &r12);
+      sumMatrix(p2, p4, &r21);
     }
 #pragma omp parallel default(shared)
 #pragma omp single
     {
       std::vector<double> t1(h * h);
       std::vector<double> t2(h * h);
-      sumMatrix(p1, p4, &t1);  
-      sumMatrix(t1, p7, &t2); 
+      sumMatrix(p1, p4, &t1);
+      sumMatrix(t1, p7, &t2);
       subtMatrix(t2, p5, &r11);
     }
 #pragma omp parallel default(shared)
@@ -265,7 +264,7 @@ void strassen_omp(const std::vector<double>& a, const std::vector<double>& b,
     {
       std::vector<double> t1(h * h);
       std::vector<double> t2(h * h);
-      sumMatrix(p1, p3, &t1); 
+      sumMatrix(p1, p3, &t1);
       sumMatrix(t1, p6, &t2);
       subtMatrix(t2, p2, &r22);
     }
