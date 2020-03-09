@@ -91,11 +91,11 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
     return Convex_Hull;
 }
 
-std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, double>> points, int num_threads) {
+std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, double>> points, int num_thr) {
     size_t size = points.size();
     size_t base_id = 0;
     std::vector<std::pair<double, double>> Convex_Hull(1);
-    std::vector<std::vector<int>> Local_Convex_Hulls(num_threads);
+    std::vector<std::vector<int>> Local_Convex_Hulls(num_thr);
     std::pair<double, double> base_p;
     std::pair<double, double> cur_p;
     std::pair<double, double> prev_p;
@@ -104,7 +104,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     int ostatok;
     int number_of_t;// = omp_get_num_threads();
 
-/*#pragma omp parallel private(tid) shared(number_of_t, size, k, ostatok) num_threads(2)
+/*#pragma omp parallel private(tid) shared(number_of_t, size, k, ostatok, num_thr) num_threads(num_thr)
     {
         tid = omp_get_thread_num();
         number_of_t = omp_get_num_threads();
@@ -113,16 +113,17 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
         //int number_of_t = omp_get_num_threads();
         if (tid == 0) {
             //number_of_t = omp_get_num_threads();
-            std::cout << "k`0 = " << k << "\n";
+            std::cout << "k`0 = " << num_thr << "\n";
             //std::cout << "number = " << number_of_t << "\n";
             //std::cout << "i am nullean???\n";
         }
 
         if (tid == 1) {
             //std::cout << "i am first\n";
-            std::cout << "k`1 = " << k << "\n";
+            std::cout << "i am first\n"; //<< k << "\n";
         }
     }*/
+
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
             base_id = i;
@@ -147,12 +148,21 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     size_t next = 0;
     size_t flag_h = 1;
 
-#pragma omp parallel private(tid, points) shared(size, Local_Convex_Hulls) num_threads(2)
+#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len) \
+    shared(size, Local_Convex_Hulls, points) num_threads(num_thr)
     {
 #pragma omp for 
-        for (size_t l = 0; l < size; l++) {
+        for (int l = 0; l < size; l++) {
             //do {
                 min_cos = 1.1;
+                tid = omp_get_thread_num();
+/*#pragma omp critical
+                {
+                    if (tid == 0)
+                        std::cout << "first " << min_cos << "\n";
+                    if (tid == 1)
+                        std::cout << "second " << min_cos << "\n";
+                }*/
                 for (size_t i = 0; i < size; i++) {
                     len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
                     len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
@@ -187,14 +197,20 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
                     }
                 }
                 // конец этой проверки
-
-                Convex_Hull.push_back(points[next]);
+                Local_Convex_Hulls[tid].push_back(next);
+#pragma omp critical
+                {
+                    if (tid == 0)
+                        std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
+                    if (tid == 1)
+                        std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
+                }
                 flag_h++;
                 prev_p.first = cur_p.first;
                 prev_p.second = cur_p.second;
                 cur_p = points[next];
             //} while (cur_p != Convex_Hull[0]);
-            if (cur_p == Convex_Hull[0])
+            if (base_id == next)
                 break;
         }
     }
