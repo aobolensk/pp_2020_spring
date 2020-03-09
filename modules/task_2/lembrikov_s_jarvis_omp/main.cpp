@@ -27,7 +27,7 @@ TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
     EXPECT_EQ(answer_func, answer_right);
 }
 
-TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
+/*TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     size_t size = 7;
     size_t size_a = 5;
     std::vector<std::pair<double, double>> answer_func(size_a);
@@ -146,7 +146,7 @@ TEST(Vector_Min_MPI, Test_On_Negative_Points_NE) {
     size = answer.size();
 
     EXPECT_NE(size_a + 1, size);
-}
+}*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

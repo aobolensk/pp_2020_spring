@@ -98,16 +98,21 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     std::pair<double, double> cur_p;
     std::pair<double, double> prev_p;
     int tid;
+    int number_of_t;// = omp_get_num_threads();
 
-#pragma omp parallel private(tid)
+#pragma omp parallel private(tid) shared(number_of_t) num_threads(2)
     {
         tid = omp_get_thread_num();
+        number_of_t = omp_get_num_threads();
+        //int number_of_t = omp_get_num_threads();
         if (tid == 0) {
-            std::cout << "i am nullean???" << "\n";
+            //number_of_t = omp_get_num_threads();
+            std::cout << "number = " << number_of_t << "\n";
+            std::cout << "i am nullean???\n";
         }
 
         if (tid == 1) {
-            std::cout << "i am first" << "\n";
+            std::cout << "i am first\n";
         }
     }
     for (size_t i = 1; i < size; i++) {
