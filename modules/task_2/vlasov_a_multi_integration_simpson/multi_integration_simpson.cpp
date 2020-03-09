@@ -2,8 +2,8 @@
 #include <vector>
 #include "../../../modules/task_2/vlasov_a_multi_integration_simpson/multi_integration_simpson.h"
 
-double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n_) {
+double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n_) {
   if (n_ <= 0)
     throw "n is negative";
   if (a.size() != b.size())
@@ -57,8 +57,8 @@ double getIntegralSimpsonOpenMP(const std::function<double(const std::vector<dou
   return sum;
 }
 
-double getSum(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n) {
+double getSum(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n) {
   int multiplicity = static_cast<int> (a.size());
   std::vector<double> h(multiplicity);
   for (int i = 0; i < multiplicity; i++) {
@@ -77,8 +77,8 @@ double getSum(const std::function<double(const std::vector<double>&)>& f, const 
   return 4 * s1 + 2 * s2;
 }
 
-double getSum_odd(const std::function<double(const std::vector<double>&)>& f, const std::vector<double>& a,
-  const std::vector<double>& b, int n) {
+double getSum_odd(const std::function<double(const std::vector<double>&)>& f,
+  const std::vector<double>& a, const std::vector<double>& b, int n) {
   int multiplicity = static_cast<int> (a.size());
   std::vector<double> h(multiplicity);
   for (int i = 0; i < multiplicity; i++) {
