@@ -81,12 +81,12 @@ std::vector<double> collectMatrix(std::vector<double> a11,
 
 void sumMatrix(const std::vector<double>& a, const std::vector<double>& b,
                std::vector<double> *c) {
-  for (int i = 0; i < c->size(); i++) c->at(i) = a[i] + b[i];
+  for (unsigned int i = 0; i < c->size(); i++) c->at(i) = a[i] + b[i];
 }
 
 void subtMatrix(const std::vector<double>& a, const std::vector<double>& b,
                 std::vector<double> *c) {
-  for (int i = 0; i < c->size(); i++) c->at(i) = a[i] - b[i];
+  for (unsigned int i = 0; i < c->size(); i++) c->at(i) = a[i] - b[i];
 }
 
 void multMatrix(const std::vector<double>& a, const std::vector<double>& b,
