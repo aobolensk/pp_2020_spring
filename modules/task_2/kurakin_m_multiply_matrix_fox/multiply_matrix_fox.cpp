@@ -69,7 +69,7 @@ bool algFoxMatrixMultiply(const matrix &a, const matrix &b, matrix *out) {
     uint size = a.size();
     prepareOutMatrix(out, size, size);
     bool isComplete = false;
-#pragma omp parallel proc_bind(close)
+#pragma omp parallel
     {
         uint numThreads = omp_get_num_threads();
         uint grid = std::sqrt(numThreads);
