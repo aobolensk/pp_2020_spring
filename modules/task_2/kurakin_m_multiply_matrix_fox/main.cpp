@@ -1,7 +1,6 @@
 // Copyright 2020 Kurakin Mikhail
 #include <gtest/gtest.h>
 #include <omp.h>
-#include <iostream>
 #include "./multiply_matrix_fox.h"
 
 TEST(Multiply_Matrix_Fox, Can_Multiplicate_Do_Properly_With_Wrong_Matrix) {
@@ -113,7 +112,7 @@ TEST(Multiply_Matrix_Fox, Can_Use_Fox_Alg_Works_Right_With_Not_Square_Matrix) {
     prepareOutMatrix(&a, rowSize, colSize);
     prepareOutMatrix(&b, rowSize, colSize);
 
-    EXPECT_FALSE(canUseFoxAlg(a, b));
+    EXPECT_FALSE(isSquareMatrix(a, b));
 }
 
 TEST(Multiply_Matrix_Fox, Can_Use_Fox_Alg_Works_Right_With_Square_Matrix) {
@@ -124,59 +123,57 @@ TEST(Multiply_Matrix_Fox, Can_Use_Fox_Alg_Works_Right_With_Square_Matrix) {
     prepareOutMatrix(&a, rowSize, colSize);
     prepareOutMatrix(&b, rowSize, colSize);
 
-    EXPECT_TRUE(canUseFoxAlg(a, b));
+    EXPECT_TRUE(isSquareMatrix(a, b));
 }
 TEST(Multiply_Matrix_Fox, Fox_Alg_Matrix_Mult_Works_Properly) {
     matrix a, b;
     matrix expectRes, res;
-    uint rowSize = 2;
-    uint colSize = 2;
+    uint matrixSize = 2;
 
-    prepareOutMatrix(&expectRes, rowSize, colSize);
-    prepareOutMatrix(&res, rowSize, colSize);
-    prepareOutMatrix(&a, rowSize, colSize);
-    prepareOutMatrix(&b, rowSize, colSize);
+    prepareOutMatrix(&expectRes, matrixSize, matrixSize);
+    prepareOutMatrix(&res, matrixSize, matrixSize);
+    prepareOutMatrix(&a, matrixSize, matrixSize);
+    prepareOutMatrix(&b, matrixSize, matrixSize);
 
     expectRes[0][0] = 8;
     expectRes[0][1] = 5;
     expectRes[1][0] = 20;
     expectRes[1][1] = 13;
 
-    for (uint i = 0; i < rowSize; i++) {  // init matrix
-        for (uint j = 0; j < colSize; j++) {
-            a[i][j] = (i * colSize) + (j + 1);
-            b[i][j] = colSize * rowSize - ((i * colSize) + j);
+    for (uint i = 0; i < matrixSize; i++) {  // init matrix
+        for (uint j = 0; j < matrixSize; j++) {
+            a[i][j] = (i * matrixSize) + (j + 1);
+            b[i][j] = matrixSize * matrixSize - ((i * matrixSize) + j);
         }
     }
 
     algFoxMatrixMultiply(a, b, &res);
 
-    for (uint i = 0; i < rowSize; i++) {
-        for (uint j = 0; j < colSize; j++) {
+    for (uint i = 0; i < matrixSize; i++) {
+        for (uint j = 0; j < matrixSize; j++) {
             EXPECT_NEAR(expectRes[i][j], res[i][j], 0.01);
         }
     }
 }
-// TEST(Multiply_Matrix_Fox, Fox_Alg_Matrix_Mult_Works_Properly_Rand) {
-//     matrix a, b;
-//     matrix expectRes, res;
-//     uint rowSize = 2;
-//     uint colSize = 2;
+TEST(Multiply_Matrix_Fox, Fox_Alg_Matrix_Mult_Works_Properly_Rand) {
+    matrix a, b;
+    matrix expectRes, res;
+    uint matrixSize = 12;
 
-//     prepareOutMatrix(&expectRes, rowSize, colSize);
-//     initMatrixRand(&a, 10, 10);
-//     initMatrixRand(&b, 10, 10);
+    prepareOutMatrix(&expectRes, matrixSize, matrixSize);
+    initMatrixRand(&a, matrixSize, matrixSize);
+    initMatrixRand(&b, matrixSize, matrixSize);
 
-//     simpleMaxtrixMultiply(a, b, &expectRes);
+    simpleMaxtrixMultiply(a, b, &expectRes);
 
-//     algFoxMatrixMultiply(a, b, &res);
+    algFoxMatrixMultiply(a, b, &res);
 
-//     for (uint i = 0; i < rowSize; i++) {
-//         for (uint j = 0; j < colSize; j++) {
-//             EXPECT_NEAR(expectRes[i][j], res[i][j], 0.1);
-//         }
-//     }
-// }
+    for (uint i = 0; i < matrixSize; i++) {
+        for (uint j = 0; j < matrixSize; j++) {
+            EXPECT_NEAR(expectRes[i][j], res[i][j], 0.1);
+        }
+    }
+}
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

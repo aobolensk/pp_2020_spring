@@ -10,8 +10,7 @@ void prepareOutMatrix(matrix *matrixOut, uint sizeRow, uint sizeCol);
 bool initMatrixRand(matrix *a, uint sizeRow, uint sizeCol);
 bool simpleMaxtrixMultiply(const matrix &a, const matrix &b, matrix *out);
 
-bool canUseFoxAlg(const matrix &a, const matrix &b);
+bool isSquareMatrix(const matrix &a, const matrix &b);
 bool algFoxMatrixMultiply(const matrix &a, const matrix &b, matrix *out);
-void getThredPos(uint grid, uint *k1, uint *k2);
 
-#endif  // MODULES_TASK_1_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
+#endif  // MODULES_TASK_2_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_

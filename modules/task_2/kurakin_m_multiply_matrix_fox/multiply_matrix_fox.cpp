@@ -4,7 +4,6 @@
 #include <omp.h>
 #include <random>
 #include <vector>
-#include <iostream>
 bool canMultiplicate(const matrix &a, const matrix &b) {
     if (a.empty() || b.empty()) return false;
     for (uint i = 0; i < a.size(); i++) {
@@ -53,7 +52,7 @@ bool initMatrixRand(matrix *a, uint sizeRow, uint sizeCol) {
     return true;
 }
 
-bool canUseFoxAlg(const matrix &a, const matrix &b) {
+bool isSquareMatrix(const matrix &a, const matrix &b) {
     if (a.empty() || b.empty()) return false;
     if (a.size() != b.size()) return false;
     for (uint i = 0; i < a.size(); i++) {
@@ -66,109 +65,52 @@ bool canUseFoxAlg(const matrix &a, const matrix &b) {
 }
 
 bool algFoxMatrixMultiply(const matrix &a, const matrix &b, matrix *out) {
-    // uint numThreads = omp_get_num_threads();
-    if (!canUseFoxAlg(a, b)) return false;
+    if (!isSquareMatrix(a, b)) return false;
     uint size = a.size();
-    // uint grid = std::sqrt(numThreads);
-    // uint blockSize = size / grid;
-    std::vector<double> aBlock(size, 0.0);
-    matrix bBlock;
-    matrix cBlock;
-    prepareOutMatrix(&cBlock, size, size);
-    prepareOutMatrix(&bBlock, size, size);
     prepareOutMatrix(out, size, size);
-    // std::cout << blockSize << "b\n" << size<<"s\n" << "grid = "<< grid <<
-    // "Threds = " << numThreads<<std::endl;
-    omp_lock_t mylock;
-    omp_init_lock(&mylock);
-#pragma omp parallel firstprivate(aBlock, bBlock, cBlock)
+    bool isComplete = false;
+#pragma omp parallel proc_bind(close)
     {
         uint numThreads = omp_get_num_threads();
         uint grid = std::sqrt(numThreads);
-        uint blockSize = size / grid;
-        uint thread_coord1 = omp_get_thread_num() / grid;
-        uint thread_coord2 = omp_get_thread_num() % grid;
-        uint k1 = thread_coord1 * blockSize;  // wrong
-        uint k2 = thread_coord2 * blockSize;  // wrong
-        // omp_set_lock(&mylock);
-        // if (omp_get_thread_num() == 0) {
-        //     for (uint i = 0; i < a.size(); i++) {
-        //         for (uint j = 0; j < a.size(); j++) {
-        //             std::cout << b[i][j] << std::endl;
-        //         }
-        //     }
-        // }
-        // // std::cout << blockSize << "b\n";
-        // // std::cout << "(" << k1 << ", " << k2 << ")  "
-        // //           << "numbeThr = " << omp_get_thread_num() << std::endl;
-        // omp_unset_lock(&mylock);
-        for (uint i = 0; i < blockSize; i++) {  // формирование обработка блока
-            for (uint j = 0; j < blockSize; j++) {  //заполнение блоков матрицы
-                uint s = (i + j) % blockSize;
-                aBlock[j] = a[j + k1][s + k2];
-                for (uint k = 0; k < blockSize; k++) {
-                    bBlock[j][k] = b[s + k1][k + k2];
+        if (size % grid == 0) {
+            uint blockSize = size / grid;
+
+            std::vector<double> aBlock(blockSize, 0.0);
+            matrix bBlock;
+            matrix cBlock;
+
+            prepareOutMatrix(&cBlock, blockSize, blockSize);
+            prepareOutMatrix(&bBlock, blockSize, blockSize);
+
+            uint thread_coord1 = omp_get_thread_num() / grid;
+            uint thread_coord2 = omp_get_thread_num() % grid;
+            uint k1 = thread_coord1 * blockSize;
+            uint k2 = thread_coord2 * blockSize;
+
+            for (uint i = 0; i < size; i++) {  // формирование обработка блоков
+                for (uint j = 0; j < blockSize;
+                     j++) {  //заполнение блоков матрицы
+                    uint s = (i + j + k1) % size;
+                    aBlock[j] = a[j + k1][s];
+                    for (uint k = 0; k < blockSize; k++) {
+                        bBlock[j][k] = b[s][k + k2];
+                    }
+                }
+                for (uint j = 0; j < blockSize; j++) {  // Compute C
+                    for (uint k = 0; k < blockSize; k++) {
+                        cBlock[j][k] += aBlock[j] * bBlock[j][k];
+                    }
                 }
             }
-            for (uint j = 0; j < blockSize; j++) {  // Compute C
-                for (uint k = 0; k < blockSize; k++) {
-                    cBlock[j][k] += aBlock[j] * bBlock[j][k];
+            //объединть все блоки в единый массив
+            for (uint i = 0; i < blockSize; i++) {
+                for (uint j = 0; j < blockSize; j++) {
+                    (*out)[i + k1][j + k2] = cBlock[i][j];
                 }
             }
-            // omp_set_lock(&mylock);
-            // if (omp_get_thread_num() == 0) {
-            //     for (uint i = 0; i < blockSize; i++) {
-            //         std::cout << "thread = " << omp_get_thread_num()
-            //                   <<"\n" << aBlock[i] << std::endl;
-            //         for (uint j = 0; j < blockSize; j++) {
-            //             // std::cout << "bBlock =" << bBlock[i][j] << std::endl;
-            //             std::cout << "cBlock =" << cBlock[i][j] << std::endl;
-            //         }
-            //     }
-            // }
-            // if (omp_get_thread_num() == 1) {
-            //     for (uint i = 0; i < blockSize; i++) {
-            //         std::cout << "thread = " << omp_get_thread_num()
-            //                   <<"\n" << aBlock[i] << std::endl;
-            //         for (uint j = 0; j < blockSize; j++) {
-            //             // std::cout << "bBlock =" << bBlock[i][j] << std::endl;
-            //             std::cout << "cBlock =" << cBlock[i][j] << std::endl;
-            //         }
-            //     }
-            // }
-            // if (omp_get_thread_num() == 2) {
-            //     for (uint i = 0; i < blockSize; i++) {
-            //         std::cout << "thread = " << omp_get_thread_num()
-            //                   <<"\n" << aBlock[i] << std::endl;
-            //         for (uint j = 0; j < blockSize; j++) {
-            //             // std::cout << "bBlock =" << bBlock[i][j] << std::endl;
-            //             std::cout << "cBlock =" << cBlock[i][j] << std::endl;
-            //         }
-            //     }
-            // }
-            // if (omp_get_thread_num() == 3) {
-            //     for (uint i = 0; i < blockSize; i++) {
-            //         std::cout << "thread = " << omp_get_thread_num()
-            //                   <<"\n" << aBlock[i] << std::endl;
-            //         for (uint j = 0; j < blockSize; j++) {
-            //             // std::cout << "bBlock =" << bBlock[i][j] << std::endl;
-            //             std::cout << "cBlock =" << cBlock[i][j] << std::endl;
-            //         }
-            //     }
-            // }
-            // omp_unset_lock(&mylock);
-        }
-        //объединть все блоки в единый массив
-        for (uint i = 0; i < blockSize; i++) {
-            for (uint j = 0; j < blockSize; j++) {
-                (*out)[i + k1][j + k2] = cBlock[i][j];
-            }
+            isComplete = true;
         }
     }
-    return true;
+    return isComplete;
 }
-
-// void getThredPos(uint grid, uint *k1, uint *k2) {
-//     (*k1)=omp_get_thread_num() / grid;
-//     (*k2) = omp_get_thread_num() %grid;
-// }
