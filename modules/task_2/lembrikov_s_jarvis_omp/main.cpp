@@ -5,7 +5,7 @@
 #include "./jarvis_omp.h"
 
 /*TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
-    size_t size = 3;
+    size_t size = 2;
     std::vector<std::pair<double, double>> answer_func(size);
     std::vector<std::pair<double, double>> answer_right(size);
     std::vector<std::pair<double, double>> pr(size);
@@ -22,7 +22,7 @@
     answer_right[1].second = 3;
     answer_right[2].first = 3;
     answer_right[2].second = 4;
-    answer_func = Jarvis_Omp(pr);
+    answer_func = Jarvis_Omp(pr, 1);
 
     EXPECT_EQ(answer_func, answer_right);
 }*/
@@ -30,7 +30,7 @@
 TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     size_t size = 7;
     size_t size_a = 5;
-    int num_thr = 1;
+    int num_thr = 2;
     std::vector<std::pair<double, double>> answer_func(size_a);
     std::vector<std::pair<double, double>> answer_right(size_a);
     std::vector<std::pair<double, double>> pr(size);
