@@ -38,8 +38,7 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
             base_id = i;
-        }
-        else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
+        } else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
             base_id = i;
         }
     }
@@ -70,8 +69,7 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
                 min_cos = cur_cos;
                 max_len = len2;
                 next = i;
-            }
-            else if (cur_cos == min_cos) {
+            } else if (cur_cos == min_cos) {
                 if (max_len < len2) {
                     next = i;
                     max_len = len2;
@@ -99,12 +97,23 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     std::vector<std::pair<double, double>> Convex_Hull(1);
     std::pair<double, double> cur_p;
     std::pair<double, double> prev_p;
+    int tid;
 
+#pragma omp parallel private(tid)
+    {
+        tid = omp_get_thread_num();
+        if (tid == 0) {
+            std::cout << "i am nullean???" << "\n";
+        }
+
+        if (tid == 1) {
+            std::cout << "i am first" << "\n";
+        }
+    }
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
             base_id = i;
-        }
-        else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
+        } else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
             base_id = i;
         }
     }
@@ -135,8 +144,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
                 min_cos = cur_cos;
                 max_len = len2;
                 next = i;
-            }
-            else if (cur_cos == min_cos) {
+            } else if (cur_cos == min_cos) {
                 if (max_len < len2) {
                     next = i;
                     max_len = len2;
