@@ -152,10 +152,15 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     size_t flag_h = 1;
     std::vector<std::pair<double, double>> part_of_points;
 
-#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok) \
-    shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
+#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok, \
+prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
     {
         tid = omp_get_thread_num();
+        next = 0;
+        flag_h = 1;
+        cur_p = Convex_Hull[0];
+        prev_p.first = Convex_Hull[0].first - 1;
+        prev_p.second = Convex_Hull[0].second;
 
         if (tid == num_thr - 1) {
             ostatok = size % num_thr;
@@ -166,7 +171,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
         for (size_t i = (tid * k); i < ((tid + 1) * k + ostatok); i++) {
             part_of_points.push_back(points[i]);
         }
-#pragma omp critical
+/*#pragma omp critical
         {
             //if (tid == 0)
               //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
@@ -177,7 +182,19 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
                     std::cout << "second " << part_of_points[i].second << "\n";
                 }
             }
-        }
+        }*/
+/*#pragma omp critical
+        {
+            //if (tid == 0)
+              //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
+            if (tid == 1) {
+                //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
+                //for (int i = 0; i < part_of_points.size(); i++) {
+                    std::cout << "first " << cur_p.first << "\n";
+                    std::cout << "second " << cur_p.second << "\n";
+                //}
+            }
+        }*/
 //#pragma omp for 
         //for (int l = 0; l < size; l++) {
         do {
@@ -189,24 +206,37 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
                                 if (tid == 1)
                                     std::cout << "second " << min_cos << "\n";
                             }*/
-            for (size_t i = 0; i < size; i++) {
+            for (size_t i = 0; i < k + ostatok; i++) {
                 len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
-                len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
-                scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
-                    (prev_p.second - cur_p.second) * (points[i].second - cur_p.second));
+                len2 = sqrt(pow((part_of_points[i].first - cur_p.first), 2) + pow((part_of_points[i].second - cur_p.second), 2));
+                scalar = ((prev_p.first - cur_p.first) * (part_of_points[i].first - cur_p.first) +
+                    (prev_p.second - cur_p.second) * (part_of_points[i].second - cur_p.second));
                 cur_cos = scalar / len1 / len2;
+
                 if (cur_cos < min_cos) {
                     min_cos = cur_cos;
                     max_len = len2;
-                    next = i;
-                }
-                else if (cur_cos == min_cos) {
+                    next = i + tid * k;
+                } else if (cur_cos == min_cos) {
                     if (max_len < len2) {
-                        next = i;
+                        next = i + tid * k;
                         max_len = len2;
                     }
                 }
             }
+
+/*#pragma omp critical
+            {
+                //if (tid == 0)
+                  //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
+                if ((tid == 1) && (flag_h == 4)){
+                    //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
+                    //for (int i = 0; i < part_of_points.size(); i++) {
+                    std::cout << flag_h << " " << " " << min_cos << "\n";
+                    //std::cout << "second " << cur_p.second << "\n";
+                    //}
+                }
+            }*/
 
             // проверка на нулевую точку, которая войдёт не во все части
             len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
@@ -214,33 +244,60 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
             scalar = ((prev_p.first - cur_p.first) * (base_p.first - cur_p.first) +
                 (prev_p.second - cur_p.second) * (base_p.second - cur_p.second));
             cur_cos = scalar / len1 / len2;
+/*#pragma omp critical
+            {
+                //if (tid == 0)
+                  //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
+                if ((tid == 1) && (flag_h == 4)) {
+                    //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
+                    //for (int i = 0; i < part_of_points.size(); i++) {
+                    std::cout << flag_h << " " << " " << cur_cos << "\n";
+                    //std::cout << "second " << cur_p.second << "\n";
+                    //}
+                }
+            }*/
             if (cur_cos < min_cos) {
                 next = base_id;
-            }
-            else if (cur_cos == min_cos) {
+            } else if (cur_cos == min_cos) {
                 if (max_len < len2) {
                     next = base_id;
                 }
             }
             // конец этой проверки
             Local_Convex_Hulls[tid].push_back(next);
+            if (next == base_id)
+                break;
 /*#pragma omp critical
             {
                 //if (tid == 0)
                   //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-                if (tid == 0)
+                if (tid == 1)
                     //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
                     std::cout << "second " << next << "\n";
             }*/
+#pragma omp atomic
             flag_h++;
             prev_p.first = cur_p.first;
             prev_p.second = cur_p.second;
-            cur_p = points[next];
+            cur_p = part_of_points[next - tid * k];
         } while (base_id != next);
             //} while (cur_p != Convex_Hull[0]);
             //if (base_id == next)
               //  break;
         //}
+#pragma omp critical
+        {
+            //if (tid == 0)
+              //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
+            if (tid == 0) {
+                //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
+                //for (int i = 0; i < part_of_points.size(); i++) {
+                for (int i = 0; i < Local_Convex_Hulls[tid].size(); i++)
+                    std::cout << flag_h << " " << Local_Convex_Hulls[tid][i] << "\n";
+                //std::cout << "second " << cur_p.second << "\n";
+                //}
+            }
+        }
     }
 
     if (flag_h > 1) {
