@@ -1,16 +1,17 @@
 // Copyright 2020 Druzhinin Alexei
 
 #include "../../../modules/task_1/druzhinin_fox_algorithm/fox_algorithm.h"
-#include <time.h>
-#include <stdlib.h>
-#include <cmath>
+#include <math.h>
 #include <algorithm>
 #include <limits>
+#include <random>
 
 void fillMatrix(double* a, const int size) {  // filling the matrix with random double values
-    srand(time(NULL));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1000.0);
     for (int i = 0; i < size * size; i++)
-        a[i] = static_cast<double>(rand_r() % 35000) / 1000;
+        a[i] = dis(gen);
 }
 
 bool comparisonMatrixes(const double* a, const double* b, const int size) {  // comparison two matrixes

@@ -34,7 +34,6 @@ TEST(Fox_Algorithm, Comparison_Unequal_Matrixes_Correct) {
 
 TEST(Fox_Algorithm, Default_Matrix_Multiplication_Correct) {
     // Arrange
-    const int 3 = 3;
     double a[3 * 3] = {1.1, 1.1, 1.1,
                             1.1, 1.1, 1.1,
                             1.1, 1.1, 1.1};
@@ -57,7 +56,6 @@ TEST(Fox_Algorithm, Default_Matrix_Multiplication_Correct) {
 
 TEST(Fox_Algorithm, Blocked_Matrix_Multiplication_Correct) {
     // Arrange
-    const int 3 = 3;
     double a[3 * 3] = {1.1, 1.1, 1.1,
                             1.1, 1.1, 1.1,
                             1.1, 1.1, 1.1};
@@ -80,7 +78,6 @@ TEST(Fox_Algorithm, Blocked_Matrix_Multiplication_Correct) {
 
 TEST(Fox_Algorithm, Blocked_and_Default_Matrix_Multiplication_Give_Identical_Result) {
     // Arrange
-    const int 3 = 3;
     double a[3 * 3];
     double b[3 * 3];
     double def_res[3 * 3];
