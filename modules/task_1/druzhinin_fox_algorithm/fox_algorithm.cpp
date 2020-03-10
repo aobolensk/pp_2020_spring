@@ -3,6 +3,7 @@
 #include "../../../modules/task_1/druzhinin_fox_algorithm/fox_algorithm.h"
 #include <time.h>
 #include <cmath>
+#include <stdlib.h>
 #include <algorithm>
 #include <limits>
 
