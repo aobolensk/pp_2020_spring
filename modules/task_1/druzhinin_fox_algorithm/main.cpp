@@ -40,7 +40,7 @@ TEST(Fox_Algorithm, Default_Matrix_Multiplication_Correct) {
     double b[3 * 3] = {1.2, 1.2, 1.2,
                             1.2, 1.2, 1.2,
                             1.2, 1.2, 1.2};
-    double res[3 * 3];
+    double res[3 * 3]();
     double true_res[3 * 3] = {3.96, 3.96, 3.96,
                             3.96, 3.96, 3.96,
                             3.96, 3.96, 3.96};
@@ -62,7 +62,7 @@ TEST(Fox_Algorithm, Blocked_Matrix_Multiplication_Correct) {
     double b[3 * 3] = {1.2, 1.2, 1.2,
                             1.2, 1.2, 1.2,
                             1.2, 1.2, 1.2};
-    double res[3 * 3];
+    double res[3 * 3]();
     double true_res[3 * 3] = {3.96, 3.96, 3.96,
                             3.96, 3.96, 3.96,
                             3.96, 3.96, 3.96};
@@ -70,8 +70,6 @@ TEST(Fox_Algorithm, Blocked_Matrix_Multiplication_Correct) {
 
     // Act
     blockMatrixMult(a, b, 3, res);
-    for (int i = 0; i < 9; i++)
-        std::cout << res[i] << " ";
     result = comparisonMatrixes(res, true_res, 3);
 
     // Assert
