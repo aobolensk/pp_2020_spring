@@ -27,6 +27,9 @@ std::vector <int> generate_im(int width_im, int height_im) {
 }
 
 int use_formula(int value, int max_value, int min_value) {
+  // The conversion of brightness levels is carried out according to the formula:
+  // g[i] = a + b * f[i]
+  // where f[i] is the old brightness value of the i-th pixel, g[i] is the new value, a, b are the coefficients
   if (max_value < min_value)
     throw -1;
 
@@ -49,13 +52,12 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
     case 1:
       throw std::runtime_error("size <= 0");
   }
-
-  std::vector<int> result(grayscale_image);
+  std::vector<int> output(grayscale_image);
   int min = minimum(&grayscale_image);
   int max = maximum(&grayscale_image);
 
   for (int i = 0; i < size; i++) {
-    result[i] = use_formula(grayscale_image[i], max, min);
+    output[i] = use_formula(grayscale_image[i], max, min);
   }
-  return result;
+  return output;
 }
