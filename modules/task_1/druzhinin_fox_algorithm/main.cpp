@@ -80,8 +80,8 @@ TEST(Fox_Algorithm, Blocked_and_Default_Matrix_Multiplication_Give_Identical_Res
     // Arrange
     double a[3 * 3];
     double b[3 * 3];
-    double def_res[3 * 3];
-    double block_res[3 * 3];
+    double def_res[3 * 3]{};
+    double block_res[3 * 3]{};
     bool result;
 
     // Act

@@ -39,6 +39,8 @@ void defaultMatrixMult(const double* a, const double* b, const int size, double*
 
 void blockMatrixMult(const double* a, const double* b, const int size, double* res) {  // blocked matrix multiplication
     int block_size = std::sqrt(size);
+    for (int i = 0; i < size * size; i++)
+        res[i] = 0;
     double tmp;
     for (int i = 0; i < size; i += block_size) {  // ijk cycle by blocks
         for (int j = 0; j < size; j += block_size) {
