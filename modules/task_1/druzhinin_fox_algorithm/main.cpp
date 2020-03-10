@@ -70,6 +70,8 @@ TEST(Fox_Algorithm, Blocked_Matrix_Multiplication_Correct) {
 
     // Act
     blockMatrixMult(a, b, 3, res);
+	for (int i = 0; i < 9; i++)
+        std::cout << res[i] << " ";
     result = comparisonMatrixes(res, true_res, 3);
 
     // Assert
