@@ -29,7 +29,10 @@ std::vector <int> generate_im(int width_im, int height_im) {
 int use_formula(int value, int max_value, int min_value) {
   // The conversion of brightness levels is carried out according to the formula:
   // g[i] = a + b * f[i]
-  // where f[i] is the old brightness value of the i-th pixel, g[i] is the new value, a, b are the coefficients
+  // where f[i] is the old brightness value of the i-th pixel, g[i] is the new 
+  // value, a, b are the coefficients.
+  // We choose a and b so that g[min] = 0, g[max] = 255
+
   if (max_value < min_value)
     throw -1;
 
