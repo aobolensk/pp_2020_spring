@@ -1,11 +1,10 @@
 // Copyright 2020 Vdovin Eugene
-#ifndef MODULES_TASK_1_VDOVIN_EUGENE_CRS_MAT_MULT_CRS_MAT_MULT_H_
-#define MODULES_TASK_1_VDOVIN_EUGENE_CRS_MAT_MULT_CRS_MAT_MULT_H_
+#ifndef MODULES_TASK_1_VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_
+#define MODULES_TASK_1_VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_
 
 #include <vector>
 #include <complex>
 #include <cmath>
-#include <iostream>
 
 class CRSMatrix {
     int n;
@@ -16,8 +15,8 @@ class CRSMatrix {
     std::vector<int> rowindex;
 
     CRSMatrix multiplicate(const CRSMatrix &mtx) const;
-public:
-    CRSMatrix(const int n_ = 0, const int nz_ = 0) : n(n_), nz(nz_), value(nz), col(nz), rowindex(n + 1) {}
+ public:
+    explicit CRSMatrix(const int n_ = 0, const int nz_ = 0) : n(n_), nz(nz_), value(nz), col(nz), rowindex(n + 1) {}
     CRSMatrix(const int n_, const int nz_,
         const std::vector<std::complex<double>> &value_,
         const std::vector<int> col_,
@@ -33,4 +32,4 @@ public:
     bool operator!=(const CRSMatrix &mtx) const;
 };
 
-#endif  // MODULES_TASK_1__VDOVIN_EUGENE_CRS_MAT_MULT_CRS_MAT_MULT_H_
+#endif  // MODULES_TASK_1__VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_

@@ -1,6 +1,9 @@
 // Copyright 2020 Vdovin Eugene
 #include <gtest/gtest.h>
-#include "crs_mat_mult.h"
+#include <vector>
+#include <complex>
+#include <cmath>
+#include "./crs_mat_mult.h"
 
 TEST(CRSMatrix, test_copy_1) {
   std::vector<std::complex<double>> v = { 1, 2, 3, 4, 8, 5, 7, 1, 6 };
