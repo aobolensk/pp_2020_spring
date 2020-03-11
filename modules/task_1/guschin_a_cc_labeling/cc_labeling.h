@@ -1,0 +1,7 @@
+// Copyright 2020 Guschin Alexander
+#ifndef MODULES_TASK_1_GUSCHIN_A_CC_LABELING_CC_LABELING_H_
+#define MODULES_TASK_1_GUSCHIN_A_CC_LABELING_CC_LABELING_H_
+#include <string>
+#include <vector>
+
+#endif  // MODULES_TASK_1_GUSCHIN_A_CC_LABELING_CC_LABELING_H_
