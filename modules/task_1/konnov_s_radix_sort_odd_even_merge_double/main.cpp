@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "./radix_sort_odd_even_merge_double.h"
 
 
