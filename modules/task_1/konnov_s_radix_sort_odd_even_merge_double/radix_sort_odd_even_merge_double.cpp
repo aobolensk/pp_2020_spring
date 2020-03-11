@@ -48,7 +48,7 @@ std::vector<double> radixSortOddEvenMergeDouble(const std::vector<double>& array
 
 std::vector<double> getRandomVector(int size, double lower_bound, double upper_bound, int seed) {
     std::mt19937 mt;
-    if (seed = -1) {
+    if (seed == -1) {
         mt = std::mt19937(static_cast<int>(time(0)));
     } else {
         mt = std::mt19937(seed);
