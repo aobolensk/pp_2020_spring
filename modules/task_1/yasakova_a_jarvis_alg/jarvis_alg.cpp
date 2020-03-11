@@ -21,7 +21,7 @@ std::vector < std::pair<int, int>> GetRandomPoints(int n) {
     return res;
 }
 
-std::vector < std::pair<int, int>> JarvisAlg(std::vector<std::pair<int, int>>& points) {
+std::vector < std::pair<int, int>> JarvisAlg(const std::vector<std::pair<int, int>>& points) {
     std::vector<std::pair<int, int>> res;
     res.push_back(FindFirstPoint(points));
     double min_cos = 0;
@@ -42,7 +42,7 @@ std::vector < std::pair<int, int>> JarvisAlg(std::vector<std::pair<int, int>>& p
     return res;
 }
 
-std::pair<int, int> FindFirstPoint(std::vector<std::pair<int, int>>& points) {
+std::pair<int, int> FindFirstPoint(const std::vector<std::pair<int, int>>& points) {
     std::pair<int, int> res = std::make_pair(points[0].first, points[0].second);
     for (auto& val : points) {
         if (val.second < res.second)
@@ -53,7 +53,7 @@ std::pair<int, int> FindFirstPoint(std::vector<std::pair<int, int>>& points) {
     return res;
 }
 
-std::pair<int, int> FindSecondPoint(std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
+std::pair<int, int> FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
     std::pair<int, int> res = std::make_pair(points[0].first, points[0].second);
     double min = 4;
     for (auto& val : points) {
