@@ -3,14 +3,20 @@
 #include <omp.h>
 #include <vector>
 #include <utility>
+#include <ctime>
 
 std::vector<std::pair<double, double>> getRandomPoints(int n) {
-    std::mt19937 engine;
+    //std::mt19937 engine;
     std::vector<std::pair<double, double>> a(n);
-    engine.seed(n);
+    //engine.seed(n);
+    std::mt19937 gen(n);
+    std::uniform_real_distribution<> urd(0, 100);
     for (int i = 0; i < n; i++) {
-        a[i].first = engine() % 100;
-        a[i].second = engine() % 100;
+        //a[i].first = engine() % 100;
+        //a[i].second = engine() % 100;
+        a[i].first = urd(gen);
+        a[i].second = urd(gen);
+        //std::cout << a[i].first << "\n";
     }
     return a;
 }
@@ -168,9 +174,11 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
             ostatok = 0;
         }
 
-        for (size_t i = (tid * k); i < ((tid + 1) * k + ostatok); i++) {
-            part_of_points.push_back(points[i]);
-        }
+        part_of_points.resize(k + ostatok);
+        std::copy(points.begin() + (tid * k), points.begin() + ((tid + 1) * k + ostatok), part_of_points.begin());
+        //for (size_t i = (tid * k); i < ((tid + 1) * k + ostatok); i++) {
+          //  part_of_points.push_back(points[i]);
+        //}
 /*#pragma omp critical
         {
             //if (tid == 0)
@@ -292,8 +300,8 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
             if (tid == 0) {
                 //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
                 //for (int i = 0; i < part_of_points.size(); i++) {
-                for (int i = 0; i < Local_Convex_Hulls[tid].size(); i++)
-                    std::cout << flag_h << " " << Local_Convex_Hulls[tid][i] << "\n";
+                //for (int i = 0; i < Local_Convex_Hulls[tid].size(); i++)
+                    //std::cout << flag_h << " " << Local_Convex_Hulls[tid][i] << "\n";
                 //std::cout << "second " << cur_p.second << "\n";
                 //}
             }

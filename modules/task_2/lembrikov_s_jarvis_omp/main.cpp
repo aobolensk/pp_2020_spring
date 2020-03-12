@@ -27,7 +27,7 @@
     EXPECT_EQ(answer_func, answer_right);
 }*/
 
-TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
+/*TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     size_t size = 7;
     size_t size_a = 5;
     int num_thr = 2;
@@ -59,10 +59,16 @@ TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     answer_right[3].second = 6;
     answer_right[4].first = 1;
     answer_right[4].second = 5;
+    double t1, t2, t3, dt;
+    t1 = omp_get_wtime();
     answer_func = Jarvis_Omp(pr, num_thr);
+    t2 = omp_get_wtime();
+    answer_func = Jarvis_Seq(pr);
+    t3 = omp_get_wtime();
+    std::cout << "omp = " << t2 - t1 << "\nseq = " << t3 - t2 << "\n";
 
     EXPECT_EQ(answer_func, answer_right);
-}
+}*/
 
 /*TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
     size_t size = 1;
@@ -108,21 +114,31 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     size = answer.size();
 
     EXPECT_EQ(size_a, size);
-}
+}*/
 
 TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer;
     size_t size;
-    size_t size_a = 2;
+    size_t size_a = 1000000;
+    int num_thr = 3;
 
     a = getRandomPoints(size_a);
-    answer = Jarvis_Omp(a);
+    //answer = Jarvis_Seq(a);
+
+    double t1, t2, t3, dt;
+    t1 = omp_get_wtime();
+    answer = Jarvis_Omp(a, num_thr);
+    t2 = omp_get_wtime();
+    answer = Jarvis_Seq(a);
+    t3 = omp_get_wtime();
+    std::cout << "omp = " << t2 - t1 << "\nseq = " << t3 - t2 << "\n";
+
     size = answer.size();
 
     EXPECT_NE(size_a + 1, size);
 }
-
+/*
 TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer;

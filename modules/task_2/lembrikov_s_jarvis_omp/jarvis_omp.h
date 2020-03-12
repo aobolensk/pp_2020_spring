@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <utility>
+#include <omp.h>
 
 std::vector<std::pair<double, double>> getRandomPoints(int n);
 std::vector<std::pair<double, double>> getNegativePoints(int n);
