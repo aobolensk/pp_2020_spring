@@ -81,7 +81,7 @@ CRSMatrix CRSMatrix::multiplicate(const CRSMatrix &mtx) const {
         std::vector<int> col_res;
         std::vector<int> rowindex_res;
         std::vector<int> tmp(n + 1);
-        int rownz;
+        int rownz = 0;
         rowindex_res.push_back(0);
 
         for (int i = 0; i < n; ++i) {
