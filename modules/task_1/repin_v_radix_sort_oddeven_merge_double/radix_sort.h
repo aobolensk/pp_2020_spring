@@ -5,6 +5,7 @@
 #include <random>
 #include <vector>
 #include <ctime>
+#include <cstring>
 
 std::vector<double> GetRandomVector(int size);
 void SortByByte(double *inp, double *out, int byteNum, int size);

@@ -3,6 +3,7 @@
 #include <random>
 #include <vector>
 #include <ctime>
+#include <cstring>
 #include "../../../modules/task_1/repin_v_radix_sort_oddeven_merge_double/radix_sort.h"
 
 std::vector<double> GetRandomVector(int size) {
