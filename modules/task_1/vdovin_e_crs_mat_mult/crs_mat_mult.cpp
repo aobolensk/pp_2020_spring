@@ -67,7 +67,7 @@ CRSMatrix CRSMatrix::transpose() const {
             int iindex = at.rowindex[rindex + 1];
 
             at.value[iindex] = v;
-            at.col [iindex] = c;
+            at.col[iindex] = c;
             at.rowindex[rindex + 1]++;
         }
     }
@@ -77,7 +77,6 @@ CRSMatrix CRSMatrix::transpose() const {
 
 CRSMatrix CRSMatrix::multiplicate(const CRSMatrix &mtx) const {
     if (n == mtx.n) {
-        CRSMatrix res(n, nz);
         std::vector<std::complex<double>> value_res;
         std::vector<int> col_res;
         std::vector<int> rowindex_res;
@@ -120,6 +119,7 @@ CRSMatrix CRSMatrix::multiplicate(const CRSMatrix &mtx) const {
             rowindex_res.push_back(rownz + rowindex_res[i]);
         }
 
+        CRSMatrix res(n, rownz);
         res.value = value_res;
         res.col = col_res;
         res.rowindex = rowindex_res;
