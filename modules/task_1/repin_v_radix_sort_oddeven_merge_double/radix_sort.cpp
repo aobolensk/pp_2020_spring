@@ -109,12 +109,13 @@ void Merge(double *inp, double *temp, int mid, int size, int even) {
         }
         i += 2;
     }
-    if (a == mid)
+    if (a == mid) {
         for (int j = b; j < size; j += 2, i += 2)
             inp[i] = inp2[j];
-    else
+    } else {
         for (int j = a; j < mid; j += 2, i += 2)
             inp[i] = temp[j];
+    }
 }
 
 void OddEvenMergeSort(double *inp, double *temp, int size, int portion) {
