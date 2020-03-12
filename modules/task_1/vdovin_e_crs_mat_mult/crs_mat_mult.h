@@ -32,4 +32,4 @@ class CRSMatrix {
     bool operator!=(const CRSMatrix &mtx) const;
 };
 
-#endif  // MODULES_TASK_1__VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_
+#endif  // MODULES_TASK_1_VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_

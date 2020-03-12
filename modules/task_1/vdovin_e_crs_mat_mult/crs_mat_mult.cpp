@@ -1,4 +1,7 @@
 // Copyright 2020 Vdovin Eugene
+#include <vector>
+#include <complex>
+#include <cmath>
 #include "../../../modules/task_1/vdovin_e_crs_mat_mult/crs_mat_mult.h"
 
 CRSMatrix::CRSMatrix(const int n_, const int nz_,
@@ -107,7 +110,7 @@ CRSMatrix CRSMatrix::multiplicate(const CRSMatrix &mtx) const {
                         }
                     }
 
-                    if (sqrt(sum.real * sum.real + sum.imag * sum.imag) > 0.000000001) {
+                    if (sqrt(sum.real() * sum.real() + sum.imag() * sum.imag()) > 0.000000001) {
                         col_res.push_back(j);
                         value_res.push_back(sum);
                         rownz++;
