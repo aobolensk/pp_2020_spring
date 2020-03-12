@@ -272,9 +272,9 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                 }
             }
             // конец этой проверки
-            Local_Convex_Hulls[tid].push_back(next);
             if (next == base_id)
                 break;
+            Local_Convex_Hulls[tid].push_back(next);
 /*#pragma omp critical
             {
                 //if (tid == 0)
@@ -283,8 +283,8 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                     //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
                     std::cout << "second " << next << "\n";
             }*/
-#pragma omp atomic
-            flag_h++;
+//#pragma omp atomic
+  //          flag_h++;
             prev_p.first = cur_p.first;
             prev_p.second = cur_p.second;
             cur_p = part_of_points[next - tid * k];
@@ -307,6 +307,55 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
             }
         }
     }
+
+    std::vector<std::pair<double, double>> points_last;
+    int razmer_mas_i;
+    int razmer_mas = 1;
+    for (size_t i = 0; i < num_thr; i++) {
+        razmer_mas_i = Local_Convex_Hulls[i].size();
+        points_last.resize(razmer_mas + razmer_mas_i);
+        for (size_t j = 0; j < razmer_mas_i; j++) {
+            cur_p = points[Local_Convex_Hulls[i][j]]; // взяли точку под номером, который хранится в массиве
+            points_last[razmer_mas + j] = cur_p;
+            //std::cout << points_last[razmer_mas + j].first << "\n";
+            //std::cout << points_last[razmer_mas + j].second << "\n";
+        }
+        razmer_mas += razmer_mas_i;
+    }
+
+    next = 0;
+    flag_h = 1;
+    max_len = 0;
+    cur_p = Convex_Hull[0];
+    prev_p.first = Convex_Hull[0].first - 1;
+    prev_p.second = Convex_Hull[0].second;
+    base_p = Convex_Hull[0];
+    do {
+        min_cos = 1.1;
+        for (size_t i = 0; i < razmer_mas; i++) {
+            len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+            len2 = sqrt(pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2));
+            scalar = ((prev_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
+                (prev_p.second - cur_p.second) * (points_last[i].second - cur_p.second));
+            cur_cos = scalar / len1 / len2;
+            if (cur_cos < min_cos) {
+                min_cos = cur_cos;
+                max_len = len2;
+                next = i;
+            }
+            else if (cur_cos == min_cos) {
+                if (max_len < len2) {
+                    next = i;
+                    max_len = len2;
+                }
+            }
+        }
+        Convex_Hull.push_back(points_last[next]);
+        flag_h++;
+        prev_p.first = cur_p.first;
+        prev_p.second = cur_p.second;
+        cur_p = points_last[next];
+    } while (cur_p != Convex_Hull[0]);
 
     if (flag_h > 1) {
         flag_h--;
