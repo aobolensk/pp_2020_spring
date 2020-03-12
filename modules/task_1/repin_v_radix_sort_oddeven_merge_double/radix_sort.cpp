@@ -41,8 +41,7 @@ void SortByByte(double *inp, double *out, int offset, int size) {
             out[counter[mas[8 * i + offset]]] = inp[i];
             counter[mas[8 * i + offset]]++;
         }
-    }
-    else {
+    } else {
         int j = 255;
         for (; j >= 128; j--)
             if (counter[j] != 0)
@@ -94,7 +93,7 @@ void RadixSortDouble(double *inp, double *out, int size) {
 }
 
 void Merge(double *inp, double *temp, int mid, int size, int even) {
-    for (int i = even; i<mid; i += 2)
+    for (int i = even; i < mid; i += 2)
         temp[i] = inp[i];
     double *inp2 = inp + mid;
     int a = even;
@@ -111,17 +110,17 @@ void Merge(double *inp, double *temp, int mid, int size, int even) {
         i += 2;
     }
     if (a == mid)
-        for (int j = b; j<size; j += 2, i += 2)
+        for (int j = b; j < size; j += 2, i += 2)
             inp[i] = inp2[j];
     else
-        for (int j = a; j<mid; j += 2, i += 2)
+        for (int j = a; j < mid; j += 2, i += 2)
             inp[i] = temp[j];
 }
 
 void OddEvenMergeSort(double *inp, double *temp, int size, int portion) {
-    if (size <= portion) 
+    if (size <= portion) {
         RadixSortDouble(inp, temp, size);
-    else {
+    } else {
         int mid = size / 2 + (size / 2) % 2;
         OddEvenMergeSort(inp, temp, mid, portion);
         OddEvenMergeSort(inp + mid, temp + mid, size - mid, portion);
