@@ -124,8 +124,8 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer;
     size_t size;
-    size_t size_a = 1000000;
-    int num_thr = 3;
+    size_t size_a = 10;
+    int num_thr = 2;
 
     a = getRandomPoints(size_a);
     //answer = Jarvis_Seq(a);

@@ -158,6 +158,16 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     size_t flag_h = 1;
     std::vector<std::pair<double, double>> part_of_points;
 
+    if (size == 1) {
+        return Convex_Hull;
+    } else if (size == 2) {
+        if (points[0] == points[1]) {
+            return Convex_Hull;
+        } else if (points[0] != points[1]) {
+            return points;
+        }
+    }
+
 #pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok, \
 prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
     {
@@ -311,6 +321,8 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
     std::vector<std::pair<double, double>> points_last;
     int razmer_mas_i;
     int razmer_mas = 1;
+
+    points_last.push_back(base_p);
     for (size_t i = 0; i < num_thr; i++) {
         razmer_mas_i = Local_Convex_Hulls[i].size();
         points_last.resize(razmer_mas + razmer_mas_i);
@@ -329,7 +341,7 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
     cur_p = Convex_Hull[0];
     prev_p.first = Convex_Hull[0].first - 1;
     prev_p.second = Convex_Hull[0].second;
-    base_p = Convex_Hull[0];
+    //base_p = Convex_Hull[0];
     do {
         min_cos = 1.1;
         for (size_t i = 0; i < razmer_mas; i++) {
