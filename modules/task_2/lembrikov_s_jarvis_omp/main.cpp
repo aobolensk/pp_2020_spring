@@ -27,8 +27,8 @@ TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     size_t size = 7;
     size_t size_a = 5;
     int num_thr = 2;
-    std::vector<std::pair<double, double>> answer_func(size_a);
-    std::vector<std::pair<double, double>> answer_right(size_a);
+    std::vector<std::pair<double, double>> answer_omp;
+    std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> pr(size);
 
     pr[0].first = 0;
@@ -45,25 +45,10 @@ TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     pr[5].second = 5;
     pr[6].first = 3;
     pr[6].second = 6;
-    answer_right[0].first = 0;
-    answer_right[0].second = 0;
-    answer_right[1].first = 5;
-    answer_right[1].second = 0;
-    answer_right[2].first = 5;
-    answer_right[2].second = 3;
-    answer_right[3].first = 3;
-    answer_right[3].second = 6;
-    answer_right[4].first = 1;
-    answer_right[4].second = 5;
-    double t1, t2, t3, dt;
-    t1 = omp_get_wtime();
-    answer_func = Jarvis_Omp(pr, num_thr);
-    t2 = omp_get_wtime();
-    answer_func = Jarvis_Seq(pr);
-    t3 = omp_get_wtime();
-    std::cout << "omp = " << t2 - t1 << "\nseq = " << t3 - t2 << "\n";
+    answer_omp = Jarvis_Omp(pr, num_thr);
+    answer_seq = Jarvis_Seq(pr);
 
-    EXPECT_EQ(answer_func, answer_right);
+    EXPECT_EQ(answer_omp, answer_seq);
 }
 
 TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
