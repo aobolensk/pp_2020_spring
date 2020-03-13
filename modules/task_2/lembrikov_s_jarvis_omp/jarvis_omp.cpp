@@ -184,8 +184,9 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
             ostatok = 0;
         }
 
-        part_of_points.resize(k + ostatok);
-        std::copy(points.begin() + (tid * k), points.begin() + ((tid + 1) * k + ostatok), part_of_points.begin());
+        //part_of_points.resize(k + ostatok);
+        //std::copy(points.begin() + (tid * k), points.begin() + ((tid + 1) * k + ostatok), part_of_points.begin());
+        
         //for (size_t i = (tid * k); i < ((tid + 1) * k + ostatok); i++) {
           //  part_of_points.push_back(points[i]);
         //}
@@ -224,20 +225,20 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                                 if (tid == 1)
                                     std::cout << "second " << min_cos << "\n";
                             }*/
-            for (size_t i = 0; i < k + ostatok; i++) {
+            for (size_t i = tid * k; i < ((tid + 1) * k) + ostatok; i++) {
                 len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
-                len2 = sqrt(pow((part_of_points[i].first - cur_p.first), 2) + pow((part_of_points[i].second - cur_p.second), 2));
-                scalar = ((prev_p.first - cur_p.first) * (part_of_points[i].first - cur_p.first) +
-                    (prev_p.second - cur_p.second) * (part_of_points[i].second - cur_p.second));
+                len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
+                scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
+                    (prev_p.second - cur_p.second) * (points[i].second - cur_p.second));
                 cur_cos = scalar / len1 / len2;
 
                 if (cur_cos < min_cos) {
                     min_cos = cur_cos;
                     max_len = len2;
-                    next = i + tid * k;
+                    next = i;// +tid * k;
                 } else if (cur_cos == min_cos) {
                     if (max_len < len2) {
-                        next = i + tid * k;
+                        next = i;// +tid * k;
                         max_len = len2;
                     }
                 }
@@ -297,7 +298,7 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
   //          flag_h++;
             prev_p.first = cur_p.first;
             prev_p.second = cur_p.second;
-            cur_p = part_of_points[next - tid * k];
+            cur_p = points[next];// - tid * k];
         } while (base_id != next);
             //} while (cur_p != Convex_Hull[0]);
             //if (base_id == next)

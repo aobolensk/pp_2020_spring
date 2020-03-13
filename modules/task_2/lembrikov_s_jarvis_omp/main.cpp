@@ -7,8 +7,8 @@
 TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
     size_t size = 3;
     int num_thr = 2;
-    std::vector<std::pair<double, double>> answer_func(size);
-    std::vector<std::pair<double, double>> answer_right(size);
+    std::vector<std::pair<double, double>> answer_seq;
+    std::vector<std::pair<double, double>> answer_omp;
     std::vector<std::pair<double, double>> pr(size);
 
     pr[0].first = 3;
@@ -17,15 +17,10 @@ TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
     pr[1].second = 3;
     pr[2].first = 0;
     pr[2].second = 0;
-    answer_right[0].first = 0;
-    answer_right[0].second = 0;
-    answer_right[1].first = 4;
-    answer_right[1].second = 3;
-    answer_right[2].first = 3;
-    answer_right[2].second = 4;
-    answer_func = Jarvis_Omp(pr, num_thr);
+    answer_omp = Jarvis_Omp(pr, num_thr);
+    answer_seq = Jarvis_Seq(pr);
 
-    EXPECT_EQ(answer_func, answer_right);
+    EXPECT_EQ(answer_omp, answer_seq);
 }
 
 TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
@@ -120,11 +115,28 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     EXPECT_EQ(size_a, size);
 }
 
+TEST(Vector_Min_MPI, Test_On_Random_Points_EQ_123123123111111111111111) {
+    std::vector<std::pair<double, double>> a;
+    std::vector<std::pair<double, double>> answer_seq;
+    std::vector<std::pair<double, double>> answer_par;
+    size_t size;
+    size_t size_a = 100;
+    int num_thr = 2;
+
+    a = getRandomPoints(size_a);
+    answer_seq = Jarvis_Seq(a);
+    answer_par = Jarvis_Omp(a, num_thr);
+    //size = answer.size();
+
+    EXPECT_EQ(answer_seq, answer_par);
+}
+
 TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
     std::vector<std::pair<double, double>> a;
-    std::vector<std::pair<double, double>> answer;
+    std::vector<std::pair<double, double>> answer_seq;
+    std::vector<std::pair<double, double>> answer_omp;
     size_t size;
-    size_t size_a = 10;
+    size_t size_a = 10000000;
     int num_thr = 2;
 
     a = getRandomPoints(size_a);
@@ -132,15 +144,15 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
 
     double t1, t2, t3, dt;
     t1 = omp_get_wtime();
-    answer = Jarvis_Omp(a, num_thr);
+    answer_omp = Jarvis_Omp(a, num_thr);
     t2 = omp_get_wtime();
-    answer = Jarvis_Seq(a);
+    answer_seq = Jarvis_Seq(a);
     t3 = omp_get_wtime();
     std::cout << "omp = " << t2 - t1 << "\nseq = " << t3 - t2 << "\n";
 
-    size = answer.size();
+    //size = answer.size();
 
-    EXPECT_NE(size_a + 1, size);
+    EXPECT_EQ(answer_seq, answer_seq);
 }
 
 TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
