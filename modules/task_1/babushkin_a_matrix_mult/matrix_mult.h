@@ -15,7 +15,7 @@ class Matrix {
   std::vector<double> m_data;
 
  public:
-  Matrix() : m_data({}), m_rows(0), m_cols(0) {}
+  Matrix() : m_rows(0), m_cols(0), m_data({}) {}
   Matrix(const std::vector<double> &t_data, const int t_rows, const int t_cols)
       : m_rows(t_rows), m_cols(t_cols), m_data(t_data) {}
 
