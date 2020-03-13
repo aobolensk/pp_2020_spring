@@ -54,17 +54,16 @@ TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
 TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
     size_t size = 1;
     int num_thr = 2;
-    std::vector<std::pair<double, double>> answer_func(size);
-    std::vector<std::pair<double, double>> answer_right(size);
+    std::vector<std::pair<double, double>> answer_omp;
+    std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> pr(size);
 
     pr[0].first = 3;
     pr[0].second = 4;
-    answer_right[0].first = 3;
-    answer_right[0].second = 4;
-    answer_func = Jarvis_Omp(pr, num_thr);
+    answer_omp = Jarvis_Omp(pr, num_thr);
+    answer_seq = Jarvis_Seq(pr);
 
-    EXPECT_EQ(answer_func, answer_right);
+    EXPECT_EQ(answer_omp, answer_seq);
 }
 
 TEST(Vector_Min_MPI, Test_On_2_Equal_Points_EQ) {
