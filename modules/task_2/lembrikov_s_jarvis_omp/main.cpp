@@ -104,23 +104,14 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
     std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> answer_omp;
     size_t size;
-    size_t size_a = 10000000;
+    size_t size_a = 10;
     int num_thr = 2;
 
     a = getRandomPoints(size_a);
-    //answer = Jarvis_Seq(a);
-
-    double t1, t2, t3, dt;
-    t1 = omp_get_wtime();
     answer_omp = Jarvis_Omp(a, num_thr);
-    t2 = omp_get_wtime();
     answer_seq = Jarvis_Seq(a);
-    t3 = omp_get_wtime();
-    std::cout << "omp = " << t2 - t1 << "\nseq = " << t3 - t2 << "\n";
 
-    //size = answer.size();
-
-    EXPECT_EQ(answer_seq, answer_seq);
+    EXPECT_EQ(answer_seq, answer_omp);
 }
 
 TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
