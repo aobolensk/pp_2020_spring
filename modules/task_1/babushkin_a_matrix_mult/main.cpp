@@ -11,13 +11,13 @@ TEST(Matrix_Mult_Seq, Getters) {
 
   ASSERT_EQ(test_matrix.get_rows(), 3);
   ASSERT_EQ(test_matrix.get_cols(), 3);
-  ASSERT_EQ(test_matrix.get_size(), 9);
+  ASSERT_EQ(test_matrix.get_size(), 9u);
 
   test_matrix.resize(4, 2);
 
   ASSERT_EQ(test_matrix.get_rows(), 4);
   ASSERT_EQ(test_matrix.get_cols(), 2);
-  ASSERT_EQ(test_matrix.get_size(), 8);
+  ASSERT_EQ(test_matrix.get_size(), 8u);
 }
 
 TEST(Matrix_Mult_Seq, To_String) {
