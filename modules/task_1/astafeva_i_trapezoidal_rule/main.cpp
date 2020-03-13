@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <utility>
 #include "../../../modules/task_1/astafeva_i_trapezoidal_rule/trapezoidal_rule.h"
 
 double function1(std::vector<double> params) {
