@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 namespace mtrxmult {
