@@ -141,8 +141,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
         }
     }
 
-#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok, \
-prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
+#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok, prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
     {
         tid = omp_get_thread_num();
         next = 0;
