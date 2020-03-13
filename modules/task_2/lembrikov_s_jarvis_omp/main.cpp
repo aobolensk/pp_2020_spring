@@ -116,16 +116,17 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_NE) {
 
 TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
     std::vector<std::pair<double, double>> a;
-    std::vector<std::pair<double, double>> answer;
+    std::vector<std::pair<double, double>> answer_seq;
+    std::vector<std::pair<double, double>> answer_omp;
     size_t size;
-    size_t size_a = 2;
+    size_t size_a = 10;
     int num_thr = 2;
 
     a = getNegativePoints(size_a);
-    answer = Jarvis_Omp(a, num_thr);
-    size = answer.size();
+    answer_omp = Jarvis_Omp(a, num_thr);
+    answer_seq = Jarvis_Seq(a);
 
-    EXPECT_EQ(size_a, size);
+    EXPECT_EQ(answer_seq, answer_omp);
 }
 
 TEST(Vector_Min_MPI, Test_On_Negative_Points_NE) {
