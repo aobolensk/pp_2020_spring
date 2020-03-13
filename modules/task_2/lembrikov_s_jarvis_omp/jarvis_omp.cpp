@@ -122,11 +122,10 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
 
     double len1;
     double len2;
-    double max_len = 0;
+    double max_len;
     double scalar;
     double cur_cos;
     double min_cos = 1.1;
-    int ost_for_last;
     size_t next = 0;
     size_t flag_h = 1;
     std::vector<std::pair<double, double>> part_of_points;
@@ -145,6 +144,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     {
         tid = omp_get_thread_num();
         next = 0;
+        max_len = 0;
         flag_h = 1;
         cur_p = Convex_Hull[0];
         prev_p.first = Convex_Hull[0].first - 1;
@@ -159,7 +159,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
         do {
             min_cos = 1.1;
 
-            for (size_t i = tid * k; i < ((tid + 1) * k) + ostatok; i++) {
+            for (int i = tid * k; i < ((tid + 1) * k) + ostatok; i++) {
                 len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
                 len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
                 scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
@@ -206,10 +206,10 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     int razmer_mas = 1;
 
     points_last.push_back(base_p);
-    for (size_t i = 0; i < num_thr; i++) {
+    for (int i = 0; i < num_thr; i++) {
         razmer_mas_i = Local_Convex_Hulls[i].size();
         points_last.resize(razmer_mas + razmer_mas_i);
-        for (size_t j = 0; j < razmer_mas_i; j++) {
+        for (int j = 0; j < razmer_mas_i; j++) {
             cur_p = points[Local_Convex_Hulls[i][j]];
             points_last[razmer_mas + j] = cur_p;
         }
