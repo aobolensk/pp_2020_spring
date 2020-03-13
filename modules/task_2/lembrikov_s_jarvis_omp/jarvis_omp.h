@@ -2,11 +2,11 @@
 #ifndef MODULES_TASK_2_LEMBRIKOV_S_JARVIS_OMP_JARVIS_OMP_H_
 #define MODULES_TASK_2_LEMBRIKOV_S_JARVIS_OMP_JARVIS_OMP_H_
 
+#include <omp.h>
 #include <iostream>
 #include <random>
 #include <vector>
 #include <utility>
-#include <omp.h>
 
 std::vector<std::pair<double, double>> getRandomPoints(int n);
 std::vector<std::pair<double, double>> getNegativePoints(int n);
