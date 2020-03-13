@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <utility>
 #include "../../../modules/task_1/astafeva_i_trapezoidal_rule/trapezoidal_rule.h"
 
 double calculateIntegral(double (*function)(std::vector<double>), std::vector <std::pair<double, double>> boundaries,
