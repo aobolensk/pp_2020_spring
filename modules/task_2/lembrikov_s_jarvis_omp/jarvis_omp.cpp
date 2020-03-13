@@ -92,19 +92,19 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
     return Convex_Hull;
 }
 
-std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, double>> points, int num_thr) {
+std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, double>> points, int nu_th) {
     size_t size = points.size();
     size_t base_id = 0;
     std::vector<std::pair<double, double>> Convex_Hull(1);
-    std::vector<std::vector<int>> Local_Convex_Hulls(num_thr);
+    std::vector<std::vector<int>> Local_Convex_Hulls(nu_th);
     std::pair<double, double> base_p;
     std::pair<double, double> cur_p;
-    std::pair<double, double> prev_p;
+    std::pair<double, double> pr_p;
     int tid;
     int k;
-    int ostatok;
+    int ost;
 
-    k = size / num_thr;
+    k = size / nu_th;
 
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
@@ -116,19 +116,18 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
 
     Convex_Hull[0] = points[base_id];
     cur_p = Convex_Hull[0];
-    prev_p.first = Convex_Hull[0].first - 1;
-    prev_p.second = Convex_Hull[0].second;
+    pr_p.first = Convex_Hull[0].first - 1;
+    pr_p.second = Convex_Hull[0].second;
     base_p = Convex_Hull[0];
 
     double len1;
     double len2;
-    double max_len;
+    double mx_ln;
     double scalar;
     double cur_cos;
-    double min_cos = 1.1;
+    double mn_cs = 1.1;
     size_t next = 0;
     size_t flag_h = 1;
-    std::vector<std::pair<double, double>> part_of_points;
 
     if (size == 1) {
         return Convex_Hull;
@@ -140,54 +139,53 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
         }
     }
 
-#pragma omp parallel private(tid, min_cos, len1, len2, scalar, cur_cos, next, max_len, part_of_points, ostatok, prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_threads(num_thr)
+#pragma omp parallel private(tid, mn_cs, len1, len2, scalar, cur_cos, next, mx_ln, ost, pr_p, cur_p) num_threads(nu_th)
     {
         tid = omp_get_thread_num();
         next = 0;
-        max_len = 0;
-        flag_h = 1;
+        mx_ln = 0;
         cur_p = Convex_Hull[0];
-        prev_p.first = Convex_Hull[0].first - 1;
-        prev_p.second = Convex_Hull[0].second;
+        pr_p.first = Convex_Hull[0].first - 1;
+        pr_p.second = Convex_Hull[0].second;
 
-        if (tid == num_thr - 1) {
-            ostatok = size % num_thr;
+        if (tid == nu_th - 1) {
+            ost = size % nu_th;
         } else {
-            ostatok = 0;
+            ost = 0;
         }
 
         do {
-            min_cos = 1.1;
+            mn_cs = 1.1;
 
-            for (int i = tid * k; i < ((tid + 1) * k) + ostatok; i++) {
-                len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+            for (int i = tid * k; i < ((tid + 1) * k) + ost; i++) {
+                len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
                 len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
-                scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
-                    (prev_p.second - cur_p.second) * (points[i].second - cur_p.second));
+                scalar = ((pr_p.first - cur_p.first) * (points[i].first - cur_p.first) +
+                    (pr_p.second - cur_p.second) * (points[i].second - cur_p.second));
                 cur_cos = scalar / len1 / len2;
 
-                if (cur_cos < min_cos) {
-                    min_cos = cur_cos;
-                    max_len = len2;
+                if (cur_cos < mn_cs) {
+                    mn_cs = cur_cos;
+                    mx_ln = len2;
                     next = i;
-                } else if (cur_cos == min_cos) {
-                    if (max_len < len2) {
+                } else if (cur_cos == mn_cs) {
+                    if (mx_ln < len2) {
                         next = i;
-                        max_len = len2;
+                        mx_ln = len2;
                     }
                 }
             }
 
-            len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+            len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
             len2 = sqrt(pow((base_p.first - cur_p.first), 2) + pow((base_p.second - cur_p.second), 2));
-            scalar = ((prev_p.first - cur_p.first) * (base_p.first - cur_p.first) +
-                (prev_p.second - cur_p.second) * (base_p.second - cur_p.second));
+            scalar = ((pr_p.first - cur_p.first) * (base_p.first - cur_p.first) +
+                (pr_p.second - cur_p.second) * (base_p.second - cur_p.second));
             cur_cos = scalar / len1 / len2;
 
-            if (cur_cos < min_cos) {
+            if (cur_cos < mn_cs) {
                 next = base_id;
-            } else if (cur_cos == min_cos) {
-                if (max_len < len2) {
+            } else if (cur_cos == mn_cs) {
+                if (mx_ln < len2) {
                     next = base_id;
                 }
             }
@@ -195,8 +193,8 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
             if (next == base_id)
                 break;
             Local_Convex_Hulls[tid].push_back(next);
-            prev_p.first = cur_p.first;
-            prev_p.second = cur_p.second;
+            pr_p.first = cur_p.first;
+            pr_p.second = cur_p.second;
             cur_p = points[next];
         } while (base_id != next);
     }
@@ -206,7 +204,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     int razmer_mas = 1;
 
     points_last.push_back(base_p);
-    for (int i = 0; i < num_thr; i++) {
+    for (int i = 0; i < nu_th; i++) {
         razmer_mas_i = Local_Convex_Hulls[i].size();
         points_last.resize(razmer_mas + razmer_mas_i);
         for (int j = 0; j < razmer_mas_i; j++) {
@@ -218,34 +216,34 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
 
     next = 0;
     flag_h = 1;
-    max_len = 0;
+    mx_ln = 0;
     cur_p = Convex_Hull[0];
-    prev_p.first = Convex_Hull[0].first - 1;
-    prev_p.second = Convex_Hull[0].second;
+    pr_p.first = Convex_Hull[0].first - 1;
+    pr_p.second = Convex_Hull[0].second;
 
     do {
-        min_cos = 1.1;
+        mn_cs = 1.1;
         for (size_t i = 0; i < razmer_mas; i++) {
-            len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+            len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
             len2 = sqrt(pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2));
-            scalar = ((prev_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
-                (prev_p.second - cur_p.second) * (points_last[i].second - cur_p.second));
+            scalar = ((pr_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
+                (pr_p.second - cur_p.second) * (points_last[i].second - cur_p.second));
             cur_cos = scalar / len1 / len2;
-            if (cur_cos < min_cos) {
-                min_cos = cur_cos;
-                max_len = len2;
+            if (cur_cos < mn_cs) {
+                mn_cs = cur_cos;
+                mx_ln = len2;
                 next = i;
-            } else if (cur_cos == min_cos) {
-                if (max_len < len2) {
+            } else if (cur_cos == mn_cs) {
+                if (mx_ln < len2) {
                     next = i;
-                    max_len = len2;
+                    mx_ln = len2;
                 }
             }
         }
         Convex_Hull.push_back(points_last[next]);
         flag_h++;
-        prev_p.first = cur_p.first;
-        prev_p.second = cur_p.second;
+        pr_p.first = cur_p.first;
+        pr_p.second = cur_p.second;
         cur_p = points_last[next];
     } while (cur_p != Convex_Hull[0]);
 
