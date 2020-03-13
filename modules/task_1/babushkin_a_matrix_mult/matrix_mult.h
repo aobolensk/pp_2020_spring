@@ -10,9 +10,9 @@
 namespace mtrxmult {
 class Matrix {
  private:
-  std::vector<double> m_data;
-  int m_cols;
   int m_rows;
+  int m_cols;
+  std::vector<double> m_data;
 
  public:
   Matrix() : m_data({}), m_rows(0), m_cols(0) {}
