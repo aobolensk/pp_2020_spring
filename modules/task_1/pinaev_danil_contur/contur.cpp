@@ -6,26 +6,29 @@
 #include <random>
 #include <stdexcept>
 #include <vector>
-#include "../../modules/task_1/pinaev_danil_contur/pinaev_danil_contur.h"
+#include "../../modules/task_1/pinaev_danil_contur/contur.h"
 
 static int offset = 0;
 
 Image generateRandomImage(int rows, int cols) {
+    if (rows < 1 || cols < 1)
+        throw std::runtime_error("Matrix dimensions are to be positive");
+
     std::mt19937 gen;
     gen.seed((unsigned)time(0) + ++offset);
     std::uniform_int_distribution<uint8_t> dis(0, 1);
-    
+
     Image res(rows + 2, cols + 2);
-    
+
     for (int i = 1; i < rows + 1; ++i) {
         for (int j = 1; j < cols + 1; ++i)
             res.data[i * (rows + 2) + j] = static_cast<uint8_t>(dis(gen));
     }
-    return result;
+    return res;
 }
 
-Image Contur(const Image &in) {
-    Image res(in.data);
+Image getContur(const Image &in) {
+    Image res(in);
 
     int cols = in.cols,
         rows = in.rows;
@@ -64,7 +67,7 @@ Image Contur(const Image &in) {
                     in.data[(i + 2)*(cols + 2) + (j + 0)] == 0 ||
                     in.data[(i + 2)*(cols + 2) + (j + 1)] == 0 ||
                     in.data[(i + 2)*(cols + 2) + (j + 2)] == 0
-                ) in.data[(i + 1)*(cols + 2) + (j + 1)] = 127;
+                ) res.data[(i + 1)*(cols + 2) + (j + 1)] = 127;
         }
     }
     return res;

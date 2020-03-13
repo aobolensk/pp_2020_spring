@@ -2,62 +2,64 @@
 #include <gtest/gtest.h>
 #include <omp.h>
 #include "./contur.h"
-/*
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
+
+TEST(Contur_ceq, Can_Take_Contur) {
     const int width = 10;
     const int height = 10;
 
     Image img = generateRandomImage(width, height);
-    Image res = gaussianFilter(img, width, height);
+    Image res = getContur(img);
 
-    ASSERT_NE(res, img);
+    ASSERT_NE(res.data, img.data);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
+TEST(Contur_ceq, Can_Make_One_Pixel_Image) {
+    const int width = 1;
+    const int height = 1;
+    const size_t size = 9;
+
+    Image img = generateRandomImage(width, height);
+
+    ASSERT_EQ(img.data.size(), size);
+}
+
+TEST(Contur_ceq, Image_Size_Should_Be_Positive) {
     const int width = 0;
     const int height = 0;
 
-    Image img = generateRandomImage(width, height);
-
-    ASSERT_EQ(img, gaussianFilter(img, width, height));
+    ASSERT_ANY_THROW(generateRandomImage(width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
-    const int width = 2;
+TEST(Contur_ceq, Can_Get_Contur) {
+    const int width = 50;
     const int height = 50;
 
     Image img = generateRandomImage(width, height);
+    Image res = getContur(img);
 
-    ASSERT_NE(img, gaussianFilter(img, width, height));
+    ASSERT_NE(img.data, res.data);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
-    const int width = 50;
-    const int height = 2;
+TEST(Contur_ceq, Can_Get_Contur_Weird_Size_1) {
+    const int width = 1000;
+    const int height = 1;
 
     Image img = generateRandomImage(width, height);
+    Image res = getContur(img);
 
-    ASSERT_NE(img, gaussianFilter(img, width, height));
+    ASSERT_NE(img.data, res.data);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Height) {
-    const int width = 10;
-    const int height = 10;
+TEST(Contur_ceq, Can_Get_Contur_Weird_Size_2) {
+    const int width = 2;
+    const int height = 1234;
 
     Image img = generateRandomImage(width, height);
+    Image res = getContur(img);
 
-    ASSERT_ANY_THROW(gaussianFilter(img, width, height - 1));
+    ASSERT_NE(img.data, res.data);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Width) {
-    const int width = 10;
-    const int height = 10;
-
-    Image img = generateRandomImage(width, height);
-
-    ASSERT_ANY_THROW(gaussianFilter(img, width + 1, height));
-}
-*/
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
