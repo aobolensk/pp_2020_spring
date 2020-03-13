@@ -6,17 +6,12 @@
 #include <ctime>
 
 std::vector<std::pair<double, double>> getRandomPoints(int n) {
-    //std::mt19937 engine;
     std::vector<std::pair<double, double>> a(n);
-    //engine.seed(n);
     std::mt19937 gen(n);
     std::uniform_real_distribution<> urd(0, 100);
     for (int i = 0; i < n; i++) {
-        //a[i].first = engine() % 100;
-        //a[i].second = engine() % 100;
         a[i].first = urd(gen);
         a[i].second = urd(gen);
-        //std::cout << a[i].first << "\n";
     }
     return a;
 }
