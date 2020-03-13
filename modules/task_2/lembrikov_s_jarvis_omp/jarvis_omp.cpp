@@ -223,7 +223,7 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
 
     do {
         mn_cs = 1.1;
-        for (size_t i = 0; i < razmer_mas; i++) {
+        for (int i = 0; i < razmer_mas; i++) {
             len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
             len2 = sqrt(pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2));
             scalar = ((pr_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
