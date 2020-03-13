@@ -25,7 +25,6 @@ TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
 
 TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     size_t size = 7;
-    size_t size_a = 5;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_omp;
     std::vector<std::pair<double, double>> answer_seq;
@@ -68,7 +67,6 @@ TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
 
 TEST(Vector_Min_MPI, Test_On_2_Equal_Points_EQ) {
     size_t size = 2;
-    size_t size_a = 1;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_omp;
     std::vector<std::pair<double, double>> answer_seq;
