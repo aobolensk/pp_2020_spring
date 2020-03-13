@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "../../task_1/babushkin_a_matrix_mult/matrix_mult.h"
+#include "./matrix_mult.h"
 
 TEST(Matrix_Mult_Seq, Getters) {
   mtrxmult::Matrix test_matrix({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);

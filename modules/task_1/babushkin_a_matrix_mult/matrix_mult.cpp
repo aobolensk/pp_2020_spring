@@ -1,6 +1,6 @@
 // Copyright 2020 Babushkin Alexey
 
-#include "../../modules/task_1/babushkin_a_matrix_mult/matrix_mult.h"
+#include "../../../modules/task_1/babushkin_a_matrix_mult/matrix_mult.h"
 
 #include <algorithm>
 #include <stdexcept>
