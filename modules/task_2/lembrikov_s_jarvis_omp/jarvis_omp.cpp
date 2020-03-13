@@ -103,35 +103,13 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
     int tid;
     int k;
     int ostatok;
-    //int num_thr;// = omp_get_num_threads();
 
     k = size / num_thr;
-
-/*#pragma omp parallel private(tid) shared(number_of_t, size, k, ostatok, num_thr) num_threads(num_thr)
-    {
-        tid = omp_get_thread_num();
-        number_of_t = omp_get_num_threads();
-        k = size / number_of_t;
-        ostatok = size % number_of_t;
-        //int number_of_t = omp_get_num_threads();
-        if (tid == 0) {
-            //number_of_t = omp_get_num_threads();
-            std::cout << "k`0 = " << num_thr << "\n";
-            //std::cout << "number = " << number_of_t << "\n";
-            //std::cout << "i am nullean???\n";
-        }
-
-        if (tid == 1) {
-            //std::cout << "i am first\n";
-            std::cout << "i am first\n"; //<< k << "\n";
-        }
-    }*/
 
     for (size_t i = 1; i < size; i++) {
         if (points[i].second < points[base_id].second) {
             base_id = i;
-        }
-        else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
+        } else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
             base_id = i;
         }
     }
@@ -179,47 +157,9 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
             ostatok = 0;
         }
 
-        //part_of_points.resize(k + ostatok);
-        //std::copy(points.begin() + (tid * k), points.begin() + ((tid + 1) * k + ostatok), part_of_points.begin());
-        
-        //for (size_t i = (tid * k); i < ((tid + 1) * k + ostatok); i++) {
-          //  part_of_points.push_back(points[i]);
-        //}
-/*#pragma omp critical
-        {
-            //if (tid == 0)
-              //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-            if (tid == 1) {
-                //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                for (int i = 0; i < part_of_points.size(); i++) {
-                    std::cout << "first " << part_of_points[i].first << "\n";
-                    std::cout << "second " << part_of_points[i].second << "\n";
-                }
-            }
-        }*/
-/*#pragma omp critical
-        {
-            //if (tid == 0)
-              //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-            if (tid == 1) {
-                //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                //for (int i = 0; i < part_of_points.size(); i++) {
-                    std::cout << "first " << cur_p.first << "\n";
-                    std::cout << "second " << cur_p.second << "\n";
-                //}
-            }
-        }*/
-//#pragma omp for 
-        //for (int l = 0; l < size; l++) {
         do {
             min_cos = 1.1;
-            /*#pragma omp critical
-                            {
-                                if (tid == 0)
-                                    std::cout << "first " << min_cos << "\n";
-                                if (tid == 1)
-                                    std::cout << "second " << min_cos << "\n";
-                            }*/
+
             for (size_t i = tid * k; i < ((tid + 1) * k) + ostatok; i++) {
                 len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
                 len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
@@ -230,46 +170,21 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                 if (cur_cos < min_cos) {
                     min_cos = cur_cos;
                     max_len = len2;
-                    next = i;// +tid * k;
+                    next = i;
                 } else if (cur_cos == min_cos) {
                     if (max_len < len2) {
-                        next = i;// +tid * k;
+                        next = i;
                         max_len = len2;
                     }
                 }
             }
 
-/*#pragma omp critical
-            {
-                //if (tid == 0)
-                  //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-                if ((tid == 1) && (flag_h == 4)){
-                    //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                    //for (int i = 0; i < part_of_points.size(); i++) {
-                    std::cout << flag_h << " " << " " << min_cos << "\n";
-                    //std::cout << "second " << cur_p.second << "\n";
-                    //}
-                }
-            }*/
-
-            // проверка на нулевую точку, которая войдёт не во все части
             len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
             len2 = sqrt(pow((base_p.first - cur_p.first), 2) + pow((base_p.second - cur_p.second), 2));
             scalar = ((prev_p.first - cur_p.first) * (base_p.first - cur_p.first) +
                 (prev_p.second - cur_p.second) * (base_p.second - cur_p.second));
             cur_cos = scalar / len1 / len2;
-/*#pragma omp critical
-            {
-                //if (tid == 0)
-                  //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-                if ((tid == 1) && (flag_h == 4)) {
-                    //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                    //for (int i = 0; i < part_of_points.size(); i++) {
-                    std::cout << flag_h << " " << " " << cur_cos << "\n";
-                    //std::cout << "second " << cur_p.second << "\n";
-                    //}
-                }
-            }*/
+
             if (cur_cos < min_cos) {
                 next = base_id;
             } else if (cur_cos == min_cos) {
@@ -277,41 +192,14 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                     next = base_id;
                 }
             }
-            // конец этой проверки
+
             if (next == base_id)
                 break;
             Local_Convex_Hulls[tid].push_back(next);
-/*#pragma omp critical
-            {
-                //if (tid == 0)
-                  //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-                if (tid == 1)
-                    //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                    std::cout << "second " << next << "\n";
-            }*/
-//#pragma omp atomic
-  //          flag_h++;
             prev_p.first = cur_p.first;
             prev_p.second = cur_p.second;
-            cur_p = points[next];// - tid * k];
+            cur_p = points[next];
         } while (base_id != next);
-            //} while (cur_p != Convex_Hull[0]);
-            //if (base_id == next)
-              //  break;
-        //}
-#pragma omp critical
-        {
-            //if (tid == 0)
-              //  std::cout << "first " <<Local_Convex_Hulls[tid].back() << "\n";
-            if (tid == 0) {
-                //std::cout << "second " << Local_Convex_Hulls[tid].back() << "\n";
-                //for (int i = 0; i < part_of_points.size(); i++) {
-                //for (int i = 0; i < Local_Convex_Hulls[tid].size(); i++)
-                    //std::cout << flag_h << " " << Local_Convex_Hulls[tid][i] << "\n";
-                //std::cout << "second " << cur_p.second << "\n";
-                //}
-            }
-        }
     }
 
     std::vector<std::pair<double, double>> points_last;
@@ -323,10 +211,8 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
         razmer_mas_i = Local_Convex_Hulls[i].size();
         points_last.resize(razmer_mas + razmer_mas_i);
         for (size_t j = 0; j < razmer_mas_i; j++) {
-            cur_p = points[Local_Convex_Hulls[i][j]]; // взяли точку под номером, который хранится в массиве
+            cur_p = points[Local_Convex_Hulls[i][j]];
             points_last[razmer_mas + j] = cur_p;
-            //std::cout << points_last[razmer_mas + j].first << "\n";
-            //std::cout << points_last[razmer_mas + j].second << "\n";
         }
         razmer_mas += razmer_mas_i;
     }
@@ -337,7 +223,7 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
     cur_p = Convex_Hull[0];
     prev_p.first = Convex_Hull[0].first - 1;
     prev_p.second = Convex_Hull[0].second;
-    //base_p = Convex_Hull[0];
+
     do {
         min_cos = 1.1;
         for (size_t i = 0; i < razmer_mas; i++) {
@@ -350,8 +236,7 @@ prev_p, cur_p, flag_h) shared(size, Local_Convex_Hulls, points, base_id, k) num_
                 min_cos = cur_cos;
                 max_len = len2;
                 next = i;
-            }
-            else if (cur_cos == min_cos) {
+            } else if (cur_cos == min_cos) {
                 if (max_len < len2) {
                     next = i;
                     max_len = len2;
