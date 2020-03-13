@@ -1,7 +1,7 @@
 // Copyright 2020 Sadikov Artem
 #include <gtest/gtest.h>
 #include <vector>
-#include "./Deikstra_Algorithm_Seq.h"
+#include "./deikstra_algorithm.h"
 
 TEST(Deikstra_Algorithm_Seq_Seq, Test_On_Six_Points_Graph) {
     std::vector<int> g = {0, 7, 9, 0, 0, 14,
