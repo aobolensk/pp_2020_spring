@@ -7,7 +7,8 @@
 
 void multSeq(int size, const double* a, const double* b, double* result);
 
-void strassenRecursivePart(int size, const double* a, const double* b, double* result);
+void strassenRecursivePart(int size, const double* a, const double* b,
+                           double* result);
 
 void splitMatrix(int size, const double* a, double* a11, double* a12,
                  double* a21, double* a22);
@@ -171,7 +172,8 @@ void strassen4(int size, const double* a1, const double* a2, const double* b1,
   delete[] t1;
 }
 
-void strassenRecursivePart(int size, const double* a, const double* b, double* result) {
+void strassenRecursivePart(int size, const double* a, const double* b,
+                           double* result) {
   int qLength = size * size / 4;
   int i;
   double* a11 = new double[size * size];
@@ -246,7 +248,8 @@ void strassenRecursivePart(int size, const double* a, const double* b, double* r
   delete[] m1;
 }
 
-void strassenMultStdThread(int size, const double* a, const double* b, double* result) {
+void strassenMultStdThread(int size, const double* a, const double* b,
+                           double* result) {
   if (powerOf2(size) < 0) {
     throw std::invalid_argument("");
   }
