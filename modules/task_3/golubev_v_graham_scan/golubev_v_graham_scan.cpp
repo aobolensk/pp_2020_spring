@@ -188,14 +188,13 @@ std::vector<std::pair<double, double> > tbb_graham_scan(
 
   std::vector<std::pair<double, double> > last_points;
   int step = (end - begin) / n_threads;
-  int ostatok = (end - begin) % n_threads;
 
   tbb::spin_mutex mutex;
   tbb::task_scheduler_init init(static_cast<int>(n_threads));
   tbb::task_group gruppe;
 
   for (std::size_t i = 0; i < n_threads - 1; ++i) {
-    gruppe.run([&last_points, &mutex, i, begin, end, step]() {
+    gruppe.run([&last_points, &mutex, i, begin, step]() {
       auto left = begin + step * i;
       auto right = begin + step * (i + 1);
       auto local_scan = graham_scan(left, right);
