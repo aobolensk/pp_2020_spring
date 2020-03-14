@@ -64,7 +64,7 @@ TEST(Strassen_std, correct_strassen_16x16_2) {
   strassen_std(a, b, &d);
   ASSERT_TRUE(isEqMatrix(c, d, n));
 }
-
+/*
 TEST(Strassen_std, correct_strassen_128x128) {
   int n = 64;
   std::vector<double> a(n * n), b(n * n), c, d(n * n);
@@ -87,6 +87,7 @@ TEST(Strassen_std, correct_strassen_128x128) {
   std::cout << "seq\t" << p2 << std::endl;
   ASSERT_TRUE(isEqMatrix(c, d, n));
 }
+*/
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
