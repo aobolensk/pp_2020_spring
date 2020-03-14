@@ -17,15 +17,6 @@ if ( USE_SEQ )
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-
-    if (USE_OPENCV)
-      add_definitions(-DOPENCV=1)
-      find_package( OpenCV REQUIRED )
-      include_directories("${CMAKE_CURRENT_SOURCE_DIR}" ${OpenCV_INCLUDE_DIRS})
-      target_link_libraries(${ProjectId} ${OpenCV_LIBS})
-    endif( USE_OPENCV)
-
 else( USE_SEQ )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
 endif( USE_SEQ )
-
