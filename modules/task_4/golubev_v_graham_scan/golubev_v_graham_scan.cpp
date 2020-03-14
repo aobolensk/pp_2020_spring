@@ -1,6 +1,5 @@
 // Copyright 2020 Golubev Vladislav
 
-#include <omp.h>
 #include <cmath>
 #include <algorithm>
 #include <vector>
@@ -8,6 +7,7 @@
 #include <utility>
 #include <random>
 #include <stack>
+#include <thread>
 #include "../../../modules/task_4/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
@@ -125,7 +125,8 @@ bool is_less(const std::pair<double, double>& a, const std::pair<double, double>
   }
 }
 
-std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double, double> >::iterator begin,
+std::vector<std::pair<double, double> > graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end) {
   std::vector<std::pair<double, double> > points(end - begin);
   std::copy(begin, end, points.begin());
@@ -178,4 +179,11 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     --i;
   }
   return res_vec;
+}
+
+std::vector<std::pair<double, double> > std_thread_graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
+  std::vector<std::pair<double, double> >::iterator end,
+  std::size_t n_threads) {
+  return graham_scan(begin, end);
 }
