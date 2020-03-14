@@ -46,7 +46,7 @@ TEST(test_Shell_Betch_sort, test_on_1000_elements) {
   ASSERT_EQ(betch, res);
 }
 
-TEST(test_Shell_Betch_sort, test_on_10000_elements) {
+TEST(test_Shell_Betch_sort, test_on_10000_elem) {
   std::vector<int> res = getRandomVector(10000);
   std::vector<int> betch = shellBatch(res, 10000);
   std::sort(res.begin(), res.end());
