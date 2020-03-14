@@ -40,7 +40,7 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Fully_Double_Array) {
   Get_Random_Array(arr, n);
 
   for (int i = 0; i < n; i++) {
-    arr[i] *= 3, 1415926535;
+    arr[i] *= 3.1415926535;
   }
   qHoareSort(arr, 0, n - 1);
 
