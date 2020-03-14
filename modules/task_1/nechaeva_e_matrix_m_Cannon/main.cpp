@@ -5,12 +5,10 @@
 #include "../../../modules/task_1/nechaeva_e_matrix_m_Cannon/matrix_m_Cannon.h"
 
 TEST(Matrix_Cannon, matrix_with_negative_size) {
-
     ASSERT_ANY_THROW(RandomMatrix(0));
-} 
+}
 
 TEST(Matrix_Cannon, correct_compare_matrix) {
-
     matrix A = {{1.5, 1.7},
                 {3.789, 37.8},
                 {12.1234, 2.0}};
@@ -22,23 +20,20 @@ TEST(Matrix_Cannon, correct_compare_matrix) {
 }
 
 TEST(Matrix_Cannon, correct_compare_different_matrix) {
-
     matrix A = RandomMatrix(3);
     matrix B = RandomMatrix(3);
     
     ASSERT_FALSE(CompareMatrix(A, B));
 }
 
-TEST(Matrix_Cannon, throw_when_naive_mult_with_different_size){
-
+TEST(Matrix_Cannon, throw_when_naive_mult_with_different_size) {
     matrix A = RandomMatrix(3);
     matrix B = RandomMatrix(5);
 
     ASSERT_ANY_THROW(NaiveMulti(A, B));
 }
 
-TEST(Matrix_Cannon, correct_result_of_the_naive_multiplication){
-
+TEST(Matrix_Cannon, correct_result_of_the_naive_multiplication) {
     matrix A = {{1.5, 1.7, 2.5},
                 {3.7, 37.8, 2.5},
                 {12.1, 2.0, 2.5}};
@@ -52,8 +47,7 @@ TEST(Matrix_Cannon, correct_result_of_the_naive_multiplication){
     ASSERT_TRUE(CompareMatrix(rez, NaiveMulti(A, B)));
 }
 
-TEST(Matrix_Cannon, correct_result_of_the_block_multiplication){
-
+TEST(Matrix_Cannon, correct_result_of_the_block_multiplication) {
     matrix A = {{1.5, 1.7, 2.5},
                 {3.7, 37.8, 2.5},
                 {12.1, 2.0, 2.5}};
@@ -67,8 +61,7 @@ TEST(Matrix_Cannon, correct_result_of_the_block_multiplication){
     ASSERT_TRUE(CompareMatrix(rez, BlockMulti(A, B, 2)));
 }
 
-TEST(Matrix_Cannon, the_same_results_of_the_mult){
-
+TEST(Matrix_Cannon, the_same_results_of_the_mult) {
     matrix A = RandomMatrix(3);
     matrix B = RandomMatrix(3);
 
