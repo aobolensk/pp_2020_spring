@@ -121,7 +121,7 @@ void strassen1(int size, const double* a1, const double* a2, const double* b1,
     t2[i] = b1[i] + b2[i];
   }
 
-  multSeq(size, t1, t2, result);
+  strassenRecursivePart(size, t1, t2, result);
 
   delete[] t1;
 }
@@ -136,7 +136,7 @@ void strassen2(int size, const double* a1, const double* a2, const double* b,
     t[i] = a1[i] + a2[i];
   }
 
-  multSeq(size, t, b, result);
+  strassenRecursivePart(size, t, b, result);
 
   delete[] t;
 }
@@ -151,7 +151,7 @@ void strassen3(int size, const double* a, const double* b1, const double* b2,
     t[i] = b1[i] - b2[i];
   }
 
-  multSeq(size, a, t, result);
+  strassenRecursivePart(size, a, t, result);
 
   delete[] t;
 }
@@ -168,13 +168,17 @@ void strassen4(int size, const double* a1, const double* a2, const double* b1,
     t2[i] = b1[i] + b2[i];
   }
 
-  multSeq(size, t1, t2, result);
+  strassenRecursivePart(size, t1, t2, result);
 
   delete[] t1;
 }
 
 void strassenRecursivePart(int size, const double* a, const double* b,
                            double* result) {
+  if (size <= 128) {
+    multSeq(size, a, b, result);
+    return;
+  }
   int qLength = size * size / 4;
   int i;
   double* a11 = new double[size * size];
