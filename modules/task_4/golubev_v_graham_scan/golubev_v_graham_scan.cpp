@@ -186,6 +186,9 @@ std::vector<std::pair<double, double> > std_thread_graham_scan(
   std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end,
   std::size_t n_threads) {
+  if (n_threads == 0) {
+    throw "incorrect number of threads";
+  }
   std::thread* threads = new std::thread[n_threads];
   std::mutex m;
 
@@ -203,7 +206,6 @@ std::vector<std::pair<double, double> > std_thread_graham_scan(
         m.unlock();
       }
       });
-    threads[i].join();
   }
   threads[n_threads - 1] = std::thread([&last_points, begin, end, n_threads, step, &m]() {
     auto local_scan = graham_scan(begin + step * (n_threads - 1), end);
@@ -213,8 +215,9 @@ std::vector<std::pair<double, double> > std_thread_graham_scan(
       m.unlock();
     }
     });
-  threads[n_threads - 1].join();
-
+  for (std::size_t i = 0; i < n_threads; ++i) {
+    threads[i].join();
+  }
   delete[] threads;
   return graham_scan(last_points.begin(), last_points.end());
 }
