@@ -156,26 +156,6 @@ TEST(Multiply_Matrix_Fox, Fox_Alg_Matrix_Mult_Works_Properly) {
         }
     }
 }
-TEST(Multiply_Matrix_Fox, Fox_Alg_Matrix_Mult_Works_Properly_Rand) {
-    matrix a, b;
-    matrix expectRes, res;
-    uint rowSize = 2;
-    uint colSize = 2;
-
-    prepareOutMatrix(&expectRes, rowSize, colSize);
-    initMatrixRand(&a, 10, 10);
-    initMatrixRand(&b, 10, 10);
-
-    simpleMaxtrixMultiply(a, b, &expectRes);
-
-    algFoxMatrixMultiply(a, b, &res);
-
-    for (uint i = 0; i < rowSize; i++) {
-        for (uint j = 0; j < colSize; j++) {
-            EXPECT_NEAR(expectRes[i][j], res[i][j], 0.1);
-        }
-    }
-}
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
