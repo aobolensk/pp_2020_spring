@@ -69,13 +69,13 @@ TEST(tbb_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
 }
 
 TEST(TBB_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
-  int size = 2000;
+  int size = 20000;
   auto area = get_rand_set(size);
   auto begin = area.begin();
   auto end = area.end();
 
   tbb::tick_count t1 = tbb::tick_count::now();
-  auto res_tbb = tbb_graham_scan(begin, end, 128);
+  auto res_tbb = tbb_graham_scan(begin, end, 4);
   tbb::tick_count t2 = tbb::tick_count::now();
   std::cout << "tbb_scan " << (t2 - t1).seconds() << std::endl;
 
