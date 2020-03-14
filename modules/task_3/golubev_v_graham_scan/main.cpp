@@ -68,7 +68,7 @@ TEST(tbb_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
   ASSERT_EQ(res_tbb, res_std);
 }
 
-TEST(TBB_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
+/*TEST(TBB_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
   int size = 20000;
   auto area = get_rand_set(size);
   auto begin = area.begin();
@@ -86,7 +86,7 @@ TEST(TBB_graham_scan, Test_tbb_graham_scan_with_big_rand_set) {
   std::cout << "acseleration " << (t4 - t3).seconds() / (t2 - t1).seconds() << std::endl;
 
   ASSERT_EQ(res_tbb, res_std);
-}
+}*/
 
 
 int main(int argc, char **argv) {
