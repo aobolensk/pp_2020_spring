@@ -10,8 +10,8 @@ environment:
       MPI_HOME: "C:/Program Files (x86)/Microsoft SDKs/MPI"
 
 artifacts:
-  - path: build
-    name: build
+  - path: build/modules/reports
+    name: reports
 
 install:
   - ps: Start-FileDownload 'https://github.com/Microsoft/Microsoft-MPI/releases/download/v10.0/msmpisetup.exe'
