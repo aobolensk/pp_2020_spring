@@ -15,7 +15,7 @@ matrix RandomMatrix(const int n) {
     std::random_device device;
     generator.seed(device());
     std::uniform_real_distribution<double> distribution(0, 100);;
-    
+
     matrix rez(n, std::vector<double>(n, 0));
 
     for (int i = 0; i < n; i++)
@@ -25,7 +25,7 @@ matrix RandomMatrix(const int n) {
     return rez;
 }
 
-matrix NaiveMulti(const matrix &A, const matrix &B){
+matrix NaiveMulti(const matrix &A, const matrix &B) {
     if (A[0].size() != B.size())
         throw std::invalid_argument("Different values for col and row");
 
@@ -52,23 +52,23 @@ bool CompareMatrix(const matrix &A, const matrix &B) {
 
     bool temp = true;
     for (size_t i = 0; i < A.size(); i++) {
-        if(temp == false)
+        if (temp == false)
             break;
         for (size_t j = 0; j < A[0].size(); j++)
-            if(!CompareValues(A[i][j], B[i][j])) {
+            if (!CompareValues(A[i][j], B[i][j])) {
                 temp = false;
                 break;
             }
     }
-    
+
     return temp;
 }
 
-matrix BlockMulti(const matrix &A, const matrix &B, const int &blockSize){
+matrix BlockMulti(const matrix &A, const matrix &B, const int &blockSize) {
     if (A[0].size() != B.size())
         throw std::invalid_argument("Different values for col and row");
     int temp = blockSize;
-    if (temp > (int)A.size())
+    if (temp > static_cast<int>(A.size()))
         throw std::invalid_argument("Wrong blockSize");
 
     int n = A[0].size();
@@ -76,18 +76,18 @@ matrix BlockMulti(const matrix &A, const matrix &B, const int &blockSize){
     matrix rez(n, std::vector<double>(n, 0));
 
     for (int jj = 0; jj < n; jj += blockSize) {
-       jjMin = std::min(jj + blockSize, n); 
+    jjMin = std::min(jj + blockSize, n); 
        for (int kk = 0; kk < n; kk += blockSize) {
-           kkMin = std::min(kk+ blockSize, n); 
+        kkMin = std::min(kk+ blockSize, n); 
            for (int i = 0; i < n; i++) {
                for (int k = kk; k < kkMin; k++) {
                    for (int j = jj; j < jjMin; j++) {
                       rez[i][j]  +=  A[i][k] * B[k][j];
                    }
-               }
-           }
-      }
-   }
+                }
+            }
+        }
+    }
 
     return rez;
 }
