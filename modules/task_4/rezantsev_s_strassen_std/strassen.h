@@ -3,7 +3,6 @@
 #define MODULES_TASK_4_REZANTSEV_S_STRASSEN_STD_STRASSEN_H_
 #include <thread>
 #include <vector>
-static int DEEP = 0;
 void splitMatrix(std::vector<double> a, std::vector<double> *a11,
                  std::vector<double> *a22, std::vector<double> *a12,
                  std::vector<double> *a21, int n);

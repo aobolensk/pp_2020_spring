@@ -146,6 +146,8 @@ void multMatrix(const std::vector<double> &a, const std::vector<double> &b,
   }
 }
 
+static int DEEP = 0;
+
 void strassen_std(const std::vector<double> &a, const std::vector<double> &b,
                   std::vector<double> *result) {
   int n = sqrt(result->size());
