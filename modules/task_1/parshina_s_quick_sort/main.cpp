@@ -16,7 +16,7 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Correctly) {
 
   ASSERT_EQ(1, IsSorted(arr, n));
 }
-TEST(Hoare_Quick_Sort_sequential, Ñan_Sort_Empty_Array) {
+TEST(Hoare_Quick_Sort_sequential, Can_Sort_Empty_Array) {
   int n = 1000000;
 
   double* arr = new double[n];
