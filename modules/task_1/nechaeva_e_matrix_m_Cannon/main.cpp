@@ -15,14 +15,14 @@ TEST(Matrix_Cannon, correct_compare_matrix) {
     matrix B = {{1.5, 1.7},
                 {3.789, 37.8},
                 {12.1234, 2.0}};
-    
+
     ASSERT_TRUE(CompareMatrix(A, B));
 }
 
 TEST(Matrix_Cannon, correct_compare_different_matrix) {
     matrix A = RandomMatrix(3);
     matrix B = RandomMatrix(3);
-    
+
     ASSERT_FALSE(CompareMatrix(A, B));
 }
 
@@ -43,7 +43,7 @@ TEST(Matrix_Cannon, correct_result_of_the_naive_multiplication) {
     matrix rez = {{38.79, 54.81, 18.24},
                 {175.66, 1062.13, 140.8},
                 {55.8, 81.17, 53.12}};
-    
+
     ASSERT_TRUE(CompareMatrix(rez, NaiveMulti(A, B)));
 }
 
@@ -57,7 +57,7 @@ TEST(Matrix_Cannon, correct_result_of_the_block_multiplication) {
     matrix rez = {{38.79, 54.81, 18.24},
                 {175.66, 1062.13, 140.8},
                 {55.8, 81.17, 53.12}};
-    
+
     ASSERT_TRUE(CompareMatrix(rez, BlockMulti(A, B, 2)));
 }
 
