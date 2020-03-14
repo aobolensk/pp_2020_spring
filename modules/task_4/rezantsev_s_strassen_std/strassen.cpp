@@ -1,11 +1,11 @@
 // Copyright 2020 Rezantsev Sergey
 #include "../../modules/task_4/rezantsev_s_strassen_std/strassen.h"
+#include <math.h>
 #include <algorithm>
 #include <future>
 #include <mutex>
 #include <thread>
 #include <vector>
-
 std::vector<double> sumMatrix(std::vector<double> a, std::vector<double> b,
                               int n) {
   std::vector<double> res(n * n);
