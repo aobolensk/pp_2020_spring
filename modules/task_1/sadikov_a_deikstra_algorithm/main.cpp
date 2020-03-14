@@ -1,9 +1,9 @@
 // Copyright 2020 Sadikov Artem
 #include <gtest/gtest.h>
 #include <vector>
-#include "./deikstra_algorithm.h"
+#include "./Deikstra_Algorithm_Seq.h"
 
-TEST(Deikstra_Algorithm_Seq_Seq, Test_On_Six_Points_Graph) {
+TEST(Deikstra_Algorithm_Seq, Test_On_Six_Points_Graph) {
     std::vector<int> g = {0, 7, 9, 0, 0, 14,
                           7, 0, 10, 15, 0, 0,
                           9, 10, 0, 11, 0, 2,
@@ -16,7 +16,7 @@ TEST(Deikstra_Algorithm_Seq_Seq, Test_On_Six_Points_Graph) {
     EXPECT_EQ(getMinRange(g, 1, 5), res);
 }
 
-TEST(Deikstra_Algorithm_Seq_Seq, Test_On_Three_Points) {
+TEST(Deikstra_Algorithm_Seq, Test_On_Three_Points) {
     std::vector<int> g = {0, 2, 3,
                           2, 0, 1,
                           3, 1, 0};
