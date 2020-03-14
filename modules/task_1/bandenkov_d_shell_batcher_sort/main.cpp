@@ -2,6 +2,7 @@
 #include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
 #include <vector>
+#include <algorithm>
 #include "./shell_batcher.h"
 
 TEST(test_Shell_Sort, test_on_20_elements) {

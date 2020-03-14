@@ -15,8 +15,7 @@ std::vector<int> getRandomVector(int sz) {
   return vec;
 }
 
-std::vector<int> shellSort(const std::vector<int>& A, int size)
-{
+std::vector<int> shellSort(const std::vector<int>& A, int size) {
   int step, i, j, tmp;
   std::vector<int>array(A);
   for (step = size / 2; step > 0; step /= 2) {
@@ -31,8 +30,7 @@ std::vector<int> shellSort(const std::vector<int>& A, int size)
   return array;
 }
 
-std::vector<int> shellBatch(const std::vector<int>& A, int size)
-{
+std::vector<int> shellBatch(const std::vector<int>& A, int size) {
   int k = size / 2;
   std::vector<int>arr1;
   std::copy(A.begin(), A.end() - k, inserter(arr1, arr1.begin()));
@@ -47,8 +45,7 @@ std::vector<int> shellBatch(const std::vector<int>& A, int size)
   return res;
 }
 
-std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& B)
-{
+std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& B) {
   int size1 = A.size();
   int size2 = B.size();
   int size_res = size1 / 2 + size2 / 2 + size1 % 2 + size2 % 2;
@@ -61,8 +58,7 @@ std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& 
     if (A[it1] <= B[it2]) {
       mas_res[i] = A[it1];
       it1 += 2;
-    }
-    else {
+    } else {
       mas_res[i] = B[it2];
       it2 += 2;
     }
@@ -74,8 +70,7 @@ std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& 
       mas_res[i] = B[j];
       i++;
     }
-  }
-  else {
+  } else {
     for (int j = it1; j < size1; j += 2) {
       mas_res[i] = A[j];
       i++;
@@ -84,8 +79,7 @@ std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& 
   return mas_res;
 }
 
-std::vector<int> oddBatcher(const std::vector<int>& A, const std::vector<int>& B)
-{
+std::vector<int> oddBatcher(const std::vector<int>& A, const std::vector<int>& B) {
   int size1 = A.size();
   int size2 = B.size();
   int size_res = size1 / 2 + size2 / 2;
@@ -98,8 +92,7 @@ std::vector<int> oddBatcher(const std::vector<int>& A, const std::vector<int>& B
     if (A[it1] <= B[it2]) {
       mas_res[i] = A[it1];
       it1 += 2;
-    }
-    else {
+    } else {
       mas_res[i] = B[it2];
       it2 += 2;
     }
@@ -111,8 +104,7 @@ std::vector<int> oddBatcher(const std::vector<int>& A, const std::vector<int>& B
       mas_res[i] = B[j];
       i++;
     }
-  }
-  else {
+  } else {
     for (int j = it1; j < size1; j += 2) {
       mas_res[i] = A[j];
       i++;
@@ -121,8 +113,7 @@ std::vector<int> oddBatcher(const std::vector<int>& A, const std::vector<int>& B
   return mas_res;
 }
 
-std::vector<int> mergeBatcher(const std::vector<int>& A, const std::vector<int>& B)
-{
+std::vector<int> mergeBatcher(const std::vector<int>& A, const std::vector<int>& B) {
   int size1 = A.size();
   int size2 = B.size();
   int flag = 0;
