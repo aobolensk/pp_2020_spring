@@ -177,10 +177,39 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
   return res_vec;
 }
 
-TBB_scan::TBB_scan(std::vector<std::pair<double, double> > _area) {
-  area = std::move(_area);
-}
 
-void TBB_scan::operator() (const tbb::blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const {
-  auto loc_res = graham_scan(range.begin(), range.end());
+std::vector<std::pair<double, double> > tbb_graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
+  std::vector<std::pair<double, double> >::iterator end,
+  std::size_t n_threads) {
+  if (n_threads == 0) {
+    throw "incorrect number of threads";
+  }
+
+  std::vector<std::pair<double, double> > last_points;
+  int step = (end - begin) / n_threads;
+  int ostatok = (end - begin) % n_threads;
+
+  tbb::task_scheduler_init init(static_cast<int>(n_threads));
+  tbb::task_group gruppe;
+
+  for (std::size_t i = 0; i < n_threads - 1; ++i) {
+    gruppe.run([&last_points, i, begin, end, step]() {
+      auto left = begin + step * i;
+      auto right = begin + step * (i + 1);
+      auto local_scan = graham_scan(left, right);
+      for (std::size_t j = 0; j < local_scan.size(); ++j) {
+        last_points.push_back(local_scan[j]);
+      }
+    });
+  }
+  gruppe.run([&]() {
+    auto local_scan = graham_scan(begin + step * (n_threads - 1), end);
+    for (std::size_t j = 0; j < local_scan.size(); ++j) {
+      last_points.push_back(local_scan[j]);
+    }
+    });
+  gruppe.wait();
+
+  return graham_scan(last_points.begin(), last_points.end());
 }

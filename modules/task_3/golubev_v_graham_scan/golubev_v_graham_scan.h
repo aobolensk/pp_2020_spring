@@ -28,13 +28,9 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
 
 // TBB class_for_graham_scan
 
-class TBB_scan {
-  std::vector<std::pair<double, double> > area;
-  std::vector<std::pair<double, double> > scan;
-
- public:
-  explicit TBB_scan(std::vector<std::pair<double, double> > _area);
-  void operator() (const tbb::blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const;
-};
+std::vector<std::pair<double, double> > tbb_graham_scan(
+  std::vector<std::pair<double, double> >::iterator begin,
+  std::vector<std::pair<double, double> >::iterator end,
+  std::size_t n_threads = 2);
 
 #endif  // MODULES_TASK_3_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
