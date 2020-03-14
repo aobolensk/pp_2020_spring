@@ -8,6 +8,7 @@
 #include <random>
 #include <stack>
 #include <thread>
+#include <mutex>
 #include "../../../modules/task_4/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
@@ -185,5 +186,35 @@ std::vector<std::pair<double, double> > std_thread_graham_scan(
   std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end,
   std::size_t n_threads) {
-  return graham_scan(begin, end);
+  std::thread* threads = new std::thread[n_threads];
+  std::mutex m;
+
+  int step = (end - begin) / n_threads;
+  std::vector<std::pair<double, double> > last_points;
+
+  for (std::size_t i = 0; i < n_threads - 1; ++i) {
+    threads[i] = std::thread([&last_points, i, begin, step, &m]() {
+      auto left = begin + step * i;
+      auto right = begin + step * (i + 1);
+      auto local_scan = graham_scan(left, right);
+      for (std::size_t j = 0; j < local_scan.size(); ++j) {
+        m.lock();
+        last_points.push_back(local_scan[j]);
+        m.unlock();
+      }
+      });
+    threads[i].join();
+  }
+  threads[n_threads - 1] = std::thread([&last_points, begin, end, n_threads, step, &m]() {
+    auto local_scan = graham_scan(begin + step * (n_threads - 1), end);
+    for (std::size_t j = 0; j < local_scan.size(); ++j) {
+      m.lock();
+      last_points.push_back(local_scan[j]);
+      m.unlock();
+    }
+    });
+  threads[n_threads - 1].join();
+
+  delete[] threads;
+  return graham_scan(last_points.begin(), last_points.end());
 }

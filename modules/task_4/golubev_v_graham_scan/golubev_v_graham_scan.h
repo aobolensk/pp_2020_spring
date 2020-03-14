@@ -25,5 +25,5 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
 std::vector<std::pair<double, double> > std_thread_graham_scan(
   std::vector<std::pair<double, double> >::iterator begin,
   std::vector<std::pair<double, double> >::iterator end,
-  std::size_t n_threads);
+  std::size_t n_threads = 4);
 #endif  // MODULES_TASK_4_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
