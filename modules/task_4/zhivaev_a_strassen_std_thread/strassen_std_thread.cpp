@@ -4,6 +4,7 @@
 
 #include <bitset>
 #include <stdexcept>
+#include <thread>
 
 void multSeq(int size, const double* a, const double* b, double* result);
 
@@ -200,25 +201,33 @@ void strassenRecursivePart(int size, const double* a, const double* b,
   splitMatrix(size, b, b11, b12, b21, b22);
 
   // M1 = (A11 + A22)(B11 + B22)
-  strassen1(size / 2, a11, a22, b11, b22, m1);
+  std::thread thread1([=] { strassen1(size / 2, a11, a22, b11, b22, m1); });
 
   // M2 = (A21 + A22)B11
-  strassen2(size / 2, a21, a22, b11, m2);
+  std::thread thread2([=] { strassen2(size / 2, a21, a22, b11, m2); });
 
   // M3 = A11(B12 - B22)
-  strassen3(size / 2, a11, b12, b22, m3);
+  std::thread thread3([=] { strassen3(size / 2, a11, b12, b22, m3); });
 
   // M4 = A22(B21 - B11)
-  strassen3(size / 2, a22, b21, b11, m4);
+  std::thread thread4([=] { strassen3(size / 2, a22, b21, b11, m4); });
 
   // M5 = (A11 + A12)B22
-  strassen2(size / 2, a11, a12, b22, m5);
+  std::thread thread5([=] { strassen2(size / 2, a11, a12, b22, m5); });
 
   // M6 = (A21 - A11)(B11 + B12)
-  strassen4(size / 2, a21, a11, b11, b12, m6);
+  std::thread thread6([=] { strassen4(size / 2, a21, a11, b11, b12, m6); });
 
   // M7 = (A12 - A22)(B21 + B22)
-  strassen4(size / 2, a12, a22, b21, b22, m7);
+  std::thread thread7([=] { strassen4(size / 2, a12, a22, b21, b22, m7); });
+
+  thread1.join();
+  thread2.join();
+  thread3.join();
+  thread4.join();
+  thread5.join();
+  thread6.join();
+  thread7.join();
 
   // C11 = M1 + M4 - M5 + M7
   for (i = 0; i < qLength; i++) {
