@@ -4,7 +4,7 @@
 #include <random>
 #include "../../../modules/task_1/parshina_s_quick_sort/quick_sort.h"
 
-//Random Array Generation
+// Random Array Generation
 void Get_Random_Array(double* arr, int size) {
   std::mt19937 generator(time(0));
   std::uniform_int_distribution<> dist(-100000, 1000000);
@@ -13,7 +13,7 @@ void Get_Random_Array(double* arr, int size) {
   }
 }
 
-//Hoare Separation of the array relative to a pivot element and returning its index
+// Hoare Separation of the array relative to a pivot element and returning its index
 int HoarePartition(double* arr, int left_index, int right_index) {
   double pivot = arr[(right_index + left_index) / 2];
   int i = left_index - 1, j = right_index + 1;
@@ -34,16 +34,16 @@ int HoarePartition(double* arr, int left_index, int right_index) {
   }
 }
 
-//Quick Sort with Hoare separation of the array
+// Quick Sort with Hoare separation of the array
 void qHoareSort(double* arr, int left_index, int right_index) {
   if (left_index < right_index) {
-    int pi = HoarePartition(arr, left_index, right_index); //Разделение массива на 2 части относительно опорного элемента
-    qHoareSort(arr, left_index, pi); //Рекурсивное доупорядочивание 1 половины массива
-    qHoareSort(arr, pi + 1, right_index); //Рекурсивное доупорядочивание 2 половины массива
+    int pi = HoarePartition(arr, left_index, right_index); 
+    qHoareSort(arr, left_index, pi); 
+    qHoareSort(arr, pi + 1, right_index);
   }
 }
 
-//Is the array sorted or not
+// Is the array sorted or not
 int IsSorted(double* arr, int n) {
   for (int i = 0; i < n-1; i++) {
     if (arr[i] > arr[i + 1]) {
@@ -51,4 +51,4 @@ int IsSorted(double* arr, int n) {
     }
   }
   return 1;
-} 
+}

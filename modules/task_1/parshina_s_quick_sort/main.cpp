@@ -1,5 +1,4 @@
 // Copyright 2020 Parshina Sophie
-
 #include <numeric>
 #include <utility>
 #include <algorithm>
@@ -17,7 +16,6 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Correctly) {
 
   ASSERT_EQ(1, IsSorted(arr, n));
 }
-
 TEST(Hoare_Quick_Sort_sequential, Ñan_Sort_Empty_Array) {
   int n = 1000000;
 
@@ -35,7 +33,6 @@ TEST(Hoare_Quick_Sort_sequential, Ñan_Sort_Empty_Array) {
   
   ASSERT_EQ(mult_element, 0);
 }
-
 TEST(Hoare_Quick_Sort_sequential, Can_Sort_Fully_Double_Array) {
   int n = 1000000;
 
@@ -49,7 +46,6 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Fully_Double_Array) {
 
   ASSERT_EQ(1, IsSorted(arr, n));
 }
-
 TEST(Hoare_Quick_Sort_sequential, Can_Sort_Opposite_Elements) {
   int n = 1000000;
 
@@ -72,7 +68,6 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Opposite_Elements) {
 
   ASSERT_EQ(equal_result,1);
 }
-
 TEST(Hoare_Quick_Sort_sequential, Can_Sort_Already_Sorted_Elements) {
   int n = 1000000;
 
@@ -91,7 +86,6 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Already_Sorted_Elements) {
 
   ASSERT_EQ(equal_result, 1);
 }
-
 TEST(Hoare_Quick_Sort_sequential, Can_Sort_Mixed_Array) {
   int n = 1000000;
 
@@ -117,7 +111,6 @@ TEST(Hoare_Quick_Sort_sequential, Can_Sort_Mixed_Array) {
 
   ASSERT_EQ(equal_result, 1);
 }
-
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
