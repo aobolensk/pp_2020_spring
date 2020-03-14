@@ -2,6 +2,9 @@
 
 #include <stack>
 #include <random>
+#include <vector>
+#include <utility>
+#include <algorithm>
 #include "../../../modules/task_3/golubev_v_graham_scan/golubev_v_graham_scan.h"
 
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size) {
@@ -112,11 +115,9 @@ bool is_less(const std::pair<double, double>& a, const std::pair<double, double>
 
   if (grad_a < grad_b) {
     return true;
-  }
-  else if ((std::abs(grad_a - grad_b) <= 1e-15) && (get_polar_r(a) < get_polar_r(b))) {
+  } else if ((std::abs(grad_a - grad_b) <= 1e-15) && (get_polar_r(a) < get_polar_r(b))) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
@@ -157,11 +158,9 @@ std::vector<std::pair<double, double> > graham_scan(std::vector<std::pair<double
     if (det > 0) {
       res.push(y);
       res.push(points[i]);
-    }
-    else if (stack_size < 3) {
+    } else if (stack_size < 3) {
       res.push(points[i]);
-    }
-    else {
+    } else {
       --i;
     }
   }
@@ -182,6 +181,6 @@ TBB_scan::TBB_scan(std::vector<std::pair<double, double> > _area) {
   area = std::move(_area);
 }
 
-void TBB_scan::operator() (const blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const{
+void TBB_scan::operator() (const tbb::blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const {
   auto loc_res = graham_scan(range.begin(), range.end());
 }

@@ -1,11 +1,11 @@
 // Copyright 2020 Golubev Vladislav
 #include <gtest/gtest.h>
-#include <vector>
-#include <iostream>
 #include <tbb/tbb.h>
 #include <stdlib.h>
+#include <vector>
+#include <utility>
+#include <iostream>
 #include "../../../modules/task_3/golubev_v_graham_scan/golubev_v_graham_scan.h"
-using namespace tbb;
 
 TEST(test, DISABLED_test) {
   std::size_t size = 10;
@@ -15,8 +15,8 @@ TEST(test, DISABLED_test) {
 }
 
 TEST(test, scheduler) {
-  task_scheduler_init init(5);
-  task_group g;
+  tbb::task_scheduler_init init(5);
+  tbb::task_group g;
   for (int i = 0; i < 5; ++i) {
     g.run([] {Sleep(1000); });
   }
@@ -24,7 +24,7 @@ TEST(test, scheduler) {
 }
 
 TEST(test, without_scheduler) {
-  for (int i = 0; i < 5; ++i) {
+  for (int i = 0; i < 3; ++i) {
     Sleep(1000);
   }
 }

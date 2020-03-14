@@ -1,12 +1,12 @@
 // Copyright 2020 Golubev Vladislav
 #ifndef MODULES_TASK_3_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
 #define MODULES_TASK_3_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
+
+#include <tbb/tbb.h>
 #include <vector>
 #include <utility>
 #include <algorithm>
-#include <tbb/tbb.h>
 #include <iostream>
-using namespace tbb;
 
 // Generate area
 std::vector<std::pair<double, double> > get_rand_set(std::size_t size);
@@ -32,9 +32,9 @@ class TBB_scan {
   std::vector<std::pair<double, double> > area;
   std::vector<std::pair<double, double> > scan;
 
-public:
-  TBB_scan(std::vector<std::pair<double, double> > _area);
-  void operator() (const blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const;
+ public:
+  explicit TBB_scan(std::vector<std::pair<double, double> > _area);
+  void operator() (const tbb::blocked_range<std::vector<std::pair<double, double> >::iterator >& range) const;
 };
 
 #endif  // MODULES_TASK_3_GOLUBEV_V_GRAHAM_SCAN_GOLUBEV_V_GRAHAM_SCAN_H_
