@@ -9,9 +9,11 @@ TEST(omp_qs, corr_res) {
   int n = 100000;
   double* a = new double[n], * b = new double[n];
   get_rand_arr(a, n);
+
   arrcpy(a, b, n);
   qs(b, 0, n - 1);
   qs_omp(a, n);
+
   bool res = std::equal(&a[0], &a[n], &b[0]);
   ASSERT_EQ(res, 1);
 }

@@ -72,7 +72,7 @@ void merge(double* a, int n, double* b, int m) {
 }
 
 void qs_omp(double* a, int n) {
-  int num_threads = 4;  // define num of threads
+  int num_threads = 2;  // define num of threads
   omp_set_num_threads(num_threads);
   std::vector<std::vector<int>> start_fin(num_threads, std::vector<int>(2));
   // [thread][0] & [thread][1] - start & finish of mini-arrays that will be sort by each thread
@@ -80,7 +80,7 @@ void qs_omp(double* a, int n) {
 #pragma omp parallel  // sort
   {
     int thread = omp_get_thread_num();
-    start_fin[thread][0] = thread * n / num_threads;  // define start of mini-array that will be sort by this thread
+    start_fin[thread][0] = thread * (n / num_threads);  // define start of mini-array that will be sort by this thread
 
     if (thread == num_threads - 1) {
       start_fin[thread][1] = n - 1;  // define fin
@@ -105,6 +105,6 @@ void qs_omp(double* a, int n) {
       start_fin.erase(start_fin.begin() + i);  // fin[i] = fin[i + 1] then delete start_fin[i + 1]
     }
     num_threads -= m;
-    m = static_cast<int>(num_threads) / 2;
+    m = num_threads / 2;
   }
 }
