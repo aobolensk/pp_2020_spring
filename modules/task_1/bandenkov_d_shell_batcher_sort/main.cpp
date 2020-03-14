@@ -1,5 +1,5 @@
 // Copyright 2020 Bandenkov Daniil
-#include <gtest-mpi-listener.hpp>
+
 #include <gtest/gtest.h>
 #include <vector>
 #include <algorithm>
