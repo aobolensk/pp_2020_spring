@@ -37,8 +37,8 @@ int HoarePartition(double* arr, int left_index, int right_index) {
 // Quick Sort with Hoare separation of the array
 void qHoareSort(double* arr, int left_index, int right_index) {
   if (left_index < right_index) {
-    int pi = HoarePartition(arr, left_index, right_index); 
-    qHoareSort(arr, left_index, pi); 
+    int pi = HoarePartition(arr, left_index, right_index);
+    qHoareSort(arr, left_index, pi);
     qHoareSort(arr, pi + 1, right_index);
   }
 }
