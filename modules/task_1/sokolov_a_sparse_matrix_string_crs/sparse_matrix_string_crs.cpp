@@ -6,7 +6,7 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
     rows = matrix.size();
     cols = matrix[0].size();
 
-    int elemsInRow{0};
+    size_t elemsInRow{0};
     constexpr double tolerance{1e-6};
     rowIndex.reserve(rows + 1);
     rowIndex.push_back(0);
@@ -25,8 +25,8 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
 
 SparseMatrix::SparseMatrix(size_t _rows, size_t _cols,
                            std::vector<double> _value,
-                           std::vector<int>    _colIndex,
-                           std::vector<int>    _rowIndex) {
+                           std::vector<size_t>    _colIndex,
+                           std::vector<size_t>    _rowIndex) {
     rows = _rows;
     cols = _cols;
     value = _value;
@@ -34,7 +34,7 @@ SparseMatrix::SparseMatrix(size_t _rows, size_t _cols,
     rowIndex = _rowIndex;
 }
 
-SparseMatrix::SparseMatrix(size_t _rows, size_t _cols, int _elemsCount) {
+SparseMatrix::SparseMatrix(size_t _rows, size_t _cols, size_t _elemsCount) {
     rows = _rows;
     cols = _cols;
     value.resize(_elemsCount);
@@ -74,9 +74,9 @@ Matrix SparseMatrix::SparseToMatrix() {
     for (size_t idx{0}; idx < rows; ++idx) {
         result[idx].resize(cols);
     }
-    int tmpCols{0};
+    size_t tmpCols{0};
     for (size_t idx{0}; idx < rows; ++idx) {
-        int tmpRows{rowIndex[idx+1] - rowIndex[idx]};
+        size_t tmpRows{rowIndex[idx+1] - rowIndex[idx]};
         for (size_t jdx{0}; jdx < cols; jdx++) {
             if (jdx == colIndex[tmpCols] && tmpRows != 0) {
                 tmpRows--;
@@ -98,7 +98,7 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
 
     for (size_t idx{0}; idx < matrixA.rows; ++idx) {
         for (size_t jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
-            int tmpCol {matrixA.colIndex[jdx]};
+            size_t tmpCol {matrixA.colIndex[jdx]};
 
             for (size_t kdx{matrixB.rowIndex[tmpCol]}; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
                 tmpResultRow[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
@@ -173,9 +173,9 @@ void SparseMatrix::printDefault() {
 }
 
 void SparseMatrix::printMatrix() {
-    int tmpValue{ 0 };
-    int tmpRows{ 0 };
-    int tmpCols{ 0 };
+    size_t tmpValue{ 0 };
+    size_t tmpRows{ 0 };
+    size_t tmpCols{ 0 };
     for (size_t idx{ 0 }; idx < rows; ++idx) {
         for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
             if (tmpRows == rowIndex[idx + 1]) {

@@ -15,28 +15,28 @@ TEST(Sparse_Matrix, Test_Create_Sparse_Matrix) {
                    { 0.0, 7.7, 1.1, 0.0, 0.0, 6.6} };
     SparseMatrix sparseMatrixA{ matrix };
 
-    int rows{ 6 };
-    int cols{ 6 };
+    size_t rows{ 6 };
+    size_t cols{ 6 };
     std::vector<double> value{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
-    std::vector<int> colIndex{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
-    std::vector<int> rowIndex{ 0, 2, 4, 4, 6, 6, 9 };
+    std::vector<size_t> colIndex{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndex{ 0, 2, 4, 4, 6, 6, 9 };
     SparseMatrix sparseMatrixB{ rows, cols, value, colIndex, rowIndex };
 
     ASSERT_EQ(sparseMatrixA, sparseMatrixB);
 }
 
 TEST(Sparse_Matrix, Test_Compare_Sparse_Matrix) {
-    int rowsA{ 6 };
-    int colsA{6};
+    size_t rowsA{ 6 };
+    size_t colsA{6};
     std::vector<double> valueA{1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6};
-    std::vector<int> colIndexA{0, 4, 2, 3, 3, 5, 1, 2, 5};
-    std::vector<int> rowIndexA{0, 2, 4, 4, 6, 6, 9};
+    std::vector<size_t> colIndexA{0, 4, 2, 3, 3, 5, 1, 2, 5};
+    std::vector<size_t> rowIndexA{0, 2, 4, 4, 6, 6, 9};
 
-    int rowsB{ 6 };
-    int colsB{ 6 };
+    size_t rowsB{ 6 };
+    size_t colsB{ 6 };
     std::vector<double> valueB{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
-    std::vector<int> colIndexB{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
-    std::vector<int> rowIndexB{ 0, 2, 4, 4, 6, 6, 9 };
+    std::vector<size_t> colIndexB{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndexB{ 0, 2, 4, 4, 6, 6, 9 };
 
     SparseMatrix matrixA{ rowsA, colsA, valueA, colIndexA, rowIndexA };
     SparseMatrix matrixB{ rowsB, colsB, valueB, colIndexB, rowIndexB };
@@ -44,11 +44,11 @@ TEST(Sparse_Matrix, Test_Compare_Sparse_Matrix) {
 }
 
 TEST(Sparse_Matrix, Test_Sparse_To_Matrix) {
-    int rowsA{ 6 };
-    int colsA{ 6 };
+    size_t rowsA{ 6 };
+    size_t colsA{ 6 };
     std::vector<double> valueA{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
-    std::vector<int> colIndexA{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
-    std::vector<int> rowIndexA{ 0, 2, 4, 4, 6, 6, 9 };
+    std::vector<size_t> colIndexA{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndexA{ 0, 2, 4, 4, 6, 6, 9 };
 
     SparseMatrix matrixSparse{ rowsA, colsA, valueA, colIndexA, rowIndexA };
     Matrix       matrix{ matrixSparse.SparseToMatrix() };
@@ -124,8 +124,8 @@ TEST(Sparse_Matrix, Test_Matrix_Miltiplication) {
     ASSERT_EQ(result.size(), goldResult.size());
     ASSERT_EQ(result[0].size(), goldResult[0].size());
 
-    for (int idx{ 0 }; idx < result.size(); ++idx) {
-        for (int jdx{ 0 }; jdx < result[0].size(); ++jdx) {
+    for (size_t idx{ 0 }; idx < result.size(); ++idx) {
+        for (size_t jdx{ 0 }; jdx < result[0].size(); ++jdx) {
             ASSERT_NEAR(result[idx][jdx], goldResult[idx][jdx], tolerance);
         }
     }
@@ -141,17 +141,17 @@ TEST(Sparse_Matrix, Test_Matrix_Miltiplication) {
 }
 
 TEST(Sparse_Matrix, Test_Sparse_Matrix_Miltiplication) {
-    int rowsA{ 6 };
-    int colsA{ 6 };
+    size_t rowsA{ 6 };
+    size_t colsA{ 6 };
     std::vector<double> valueA{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
-    std::vector<int> colIndexA{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
-    std::vector<int> rowIndexA{ 0, 2, 4, 4, 6, 6, 9 };
+    std::vector<size_t> colIndexA{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndexA{ 0, 2, 4, 4, 6, 6, 9 };
 
-    int rowsB{ 6 };
-    int colsB{ 6 };
+    size_t rowsB{ 6 };
+    size_t colsB{ 6 };
     std::vector<double> valueB{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
-    std::vector<int> colIndexB{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
-    std::vector<int> rowIndexB{ 0, 2, 4, 4, 6, 6, 9 };
+    std::vector<size_t> colIndexB{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndexB{ 0, 2, 4, 4, 6, 6, 9 };
 
     Matrix goldMatrix{ { 1.21, 0.0,   0.0,   0.0,   2.42, 0.0   },
                        { 0.0,  0.0,   0.0,   38.72, 0.0,  24.2  },
