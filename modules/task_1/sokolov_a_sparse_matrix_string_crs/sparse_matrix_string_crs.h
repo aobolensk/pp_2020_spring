@@ -19,13 +19,13 @@ class SparseMatrix {
     std::vector<int> rowIndex;  // Index of the beginning of each line
  public:
      SparseMatrix() : rows(0), cols(0) {}
-     SparseMatrix(int _rows, int _cols,
+     SparseMatrix(size_t _rows, size_t _cols,
                   std::vector<double> _value,
                   std::vector<int>    _colIndex,
                   std::vector<int>    _rowIndex);
      explicit SparseMatrix(const Matrix& matrix);
      SparseMatrix(const SparseMatrix& matrix) = default;
-     SparseMatrix(int _rows, int _cols, int _elemsCount);
+     SparseMatrix(size_t _rows, size_t _cols, int _elemsCount);
 
      bool operator== (const SparseMatrix& mat) const&;
 
@@ -40,7 +40,7 @@ class SparseMatrix {
 SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matrixB);
 Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB);
 
-Matrix generateMatrix(const int& rows, const int& cols, const int& coeff);
+Matrix generateMatrix(const size_t& rows, const size_t& cols, const int& coeff);
 
 void print(const Matrix& matrix);
 
