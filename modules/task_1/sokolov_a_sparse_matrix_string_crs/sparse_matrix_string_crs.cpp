@@ -134,7 +134,7 @@ Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB) {
 }
 
 // coeff from 0 to 100
-Matrix generateMatrix(const size_t& rows, const size_t& cols, const int& coeff) {
+Matrix generateMatrix(const size_t& rows, const size_t& cols, const size_t& coeff) {
     Matrix result{};
     result.resize(rows);
     for (size_t idx{0}; idx < rows; ++idx) {
