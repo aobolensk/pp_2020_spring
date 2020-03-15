@@ -110,7 +110,6 @@ std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2) {
             i++;
         }
     }
-    
     return res;
 }
 
@@ -152,7 +151,7 @@ std::vector<int> oddBatch(std::vector<int> vec1, std::vector<int> vec2) {
 std::vector<int> GetRandVector(int size) {
     if (size < 1)
         throw - 1;
-   
+    
     std::mt19937 gen;
     std::vector<int> vec(size);
     for (int i = 0; i < size; i++) {
