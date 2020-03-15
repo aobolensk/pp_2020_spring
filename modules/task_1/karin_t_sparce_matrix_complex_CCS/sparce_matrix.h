@@ -7,14 +7,14 @@
 #include <complex>
 
 struct SparceMatrix {
-  int size;
+  int nRow, nCol;
   std::vector<std::complex<int>> val;
   std::vector<int> row_number;
   std::vector<int> point;
 
-  SparceMatrix(int _size, int not_null_count = 0);
+  SparceMatrix(int _nCol, int _nRow, int not_null_count = 0);
   SparceMatrix(std::vector<std::vector<std::complex<int>>>);
-  SparceMatrix(std::vector<std::complex<int>> _val, std::vector<int> _row_number, 
+  SparceMatrix(int _n—ol, int _nRow, std::vector<std::complex<int>> _val, std::vector<int> _row_number, 
                std::vector<int> _point);
   SparceMatrix Transpose();
   SparceMatrix operator*(const SparceMatrix &MB);
