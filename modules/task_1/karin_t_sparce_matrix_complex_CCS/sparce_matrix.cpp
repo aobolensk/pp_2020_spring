@@ -112,7 +112,7 @@ SparceMatrix SparceMatrix::Transpose() {
   std::vector<int> cols;
   int iter = 0;
   for (unsigned i = 0; i < row_number.size(); i++) {
-    while (((int)i >= point[iter]) && (iter != nCol-1))
+    while ((static_cast<int>(i) >= point[iter]) && (iter != nCol-1))
       iter++;
     matr[row_number[i]].push_back(i);
     cols.push_back(iter);
