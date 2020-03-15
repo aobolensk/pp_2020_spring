@@ -14,11 +14,11 @@ struct SparceMatrix {
 
   SparceMatrix(int _nCol, int _nRow, int not_null_count = 0);
   explicit SparceMatrix(std::vector<std::vector<std::complex<int>>>);
-  SparceMatrix::SparceMatrix(int _nCol, int _nRow, std::vector<std::complex<int>> _val,
+  SparceMatrix(int _nCol, int _nRow, std::vector<std::complex<int>> _val,
     std::vector<int> _row_number, std::vector<int> _point);
   SparceMatrix Transpose();
   SparceMatrix operator*(const SparceMatrix &MB);
-  // void Print();
+  void Print();
   int colCount(int col);
 };
 

@@ -191,40 +191,40 @@ std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B
   return sum;
 }
 
-// void SparceMatrix::Print() {
-//  std::cout << "val: ";
-//  for (int i = 0; i < val.size(); i++)
-//    std::cout << val[i] << ", ";
-//  std::cout << std::endl << std::endl << "row_number: ";
-//  for (int i = 0; i < row_number.size(); i++)
-//    std::cout << row_number[i] << ", ";
-//  std::cout << std::endl << std::endl << "point: ";
-//  for (int i = 0; i < point.size(); i++)
-//    std::cout << point[i] << ", ";
-//  std::cout << std::endl << std::endl;
-//  SparceMatrix B = this->Transpose();
-//  int iter = 0;
-//  for (int i = 0; i < B.nCol; i++) {
-//    int k;
-//    if (i == 0)
-//      k = B.point[0];
-//    else if (i == B.nCol - 1)
-//      k = B.val.size();
-//    else
-//      k = B.point[i];
-//    for (int i = 0; i < B.nRow; i++) {
-//      bool exist = false;
-//      if (iter < k) {
-//        if (B.row_number[iter] == i) {
-//          std::cout << B.val[iter] << "\t";
-//          iter++;
-//          exist = true;
-//        }
-//      }
-//      if (exist == false)
-//        std::cout << "0\t\t";
-//    }
-//    std::cout << std::endl;
-//  }
-//  std::cout << std::endl;
-//}
+ void SparceMatrix::Print() {
+  std::cout << "val: ";
+  for (int i = 0; i < val.size(); i++)
+    std::cout << val[i] << ", ";
+  std::cout << std::endl << std::endl << "row_number: ";
+  for (int i = 0; i < row_number.size(); i++)
+    std::cout << row_number[i] << ", ";
+  std::cout << std::endl << std::endl << "point: ";
+  for (int i = 0; i < point.size(); i++)
+    std::cout << point[i] << ", ";
+  std::cout << std::endl << std::endl;
+  SparceMatrix B = this->Transpose();
+  int iter = 0;
+  for (int i = 0; i < B.nCol; i++) {
+    int k;
+    if (i == 0)
+      k = B.point[0];
+    else if (i == B.nCol - 1)
+      k = B.val.size();
+    else
+      k = B.point[i];
+    for (int i = 0; i < B.nRow; i++) {
+      bool exist = false;
+      if (iter < k) {
+        if (B.row_number[iter] == i) {
+          std::cout << B.val[iter] << "\t";
+          iter++;
+          exist = true;
+        }
+      }
+      if (exist == false)
+        std::cout << "0\t\t";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+}
