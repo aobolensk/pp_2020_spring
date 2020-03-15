@@ -21,7 +21,8 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
   ran.seed(static_cast<unsigned int>(time(0)));
   unsigned count = not_null_count;
   for (int i = 0; i < nCol; i++) {
-    int next = std::min(count, ran()%nRow);
+    unsigned randnum = ran() % nRow;
+    int next = std::min(count, randnum);
     count -= next;
     point[i] = next;
   }
@@ -54,7 +55,7 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
       bool added = false;
       while (added == false) {
         bool exist = false;
-        for (int i = 0; i < col.size(); i++) {
+        for (unsigned i = 0; i < col.size(); i++) {
           if (col[i] == r) {
             exist = true;
             break;
@@ -79,7 +80,7 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
 }
 
 SparceMatrix::SparceMatrix(std::vector<std::vector<std::complex<int>>> matr) {
-  for (int i = 0; i < matr.size()-1; i++)
+  for (unsigned i = 0; i < matr.size()-1; i++)
     if (matr[i].size() != matr[i+1].size())
       throw "incorrect matrix";
   nRow = matr.size();
@@ -110,7 +111,7 @@ SparceMatrix SparceMatrix::Transpose() {
   std::vector<std::vector<int>> matr(nRow);
   std::vector<int> cols;
   int iter = 0;
-  for (int i = 0; i < row_number.size(); i++) {
+  for (unsigned i = 0; i < row_number.size(); i++) {
     while ((i >= point[iter]) && (iter != nCol-1))
       iter++;
     matr[row_number[i]].push_back(i);
@@ -120,7 +121,7 @@ SparceMatrix SparceMatrix::Transpose() {
   for (int i = 1; i < nRow; i++)
     Tr.point[i] = Tr.point[i-1] + matr[i].size();
   for (int i = 0; i < nRow; i++)
-    for (int j = 0; j < matr[i].size(); j++) {
+    for (unsigned j = 0; j < matr[i].size(); j++) {
       Tr.val.push_back(val[matr[i][j]]);
       Tr.row_number.push_back(cols[matr[i][j]]);
     }
@@ -135,7 +136,7 @@ SparceMatrix SparceMatrix::operator*(const SparceMatrix& B) {
   for (int i = 0; i < B.nCol; i++) {
     for (int j = 0; j < ATr.nCol; j++) {
       std::complex<int> sum = ScalarMult(ATr, j, B, i);
-      if (sum != (0, 0)) {
+      if (sum != 0) {
         Res.val.push_back(sum);
         Res.row_number.push_back(j);
       }
@@ -193,13 +194,13 @@ std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B
 
 void SparceMatrix::Print() {
   std::cout << "val: ";
-  for (int i = 0; i < val.size(); i++)
+  for (unsigned i = 0; i < val.size(); i++)
     std::cout << val[i] << ", ";
   std::cout << std::endl << std::endl << "row_number: ";
-  for (int i = 0; i < row_number.size(); i++)
+  for (unsigned i = 0; i < row_number.size(); i++)
     std::cout << row_number[i] << ", ";
   std::cout << std::endl << std::endl << "point: ";
-  for (int i = 0; i < point.size(); i++)
+  for (unsigned i = 0; i < point.size(); i++)
     std::cout << point[i] << ", ";
   std::cout << std::endl << std::endl;
   SparceMatrix B = this->Transpose();
