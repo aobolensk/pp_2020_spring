@@ -224,6 +224,8 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
         ost = 0;
       }
 
+      maxlen = 0;
+      minind = 0;
       last = new int[2];
       beforelast = new int[2];
       last = convex_mas[m];
