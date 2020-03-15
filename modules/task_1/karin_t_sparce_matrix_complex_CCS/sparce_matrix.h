@@ -22,4 +22,6 @@ struct SparceMatrix {
   int colCount(int col);
 };
 
+std::complex<int> ScalarMult (const SparceMatrix &A, int i, const SparceMatrix &B, int j);
+
 #endif  // MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_

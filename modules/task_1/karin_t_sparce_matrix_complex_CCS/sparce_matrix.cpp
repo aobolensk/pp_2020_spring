@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <complex>
+#include <algorithm>
 #include "../../../modules/task_1/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
@@ -62,8 +63,9 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
         if (exist == false) {
           col.push_back(r);
           added = true;
-        } else
+        } else {
           r = (r+1)%nRow;
+        }
       }
     }
     std::sort(col.begin(), col.end());
@@ -132,35 +134,7 @@ SparceMatrix SparceMatrix::operator*(const SparceMatrix& B) {
   SparceMatrix Res(B.nCol, this->nRow);
   for (int i = 0; i < B.nCol; i++) {
     for (int j = 0; j < ATr.nCol; j++) {
-      int k1, k2;
-      if (j == 0)
-        k1 = 0;
-      else
-        k1 = ATr.point[j-1];
-      if (i == 0)
-        k2 = 0;
-      else
-        k2 = B.point[i - 1];
-      std::complex<int> sum = (0, 0);
-        int stop1, stop2;
-        if (j == ATr.nCol-1)
-          stop1 = ATr.val.size();
-        else
-          stop1 = ATr.point[j];
-        if (i == B.nCol - 1)
-          stop2 = B.val.size();
-        else
-          stop2 = B.point[i];
-      while (k1 < stop1 && k2 < stop2) {
-        if (ATr.row_number[k1] == B.row_number[k2]) {
-          sum+=ATr.val[k1] * B.val[k2];
-          k1++;
-          k2++;
-        } else if (ATr.row_number[k1] > B.row_number[k2])
-          k2++;
-        else
-          k1++;
-      }
+      std::complex<int> sum = ScalarMult(ATr, j, B, i);
       if (sum != (0, 0)) {
         Res.val.push_back(sum);
         Res.row_number.push_back(j);
@@ -179,6 +153,42 @@ int SparceMatrix::colCount(int col) {
     return val.size() - point[nCol-2];
   else
     return point[col] - point[col - 1];
+}
+
+std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B, int j) {
+  int k1, k2;
+  if (i == 0)
+    k1 = 0;
+  else
+    k1 = A.point[i - 1];
+  if (j == 0)
+    k2 = 0;
+  else
+    k2 = B.point[j - 1];
+
+  std::complex<int> sum = (0, 0);
+
+  int stop1, stop2;
+  if (i == A.nCol - 1)
+    stop1 = A.val.size();
+  else
+    stop1 = A.point[i];
+  if (j == B.nCol - 1)
+    stop2 = B.val.size();
+  else
+    stop2 = B.point[j];
+  while (k1 < stop1 && k2 < stop2) {
+    if (A.row_number[k1] == B.row_number[k2]) {
+      sum += A.val[k1] * B.val[k2];
+      k1++;
+      k2++;
+    } else if (A.row_number[k1] > B.row_number[k2]) {
+      k2++;
+    }
+    else
+      k1++;
+  }
+  return sum;
 }
 
 // void SparceMatrix::Print() {
