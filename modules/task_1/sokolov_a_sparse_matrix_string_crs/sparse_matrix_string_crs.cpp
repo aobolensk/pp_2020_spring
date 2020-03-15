@@ -143,7 +143,7 @@ Matrix generateMatrix(const size_t& rows, const size_t& cols, const size_t& coef
     std::random_device rd{};
     std::mt19937 mt {rd()};
     std::uniform_real_distribution<double> disValue{ 0.0, 10.0 };
-    std::uniform_int_distribution<> disProbability {0, 100};
+    std::uniform_int_distribution<size_t> disProbability {0, 100};
 
     for (size_t idx{ 0 }; idx < rows; ++idx) {
         for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
