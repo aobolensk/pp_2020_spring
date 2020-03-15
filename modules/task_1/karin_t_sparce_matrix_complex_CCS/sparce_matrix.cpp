@@ -184,9 +184,9 @@ std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B
       k2++;
     } else if (A.row_number[k1] > B.row_number[k2]) {
       k2++;
-    }
-    else
+    } else {
       k1++;
+    }
   }
   return sum;
 }
