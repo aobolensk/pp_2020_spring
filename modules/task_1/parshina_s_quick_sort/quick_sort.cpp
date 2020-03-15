@@ -52,3 +52,10 @@ int IsSorted(double* arr, int n) {
   }
   return 1;
 }
+
+// Copy elements from array to another one
+void Copy_elements(double*a1, double* a2, int n) {
+  for (int i = 0; i < n; i++) {
+    a2[i] = a1[i];
+  }
+}
