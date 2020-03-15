@@ -17,7 +17,7 @@ std::vector<int> getRandomVector(int  sz) {
 }
 
 SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
-  if (_nCol <= 0 || _nRow <= 0)
+  if (_nCol <= 0 || _nRow <= 0 || not_null_count < 0)
     throw "negative size";
   if (_nCol * _nRow < not_null_count)
     throw "not null count does'n match the size";
@@ -89,9 +89,21 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
 }
 
 SparceMatrix::SparceMatrix(std::vector<std::vector<std::complex<int>>> matr) {
-  /*for (int i = 0; i < matr.size(); i++) {
-    for (int j=0; j < matr.size(); i++)
-  }*/
+  for (int i=0; i<matr.size()-1; i++)
+    if (matr[i].size() != matr[i+1].size())
+      throw "incorrect matrix";
+  nRow = matr.size();
+  nCol = matr[0].size();
+  for (int j = 0; j < nCol; j++) {
+    for (int i = 0; i < nRow; i++) {
+      if (matr[i][j] != std::complex<int>(0, 0)) {
+        val.push_back(matr[i][j]);
+        row_number.push_back(i);
+      }
+    }
+    point.resize(nCol);
+    point[j]=val.size();
+  }
 }
 
 SparceMatrix::SparceMatrix(int _nCol, int _nRow, std::vector<std::complex<int>> _val,
@@ -126,6 +138,8 @@ SparceMatrix SparceMatrix::Transpose() {
 }
 
 SparceMatrix SparceMatrix::operator*(const SparceMatrix& B) {
+  if (this->nRow != B.nCol)
+    throw "wrong matrix size";
   SparceMatrix ATr=this->Transpose();
   SparceMatrix Res(B.nCol, this->nRow);
   for (int i = 0; i < B.nCol; i++) {
