@@ -8,6 +8,8 @@
 #include <ctime>
 #include <random>
 
+#define MIN(a, b)  (a < b)? a:b
+
 int minimum(std::vector<int> *grayscale_image) {
   return *std::min_element(grayscale_image->begin(), grayscale_image->end());
 }
@@ -59,16 +61,18 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
   std::vector<int> output(grayscale_image);
   int min = minimum(&grayscale_image);
   int max = maximum(&grayscale_image);
+  int step = size / num;
   int i = 0;
 
-  #pragma omp parallel private(i) shared(output, grayscale_image)
+  #pragma omp parallel private(i) shared(output, grayscale_image) num_threads(num)
   {
     omp_set_num_threads(num);
+    int current = omp_get_thread_num();
+    int start = MIN(current * step, size - (current + 1) * step);
     #pragma omp parallel for
-    for (i = 0; i < size; i++) {
+    for (i = start; i < start + step; i++) {
       output[i] = use_formula(grayscale_image[i], max, min);
     }
   }
-
   return output;
 }
