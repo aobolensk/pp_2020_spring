@@ -8,14 +8,6 @@
 #include <complex>
 #include "../../../modules/task_1/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
-std::vector<int> getRandomVector(int  sz) {
-    std::mt19937 gen;
-    gen.seed(static_cast<unsigned int>(time(0)));
-    std::vector<int> vec(sz);
-    for (int  i = 0; i < sz; i++) { vec[i] = gen() % 100; }
-    return vec;
-}
-
 SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
   if (_nCol <= 0 || _nRow <= 0 || not_null_count < 0)
     throw "negative size";
@@ -34,7 +26,7 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
   }
   while (count != 0)
   {
-    for (int i = 0; i < nCol; i++){
+    for (int i = 0; i < nCol; i++) {
       if(point[i] < nRow) {
         point[i]++;
         count--;
@@ -48,10 +40,9 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
      point[i+1] += point[i];
   }
 
-  for (int i = 0; i < nCol; i++)
-  {
+  for (int i = 0; i < nCol; i++) {
     int k;
-    if (i==0)
+    if (i == 0)
       k = point[i];
     else if (i == nCol - 1)
       k = not_null_count - point[i - 1];
@@ -83,7 +74,7 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
   }
 
   for (int i = 0; i < not_null_count; i++) {
-    std::complex<int> compl(ran()%100, 0);
+    std::complex<int> compl(ran()%1000, ran() % 1000);
     val.push_back(compl);
   }
 }
@@ -184,43 +175,6 @@ SparceMatrix SparceMatrix::operator*(const SparceMatrix& B) {
   return Res;
 }
 
-void SparceMatrix::Print() {
-  std::cout<<"val: ";
-  for (int i=0; i<val.size(); i++)
-    std::cout << val[i] << ", ";
-  std::cout << std::endl<<std::endl << "row_number: ";
-  for (int i = 0; i < row_number.size(); i++)
-    std::cout << row_number[i] << ", ";
-  std::cout << std::endl << std::endl << "point: ";
-  for (int i = 0; i < point.size(); i++)
-    std::cout << point[i] << ", ";
-  std::cout << std::endl << std::endl;
-  SparceMatrix B = this->Transpose();
-  int iter=0;
-  for (int i = 0; i < B.nCol; i++) {
-    int k;
-    if (i==0)
-      k=B.point[0];
-    else if(i == B.nCol-1)
-      k = B.val.size();
-    else
-      k = B.point[i];
-    for (int i = 0; i < B.nRow; i++) {
-      bool exist = false;
-      if (iter<k) {
-        if (B.row_number[iter] == i) {
-          std::cout << B.val[iter] << "\t";
-          iter++;
-          exist = true;
-        }
-      }
-      if (exist == false)
-        std::cout << "0\t\t";
-    }
-    std::cout<<std::endl;
-  }
-  std::cout << std::endl;
-}
 
 int SparceMatrix::colCount(int col) {
   if (col == 0)
@@ -230,3 +184,41 @@ int SparceMatrix::colCount(int col) {
   else
     return point[col] - point[col - 1];
 }
+
+//void SparceMatrix::Print() {
+//  std::cout << "val: ";
+//  for (int i = 0; i < val.size(); i++)
+//    std::cout << val[i] << ", ";
+//  std::cout << std::endl << std::endl << "row_number: ";
+//  for (int i = 0; i < row_number.size(); i++)
+//    std::cout << row_number[i] << ", ";
+//  std::cout << std::endl << std::endl << "point: ";
+//  for (int i = 0; i < point.size(); i++)
+//    std::cout << point[i] << ", ";
+//  std::cout << std::endl << std::endl;
+//  SparceMatrix B = this->Transpose();
+//  int iter = 0;
+//  for (int i = 0; i < B.nCol; i++) {
+//    int k;
+//    if (i == 0)
+//      k = B.point[0];
+//    else if (i == B.nCol - 1)
+//      k = B.val.size();
+//    else
+//      k = B.point[i];
+//    for (int i = 0; i < B.nRow; i++) {
+//      bool exist = false;
+//      if (iter < k) {
+//        if (B.row_number[iter] == i) {
+//          std::cout << B.val[iter] << "\t";
+//          iter++;
+//          exist = true;
+//        }
+//      }
+//      if (exist == false)
+//        std::cout << "0\t\t";
+//    }
+//    std::cout << std::endl;
+//  }
+//  std::cout << std::endl;
+//}

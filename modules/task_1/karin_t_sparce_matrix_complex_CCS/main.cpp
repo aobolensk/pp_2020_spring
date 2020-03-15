@@ -1,6 +1,7 @@
 // Copyright 2020 Karin Timofey
 #include <gtest/gtest.h>
-#include "sparce_matrix.h"
+#include <vector>
+#include "../../modules/task_1/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 int main(int argc, char **argv) {
     /*std::vector<std::complex<int>> val(7);
@@ -20,7 +21,6 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-//{(35, 0), (29, 0), (65, 0), (51, 0), (85, 0), (36, 0), (61, 0)}
 
 TEST(Sparce_Matrix, can_create_random_matrix) {
   ASSERT_NO_THROW(SparceMatrix(6, 9, 10));
@@ -45,11 +45,10 @@ TEST(Sparce_Matrix, can_convert_from_standart) {
   for (int i = 0; i < 5; i++) {
      matr[i].resize(4);
      for (int j = 0; j < 4; j++) {
-       matr[i][j]=std::complex<int>(i+1,j+1);
+       matr[i][j] = std::complex<int>(i+1, j+1);
      }
   }
   SparceMatrix SM(matr);
-  //SM.Print();
   ASSERT_EQ(SM.nCol, 4);
   ASSERT_EQ(SM.nRow, 5);
   ASSERT_EQ(SM.val[7], std::complex<int>(3, 2));
@@ -107,9 +106,9 @@ TEST(Sparce_Matrix, can_transpose) {
 }
 
 TEST(Sparce_Matrix, can_multiplication_without_throw) {
-  SparceMatrix A (5, 3, 5);
+  SparceMatrix A(5, 3, 5);
   SparceMatrix B(3, 5, 10);
-  ASSERT_NO_THROW (A*B);
+  ASSERT_NO_THROW(A*B);
 }
 
 TEST(Sparce_Matrix, can_not_multiplication_with_wrong_size) {
@@ -132,7 +131,7 @@ TEST(Sparce_Matrix, can_multyplication) {
   SparceMatrix C = A * B;
   ASSERT_EQ(C.nCol, 4);
   ASSERT_EQ(C.nRow, 4);
-  ASSERT_EQ(C.val[0], std::complex<int>(6746,0));
+  ASSERT_EQ(C.val[0], std::complex<int>(6746, 0));
   ASSERT_EQ(C.val[1], std::complex<int>(6526, 0));
   ASSERT_EQ(C.val[2], std::complex<int>(5525, 0));
   ASSERT_EQ(C.val[3], std::complex<int>(6526, 0));

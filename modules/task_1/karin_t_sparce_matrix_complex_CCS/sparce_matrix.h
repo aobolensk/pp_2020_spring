@@ -1,6 +1,6 @@
 // Copyright 2020 Karin Timofey
-#ifndef MODULES_TASK1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_H_
-#define MODULES_TASK1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_H_
+#ifndef MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
+#define MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
 
 #include <vector>
 #include <string>
@@ -14,12 +14,12 @@ struct SparceMatrix {
 
   SparceMatrix(int _nCol, int _nRow, int not_null_count = 0);
   SparceMatrix(std::vector<std::vector<std::complex<int>>>);
-  SparceMatrix(int _n—ol, int _nRow, std::vector<std::complex<int>> _val, std::vector<int> _row_number, 
+  SparceMatrix(int _n—ol, int _nRow, std::vector<std::complex<int>> _val, std::vector<int> _row_number,
                std::vector<int> _point);
   SparceMatrix Transpose();
   SparceMatrix operator*(const SparceMatrix &MB);
-  void Print();
+  //void Print();
   int colCount(int col);
 };
 
-#endif  // MODULES_TASK1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_H_
+#endif  // MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
