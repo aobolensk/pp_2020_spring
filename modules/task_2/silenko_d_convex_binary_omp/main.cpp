@@ -225,7 +225,7 @@ TEST(convex_binary_omp, test_rand) {
 
   omp_res = getComponent_OMP(newmas, n, m, &omp_convex_mas, &num, num_thr);
 
-  result = getComponent(mas, n, m, &convex_mas, &num);  
+  result = getComponent(mas, n, m, &convex_mas, &num);
 
   int size = omp_res.size();
 

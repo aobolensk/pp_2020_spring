@@ -22,7 +22,7 @@ int** getRandomMas(const int n, const int m) {
     mas[i] = new int[m];
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {
-      mas[i][j] = (int)rnd(seed) % 2;
+      mas[i][j] = static_cast<int>(rnd(seed)) % 2;
     }
   }
   return mas;
@@ -69,12 +69,13 @@ std::vector<int*> Jarvis(int** convex_mas, int n) {
           minind = i;
           mincos = cos;
           maxlen = length(last, convex_mas[i]);
-        }
-        else if (cos == mincos) {
-          double len = length(last, convex_mas[i]);
-          if (len > maxlen) {
-            minind = i;
-            maxlen = len;
+        } else {
+          if (cos == mincos) {
+            double len = length(last, convex_mas[i]);
+            if (len > maxlen) {
+              minind = i;
+              maxlen = len;
+            }
           }
         }
       }
@@ -85,7 +86,7 @@ std::vector<int*> Jarvis(int** convex_mas, int n) {
         break;
       res.push_back(convex_mas[minind]);
     }
-  } 
+  }
   return res;
 }
 
@@ -191,13 +192,11 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
   std::vector<std::vector<int*>> local_res(num_thr);
   if (n == 1) {
     res.push_back(convex_mas[0]);
-  }
-  else if (n == 2) {
+  } else if (n == 2) {
     res.push_back(convex_mas[0]);
     if (convex_mas[0] != convex_mas[1])
       res.push_back(convex_mas[1]);
-  }
-  else {
+  } else {
     int m = 0;
 
     res.push_back(convex_mas[m]);
@@ -214,15 +213,14 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
     int id, delta, ost;
     double len;
 
-#pragma omp parallel private (id, delta, ost, mincos, cos, minind, maxlen, last, beforelast, len) num_threads(num_thr)
+#pragma omp parallel private(id, delta, ost, mincos, cos, minind, maxlen, last, beforelast, len) num_threads(num_thr)
     {
       delta = n / num_thr;
       id = omp_get_thread_num();
 
       if (id == num_thr - 1) {
         ost = n % num_thr;
-      }
-      else {
+      } else {
         ost = 0;
       }
 
@@ -240,8 +238,7 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
             minind = i;
             mincos = cos;
             maxlen = length(last, convex_mas[i]);
-          }
-          else if (cos == mincos) {
+          } else if (cos == mincos) {
             len = length(last, convex_mas[i]);
             if (len > maxlen) {
               minind = i;
@@ -256,8 +253,7 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
             minind = 0;
             mincos = cos;
             maxlen = length(last, convex_mas[0]);
-          }
-          else if (cos == mincos) {
+          } else if (cos == mincos) {
             len = length(last, convex_mas[0]);
             if (len > maxlen) {
               minind = 0;
@@ -297,8 +293,7 @@ std::vector<int*> Jarvis_OMP(int** convex_mas, int n, int num_thr) {
           minind = i;
           mincos = cos;
           maxlen = length(last, finale_local[i]);
-        }
-        else if (cos == mincos) {
+        } else if (cos == mincos) {
           double len = length(last, finale_local[i]);
           if (len > maxlen) {
             minind = i;
@@ -359,9 +354,9 @@ std::vector<int*> getComponent_OMP(int** mas, int n, int m, int** *convex_mas, i
           } else {
             mas[i][j] = B;
             int k;
-#pragma omp parallel private (k) num_threads(num_thr)
+#pragma omp parallel private(k) num_threads(num_thr)
             {
-#pragma omp for 
+#pragma omp for
               for (k = 0; k < i; k++)
                 for (int kk = 0; kk < m; kk++)
                   if (mas[k][kk] == C)
