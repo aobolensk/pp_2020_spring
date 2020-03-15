@@ -112,7 +112,7 @@ SparceMatrix SparceMatrix::Transpose() {
   std::vector<int> cols;
   int iter = 0;
   for (unsigned i = 0; i < row_number.size(); i++) {
-    while ((i >= point[iter]) && (iter != nCol-1))
+    while (((int)i >= point[iter]) && (iter != nCol-1))
       iter++;
     matr[row_number[i]].push_back(i);
     cols.push_back(iter);
@@ -167,7 +167,7 @@ std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B
   else
     k2 = B.point[j - 1];
 
-  std::complex<int> sum = (0, 0);
+  std::complex<int> sum = 0;
 
   int stop1, stop2;
   if (i == A.nCol - 1)
