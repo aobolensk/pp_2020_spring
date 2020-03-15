@@ -191,7 +191,7 @@ std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B
   return sum;
 }
 
- void SparceMatrix::Print() {
+void SparceMatrix::Print() {
   std::cout << "val: ";
   for (int i = 0; i < val.size(); i++)
     std::cout << val[i] << ", ";
