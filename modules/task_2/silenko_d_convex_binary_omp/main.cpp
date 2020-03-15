@@ -217,8 +217,6 @@ TEST(convex_binary_omp, test_rand) {
     for (int j = 0; j < m; j++)
       newmas[i][j] = mas[i][j];
 
-  double t_seq1, t_seq2, t_par1, t_par2;
-
   std::vector<int*> omp_res;
   int** omp_convex_mas = NULL;
   int num_thr = 2;
