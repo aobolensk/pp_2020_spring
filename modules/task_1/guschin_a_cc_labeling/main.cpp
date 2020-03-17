@@ -22,9 +22,9 @@ TEST(Sequential, Can_Lable_Pic) {
   };
   std::vector<std::vector<int>> res(3, std::vector<int>(3));
   res = {
-    {1, 0, 4},
-    {0, 4, 4},
-    {4, 4, 4}
+    {1, 0, 2},
+    {0, 2, 2},
+    {2, 2, 2}
   };
   EXPECT_EQ(Labeling(A), res);
 }
