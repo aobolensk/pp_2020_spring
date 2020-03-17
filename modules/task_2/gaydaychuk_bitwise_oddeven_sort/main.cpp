@@ -35,11 +35,11 @@ TEST(Sequential, Test_ThirdSort) {
 
 TEST(Sequential, Comparator) {
     NetworkBuilder nb;
-    nb.setNetworkSize(8);
+    nb.setNetworkSize(32);
     nb.computeNetwork();
     std::cout<<"My comparator\n\n\n\n" << 
-    //nb.printParallelComp() << nb.printAux();  
-    nb.printComp();
+    nb.printParallelComp() << nb.printAux() <<"\n^^^^^^^^^^^^^^^^^^\n"
+    <<nb.printComp();
     std::cout<<"**************** state   ***************\n" << nb.getState();
     ASSERT_EQ(2*2, 4);
 }

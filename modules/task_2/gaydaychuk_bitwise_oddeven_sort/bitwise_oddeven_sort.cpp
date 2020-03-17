@@ -53,19 +53,19 @@ void NetworkBuilder::bMerge_2(int lo, int n, int r, int level_of_merge)
         bMerge_2(lo, n, m, level_of_merge + 1);      // even subsequence
         bMerge_2(lo+r, n, m, level_of_merge + 1);    // odd subsequence
         for (int i=lo+r; i+r<lo+n; i+=m){
-            comparatorArray.push_back(std::pair<int, int>(-4, -r));
-            comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
+            // comparatorArray.push_back(std::pair<int, int>(-4, -r));
+            // comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
 
             comparatorArray.push_back(std::pair<int, int>(indexArray[i], indexArray[i + r]));
-            addComparator(indexArray[i], indexArray[i + r]);
+            addComparatorAnother(indexArray[i], indexArray[i + r]);
         }
     }
     else{
-        comparatorArray.push_back(std::pair<int, int>(-3, -r));
-        comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
+        // comparatorArray.push_back(std::pair<int, int>(-3, -r));
+        // comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
 
 
-        addComparator(indexArray[lo], indexArray[lo + r]);
+        addComparatorAnother(indexArray[lo], indexArray[lo + r]);
         comparatorArray.push_back(std::pair<int, int>(indexArray[lo], indexArray[lo + r]));
     }
 }
@@ -112,6 +112,64 @@ void NetworkBuilder::addComparator(int i, int j){
                 itBlocks->push_back(i);
                 itBlocks->push_back(j);
                 break;
+            }
+            ++parallelBlocksIterator;
+        };
+    }
+}
+
+void NetworkBuilder::addComparatorAnother(int i, int j){
+    if(auxiliaryNodeSetArray.empty()){
+        std::vector<int> newBlockNodeSet;
+
+        newBlockNodeSet.push_back(i);
+        newBlockNodeSet.push_back(j);
+        auxiliaryNodeSetArray.push_back(newBlockNodeSet);
+
+        std::vector<std::pair <int, int> > newBlock;
+        newBlock.push_back(std::pair<int, int>(i, j));
+        parallelBlockArray.push_back(newBlock);
+    }
+    else{
+        bool pairAndSetIntersectionFound = false;
+        std::list<std::vector<std::pair <int, int> > >::reverse_iterator  parallelBlocksIterator = parallelBlockArray.rbegin();
+        for(
+            std::list<std::vector<int > >::reverse_iterator  itBlocks = auxiliaryNodeSetArray.rbegin(); 
+            itBlocks != auxiliaryNodeSetArray.rend(); 
+            ++itBlocks) {
+            pairAndSetIntersectionFound = false;
+            auto currBlock = *itBlocks;
+            for(std::vector<int> ::iterator itInBlock = currBlock.begin(); itInBlock != currBlock.end(); ++itInBlock){
+                if(i == *itInBlock || j == *itInBlock){
+                    pairAndSetIntersectionFound = true;
+                    break;
+                }
+            };
+            if(pairAndSetIntersectionFound == true){
+                if(itBlocks == auxiliaryNodeSetArray.rbegin()){
+                    auxiliaryNodeSetArray.push_back({i, j});
+                    parallelBlockArray.push_back(std::vector<std::pair <int, int> >({std::pair <int, int>(i, j)}));
+                    break;
+                }
+                else{
+                    --itBlocks;
+                    --parallelBlocksIterator;
+                    parallelBlocksIterator->push_back(std::pair<int, int>(i, j));
+                    itBlocks->push_back(i);
+                    itBlocks->push_back(j);
+                    break;
+                }
+            }
+            else{
+                if(next(itBlocks) != auxiliaryNodeSetArray.rend()){
+                    ++parallelBlocksIterator;
+                    continue;
+                }
+                else{
+                    parallelBlocksIterator->push_back(std::pair<int, int>(i, j));
+                    itBlocks->push_back(i);
+                    itBlocks->push_back(j);
+                }
             }
             ++parallelBlocksIterator;
         };

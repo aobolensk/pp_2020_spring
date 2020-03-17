@@ -18,6 +18,7 @@ class NetworkBuilder{
     void printIndexArray();
 
     void addComparator(int i, int j);
+    void NetworkBuilder::addComparatorAnother(int i, int j);
 public:
     void setNetworkSize(int size);
     void computeNetwork();
