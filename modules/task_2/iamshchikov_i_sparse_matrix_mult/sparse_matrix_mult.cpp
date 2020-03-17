@@ -44,7 +44,6 @@ CcsMatrix generateMatrix(int M, int N) {
     int nz = 0, nz_in_col = 0, tmp = 0;
     std::mt19937 gen;
     std::vector<int> row;
-    std::vector<int>::iterator it;
     gen.seed(static_cast<unsigned int>(time(0)));
     nz = gen() % static_cast<int>(sqrt(M*N));
     nz_in_col = (nz / N == 0) ? 1 : nz / N;
