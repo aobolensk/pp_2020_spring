@@ -6,7 +6,6 @@
 #include <string>
 #include <utility>
 
-std::pair<double, double> getRandomPair();
 std::vector<std::pair<double, double>> getRandomVectorOfPair(size_t sz);
 std::vector<std::pair<double, double>> ConvexHull_Jarvis(std::vector<std::pair<double, double>> points);
 
