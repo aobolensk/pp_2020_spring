@@ -2,12 +2,15 @@
 #include <vector>
 #include "../../../modules/task_1/guschin_a_cc_labeling/cc_labeling.h"
 
-std::vector<std::vector<int>> Labeling(const std::vector<std::vector<int>>& pic) {
+std::vector<std::vector<int>> Labeling(
+    const std::vector<std::vector<std::int8_t>>& pic) {
   std::vector<std::vector<int>> res(pic.size(),
                                     std::vector<int>(pic[0].size(), 0));
+  int w = pic.size();
+  int h = pic[0].size();
   int comp_counter = 1;
-  for (int i = 0; i < pic.size(); ++i)
-    for (int j = 0; j < pic[0].size(); ++j) {
+  for (int i = 0; i < w; ++i)
+    for (int j = 0; j < h; ++j) {
       int left_v = 0;
       int up_v = 0;
       int sel_v = 0;
@@ -39,8 +42,10 @@ std::vector<std::vector<int>> Labeling(const std::vector<std::vector<int>>& pic)
 
 void Merge(std::vector<std::vector<int>>* ptr, int pr_num, int req_num,
            int end_x, int end_y) {
-  for (int i = 0; i < (*ptr).size(); ++i)
-    for (int j = 0; j < (*ptr)[0].size(); ++j) {
+  int w = (*ptr).size();
+  int h = (*ptr)[0].size();
+  for (int i = 0; i < w; ++i)
+    for (int j = 0; j < h; ++j) {
       if ((*ptr)[i][j] == pr_num) (*ptr)[i][j] = req_num;
       if (i == end_x && j == end_y) return;
     }
