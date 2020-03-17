@@ -1,5 +1,7 @@
 // Copyright 2020 Iamshchikov Ivan
 #include <omp.h>
+#include <algorithm>
+#include <cstring>
 #include <vector>
 #include <random>
 #include <ctime>
@@ -44,17 +46,17 @@ CcsMatrix generateMatrix(int M, int N) {
     std::vector<int> row;
     std::vector<int>::iterator it;
     gen.seed(static_cast<unsigned int>(time(0)));
-    nz = gen() % int(sqrt(M*N));
+    nz = gen() % static_cast<int>(sqrt(M*N));
     nz_in_col = (nz / N == 0) ? 1 : nz / N;
 
     CcsMatrix m(M, N, 0);
     m.not_zero_number = nz_in_col * N;
-    for (int i = 0; i < N;i++) {
+    for (int i = 0; i < N; i++) {
         for (int j = 0; j < nz_in_col; j++) {
-            m.value.push_back(gen() % int(M*N));
-            do
-                tmp = gen() % int(M);
-            while (std::find(row.begin(), row.end(), tmp) != row.end());
+            m.value.push_back(gen() % static_cast<int>(M*N));
+            tmp = gen() % static_cast<int>(M);
+            while (std::find(row.begin(), row.end(), tmp) != row.end())
+                tmp = gen() % static_cast<int>(M);
             m.row.push_back(tmp);
         }
         m.colIndex[i] = i * nz_in_col;
@@ -111,7 +113,7 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
     CcsMatrix res(m1->M, m2->N, 0);
     CcsMatrix transposed_m1(transposeMatrix(m1));
 
-    #pragma omp parallel if(m2->N > 1) shared(res, transposed_m1)
+    #pragma omp parallel if (m2->N > 1) shared(res, transposed_m1)
     {
         int colNZ = 0, first_col = m2->N;
         double value_tmp;
@@ -137,8 +139,7 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
         #pragma omp master
         {
             int nz = 0, s = res.N;
-            for (int j = 0; j < s; j++)
-            {
+            for (int j = 0; j < s; j++) {
                 int tmp = res.colIndex[j];
                 res.colIndex[j] = nz;
                 nz += tmp;
@@ -152,15 +153,15 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
         #pragma omp barrier
 
         if (omp_get_thread_num() == 0) {
-            memcpy(res.value.data(), local_value.data(),
+            std::memcpy(res.value.data(), local_value.data(),
                    local_value.size() * sizeof(double));
-            memcpy(res.row.data(), local_row.data(),
+            std::memcpy(res.row.data(), local_row.data(),
                    local_row.size() * sizeof(int));
-            
+
         } else if (local_value.size() != 0) {
-            memcpy(&(res.value[res.colIndex[first_col]]),
+            std::memcpy(&(res.value[res.colIndex[first_col]]),
                     local_value.data(), local_value.size() * sizeof(double));
-            memcpy(&(res.row[res.colIndex[first_col]]),
+            std::memcpy(&(res.row[res.colIndex[first_col]]),
                     local_row.data(), local_row.size() * sizeof(int));
         }
     }
