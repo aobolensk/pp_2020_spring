@@ -30,9 +30,13 @@ std::vector<std::vector<int>> Labeling(
         if (res[i - 1][j] == res[i][j - 1]) {
           res[i][j] = res[i - 1][j];
         } else {
-          is_taged[res[i - 1][j]] = 0;
-          Merge(&res, res[i - 1][j], res[i][j - 1], i, j);
-          res[i][j] = res[i - 1][j];
+          int min =
+              (res[i - 1][j] < res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
+          int max =
+              (res[i - 1][j] > res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
+          is_taged[max] = 0;
+          Merge(&res, max, min, i, j);
+          res[i][j] = min;
         }
       } else if (left_v == 1 && up_v == 0) {
         res[i][j] = res[i - 1][j];
@@ -45,7 +49,6 @@ std::vector<std::vector<int>> Labeling(
         comp_counter++;
       }
     }
-  Trim(&res, is_taged);
   return res;
 }
 
@@ -57,24 +60,5 @@ void Merge(std::vector<std::vector<int>>* ptr, int pr_num, int req_num,
     for (int j = 0; j < h; ++j) {
       if ((*ptr)[i][j] == pr_num) (*ptr)[i][j] = req_num;
       if (i == end_x && j == end_y) return;
-    }
-}
-
-void Trim(std::vector<std::vector<int>>* ptr,
-          const std::vector<std::int8_t>& is_taged) {
-  std::vector<int> fresh_ind(is_taged.size(), 0);
-  int vec_size = is_taged.size();
-  int k = 1;
-  for (int i = 1; i < vec_size; ++i)
-    if (is_taged[i] == 1) {
-      fresh_ind[i] = k;
-      k++;
-    }
-
-  int w = (*ptr).size();
-  int h = (*ptr)[0].size();
-  for (int i = 0; i < w; ++i)
-    for (int j = 0; j < h; ++j) {
-      (*ptr)[i][j] = fresh_ind[(*ptr)[i][j]];
     }
 }

@@ -28,3 +28,19 @@ TEST(Sequential, Can_Lable_Pic) {
   };
   EXPECT_EQ(Labeling(A), res);
 }
+
+TEST(Sequential, Can_Lable_Another_Pic) {
+  std::vector<std::vector<std::int8_t>> A(4, std::vector<std::int8_t>(4));
+  A = {
+    {1, 1, 0, 1}, 
+    {0, 1, 1, 0},
+    {1, 0, 1, 1},
+    {0, 1, 1, 0}};
+  std::vector<std::vector<int>> res(4, std::vector<int>(4));
+  res = {
+    {1, 1, 0, 2}, 
+    {0, 1, 1, 0},
+    {3, 0, 1, 1},
+    {0, 1, 1, 0}};
+  EXPECT_EQ(Labeling(A), res);
+}
