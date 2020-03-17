@@ -6,10 +6,6 @@ std::vector<std::vector<int>> Labeling(
     const std::vector<std::vector<std::int8_t>>& pic) {
   std::vector<std::vector<int>> res(pic.size(),
                                     std::vector<int>(pic[0].size(), 0));
-  std::vector<std::int8_t> is_taged;
-  is_taged.push_back(0);
-  is_taged.push_back(0);
-
   int w = pic.size();
   int h = pic[0].size();
   int comp_counter = 1;
@@ -34,7 +30,6 @@ std::vector<std::vector<int>> Labeling(
               (res[i - 1][j] < res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
           int max =
               (res[i - 1][j] > res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
-          is_taged[max] = 0;
           Merge(&res, max, min, i, j);
           res[i][j] = min;
         }
@@ -44,8 +39,6 @@ std::vector<std::vector<int>> Labeling(
         res[i][j] = res[i][j - 1];
       } else if (left_v == 0 && up_v == 0) {
         res[i][j] = comp_counter;
-        is_taged[comp_counter] = 1;
-        is_taged.push_back(0);
         comp_counter++;
       }
     }
