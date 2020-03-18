@@ -10,7 +10,7 @@ std::vector<std::vector<int>> getRandomPic(int n, int m) {
     }
 
     int size = n * m;
-    
+
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
     std::vector<std::vector<int>> pic(size, std::vector<int>(3));
@@ -29,7 +29,7 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
     if (n <= 0 || m <= 0) {
         throw "-1";
     }
-    
+
     int newN = n + 2;
     int newM = m + 2;
     std::vector<std::vector<int>> newPic(newN * newM, std::vector<int>(3));
@@ -41,7 +41,7 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
         newPic[(newN - 1) * newM][i] = pic[(n - 1) * m][i];
         newPic[newN * newM - 1][i] = pic[n * m - 1][i];
     }
-    
+
     // Top and bottom borders:
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < 3; ++j) {
@@ -53,8 +53,8 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
     // Right and left borders:
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < 3; ++j) {
-            newPic[(i + 1) * newN] = pic[i * n];
-            newPic[(i + 1) * newN + newN - 1] = pic[i * n + n - 1];
+            newPic[(i + 1) * newN][j] = pic[i * n][j];
+            newPic[(i + 1) * newN + newN - 1][j] = pic[i * n + n - 1][j];
         }
     }
 
@@ -75,6 +75,8 @@ std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int
         throw "-1";
     }
 
+    pic = addBorders(pic, n, m);
+
     std::vector<std::vector<int>> newPic(n * m, std::vector<int>(3));
 
     for (int i = 0; i < m; ++i) {
@@ -82,17 +84,15 @@ std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int
             for (int k = 0; k < 3; ++k) {
                 for (int l = 0; l < 9; ++l) {
                     newPic[i * n + j][k] =
-                        (
-                            pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 + 1)][k] * kernel[0] +
-                            pic[(i + 1) * (n + 2) + (j + 1) - (n + 2)][k] * kernel[1] +
-                            pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 - 1)][k] * kernel[2] +
-                            pic[(i + 1) * (n + 2) + (j + 1) - 1][k] * kernel[3] +
-                            pic[(i + 1) * (n + 2) + (j + 1)][k] * kernel[4] +
-                            pic[(i + 1) * (n + 2) + (j + 1) + 1][k] * kernel[5] +
-                            pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 - 1)][k] * kernel[6] +
-                            pic[(i + 1) * (n + 2) + (j + 1) + (n + 2)][k] * kernel[7] +
-                            pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 + 1)][k] * kernel[8]
-                        ) / divKernel;
+                            (pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 + 1)][k] * kernel[0] +
+                             pic[(i + 1) * (n + 2) + (j + 1) - (n + 2)][k] * kernel[1] +
+                             pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 - 1)][k] * kernel[2] +
+                             pic[(i + 1) * (n + 2) + (j + 1) - 1][k] * kernel[3] +
+                             pic[(i + 1) * (n + 2) + (j + 1)][k] * kernel[4] +
+                             pic[(i + 1) * (n + 2) + (j + 1) + 1][k] * kernel[5] +
+                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 - 1)][k] * kernel[6] +
+                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2)][k] * kernel[7] +
+                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 + 1)][k] * kernel[8]) / divKernel;
                 }
             }
         }
