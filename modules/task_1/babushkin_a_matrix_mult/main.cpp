@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -13,27 +12,11 @@ void test(const int n) {
   mtrxmult::Matrix right = mtrxmult::random_matrix(n, n);
   right.column_storage();
 
-  auto start = std::chrono::high_resolution_clock::now();
-
   mtrxmult::Matrix mult_res_cannon = mtrxmult::multiply_cannon(left, right);
 
-  auto end = std::chrono::high_resolution_clock::now();
-  std::chrono::nanoseconds time_spent = end - start;
-
-  std::cout << "Estimated time(cannon): " << time_spent.count() << "ns"
-            << std::endl;
   right.row_storage();
 
-  start = std::chrono::high_resolution_clock::now();
-
   mtrxmult::Matrix mult_res_seq = mtrxmult::multiply(left, right);
-
-  end = std::chrono::high_resolution_clock::now();
-  time_spent = end - start;
-
-  std::cout << "Estimated time(seq): " << time_spent.count() << "ns"
-            << std::endl
-            << std::endl;
 
   ASSERT_TRUE(mult_res_cannon.equals(mult_res_seq));
 }
@@ -91,7 +74,7 @@ TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_40x40) { test(40); }
 // Commented too speed up testing
 // TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_80x80) { test(80); }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
