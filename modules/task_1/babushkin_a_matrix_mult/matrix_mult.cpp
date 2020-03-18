@@ -34,6 +34,7 @@ bool Matrix::equals(const Matrix &other) {
 
   bool equal = true;
   auto eps = 1e-6;
+
   for (int i = 0; i < m_data.size(); i++) {
     if (std::abs(m_data.at(i) - other.m_data.at(i)) > eps) {
       equal = false;
@@ -42,33 +43,6 @@ bool Matrix::equals(const Matrix &other) {
   }
 
   return equal;
-}
-
-Matrix multiply(const Matrix left, const Matrix right) {
-  if (right.m_data.size() == 0 || left.m_data.size() == 0) {
-    throw new std::invalid_argument("Matrices must not be empty");
-    return Matrix();
-  }
-
-  if (right.m_rows != left.m_cols) {
-    throw new std::invalid_argument(
-        "Right matrix must contain left matrix rows number of columns");
-    return Matrix();
-  }
-
-  std::vector<double> result_vector;
-
-  for (auto i = 0; i < left.m_rows; i++) {
-    for (auto j = 0; j < right.m_cols; j++) {
-      result_vector.push_back(0);
-      for (auto k = 0; k < left.m_cols; k++) {
-        result_vector.back() += left.m_data.at(i * left.m_cols + k) *
-                                right.m_data.at(k * right.m_cols + j);
-      }
-    }
-  }
-
-  return Matrix(result_vector, left.m_rows, right.m_cols);
 }
 
 void Matrix::column_storage() {
@@ -104,7 +78,7 @@ void shift_left(InputIt first, InputIt last, const T &value) {
     auto current = i;
 
     for (auto j = 0; j < value; j++) {
-      if (current - 1 - first < 0) {
+      if (current == first) {
         std::iter_swap(current, last - 1);
         current = last - 1;
       } else {
@@ -130,6 +104,33 @@ void shift_right(InputIt first, InputIt last, const T &value) {
       }
     }
   }
+}
+
+Matrix multiply(const Matrix left, const Matrix right) {
+  if (right.m_data.size() == 0 || left.m_data.size() == 0) {
+    throw new std::invalid_argument("Matrices must not be empty");
+    return Matrix();
+  }
+
+  if (right.m_rows != left.m_cols) {
+    throw new std::invalid_argument(
+        "Right matrix must contain left matrix rows number of columns");
+    return Matrix();
+  }
+
+  std::vector<double> result_vector;
+
+  for (auto i = 0; i < left.m_rows; i++) {
+    for (auto j = 0; j < right.m_cols; j++) {
+      result_vector.push_back(0);
+      for (auto k = 0; k < left.m_cols; k++) {
+        result_vector.back() += left.m_data.at(i * left.m_cols + k) *
+                                right.m_data.at(k * right.m_cols + j);
+      }
+    }
+  }
+
+  return Matrix(result_vector, left.m_rows, right.m_cols);
 }
 
 Matrix multiply_cannon(Matrix left, Matrix right) {
@@ -163,7 +164,8 @@ Matrix multiply_cannon(Matrix left, Matrix right) {
                right.m_data.begin() + i * right.m_rows + right.m_cols, i);
   }
 
-  std::vector<double> result_vec(left.m_rows * right.m_cols, 0);
+  std::vector<double> result_vec;
+  result_vec.resize(left.m_rows * right.m_cols, 0);
 
   for (auto k = 0; k < left.m_rows; k++) {
     for (auto i = 0; i < left.m_rows; i++) {
@@ -193,9 +195,10 @@ Matrix random_matrix(const int rows, const int columns) {
 
   std::uniform_real_distribution<double> dist(0.0, 50.0);
 
-  std::vector<double> data(rows * columns);
-  std::generate(data.begin(), data.end(), [&]() { return dist(gen); });
-  data.shrink_to_fit();
+  std::vector<double> data;
+  data.resize(rows * columns);
+
+  std::generate(data.begin(), data.end() - 1, [&]() { return dist(gen); });
 
   return Matrix(data, rows, columns);
 }

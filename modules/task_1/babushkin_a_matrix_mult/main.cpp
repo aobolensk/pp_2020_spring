@@ -88,7 +88,8 @@ TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_10x10) { test(10); }
 
 TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_40x40) { test(40); }
 
-TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_80x80) { test(80); }
+// Commented too speed up testing
+// TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_80x80) { test(80); }
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
