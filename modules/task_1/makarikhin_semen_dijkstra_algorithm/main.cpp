@@ -3,28 +3,28 @@
 #include <vector>
 #include "./dijkstra_algorithm.h"
 
-TEST(Dijkstra_Algorithm, Test_En_Exception) {
+TEST_1(Dijkstra_Algorithm, Test_En_Exception) {
   int vertex = 5;
   int edge = 8;
   Graph g = get_Random_Graph(vertex, edge);
   ASSERT_NO_THROW(Dijkstra(g, 0));
 }
 
-TEST(Dijkstra_Algorithm, Test_Out_Max_Num_Edge) {
+TEST_2(Dijkstra_Algorithm, Test_Out_Max_Num_Edge) {
   int vertex = 5;
   int edge = 11;
 
   ASSERT_ANY_THROW(get_Random_Graph(vertex, edge));
 }
 
-TEST(Dijkstra_Algorithm, Test_Out_Min_Num_Edge) {
+TEST_3(Dijkstra_Algorithm, Test_Out_Min_Num_Edge) {
   int vertex = 5;
   int edge = -1;
 
   ASSERT_ANY_THROW(get_Random_Graph(vertex, edge));
 }
 
-TEST(Dijkstra_Algorithm, Test_Const_Six_Vertex_Graph) {
+TEST_4(Dijkstra_Algorithm, Test_Const_Six_Vertex_Graph) {
   int vertex = 6;
   Graph g(vertex);
   std::vector <int> res = { 0, 1, 4, 10, 2, 10 };
@@ -39,7 +39,7 @@ TEST(Dijkstra_Algorithm, Test_Const_Six_Vertex_Graph) {
   ASSERT_EQ(Dijkstra(g, 0), res);
 }
 
-TEST(Dijkstra_Algorithm, Test_Const_Four_Vertex_Graph) {
+TEST_5(Dijkstra_Algorithm, Test_Const_Four_Vertex_Graph) {
   int vertex = 4;
   Graph g(vertex);
   std::vector <int> res = { 0, 12, 8, 7, };
@@ -51,7 +51,7 @@ TEST(Dijkstra_Algorithm, Test_Const_Four_Vertex_Graph) {
   ASSERT_EQ(Dijkstra(g, 0), res);
 }
 
-TEST(Dijkstra_Algorithm, Test_One_Element_Graph) {
+TEST_6(Dijkstra_Algorithm, Test_One_Element_Graph) {
   int vertex = 1;
   int edge = 0;
   Graph g = get_Random_Graph(vertex, edge);
@@ -60,7 +60,7 @@ TEST(Dijkstra_Algorithm, Test_One_Element_Graph) {
   ASSERT_EQ(Dijkstra(g, 0), res);
 }
 
-TEST(Dijkstra_Algorithm, Test_Out_Serch_Vertex) {
+TEST_7(Dijkstra_Algorithm, Test_Out_Serch_Vertex) {
   int vertex = 10;
   int edge = 24;
   Graph g = get_Random_Graph(vertex, edge);
