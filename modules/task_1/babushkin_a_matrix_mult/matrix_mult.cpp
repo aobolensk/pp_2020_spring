@@ -35,7 +35,7 @@ bool Matrix::equals(const Matrix &other) {
   bool equal = true;
   auto eps = 1e-6;
 
-  for (int i = 0; i < m_data.size(); i++) {
+  for (uint32_t i = 0; i < m_data.size(); i++) {
     if (std::abs(m_data.at(i) - other.m_data.at(i)) > eps) {
       equal = false;
       break;

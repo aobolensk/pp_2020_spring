@@ -54,6 +54,16 @@ class Matrix {
 
 Matrix random_matrix(const int rows, const int columns);
 
+template <class InputIt, class T>
+void shift_left(InputIt first, InputIt last, const T &value);
+
+template <class InputIt, class T>
+void shift_right(InputIt first, InputIt last, const T &value);
+
+Matrix multiply(const Matrix left, const Matrix right);
+
+Matrix multiply_cannon(Matrix left, Matrix right);
+
 }  // namespace mtrxmult
 
 #endif  // MODULES_TASK_1_BABUSHKIN_A_MATRIX_MULT_MATRIX_MULT_H_
