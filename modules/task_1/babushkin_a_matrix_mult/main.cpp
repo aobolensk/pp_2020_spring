@@ -2,9 +2,41 @@
 
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <iostream>
 #include <string>
 
 #include "./matrix_mult.h"
+
+void test(const int n) {
+  mtrxmult::Matrix left = mtrxmult::random_matrix(n, n);
+  mtrxmult::Matrix right = mtrxmult::random_matrix(n, n);
+  right.column_storage();
+
+  auto start = std::chrono::high_resolution_clock::now();
+
+  mtrxmult::Matrix mult_res_cannon = mtrxmult::multiply_cannon(left, right);
+
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::nanoseconds time_spent = end - start;
+
+  std::cout << "Estimated time(cannon): " << time_spent.count() << "ns"
+            << std::endl;
+  right.row_storage();
+
+  start = std::chrono::high_resolution_clock::now();
+
+  mtrxmult::Matrix mult_res_seq = mtrxmult::multiply(left, right);
+
+  end = std::chrono::high_resolution_clock::now();
+  time_spent = end - start;
+
+  std::cout << "Estimated time(seq): " << time_spent.count() << "ns"
+            << std::endl
+            << std::endl;
+
+  ASSERT_TRUE(mult_res_cannon.equals(mult_res_seq));
+}
 
 TEST(Matrix_Mult_Seq, Getters) {
   mtrxmult::Matrix test_matrix({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
@@ -20,24 +52,14 @@ TEST(Matrix_Mult_Seq, Getters) {
   ASSERT_EQ(test_matrix.get_size(), 8u);
 }
 
-TEST(Matrix_Mult_Seq, To_String) {
-  mtrxmult::Matrix test_matrix({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
-  std::string result(
-      "Matrix(3, 3)[ 1.000000, 2.000000, 3.000000, 4.000000, "
-      "5.000000, 6.000000, 7.000000, 8.000000, 9.000000 ]");
-
-  ASSERT_NO_THROW(test_matrix.to_string());
-  ASSERT_EQ(test_matrix.to_string(), result);
-}
-
 TEST(Matrix_Mult_Seq, Mult_Same_Size) {
   mtrxmult::Matrix test_matrix({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
   mtrxmult::Matrix test_matrix_2({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
   mtrxmult::Matrix mult_result(
       {30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0}, 3, 3);
 
-  ASSERT_EQ(test_matrix.multiply(test_matrix_2).get_data(),
-            mult_result.get_data());
+  ASSERT_TRUE(
+      mtrxmult::multiply(test_matrix, test_matrix_2).equals(mult_result));
 }
 
 TEST(Matrix_Mult_Seq, Mult_Diff_Size) {
@@ -47,8 +69,8 @@ TEST(Matrix_Mult_Seq, Mult_Diff_Size) {
       {9.0, 12.0, 17.0, 19.0, 26.0, 37.0, 29.0, 40.0, 57.0, 39.0, 54.0, 77.0},
       4, 3);
 
-  ASSERT_EQ(test_matrix.multiply(test_matrix_2).get_data(),
-            mult_result.get_data());
+  ASSERT_TRUE(
+      mtrxmult::multiply(test_matrix, test_matrix_2).equals(mult_result));
 }
 
 TEST(Matrix_Mult_Seq, Mult_Err) {
@@ -58,9 +80,15 @@ TEST(Matrix_Mult_Seq, Mult_Err) {
 
   mtrxmult::Matrix test_matrix_2({1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
 
-  ASSERT_ANY_THROW(test_matrix.multiply(test_matrix_2));
-  ASSERT_ANY_THROW(test_matrix.multiply(mtrxmult::Matrix()));
+  ASSERT_ANY_THROW(mtrxmult::multiply(test_matrix, test_matrix_2));
+  ASSERT_ANY_THROW(mtrxmult::multiply(test_matrix, mtrxmult::Matrix()));
 }
+
+TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_10x10) { test(10); }
+
+TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_40x40) { test(40); }
+
+TEST(Matrix_Mult_Seq, Mult_Cannon_Rand_80x80) { test(80); }
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
