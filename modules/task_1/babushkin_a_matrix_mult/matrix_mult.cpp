@@ -3,8 +3,6 @@
 #include "../../../modules/task_1/babushkin_a_matrix_mult/matrix_mult.h"
 
 #include <algorithm>
-#include <cstdint>
-#include <iostream>
 #include <random>
 #include <stdexcept>
 #include <string>
