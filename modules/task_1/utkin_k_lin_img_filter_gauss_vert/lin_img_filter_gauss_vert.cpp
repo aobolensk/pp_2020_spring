@@ -4,6 +4,9 @@
 #include <ctime>
 #include "../../../modules/task_1/utkin_k_lin_img_filter_gauss_vert/lin_img_filter_gauss_vert.h"
 
+std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+int divKernel = 16;
+
 std::vector<std::vector<int>> getRandomPic(int n, int m) {
     if (n <= 0 || m <= 0) {
         throw "-1";
@@ -38,15 +41,15 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
     for (int i = 0; i < 3; ++i) {
         newPic[0][i] = pic[0][i];
         newPic[newN - 1][i] = pic[n - 1][i];
-        newPic[(newN - 1) * newM][i] = pic[(n - 1) * m][i];
+        newPic[(newM - 1) * newN][i] = pic[(m - 1) * n][i];
         newPic[newN * newM - 1][i] = pic[n * m - 1][i];
     }
 
     // Top and bottom borders:
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < n; ++i) {
         for (int j = 0; j < 3; ++j) {
             newPic[i + 1][j] = pic[i][j];
-            newPic[(newN - 1) * newM + 1][j] = pic[(n - 1) * m][j];
+            newPic[(newM - 1) * newN + 1 + i][j] = pic[(m - 1) * n + i][j];
         }
     }
 

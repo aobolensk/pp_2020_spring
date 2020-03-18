@@ -4,9 +4,6 @@
 
 #include <vector>
 
-std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
-int divKernel = 16;
-
 std::vector<std::vector<int>> getRandomPic(int n, int m);
 
 std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int n, int m);
