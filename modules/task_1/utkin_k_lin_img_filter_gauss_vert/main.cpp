@@ -247,3 +247,8 @@ TEST(Lin_Img_Filter_Gauss_Vert, Can_Gauss_Filter_With_Big_Sizes) {
 
     ASSERT_NO_THROW(gaussFilter(pic, n, m));
 }
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
