@@ -28,7 +28,7 @@ std::vector<double> regularMultiplication(const std::vector<double>& a, const st
 std::vector<double> sum(const std::vector<double>& a, const std::vector<double>& b, unsigned int sz) {
   unsigned int size = sz * sz;
   std::vector<double> res(size);
-  for (int i = 0; i < size; i++) {
+  for (unsigned int i = 0; i < size; i++) {
     res[i] = a[i] + b[i];
   }
   return res;
@@ -37,7 +37,7 @@ std::vector<double> sum(const std::vector<double>& a, const std::vector<double>&
 std::vector<double> diff(const std::vector<double>& a, const std::vector<double>& b, unsigned int sz) {
   unsigned int size = sz * sz;
   std::vector<double> res(size);
-  for (int i = 0; i < size; i++) {
+  for (unsigned int i = 0; i < size; i++) {
     res[i] = a[i] - b[i];
   }
   return res;
