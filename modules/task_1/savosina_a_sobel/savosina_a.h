@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <random>
+#include <ctime>
 #include <iostream>
 
 struct img {
@@ -58,8 +59,11 @@ struct img {
     size = height * width;
     pict.resize(size);
 
-    for (int i = 0; i < size; i++)
-      pict[i] = rand() % 256 + 0;
+    for (int i = 0; i < size; i++) {
+      std::mt19937 gen;
+      gen.seed(static_cast<unsigned int>(time(0)));
+      for (int i = 0; i < size; i++) { pict[i] = gen() % 256; }
+    }
   }
 };
 

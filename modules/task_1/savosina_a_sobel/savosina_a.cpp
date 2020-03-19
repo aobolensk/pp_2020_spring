@@ -40,7 +40,7 @@ mainImage sobel(const mainImage& _img) {
       if (sqrt(x * x + y * y) > 255)
         result.pict[ind] = 255;
       else
-        result.pict[ind] = (static_cast<int>)sqrt(x * x + y * y);
+        result.pict[ind] = sqrt(x * x + y * y);
 
       x = 0;
       y = 0;
