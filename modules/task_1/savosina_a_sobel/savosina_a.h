@@ -1,12 +1,12 @@
 // Copyright 2020 Savosina Aleksandra
 
+
 #ifndef MODULES_TASK_1_SAVOSINA_A_SOBEL_SAVOSINA_A_H_
 #define MODULES_TASK_1_SAVOSINA_A_SOBEL_SAVOSINA_A_H_
 
 
 #include <vector>
 #include <random>
-#include <std.lib>
 #include <iostream>
 
 struct img {
@@ -48,7 +48,7 @@ struct img {
     return false;
   }
 
-  bool operator!= (const img& _img) const { 
+  bool operator!= (const img& _img) const {
     return !(*this == _img);
   }
 
