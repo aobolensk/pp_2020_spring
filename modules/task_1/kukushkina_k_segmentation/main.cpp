@@ -3,7 +3,7 @@
 #include "./bin_image_segmentation.h"
 
 TEST(Segmentation, Init) {
-    ASSERT_NO_THROW(1+1);
+    ASSERT_NO_THROW(1);
 }
 
 int main(int argc, char** argv) {
