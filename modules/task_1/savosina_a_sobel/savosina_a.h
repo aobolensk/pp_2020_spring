@@ -59,7 +59,7 @@ struct img {
     pict.resize(size);
 
     for (int i = 0; i < size; i++)
-      pict[i] = rand_r() % 256 + 0;
+      pict[i] = rand() % 256 + 0;
   }
 };
 
