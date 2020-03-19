@@ -1,5 +1,4 @@
-﻿//  Copyright 2020 Savosina Aleksandra
-
+﻿// Copyright 2020 Savosina Aleksandra
 #include <cmath>
 #include <vector>
 #include "../../../modules/task_1/savosina_a_sobel/savosina_a.h"
