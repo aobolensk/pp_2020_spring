@@ -1,7 +1,22 @@
-message(STATUS "Task 1")
+get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-SUBDIRLIST(subdirs ${CMAKE_CURRENT_SOURCE_DIR})
+if ( USE_SEQ )
+    set(ProjectId "${ProjectId}_seq")
+    project( ${ProjectId} )
+    message( STATUS "-- " ${ProjectId} )
 
-foreach(subd ${subdirs})
-  add_subdirectory(${subd})
-endforeach()
+    file(GLOB_RECURSE header_files "*.h")
+    file(GLOB_RECURSE source_files "*.cpp")
+    set(PACK_LIB "${ProjectId}_lib")
+    add_library(${PACK_LIB} STATIC ${header_files} ${source_files})
+
+    add_executable(${ProjectId} ${source_files})
+
+    target_link_libraries(${ProjectId} ${PACK_LIB})
+    target_link_libraries(${ProjectId} gtest gtest_main)
+
+    enable_testing()
+    add_test(NAME ${ProjectId} COMMAND ${ProjectId})
+else( USE_SEQ )
+    message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
+endif( USE_SEQ )
