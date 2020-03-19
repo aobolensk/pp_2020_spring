@@ -1,10 +1,11 @@
 ﻿// Copyright 2020 Savosina Aleksandra
 
+
 #include <cmath>
+#include <vector>
 #include "../../../modules/task_1/savosina_a_sobel/savosina_a.h"
 
 mainImage sobel(const mainImage& _img) {
-
   std::vector<int> vec(_img.size);
   mainImage result{_img.height, _img.width, vec};
   int ind, index;
@@ -41,7 +42,7 @@ mainImage sobel(const mainImage& _img) {
       if (sqrt(x * x + y * y) > 255)
         result.pict[ind] = 255;
       else
-        result.pict[ind] = (int)sqrt(x * x + y * y);
+        result.pict[ind] = (static_cast<int>)sqrt(x * x + y * y);
 
       x = 0;
       y = 0;

@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <random>
+#include <std.lib>
 #include <iostream>
 
 struct img {
@@ -39,10 +40,6 @@ struct img {
     width = _img.width;
     pict = _img.pict;
   }
-  
-  /*void set(int tmp, int i) {
-    pict[i] = tmp;
-  }*/
 
   bool operator== (const img& _img) const {
     if (pict == _img.pict && height == _img.height
@@ -62,7 +59,7 @@ struct img {
     pict.resize(size);
 
     for (int i = 0; i < size; i++)
-      pict[i] = rand() % 256 + 0;
+      pict[i] = rand_r() % 256 + 0;
   }
 };
 

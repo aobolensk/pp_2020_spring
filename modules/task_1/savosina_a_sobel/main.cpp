@@ -17,7 +17,7 @@ TEST(savosina_a_sobel, Can_Create_Picture) {
   ASSERT_EQ(tmp.height, 1);
   ASSERT_EQ(tmp.width, 1);
   ASSERT_EQ(tmp.size, 1);
-} 
+}
 
 TEST(savosina_a_sobel, Can_Create_2_Picture) {
   mainImage tmp{ 2, 2, {1, 2, 4, 3} };
