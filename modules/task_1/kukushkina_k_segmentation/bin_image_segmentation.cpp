@@ -7,7 +7,7 @@
 
 static int offset = 0;
 
-std::vector<int> Generate_pic(size_t w, size_t h) {
+std::vector<int> Generate_pic(std::size_t w, std::size_t h) {
   if (h <= 0 || w <= 0) throw "Trying to generate negative-dim pic";
   std::vector<int> pic(h * w);
   std::mt19937 gen;
@@ -18,7 +18,7 @@ std::vector<int> Generate_pic(size_t w, size_t h) {
   return pic;
 }
 
-void recolor(std::vector<int>* vec, size_t pix, int color, size_t w) {
+void recolor(std::vector<int>* vec, std::size_t pix, int color, std::size_t w) {
   int old = (*vec)[pix];
   if (old == 0) throw "Trying to recolor empty space";
   (*vec)[pix] = color;
@@ -32,7 +32,7 @@ void recolor(std::vector<int>* vec, size_t pix, int color, size_t w) {
     recolor(vec, pix + w, color, w);
 }
 
-std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
+std::vector<int> Segmentation(const std::vector<int> &source, std::size_t w) {
   std::vector<int> res;
   for (size_t i = 0; i < source.size(); i++) {
     res.push_back(source[i]);
@@ -69,7 +69,8 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
   }
   return res;
 }
-void Output(const std::vector<int>& source, size_t w) {
+
+void Output(const std::vector<int>& source, std::size_t w) {
   for (size_t i = 0; i < source.size(); i++) {
     if (i % w == 0)
       std::cout << std::endl;
