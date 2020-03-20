@@ -14,11 +14,11 @@ double getMultipleIntegralUsingRectangleMethod(
             double xMiddle = (i + i + stepX) / 2;
             double yMiddle = (j + j + stepY) / 2;
 
-            resultIntegral += function(xMiddle, yMiddle) * cellSquare;
+            resultIntegral += function(xMiddle, yMiddle);
         }
     }
 
-    return resultIntegral;
+    return resultIntegral * cellSquare;  // common factor
 }
 
 double function1(double x, double y) {
