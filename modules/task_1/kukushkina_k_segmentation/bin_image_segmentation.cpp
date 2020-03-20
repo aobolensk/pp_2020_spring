@@ -33,7 +33,10 @@ void recolor(std::vector<int>* vec, size_t pix, int color, size_t w) {
 }
 
 std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
-  std::vector<int> res(source);
+  std::vector<int> res;
+  for (size_t i = 0; i < source.size(); i++) {
+    res.push_back(source[i]);
+  }
   int color = 1;
   if (res[0] == 1) res[0] = ++color;
   for (size_t i = 1; i < w; i++) {  // first line segmentation
@@ -43,7 +46,7 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
     else
       res[i] = ++color;  // new segment starting
   }
-  for (size_t i = w + 1; i < res.size(); i++) {
+  for (size_t i = w; i < res.size(); i++) {
     if (res[i] == 0) continue;  // empty space skipping
     if (i % w == 0) {  // left edge segmentation
       if (res[i - w] != 0)
@@ -58,8 +61,10 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
       res[i] = res[i - w];  // adding to upper segment
     } else if (res[i - 1] != 0 && res[i - w] != 0) {
       res[i] = res[i - 1];  // adding to left segment
-      if (res[i - w] != res[i - 1])
-        recolor(&res, i - w, color, w);  // recoloring upper segment
+      if (res[i - w] != res[i - 1]) {
+        // std::cout << "recolor " << i - w << std::endl;
+        // recolor(&res, i - w, color, w);  // recoloring upper segment
+      }
     }
   }
   return res;
