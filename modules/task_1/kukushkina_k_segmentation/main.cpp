@@ -16,7 +16,7 @@ TEST(Bin_image_segmentation, negative_dim_image) {
 
 TEST(Bin_image_segmentation, image_dim) {
   std::vector<int> vec = Generate_pic(3, 3);
-  ASSERT_EQ(vec.size(), 9);
+  ASSERT_EQ(vec.size(), static_cast<unsigned int>(9));
 }
 
 TEST(Bin_image_segmentation, empty_space_small) {
