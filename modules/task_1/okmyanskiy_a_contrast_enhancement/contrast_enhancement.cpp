@@ -7,7 +7,7 @@
 
 std::vector<int> getRandomMatrix(int width, int height) {
     if (width <= 0 || height <= 0) {
-        throw std::runtime_error("Width or height <= 0");
+        throw "Width or height <= 0";
     }
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
@@ -20,11 +20,11 @@ std::vector<int> getRandomMatrix(int width, int height) {
 
 int linearHistogramStretching(int value, int max, int min) {
     if (max < 0 || min < 0 || max > 255 || min > 255) {
-        throw std::runtime_error("The maximum or minimum value does not match the task");
+        throw "The maximum or minimum value does not match the task";
     }
 
     if (max < min) {
-        throw std::runtime_error("The maximum value is less than the minimum value");
+        throw "The maximum value is less than the minimum value";
     }
 
     if (max == min) {
@@ -38,11 +38,11 @@ int linearHistogramStretching(int value, int max, int min) {
 
 std::vector<int> getResultMatrix(std::vector<int> initial, int width, int height) {
     if (width <= 0 || height <= 0) {
-        throw std::runtime_error("Width or height <= 0");
+        throw "Width or height <= 0";
     }
 
     if (width * height != static_cast<int>(initial.size())) {
-        throw std::runtime_error("Matrix size does not match description");
+        throw "Matrix size does not match description";
     }
 
     std::vector<int> result(width * height);
