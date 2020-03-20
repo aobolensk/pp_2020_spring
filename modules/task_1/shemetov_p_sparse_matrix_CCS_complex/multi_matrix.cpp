@@ -1,6 +1,7 @@
 #include "multi_matrix.h"
 #include <random>
 #include <iostream>
+#include <chrono>
 
 
 
@@ -45,6 +46,18 @@ mtxComplex SparseMatrixCCS::randomGenerateMatrix(double sparseness){
    return vec;
 }
 
+mtxComplex SparseMatrixCCS::TransposeMatrix(const mtxComplex& mt){
+    
+    mtxComplex transpose(mt[0].size(),std::vector<std::complex<double>>());
+    
+     for (size_t i = 0; i < mt.size(); i++) {
+        for (size_t j = 0; j < mt[i].size(); j++) {
+            transpose[j].push_back(i);
+        }
+    }
+    return transpose; 
+}
+
 //Debug
 void SparseMatrixCCS::Print(const mtxComplex& mt){
     for(int i=0;i<m;i++){
@@ -52,6 +65,14 @@ void SparseMatrixCCS::Print(const mtxComplex& mt){
         std::cout<< mt[i][j] << " \n"[j == n-1];
     }
 }
+
+void SparseMatrixCCS::TransposePrint(const mtxComplex& mt){
+    for(int i=0;i<n;i++){
+        for(int j=0; j<m; j++)
+        std::cout<< mt[i][j] << " \n"[j == m-1];
+    }
+}
+
 
 
 

@@ -19,6 +19,7 @@ public:
     mtxComplex randomGenerateMatrix(double sparseness);
     mtxComplex TransposeMatrix(const mtxComplex&);
     void Print(const mtxComplex&);
+    void TransposePrint(const mtxComplex&);
     
 };
 
