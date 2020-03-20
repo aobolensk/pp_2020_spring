@@ -4,7 +4,6 @@
 
 double SequentialIntegr(double(*func)(std::vector<double>), std::vector <double> x,
   std::vector <double> y, const int n) {
-
   if (x.size() != y.size() || n <= 0) {
     throw "wrong data";
   }

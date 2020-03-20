@@ -24,7 +24,6 @@ double f3(std::vector<double> vec) {
 }
 
 TEST(Multiple_Trapez_Integraion, Test_1_Integral_with_2_dimension_f1) {
-
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
@@ -38,7 +37,6 @@ TEST(Multiple_Trapez_Integraion, Test_1_Integral_with_2_dimension_f1) {
 }
 
 TEST(Multiple_Trapez_Integraion, Test_2_Integral_with_2_dimension_f2) {
-
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
@@ -52,7 +50,6 @@ TEST(Multiple_Trapez_Integraion, Test_2_Integral_with_2_dimension_f2) {
 }
 
 TEST(Multiple_Trapez_Integraion, Test_3_Integral_with_2_dimension_f3) {
-
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
@@ -77,7 +74,6 @@ TEST(Multiple_Trapez_Integraion, Test_4_Wrong_Data_Negative_in_n) {
 }
 
 TEST(Multiple_Trapez_Integraion, Test_5_Wrong_Data_Negative_in_size_of_first_coord) {
-
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
@@ -85,19 +81,16 @@ TEST(Multiple_Trapez_Integraion, Test_5_Wrong_Data_Negative_in_size_of_first_coo
   y = { -5, 6 };
   const int n = 100;
   ASSERT_ANY_THROW(SequentialIntegr(f1, x, y, n));
-
 }
 
 TEST(Multiple_Trapez_Integraion, Test_6_Wrong_Data_Negative_in_size_of_second_coord) {
-
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
   x = { 2, 10 };
   y = { -5, 6, 13 };
   const int n = 100;
-
- ASSERT_ANY_THROW(SequentialIntegr(f1, x, y, n));
+  ASSERT_ANY_THROW(SequentialIntegr(f1, x, y, n));
 }
 
 int main(int argc, char** argv) {
