@@ -45,18 +45,18 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
   }
   for (size_t i = w + 1; i < res.size(); i++) {
     if (res[i] == 0) continue;  // empty space skipping
-    if (i % w == 0)  // left edge segmentation
+    if (i % w == 0) {  // left edge segmentation
       if (res[i - w] != 0)
         res[i] = res[i - w];  // adding to existing segment
-    else
+      else
+        res[i] = ++color;  // new segment starting
+    } else if (res[i - 1] == 0 && res[i - w] == 0) {
       res[i] = ++color;  // new segment starting
-    else if (res[i - 1] == 0 && res[i - w] == 0)
-      res[i] = ++color;  // new segment starting
-    else if (res[i - 1] != 0 && res[i - w] == 0)
+    } else if (res[i - 1] != 0 && res[i - w] == 0) {
       res[i] = res[i - 1];  // adding to left segment
-    else if (res[i - 1] == 0 && res[i - w] != 0)
+    } else if (res[i - 1] == 0 && res[i - w] != 0) {
       res[i] = res[i - w];  // adding to upper segment
-    else if (res[i - 1] != 0 && res[i - w] != 0) {
+    } else if (res[i - 1] != 0 && res[i - w] != 0) {
       res[i] = res[i - 1];  // adding to left segment
       if (res[i - w] != res[i - 1])
         recolor(&res, i - w, color, w);  // recoloring upper segment
