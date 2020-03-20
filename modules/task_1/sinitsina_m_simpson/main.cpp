@@ -69,7 +69,7 @@ TEST(Multiple_Trapez_Integraion, Test_4_Wrong_Data_Negative_in_n) {
   ASSERT_ANY_THROW(SequentialIntegr(f1, x, y, n));
 }
 
-TEST(Multiple_Trapez_Integraion, Test_5_Wrong_Data_Negative_in_size_of_first_coord) {
+TEST(Multiple_Trapez_Integraion, Test_5_Wrong_Data_Negative_in_size_of_first_coordinate) {
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
