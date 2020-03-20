@@ -4,7 +4,6 @@
 #include <random>
 #include <ctime>
 #include <iostream>
-#include <stdlib.h>
 
 static int offset = 0;
 
@@ -49,16 +48,15 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
     if (i % w == 0)  // left edge segmentation
       if (res[i - w] != 0)
         res[i] = res[i - w];  // adding to existing segment
-      else
-        res[i] = ++color;  // new segment starting
+    else
+      res[i] = ++color;  // new segment starting
     else if (res[i - 1] == 0 && res[i - w] == 0)
       res[i] = ++color;  // new segment starting
     else if (res[i - 1] != 0 && res[i - w] == 0)
       res[i] = res[i - 1];  // adding to left segment
     else if (res[i - 1] == 0 && res[i - w] != 0)
       res[i] = res[i - w];  // adding to upper segment
-    else 
-      if (res[i - 1] != 0 && res[i - w] != 0) {
+    else if (res[i - 1] != 0 && res[i - w] != 0) {
       res[i] = res[i - 1];  // adding to left segment
       if (res[i - w] != res[i - 1])
         recolor(&res, i - w, color, w);  // recoloring upper segment
