@@ -1,7 +1,7 @@
 // Copyright 2020 Okmyanskiy Andrey
-#include "./contrast_enhancement.h"
 #include <gtest/gtest.h>
 #include <vector>
+#include "./contrast_enhancement.h"
 
 TEST(Sequential_Contrast_Enhancement, Test_Random_Matrix_Size_Zero) {
   const int matrixWidth = 15;
@@ -25,19 +25,19 @@ TEST(Sequential_Contrast_Enhancement, Test_Random_Matrix_Size_Correctly) {
 }
 
 TEST(Sequential_Contrast_Enhancement, Test_Stretching_Minimum_Greather_Maximum) {
-  const int min = 200; 
-  const int max = 50; 
-  const int value = 10; 
+  const int min = 200;
+  const int max = 50;
+  const int value = 10;
 
-  ASSERT_ANY_THROW(linearHistogramStretching(value, max, min)); 
+  ASSERT_ANY_THROW(linearHistogramStretching(value, max, min));
 }
 
 TEST(Sequential_Contrast_Enhancement, Test_Stretching_Minimum_Or_Maximum_False) {
-  const int min = -5; 
-  const int max = 260; 
-  const int value = 10; 
+  const int min = -5;
+  const int max = 260;
+  const int value = 10;
 
-  ASSERT_ANY_THROW(linearHistogramStretching(value, max, min)); 
+  ASSERT_ANY_THROW(linearHistogramStretching(value, max, min));
 }
 
 TEST(Sequential_Contrast_Enhancement, Test_Check_Stretching_Correct) {
@@ -45,15 +45,15 @@ TEST(Sequential_Contrast_Enhancement, Test_Check_Stretching_Correct) {
   const int max = 158;
   const int value = 18;
 
-  ASSERT_EQ(20, linearHistogramStretching(value, max, min)); 
+  ASSERT_EQ(20, linearHistogramStretching(value, max, min));
 }
 
 TEST(Sequential_Contrast_Enhancement, Test_Result_Matrix_Size_Zero) {
-  const int matrixWidth = 15; 
-  const int matrixHeight = 0; 
-  const std::vector<int> matrix(15); 
+  const int matrixWidth = 15;
+  const int matrixHeight = 0;
+  const std::vector<int> matrix(15);
 
-  ASSERT_ANY_THROW(getResultMatrix(matrix, matrixWidth, matrixHeight)); 
+  ASSERT_ANY_THROW(getResultMatrix(matrix, matrixWidth, matrixHeight));
 }
 
 TEST(Sequential_Contrast_Enhancement, Test_Result_Matrix_Size_Negative) {
