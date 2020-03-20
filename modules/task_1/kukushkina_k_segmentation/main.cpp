@@ -62,10 +62,10 @@ TEST(Bin_image_segmentation, correctness_square) {
         break;
       }
     } else {
-      if (res[i] != res[i - 10] && res[i - 10] != 0
-        || res[i] != res[i + 10] && res[i + 10] != 0
-        || res[i] != res[i - 1] && res[i - 1] != 0
-        || res[i] != res[i + 1] && res[i + 1] != 0) {
+      if ((res[i] != res[i - 10] && res[i - 10] != 0)
+        || (res[i] != res[i + 10] && res[i + 10] != 0)
+        || (res[i] != res[i - 1] && res[i - 1] != 0)
+        || (res[i] != res[i + 1] && res[i + 1] != 0)) {
         corr = 0;
         break;
       }
@@ -79,7 +79,7 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
   std::vector<int> vec = Generate_pic(w, 1000);
   std::vector<int> res = Segmentation(vec, w);
   bool corr = 1;
-  for (size_t i = w + 1; i < 1000 * w - w - 1; i++) {
+  for (std::size_t i = static_cast<std::size_t>(w + 1); i < static_cast<std::size_t>(1000 * w - w - 1); i++) {
     if (res[i] == 0) continue;
     if (i % w == 0) {
       if (res[i] != res[i - w] && res[i - w] != 0
@@ -92,10 +92,10 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
         break;
       }
     } else {
-      if (res[i] != res[i - w] && res[i - w] != 0
-        || res[i] != res[i + w] && res[i + w] != 0
-        || res[i] != res[i - 1] && res[i - 1] != 0
-        || res[i] != res[i + 1] && res[i + 1] != 0) {
+      if ((res[i] != res[i - w] && res[i - w] != 0)
+        || (res[i] != res[i + w] && res[i + w] != 0)
+        || (res[i] != res[i - 1] && res[i - 1] != 0)
+        || (res[i] != res[i + 1] && res[i + 1] != 0)) {
         corr = 0;
         break;
       }
