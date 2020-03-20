@@ -11,56 +11,36 @@ double getMultipleIntegralUsingRectangleMethod(
 
     for (double i = x1; i < x2; i += stepX) {
         for (double j = y1; j < y2; j += stepY) {
-            double xMiddle = (i + stepX) / 2;
-            double yMiddle = (j + stepY) / 2;
+            double xMiddle = (i + i + stepX) / 2;
+            double yMiddle = (j + j + stepY) / 2;
 
-            resultIntegral += function(xMiddle, yMiddle);
+            resultIntegral += function(xMiddle, yMiddle) * cellSquare;
         }
     }
-
-    resultIntegral *= cellSquare;  // common factor
 
     return resultIntegral;
 }
 
 double function1(double x, double y) {
-    return x - y;
-}
-
-double function2(double x, double y) {
     return x*x + y*y;
 }
 
-double function3(double x, double y) {
+double function2(double x, double y) {
     return sin(x*y);
 }
 
-double function4(double x, double y) {
+double function3(double x, double y) {
     return cos(x*y);
 }
 
-double function5(double x, double y) {
+double function4(double x, double y) {
     return sin(x*y) - cos(x*y);
 }
 
-int main() {
-    double (*passingFunc)(double, double) = nullptr;
-    passingFunc = &function1;
+double function5(double x, double y) {
+    return 3*x*x - y;
+}
 
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
-                                                    0, 2, 0, 2, 0.01, 0.01);
-
-    std::cout << integral << std::endl;
-
-    passingFunc = &function2;
-    integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
-                                                    0, 2, 0, 2, 0.001, 0.001);
-
-    std::cout << integral << std::endl;
-
-    passingFunc = &function3;
-    integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
-                                                    0, 2, 0, 2, 0.01, 0.01);
-
-    std::cout << integral << std::endl;
+double function6(double x, double y) {
+    return x*y;
 }
