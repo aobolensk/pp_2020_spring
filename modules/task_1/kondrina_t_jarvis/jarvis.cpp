@@ -14,7 +14,7 @@ int rotate(const Point& p, const Point& q, const Point& i) {
 std::vector<Point> buildHull(std::vector<Point> m_set) {
   Point left_point = *std::min_element(
       m_set.begin(), m_set.end(), [](Point a, Point b)
-      { return (a.y < b.y) || (a.y==b.y && a.x < b.x); } );
+      { return (a.y < b.y) || (a.y == b.y && a.x < b.x); } );
 
   std::vector<Point> hull;
   Point end_point;
