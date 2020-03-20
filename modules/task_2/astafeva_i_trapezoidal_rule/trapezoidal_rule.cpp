@@ -17,7 +17,7 @@ double calculateIntegral(double(*function)(std::vector<double>), std::vector <st
         segments *= partition[i];
     }
     double result = 0.0;
-    #pragma omp parallel num_threads(4) shared(result, dimensionality, segments, delta, boundaries, partition)
+    #pragma omp parallel shared(result, dimensionality, segments, delta, boundaries, partition)
     {
         std::vector<double> params(dimensionality);
         int const THREAD_NUMBER = omp_get_thread_num();
