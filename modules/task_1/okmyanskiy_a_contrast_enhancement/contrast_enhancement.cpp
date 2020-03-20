@@ -1,9 +1,9 @@
 // Copyright 2020 Okmyanskiy Andrey
-#include "contrast_enhancement.h"
 #include <vector>
 #include <random>
 #include <ctime>
 #include <algorithm>
+#include "../../../modules/task_1/okmyanskiy_a_contrast_enhancement/contrast_enhancement.h"
 
 std::vector<int> getRandomMatrix(int width, int height) {
     if (width <= 0 || height <= 0) {
