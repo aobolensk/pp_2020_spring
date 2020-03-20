@@ -1,6 +1,7 @@
 // Copyright 2020 Fedotov Vladislav
 #include "../../modules/task_1/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.h"
 #include <iostream>
+#include <math.h>
 
 double getMultipleIntegralUsingRectangleMethod(
     double (*function)(double, double), double x1, double x2,
@@ -30,18 +31,28 @@ double function2(double x, double y) {
     return x*x + y*y;
 }
 
+double function3(double x, double y) {
+    return sin(x*y);
+}
+
 int main() {
     double (*passingFunc)(double, double) = nullptr;
     passingFunc = &function1;
 
     double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
-                                                    0, 2, 0, 2, 0.1, 0.1);
+                                                    0, 2, 0, 2, 0.01, 0.01);
 
     std::cout << integral << std::endl;
 
     passingFunc = &function2;
     integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
-                                                    0, 2, 0, 2, 0.1, 0.1);
+                                                    0, 2, 0, 2, 0.01, 0.01);
+
+    std::cout << integral << std::endl;
+
+    passingFunc = &function3;
+    integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+                                                    0, 2, 0, 2, 0.01, 0.01);
 
     std::cout << integral << std::endl;
 }
