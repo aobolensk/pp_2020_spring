@@ -26,7 +26,9 @@ double function1(double x, double y) {
     return x - y;
 }
 
-
+double function2(double x, double y) {
+    return x*x + y*y;
+}
 
 int main() {
     double (*passingFunc)(double, double) = nullptr;
@@ -35,5 +37,11 @@ int main() {
     double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
                                                     0, 2, 0, 2, 0.1, 0.1);
 
-    std::cout << integral;
+    std::cout << integral << std::endl;
+
+    passingFunc = &function2;
+    integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+                                                    0, 2, 0, 2, 0.1, 0.1);
+
+    std::cout << integral << std::endl;
 }
