@@ -57,10 +57,6 @@ TEST(Bin_image_segmentation, correctness_square) {
         corr = 0;
         break;
       }
-      if (res[i] == res[i - 1]) {
-        corr = 0;
-        break;
-      }
     } else {
       if ((res[i] != res[i - 10] && res[i - 10] != 0)
         && (res[i] != res[i + 10] && res[i + 10] != 0)
@@ -84,10 +80,6 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
     if (i % w == 0) {
       if (res[i] != res[i - w] && res[i - w] != 0
         && res[i] != res[i + w] && res[i + w] != 0) {
-        corr = 0;
-        break;
-      }
-      if (res[i] == res[i - 1]) {
         corr = 0;
         break;
       }
