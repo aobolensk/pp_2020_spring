@@ -4,15 +4,17 @@
 #include <random>
 #include <ctime>
 #include <iostream>
+#include <stdlib.h>
 
 static int offset = 0;
 
 std::vector<int> Generate_pic(size_t w, size_t h) {
   if (h <= 0 || w <= 0) throw "Trying to generate negative-dim pic";
   std::vector<int> pic(h * w);
+  std::mt19937 gen;
+  gen.seed(static_cast<unsigned>(time(0)) + offset++);
   for (size_t i = 0; i < h * w; i++) {
-    srand(static_cast<unsigned>(time(0)) + offset++);
-    pic[i] = rand() % 2;
+    pic[i] = gen() % 2;
   }
   return pic;
 }
@@ -39,7 +41,8 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
     if (res[i] == 0) continue;  // empty space skipping
     if (res[i - 1] != 0)
       res[i] = res[i - 1];
-    else res[i] = ++color;  // new segment starting
+    else
+      res[i] = ++color;  // new segment starting
   }
   for (size_t i = w + 1; i < res.size(); i++) {
     if (res[i] == 0) continue;  // empty space skipping
@@ -54,7 +57,8 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
       res[i] = res[i - 1];  // adding to left segment
     else if (res[i - 1] == 0 && res[i - w] != 0)
       res[i] = res[i - w];  // adding to upper segment
-    else if (res[i - 1] != 0 && res[i - w] != 0) {
+    else 
+      if (res[i - 1] != 0 && res[i - w] != 0) {
       res[i] = res[i - 1];  // adding to left segment
       if (res[i - w] != res[i - 1])
         recolor(&res, i - w, color, w);  // recoloring upper segment
