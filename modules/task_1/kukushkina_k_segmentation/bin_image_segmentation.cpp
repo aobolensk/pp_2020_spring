@@ -8,6 +8,7 @@
 static int offset = 0;
 
 std::vector<int> Generate_pic(size_t w, size_t h) {
+  if (h <= 0 || w <= 0) throw "Trying to generate negative-dim pic";
   std::vector<int> pic(h * w);
   for (size_t i = 0; i < h * w; i++) {
     srand(static_cast<unsigned>(time(0)) + offset++);
@@ -36,17 +37,17 @@ std::vector<int> Segmentation(const std::vector<int> &source, size_t w) {
   if (res[0] == 1) res[0] = ++color;
   for (size_t i = 1; i < w; i++) {  // first line segmentation
     if (res[i] == 0) continue;  // empty space skipping
-    if (res[i - 1] != 0) res[i] = res[i - 1];
+    if (res[i - 1] != 0)
+      res[i] = res[i - 1];
     else res[i] = ++color;  // new segment starting
   }
   for (size_t i = w + 1; i < res.size(); i++) {
     if (res[i] == 0) continue;  // empty space skipping
-    if (i % w == 0) {  // left edge segmentation
+    if (i % w == 0)  // left edge segmentation
       if (res[i - w] != 0)
         res[i] = res[i - w];  // adding to existing segment
       else
         res[i] = ++color;  // new segment starting
-    }
     else if (res[i - 1] == 0 && res[i - w] == 0)
       res[i] = ++color;  // new segment starting
     else if (res[i - 1] != 0 && res[i - w] == 0)

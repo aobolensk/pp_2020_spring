@@ -9,6 +9,10 @@ TEST(Bin_image_segmentation, can_generate_image) {
   ASSERT_NO_THROW(Generate_pic(100, 100));
 }
 
+TEST(Bin_image_segmentation, negative_dim_image) {
+  ASSERT_ANY_THROW(Generate_pic(-1, 100));
+}
+
 TEST(Bin_image_segmentation, image_dim) {
   std::vector<int> vec = Generate_pic(3, 3);
   ASSERT_EQ(vec.size(), 9);
@@ -85,8 +89,7 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
         corr = 0;
         break;
       }
-    }
-    else {
+    } else {
       if (res[i] != res[i - 20] && res[i - 20] != 0
         && res[i] != res[i + 20] && res[i + 20] != 0
         && res[i] != res[i - 1] && res[i - 1] != 0
