@@ -7,19 +7,16 @@
 
 double f1(std::vector<double> vec) {
   double x = vec[0];
-  double y = vec[1];
   return (1 / (1 + x));
 }
 
 double f2(std::vector<double> vec) {
   double x = vec[0];
-  double y = vec[1];
   return (sin(x * x));
 }
 
 double f3(std::vector<double> vec) {
   double x = vec[0];
-  double y = vec[1];
   return (x / (x * x * x * x + 4));
 }
 
@@ -69,7 +66,6 @@ TEST(Multiple_Trapez_Integraion, Test_4_Wrong_Data_Negative_in_n) {
   x = { 2, 1 };
   y = { -5, 6 };
   const int n = -100;
-  double error = 0.0001;
   ASSERT_ANY_THROW(SequentialIntegr(f1, x, y, n));
 }
 
