@@ -1,9 +1,10 @@
 #include "multi_matrix.h"
 #include <random>
+#include <iostream>
 
 
 
-SparseMatrixCCS::SparseMatrixCCS(int _n, int _m, int _noneZero)
+SparseMatrixCCS::SparseMatrixCCS(int _m, int _n, int _noneZero)
 {
     n = _n;
     m = _m;
@@ -23,10 +24,37 @@ SparseMatrixCCS::SparseMatrixCCS(const SparseMatrixCCS& obj){
     col_offsets = obj.col_offsets;
 }
 
-// SparseMatrixCCS randomGenerateMatrix(int _n, int _m){
-//     std::mt19937 gen;
-//     gen.seed(time(0));
-// }
+mtxComplex SparseMatrixCCS::randomGenerateMatrix(double sparseness){
+    mtxComplex vec(m);
+    for ( int i = 0 ; i < m; i++ )
+    vec[i].resize(n);
+    std::mt19937 genReal{std::random_device()()};
+    std::mt19937 genImag{std::random_device()()};
+    std::mt19937 gen{std::random_device()()};
+    std::uniform_int_distribution<int> randReal (0,10), randImag(0,10);
+    std::uniform_real_distribution<> probability{0,1};
+
+    for(int i=0;i<m;i++){
+        for(int j=0; j<n; j++){
+            if(probability(gen)>=sparseness){
+                vec[i][j].real(randReal(genReal));
+                vec[i][j].imag(randImag(genImag));
+            }
+        }
+    }
+   return vec;
+}
+
+//Debug
+void SparseMatrixCCS::Print(const mtxComplex& mt){
+    for(int i=0;i<m;i++){
+        for(int j=0; j<n; j++)
+        std::cout<< mt[i][j] << " \n"[j == n-1];
+    }
+}
+
+
+
 
 
 

@@ -4,6 +4,9 @@
 #include "multi_matrix.h"
 
 TEST(multi_matrix, TEST_FOR_FUN){
+    SparseMatrixCCS test(4,4,10);
+    
+    test.Print(test.randomGenerateMatrix(0.8));
     SUCCEED();
 }
 

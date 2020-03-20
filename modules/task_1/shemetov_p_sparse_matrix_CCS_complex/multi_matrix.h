@@ -3,6 +3,7 @@
 #include <vector>
 #include <complex>
 
+typedef std::vector<std::vector<std::complex<double>>> mtxComplex;
 
 class SparseMatrixCCS
 {
@@ -12,12 +13,13 @@ private:
     std::vector<int> col_offsets;
     int n, m, noneZero;
 public:
-    SparseMatrixCCS(int n, int m, int noneZero);
+    SparseMatrixCCS(int m, int n, int noneZero);
+    SparseMatrixCCS(const mtxComplex&);
     SparseMatrixCCS(const SparseMatrixCCS& obj);
-    SparseMatrixCCS randomGenerateMatrix(int n, int m);
-    SparseMatrixCCS TransposeMatrix();
-    void Print();
-    ~SparseMatrixCCS();
+    mtxComplex randomGenerateMatrix(double sparseness);
+    mtxComplex TransposeMatrix(const mtxComplex&);
+    void Print(const mtxComplex&);
+    
 };
 
 
