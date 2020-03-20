@@ -11,18 +11,20 @@ private:
     std::vector<std::complex<int>> value;
     std::vector<int> row_index;
     std::vector<int> col_offsets;
-    int n, m, noneZero;
+    size_t n, m;
+    int noneZero;
 public:
-    SparseMatrixCCS(int m, int n, int noneZero);
+    SparseMatrixCCS(size_t m, size_t n);
     SparseMatrixCCS(const mtxComplex&);
     SparseMatrixCCS(const SparseMatrixCCS& obj);
-    mtxComplex randomGenerateMatrix(double sparseness);
-    mtxComplex TransposeMatrix(const mtxComplex&);
     void Print(const mtxComplex&);
+    void PrintCCS();
     void TransposePrint(const mtxComplex&);
     
 };
 
+mtxComplex randomGenerateMatrix(size_t m,size_t n,double sparseness);
+mtxComplex TransposeMatrix(const mtxComplex&);
 
 
 #endif // MODULES_TASK_1_SHEMETOV_P_SPARSE_MATRIX_CSS_COMPLEX_MULTI_MATRIX_H_

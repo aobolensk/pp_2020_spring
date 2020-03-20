@@ -4,14 +4,16 @@
 #include "multi_matrix.h"
 
 TEST(multi_matrix, TEST_FOR_FUN){
-    SparseMatrixCCS test(5,5,10);
-    mtxComplex vec = test.randomGenerateMatrix(0.8);
+    
+    mtxComplex vec = randomGenerateMatrix(5,5,0.8);
+    SparseMatrixCCS test(vec);
     test.Print(vec);
-    vec = test.TransposeMatrix(vec);
+    test.PrintCCS();
+    
 
     std::cout << "__________" << std::endl;
 
-    test.TransposePrint(vec);
+    
     SUCCEED();
 }
 
