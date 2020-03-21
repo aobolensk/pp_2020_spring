@@ -12,8 +12,7 @@ Matrix simpleMult(const Matrix& A, const Matrix& B) {
     int n = A.size();
     int m = B[0].size();
     Matrix C(n, std::vector<double>(n, 0));
-		int size = B.size;
-    
+    int size = B.size;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             for (int t = 0; t < size; t++) {
