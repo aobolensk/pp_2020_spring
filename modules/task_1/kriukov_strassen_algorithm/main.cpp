@@ -142,6 +142,16 @@ TEST(SequentialStrassen, Test_Strassen_Mult_size_3) {
   EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
 }
 
+  TEST(SequentialStrassen, Test_Strassen_Mult_size_59) {
+    unsigned int sz = 59;
+    std::vector<double> a = getRandomMatrix(sz);
+    std::vector<double> b = getRandomMatrix(sz);
+    std::vector<double> res_regular = regularMultiplication(a, b, sz);
+    std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
+
+    EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
+}
+
 #define STRASSEN_ALGORITHM_TIME_TEST_OFF
 
 #ifdef STRASSEN_ALGORITHM_TIME_TEST_ON
