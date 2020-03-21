@@ -1,7 +1,5 @@
 // Copyright 2020 Pauzin Leonid
-#include <gtest-mpi-listener.hpp>
 #include <gtest/gtest.h>
-#include <algorithm>
 #include <vector>
 #include "./pauzin_l_shell_merge.h"
 
@@ -57,15 +55,5 @@ TEST(Shell_Merge_Sort, Test_With_Negative_Vec) {
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  MPI_Init(&argc, &argv);
-
-  ::testing::AddGlobalTestEnvironment(new GTestMPIListener::MPIEnvironment);
-  ::testing::TestEventListeners& listeners =
-    ::testing::UnitTest::GetInstance()->listeners();
-
-  listeners.Release(listeners.default_result_printer());
-  listeners.Release(listeners.default_xml_generator());
-
-  listeners.Append(new GTestMPIListener::MPIMinimalistPrinter);
   return RUN_ALL_TESTS();
 }

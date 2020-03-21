@@ -1,5 +1,4 @@
 // Copyright 2020 Pauzin Leonid
-#include <mpi.h>
 #include <vector>
 #include <random>
 #include <ctime>
@@ -57,7 +56,6 @@ std::vector<int> myMerge(std::vector<int> vec1, std::vector<int> vec2, std::vect
       k++;
     }
   }
-
   return result;
 }
 std::vector <int> mySort(std::vector<int> vec1) {
@@ -85,8 +83,5 @@ std::vector <int> mySort(std::vector<int> vec1) {
   vec3 = ShellSort(vec3);
 
   result = myMerge(vec2, vec3, result);
-
   return result;
 }
-
-

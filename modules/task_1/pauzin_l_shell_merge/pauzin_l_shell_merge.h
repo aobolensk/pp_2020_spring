@@ -1,4 +1,4 @@
-// Copyright 2020 Pauzin Leonid pauzin_l_shell_merge
+// Copyright 2020 Pauzin Leonid
 #ifndef MODULES_TASK_1_PAUZIN_L_SHELL_MERGE_PAUZIN_L_SHELL_MERGE_H_
 #define MODULES_TASK_1_PAUZIN_L_SHELL_MERGE_PAUZIN_L_SHELL_MERGE_H_
 
