@@ -93,7 +93,7 @@ TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct_4x5) {
     int width = 4, height = 5;
     std::vector<int> initial(width * height);
     std::vector<int> result(width * height);
-    initial = { 53, 217, 91, 175, 51, 83, 141, 150, 60, 149, 44, 
+    initial = { 53, 217, 91, 175, 51, 83, 141, 150, 60, 149, 44,
         195, 250, 222, 144, 4, 30, 76, 147, 200 };
 
     for (int i = 0; i < width * height; i++) {
