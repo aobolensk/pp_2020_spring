@@ -16,7 +16,7 @@ TEST(Bin_image_segmentation, negative_dim_image) {
 
 TEST(Bin_image_segmentation, image_dim) {
   std::vector<int> vec = Generate_pic(3, 3);
-  ASSERT_EQ(vec.size(), 9);
+  ASSERT_EQ(vec.size(), static_cast<unsigned int>(9));
 }
 
 TEST(Bin_image_segmentation, empty_space_small) {
@@ -57,15 +57,11 @@ TEST(Bin_image_segmentation, correctness_square) {
         corr = 0;
         break;
       }
-      if (res[i] == res[i - 1]) {
-        corr = 0;
-        break;
-      }
     } else {
-      if (res[i] != res[i - 10] && res[i - 10] != 0
-        || res[i] != res[i + 10] && res[i + 10] != 0
-        || res[i] != res[i - 1] && res[i - 1] != 0
-        || res[i] != res[i + 1] && res[i + 1] != 0) {
+      if ((res[i] != res[i - 10] && res[i - 10] != 0)
+        && (res[i] != res[i + 10] && res[i + 10] != 0)
+        && (res[i] != res[i - 1] && res[i - 1] != 0)
+        && (res[i] != res[i + 1] && res[i + 1] != 0)) {
         corr = 0;
         break;
       }
@@ -75,11 +71,11 @@ TEST(Bin_image_segmentation, correctness_square) {
 }
 
 TEST(Bin_image_segmentation, correctness_rectangle) {
-  int w = 999;
-  std::vector<int> vec = Generate_pic(w, 1000);
+  int w = 9;
+  std::vector<int> vec = Generate_pic(w, 20);
   std::vector<int> res = Segmentation(vec, w);
   bool corr = 1;
-  for (size_t i = w + 1; i < 1000 * w - w - 1; i++) {
+  for (std::size_t i = static_cast<std::size_t>(w + 1); i < static_cast<std::size_t>(20 * w - w - 1); i++) {
     if (res[i] == 0) continue;
     if (i % w == 0) {
       if (res[i] != res[i - w] && res[i - w] != 0
@@ -87,15 +83,11 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
         corr = 0;
         break;
       }
-      if (res[i] == res[i - 1]) {
-        corr = 0;
-        break;
-      }
     } else {
-      if (res[i] != res[i - w] && res[i - w] != 0
-        || res[i] != res[i + w] && res[i + w] != 0
-        || res[i] != res[i - 1] && res[i - 1] != 0
-        || res[i] != res[i + 1] && res[i + 1] != 0) {
+      if ((res[i] != res[i - w] && res[i - w] != 0)
+        && (res[i] != res[i + w] && res[i + w] != 0)
+        && (res[i] != res[i - 1] && res[i - 1] != 0)
+        && (res[i] != res[i + 1] && res[i + 1] != 0)) {
         corr = 0;
         break;
       }
