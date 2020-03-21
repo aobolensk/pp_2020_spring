@@ -71,7 +71,7 @@ TEST(Sort_Shell_Seq, Test_4_Random_Merge) {
   std::vector<int> vec = getRandom(10);
   std::vector<std::vector<int>> a = division(vec, 4);
 
-  for (int i = 0; i < a.size(); i++) {
+  for (unsigned int i = 0; i < a.size(); i++) {
     a[i] = SortShell(a[i], a[i].size());
   }
 
