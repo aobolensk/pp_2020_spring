@@ -37,14 +37,15 @@ std::vector<int> SortShell(const std::vector<int>& a, int size) {
 std::vector<std::vector<int>> division(const std::vector<int>& a, unsigned int n) {
   std::vector<std::vector<int>> res;
   std::vector<int> v;
+  std::vector<int> s(a);
 
-  unsigned int k = a.size() / n;
+  unsigned int k = s.size() / n;
 
   for (unsigned int i = 0; i < n; i++) {
-    if ((n*k < a.size())&&(i == n-1)) {
-      std::copy(a.begin() + i*k, a.end(), std::back_inserter(v));
+    if ((n*k < s.size())&&(i == n-1)) {
+      v.insert(v.end(), s.begin() + i*k, s.end());
     } else {
-      std::copy(a.begin() + i*k, a.begin() + (i + 1)*k, std::back_inserter(v));
+      v.insert(v.end(), s.begin() + i*k, s.begin() + (i + 1)*k);
     }
     res.push_back(v);
     v.clear();
