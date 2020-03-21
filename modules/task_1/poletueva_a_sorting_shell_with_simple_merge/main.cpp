@@ -26,18 +26,6 @@ TEST(Sort_Shell_Seq, Test_2_Random_Shell) {
   std::vector<int> res1 = SortShell(vec1, 6);
   std::vector<int> res2 = SortShell(vec2, 6);
 
-  for (int i = 0; i < 6; i++) {
-    std::cout << res1[i] << ' ';
-  }
-
-  std::cout << std::endl;
-
-  for (int i = 0; i < 6; i++) {
-    std::cout << res2[i] << ' ';
-  }
-
-  std::cout << std::endl;
-
   std::vector<int> res_merge = Merge_of_two_vectors(res1, res2);
 
   std::vector<int> res_s(vec1);
