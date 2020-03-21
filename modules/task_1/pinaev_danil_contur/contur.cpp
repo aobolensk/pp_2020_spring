@@ -19,7 +19,7 @@ Image generateRandomImage(int rows, int cols) {
 
     std::mt19937 gen;
     gen.seed((unsigned)time(0) + ++offset);
-    std::uniform_int_distribution<uint8_t> dis(0, 255);
+    std::uniform_int_distribution<int> dis(0, 255);
 
     Image res(rows + 2, cols + 2);
 
