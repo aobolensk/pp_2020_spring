@@ -9,7 +9,7 @@
 #include <ctime>
 
 
-std::vector<int> getRandom(int N, time_t seed) {
+std::vector<int> getRandom(int N, int seed) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(seed));
 
@@ -34,13 +34,13 @@ std::vector<int> SortShell(const std::vector<int>& a, int size) {
   return m;
 }
 
-std::vector<std::vector<int>> division(const std::vector<int>& a, int n) {
+std::vector<std::vector<int>> division(const std::vector<int>& a, unsigned int n) {
   std::vector<std::vector<int>> res;
   std::vector<int> v;
 
-  int k = a.size() / n;
+  unsigned int k = a.size() / n;
 
-  for (int i = 0; i < n; i++) {
+  for (unsigned int i = 0; i < n; i++) {
     if ((n*k < a.size())&&(i == n-1)) {
       std::copy(a.begin() + i*k, a.end(), std::back_inserter(v));
     } else {
@@ -100,7 +100,7 @@ std::vector<int> Shell_with_merge(const std::vector<int>& a, int n, int size) {
 
   std::vector<std::vector<int>> vec = division(a, n);
 
-  for (int i = 0; i < vec.size(); i++) {
+  for (unsigned int i = 0; i < vec.size(); i++) {
     vec[i] = SortShell(vec[i], vec[i].size());
   }
   res = Merge(vec, n, size);
