@@ -12,6 +12,7 @@ int rotate(const Point& p, const Point& q, const Point& i) {
 }
 
 std::vector<Point> buildHull(std::vector<Point> m_set) {
+  if (m_set.size() < 3) throw -1;
   Point left_point = *std::min_element(
       m_set.begin(), m_set.end(), [](Point a, Point b)
       { return (a.y < b.y) || (a.y == b.y && a.x < b.x); } );

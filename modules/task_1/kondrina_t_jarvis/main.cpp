@@ -29,6 +29,11 @@ TEST(Jarvis_Algorithm, Set_Wrong_Test) {
     ASSERT_ANY_THROW(std::vector<Point> set = randomSet(2));
 }
 
+TEST(Jarvis_Algirithm, Hull_Wrong_Test) {
+    std::vector<Point> set = {{0, 1}, {2, 3}};
+    ASSERT_ANY_THROW(buildHull(set));
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
