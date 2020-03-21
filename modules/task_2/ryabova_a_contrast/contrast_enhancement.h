@@ -3,9 +3,9 @@
 #ifndef MODULES_TASK_1_RYABOVA_A_CONTRAST_CONTRAST_ENHANCEMENT_H_
 #define MODULES_TASK_1_RYABOVA_A_CONTRAST_CONTRAST_ENHANCEMENT_H_
 
+#include <omp.h>
 #include <cstdint>
 #include <vector>
-#include <omp.h>
 
 int F(int x, int xMax, int xMin);
 

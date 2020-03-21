@@ -54,9 +54,9 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 }
 
 #else
+#include <omp.h>
 #include <string>
 #include <vector>
-#include <omp.h>
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
