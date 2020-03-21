@@ -26,7 +26,7 @@ image<uint8_t> sobelSequence(image<uint8_t> inImage) {
         throw -1;
     }
     image<uint8_t> result(inImage._columns, inImage._rows);
-    for(size_t i = 1; i < inImage._rows - 1; ++i)
+    for (size_t i = 1; i < inImage._rows - 1; ++i)
         for (size_t j = 1; j < inImage._columns - 1; ++j) {
             int index = i * inImage._columns + j;
             int resX = 0, resY = 0;

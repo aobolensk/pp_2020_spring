@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-#include "dudchenko_a_sobel.h"
+#include "../../../modules/task_1/dudchenko_a_sobel/dudchenko_a_sobel.h"
 
 TEST(seqSobelFilter, canCreateRandomMatrix) {
     ASSERT_NO_THROW(randImage(5, 5));
@@ -32,4 +32,4 @@ TEST(seqSobelFilter, sobelChangeMatrix) {
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-};
+}
