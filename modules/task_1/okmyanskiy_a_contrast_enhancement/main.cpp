@@ -10,13 +10,6 @@ TEST(Sequential_Contrast_Enhancement, Test_Random_Matrix_Size_Zero) {
   ASSERT_ANY_THROW(getRandomMatrix(matrixWidth, matrixHeight));
 }
 
-TEST(Sequential_Contrast_Enhancement, Test_Random_Matrix_Size_Negative) {
-  const int matrixWidth = -13;
-  const int matrixHeight = 7;
-
-  ASSERT_ANY_THROW(getRandomMatrix(matrixWidth, matrixHeight));
-}
-
 TEST(Sequential_Contrast_Enhancement, Test_Random_Matrix_Size_Correctly) {
   const int matrixWidth = 10;
   const int matrixHeight = 10;
@@ -48,14 +41,6 @@ TEST(Sequential_Contrast_Enhancement, Test_Check_Stretching_Correct) {
   ASSERT_EQ(20, linearHistogramStretching(value, max, min));
 }
 
-TEST(Sequential_Contrast_Enhancement, Test_Result_Matrix_Size_Zero) {
-  const int matrixWidth = 15;
-  const int matrixHeight = 0;
-  const std::vector<int> matrix(15);
-
-  ASSERT_ANY_THROW(getResultMatrix(matrix, matrixWidth, matrixHeight));
-}
-
 TEST(Sequential_Contrast_Enhancement, Test_Result_Matrix_Size_Negative) {
   const int matrixWidth = 15;
   const int matrixHeight = -14;
@@ -80,7 +65,7 @@ TEST(Sequential_Contrast_Enhancement, Test_Result_Matrix_Size_Correctly) {
   ASSERT_NO_THROW(getResultMatrix(matrix, matrixWidth, matrixHeight));
 }
 
-TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct) {
+TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct_3x4) {
   int width = 3, height = 4;
   std::vector<int> initial(width * height);
   std::vector<int> result(width * height);
@@ -90,6 +75,31 @@ TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct) {
     result[i] = static_cast<int>(-6.74009f + 1.12335f * initial[i]);
   }
   ASSERT_EQ(result, getResultMatrix(initial, width, height));
+}
+
+TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct_4x4) {
+    int width = 4, height = 4;
+    std::vector<int> initial(width * height);
+    std::vector<int> result(width * height);
+    initial = { 166, 136, 173, 190, 203, 103, 135, 112, 11, 195, 244, 47, 244, 246, 144, 223 };
+
+    for (int i = 0; i < width * height; i++) {
+        result[i] = static_cast<int>(-11.936171f+ 1.085106f * initial[i]);
+    }
+    ASSERT_EQ(result, getResultMatrix(initial, width, height));
+}
+
+TEST(Sequential_Contrast_Enhancement, Test_Check_Result_Matrix_Correct_4x5) {
+    int width = 4, height = 5;
+    std::vector<int> initial(width * height);
+    std::vector<int> result(width * height);
+    initial = { 53, 217, 91, 175, 51, 83, 141, 150, 60, 149, 44, 
+        195, 250, 222, 144, 4, 30, 76, 147, 200 };
+
+    for (int i = 0; i < width * height; i++) {
+        result[i] = static_cast<int>(-4.146341f + 1.036585f * initial[i]);
+    }
+    ASSERT_EQ(result, getResultMatrix(initial, width, height));
 }
 
 int main(int argc, char** argv) {
