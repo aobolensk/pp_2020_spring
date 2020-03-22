@@ -125,5 +125,5 @@ int RadixSort(double* buffer, int length) {
     if (posArray) { free(posArray); posArray = NULL; }
     if (negArray) { free(negArray); negArray = NULL; }
 
-    return 0;
+    return sts;
 }
