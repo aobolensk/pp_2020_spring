@@ -9,13 +9,13 @@
 Matrix simpleMult(const Matrix& A, const Matrix& B) {
     if (A[0].size() != B.size())
         throw "Different size";
-    size_t n = A.size();
-    size_t m = B[0].size();
+    int n = A.size();
+    int m = B[0].size();
     Matrix C(n, std::vector<double>(n, 0));
-    size_t size = B.size;
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < m; j++) {
-            for (size_t t = 0; t < size; t++) {
+    int size = B.size();
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            for (int t = 0; t < size; t++) {
                 C[i][j] += A[i][t]*B[t][j];
             }
         }
@@ -26,7 +26,7 @@ Matrix simpleMult(const Matrix& A, const Matrix& B) {
 Matrix foxMult(const Matrix& A, const Matrix& B, const int &blockSize) {
     if (A[0].size() != B.size())
         throw "Different size";
-    int n = A[0].size();
+    int n = A.size();
     if (blockSize > n)
       throw "block size is larger than matrix size";
     Matrix C(n, std::vector<double>(n, 0));
