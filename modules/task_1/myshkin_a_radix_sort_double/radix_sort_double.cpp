@@ -1,7 +1,6 @@
 // Copyright 2020 Myshkin Andrey
 #include "../../../modules/task_1/myshkin_a_radix_sort_double/radix_sort_double.h"
 #include <stdio.h>
-#include <malloc.h>
 #include <cstring>
 #include <utility>
 
