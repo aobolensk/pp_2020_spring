@@ -13,8 +13,7 @@ TEST(Senquential, Test_Numder_First) {
 
     if (length > 0) {
         buffer = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    }
-    else {
+    } else {
         sts = -1;
     }
 
@@ -34,8 +33,7 @@ TEST(Senquential, Test_Numder_Second) {
 
     if (length > 0) {
         buffer = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    }
-    else {
+    } else {
         sts = -1;
     }
 
@@ -55,8 +53,7 @@ TEST(Senquential, Test_Numder_Third) {
 
     if (length > 0) {
         buffer = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    }
-    else {
+    } else {
         sts = -1;
     }
 
@@ -76,8 +73,7 @@ TEST(Senquential, Test_Numder_Fourth) {
 
     if (length > 0) {
         buffer = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    }
-    else {
+    } else {
         sts = -1;
     }
 
@@ -97,8 +93,7 @@ TEST(Senquential, Test_Numder_Five) {
 
     if (length > 0) {
         buffer = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    }
-    else {
+    } else {
         sts = -1;
     }
 
