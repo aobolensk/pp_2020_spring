@@ -7,10 +7,10 @@
 
 int getRandomArray(double* buffer, int length, double rangebot, double rangetop) {
     if ((length <= 0) || (buffer == nullptr)) return -1;
+    if (rangebot >= rangetop) return -1;
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
     std::uniform_real_distribution<double> buf(rangebot, rangetop);
-    // std::uniform_real_distribution<double> buf(-1000.0, 1000.0);
     for (int i = 0; i < length; i++) {
         buffer[i] = buf(gen);
     }
@@ -34,7 +34,7 @@ int MergeArrays(double* buffer1, int length1, double *buffer2, int length2, doub
 }
 
 int SortingCheck(double *buffer, int length) {
-    if (length < 0) return -1;
+    if (length < 1) return -1;
     if (buffer == nullptr) return -1;
 
     for (int i = 0; i < length - 1; i++) {
@@ -50,7 +50,7 @@ int SortingCheck(double *buffer, int length) {
 void CountingSort(double *input, double *output, int valbyte, int length) {
     unsigned char *buffer = (unsigned char *)input;
     // int amount = pow(2, sizeof(double));
-    // int *counter = (int*)malloc(sizeof(int) * amount); // type = 256
+    // int *counter = (int*)malloc(sizeof(int) * amount); // amount = 256
     int counter[256];
     int value;
     memset(counter, 0, sizeof(int) * 256);
@@ -92,24 +92,24 @@ int RadixSortUnsigned(double *buffer, int length) {
         CountingSort(outbuf, buffer, 2 * i + 1, length);
     }
 
-    if (outbuf) { free(outbuf); outbuf = NULL; }
+    if (outbuf) { free(outbuf); outbuf = nullptr; }
 
     return 0;
 }
 
 
 int RadixSort(double* buffer, int length) {
-    double* posArray = NULL;
-    double* negArray = NULL;
+    if (length < 1) return -1;
+    if (buffer == nullptr) return -1;
+    double* posArray = nullptr;
+    double* negArray = nullptr;
     int poslen = 0, neglen = 0;
     int sts = 0;
 
     posArray = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    if (posArray == NULL) { return -1; }
-    // if (posArray == NULL) { printf("Error: Unable to allocate memory for array!\n"); return -1; }
+    if (posArray == nullptr) { return -1; }
     negArray = reinterpret_cast<double*>(malloc(sizeof(double) * length));
-    if (negArray == NULL) { return -1; }
-    // if (negArray == NULL) { printf("Error: Unable to allocate memory for array!\n"); return -1; }
+    if (negArray == nullptr) { return -1; }
 
     for (int i = 0; i < length; i++) {
         if (buffer[i] >= 0) { posArray[poslen] = buffer[i]; poslen++;
@@ -121,8 +121,8 @@ int RadixSort(double* buffer, int length) {
 
     sts = MergeArrays(negArray, neglen, posArray, poslen, buffer);
 
-    if (posArray) { free(posArray); posArray = NULL; }
-    if (negArray) { free(negArray); negArray = NULL; }
+    if (posArray) { free(posArray); posArray = nullptr; }
+    if (negArray) { free(negArray); negArray = nullptr; }
 
     return sts;
 }
