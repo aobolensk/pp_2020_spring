@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <random>
+#include <algorithm>
 #include "../../../modules/task_1/koltyushkina_ya_radix_sort_for_double/radix_sort.h"
 
 TEST(Radix_Sort_for_Double, Random_Mas_with_Negayive_Size) {

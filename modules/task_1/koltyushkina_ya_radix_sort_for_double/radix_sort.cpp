@@ -9,8 +9,8 @@ double* RandMas(int len, double low, double high) {
   if (len <= 0) {
     throw std::exception();
   }
-  std::random_device rand;
-  std::mt19937 g(rand());
+  std::random_device ran;
+  std::mt19937 g(ran());
   if (low >= high) {
     throw std::exception();
   }
@@ -32,7 +32,7 @@ void RadixSortPart(double *inmas, double **outmas, int len, int byteN) {
     schet[bymas[8 * i + byteN]]++;
   }
 
-  int s = 0; 
+  int s = 0;
   for (s = 0; s < 256; s++) {
     if (schet[s] != 0)
       break;
@@ -52,8 +52,7 @@ void RadixSortPart(double *inmas, double **outmas, int len, int byteN) {
   for (int i = 0; i < len; i++) {
     (*outmas)[schet[bymas[8 * i + byteN]]] = inmas[i];
     schet[bymas[8 * i + byteN]]++;
-  }
-  
+  } 
 }
 void RadixSortAll(double**inmas, int len) {
   double* outmas = new double[len];
