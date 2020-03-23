@@ -52,7 +52,7 @@ void RadixSortPart(double *inmas, double **outmas, int len, int byteN) {
   for (int i = 0; i < len; i++) {
     (*outmas)[schet[bymas[8 * i + byteN]]] = inmas[i];
     schet[bymas[8 * i + byteN]]++;
-  } 
+  }
 }
 void RadixSortAll(double**inmas, int len) {
   double* outmas = new double[len];
