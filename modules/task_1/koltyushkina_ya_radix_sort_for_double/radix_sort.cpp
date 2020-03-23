@@ -26,7 +26,10 @@ void RadixSortPart(double *inmas, double **outmas, int len, int byteN) {
   unsigned char *bymas = (unsigned char*)inmas;
   int schet[256];
   int smesh;
-  memset(schet, 0, sizeof(int) * 256);
+  // memset(schet, 0, sizeof(int) * 256);
+  for (int i = 0; i < 256; i++) {
+    schet[i] = 0;
+  }
 
   for (int i = 0; i < len; i++) {
     schet[bymas[8 * i + byteN]]++;
