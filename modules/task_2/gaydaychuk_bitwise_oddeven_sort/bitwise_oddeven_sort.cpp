@@ -308,7 +308,7 @@ void printThreadNum(int maxThreadNumber){
 void printThreadArea(int arraySize, int maxThreadCount){
 
     int effectiveThreadCount = 0;
-    if(((int) (arraySize / maxThreadCount)) < MINIMAL_SINGLE_ARRAY_LENGTH) {
+    if(arraySize < MINIMAL_SINGLE_ARRAY_LENGTH * maxThreadCount) {
         if (arraySize % MINIMAL_SINGLE_ARRAY_LENGTH == 0) {
             effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH);
         }
@@ -316,7 +316,11 @@ void printThreadArea(int arraySize, int maxThreadCount){
             effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH) + 1;
         }
     } else {
-        effectiveThreadCount = maxThreadCount;
+        if (arraySize < (MINIMAL_SINGLE_ARRAY_LENGTH + 1) * (maxThreadCount - 1) + 1){
+            effectiveThreadCount = maxThreadCount - 1;
+        } else {
+            effectiveThreadCount = maxThreadCount;
+        }
     }
     omp_set_num_threads(effectiveThreadCount);
 
@@ -380,5 +384,78 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount){
     // define areas
     // sort
     // check every one
-    return true;
+
+    bool allSubarraysSortedCorrectly = true;
+    int effectiveThreadCount = 0;
+    if(arraySize < MINIMAL_SINGLE_ARRAY_LENGTH * maxThreadCount) {
+        if (arraySize % MINIMAL_SINGLE_ARRAY_LENGTH == 0) {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH);
+        }
+        else {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH) + 1;
+        }
+    } else {
+        if (arraySize < (MINIMAL_SINGLE_ARRAY_LENGTH + 1) * (maxThreadCount - 1) + 1){
+            effectiveThreadCount = maxThreadCount - 1;
+        } else {
+            effectiveThreadCount = maxThreadCount;
+        }
+    }
+    omp_set_num_threads(effectiveThreadCount);
+
+    int threadNumber = 0, beginIndex = 0, endIndex = 0;  // indexes are supposed to be inclusive
+    #pragma omp parallel private(threadNumber, beginIndex, endIndex)
+    {
+        #pragma omp single
+        {
+            std::cout<<"\n SORTING OF EACH SUBARRAY \n";
+        }
+        threadNumber = omp_get_thread_num();
+
+        if(threadNumber > effectiveThreadCount){
+            beginIndex = endIndex = -1; // do nothing
+        } else {
+            if(arraySize % effectiveThreadCount == 0) {
+                int localSize = (int) (arraySize / effectiveThreadCount);
+                beginIndex = threadNumber * localSize;
+                endIndex = beginIndex + localSize - 1;
+            }else{
+                if(effectiveThreadCount == 1){
+                    beginIndex = 0;
+                    endIndex = arraySize - 1;
+                }
+                else{
+                    int localSize = (int) (arraySize / effectiveThreadCount) + 1;
+                    beginIndex = threadNumber * localSize;
+                    if (threadNumber == effectiveThreadCount - 1) {
+                        endIndex = arraySize - 1;
+                    }else{
+                        endIndex = beginIndex + localSize - 1;
+                    }
+                }
+            }
+        }
+
+        bitwiseSort(array + beginIndex, endIndex - beginIndex + 1);
+        bool sortedLocally = checkAscending(array + beginIndex, endIndex - beginIndex + 1);
+        #pragma omp critical
+        {
+            allSubarraysSortedCorrectly &= sortedLocally;
+            std::cout<<"\n ------------- \n"
+            << "ThreadNumber: " << std::to_string(threadNumber) << "\t\t"
+            // << "EffectiveThreadCount: " << std::to_string(effectiveThreadCount) << "\t\t"
+            << "begin: " << std::to_string(beginIndex) << "\t"
+            << "end: " << std::to_string(endIndex)<<"\nARRAY {";
+            for(int i = beginIndex; i <= endIndex; i++){
+                std::cout<<array[i] << "\t";
+            }
+            std::cout<<(sortedLocally ? "}\n SORTED CORRECTLY \n" : "}\n SORTED NOT CORRECTLY \n");
+        }
+        #pragma omp barrier
+        #pragma omp single
+        {
+            std::cout<<(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n" : "\n ARRAYS SORTED NOT CORRECTLY \n");
+        }
+    }
+    return allSubarraysSortedCorrectly;
 }

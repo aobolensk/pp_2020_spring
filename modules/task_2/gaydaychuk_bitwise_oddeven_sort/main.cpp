@@ -50,61 +50,82 @@ TEST(Sequential, Test_RawDataBitwiseSort) {
     ASSERT_EQ(true, checkAscending(a, 5));
 }
 
-TEST(Sequential, Test_PrintThreadNumber) {
-    printThreadNum(30);
-    ASSERT_EQ(true, true);
+// TEST(Sequential, Test_PrintThreadNumber) {
+//     printThreadNum(30);
+//     ASSERT_EQ(true, true);
+// }
+
+// TEST(Sequential, Test_PrintThreadArea1) {
+//     printThreadArea(30, 4);
+//     ASSERT_EQ(true, true);
+// }
+// TEST(Sequential, Test_PrintThreadArea2) {
+//     printThreadArea(30, 5);
+//     ASSERT_EQ(true, true);
+// }
+// TEST(Sequential, Test_PrintThreadArea3) {
+//     printThreadArea(11, 4);
+//     ASSERT_EQ(true, true);
+// }
+// TEST(Sequential, Test_PrintThreadArea4) {
+//     printThreadArea(5, 4);
+//     ASSERT_EQ(true, true);
+// }
+// TEST(Sequential, Test_PrintThreadArea5) {
+//     printThreadArea(9, 4);
+//     ASSERT_EQ(true, true);
+// }
+
+TEST(Sequential, Test_LocalSorting1) {
+    int a[] = {99,88,77,6,5,4,333,222,111};
+git     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 4));
 }
 
-TEST(Sequential, Test_PrintThreadArea1) {
-    printThreadArea(30, 4);
-    ASSERT_EQ(true, true);
-}
-TEST(Sequential, Test_PrintThreadArea2) {
-    printThreadArea(30, 5);
-    ASSERT_EQ(true, true);
-}
-TEST(Sequential, Test_PrintThreadArea3) {
-    printThreadArea(11, 4);
-    ASSERT_EQ(true, true);
-}
-TEST(Sequential, Test_PrintThreadArea4) {
-    printThreadArea(5, 4);
-    ASSERT_EQ(true, true);
+
+TEST(Sequential, Test_LocalSorting2) {
+    int a[] = {9,8,7,6,5,4,3,2,1};
+    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 2));
 }
 
-TEST(Sequential, Test_MergingTest1) {
-    int a[] = {1,4,5,7,8,9,2,3,6};
-    int specimen[] = {1, 2, 3, 7, 8, 9, 4, 5, 6};
-    mergeAndSplit(a, 3, a + 6, 3);
-    bool ok = true;
-    for(int i = 0; i < 9; i++){
-        if(a[i] != specimen[i]){
-            ok = false;
-            break;
-        }
-    }
-    // for(int i = 0; i < 9; i++){
-    //     std::cout<<a[i]<<"\t";
-    // }
-    ASSERT_EQ(true, ok);
+
+TEST(Sequential, Test_LocalSorting3) {
+    int a[] = {9,8,7,6,5,4,3,2,1};
+    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
 }
 
-TEST(Sequential, Test_MergingTest2) {
-    int a[] = {10,4,5,7,8,9,2,3,6};
-    int specimen[] = {10, 2, 3, 4, 5, 9, 6, 7, 8};
-    mergeAndSplit(a + 1, 4, a + 6, 3);
-    bool ok = true;
-    for(int i = 0; i < 9; i++){
-        if(a[i] != specimen[i]){
-            ok = false;
-            break;
-        }
-    }
-    // for(int i = 0; i < 9; i++){
-    //     std::cout<<a[i]<<"\t";
-    // }
-    ASSERT_EQ(true, ok);
-}
+// TEST(Sequential, Test_MergingTest1) {
+//     int a[] = {1,4,5,7,8,9,2,3,6};
+//     int specimen[] = {1, 2, 3, 7, 8, 9, 4, 5, 6};
+//     mergeAndSplit(a, 3, a + 6, 3);
+//     bool ok = true;
+//     for(int i = 0; i < 9; i++){
+//         if(a[i] != specimen[i]){
+//             ok = false;
+//             break;
+//         }
+//     }
+//     // for(int i = 0; i < 9; i++){
+//     //     std::cout<<a[i]<<"\t";
+//     // }
+//     ASSERT_EQ(true, ok);
+// }
+
+// TEST(Sequential, Test_MergingTest2) {
+//     int a[] = {10,4,5,7,8,9,2,3,6};
+//     int specimen[] = {10, 2, 3, 4, 5, 9, 6, 7, 8};
+//     mergeAndSplit(a + 1, 4, a + 6, 3);
+//     bool ok = true;
+//     for(int i = 0; i < 9; i++){
+//         if(a[i] != specimen[i]){
+//             ok = false;
+//             break;
+//         }
+//     }
+//     // for(int i = 0; i < 9; i++){
+//     //     std::cout<<a[i]<<"\t";
+//     // }
+//     ASSERT_EQ(true, ok);
+// }
 
 /*
 TEST(Sequential, Comparator) {
