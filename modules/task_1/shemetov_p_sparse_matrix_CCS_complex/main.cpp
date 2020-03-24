@@ -76,7 +76,7 @@ TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE_2) {
     SparseMatrixCCS expect(3, 2, valueExpect, row_indexExpect, col_ptrExpect);
     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrix(A, B);
     result = result.transpose();
-    EXPECT_TRUE(expect == result);
+    EXPECT_TRUE(expect == rsult);
 }
 
 
