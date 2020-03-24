@@ -17,7 +17,7 @@ void NetworkBuilder::setNetworkSize(int size){
             twoDegree *= 2;
         }
         indexArray.clear();
-        for(int i = 1; i <= twoDegree; i++){
+        for(int i = 0; i < twoDegree; i++){
             indexArray.push_back(i);
         }
         auxiliaryNodeSetArray.clear();
@@ -164,6 +164,31 @@ void NetworkBuilder::addComparatorAnother(int i, int j){
         };
     }
 }
+
+std::list<std::vector<std::pair <int, int> > > NetworkBuilder::getParallelBlockArray(){
+    computeNetwork();
+    // remove unused pairs
+    std::list<std::vector<std::pair <int, int> > > shortenedNetwork;
+    for(std::list<std::vector<std::pair <int, int> > >::iterator itBlocks = parallelBlockArray.begin();
+    itBlocks != parallelBlockArray.end();
+    ++itBlocks){
+        // auto predicate = [=](const std::pair <int, int> &p) { return p.first >= size || p.second >= size; };
+        // auto v = *(itBlocks);
+        // v.erase(std::remove_if(v.begin(), v.end(), predicate), v.end());
+        std::vector<std::pair <int, int> > currentBlock;
+        for(std::vector<std::pair <int, int> >::iterator itElements = itBlocks->begin();
+        itElements != itBlocks->end();
+        ++itElements){
+            if(itElements->first < size && itElements->second < size){
+                currentBlock.push_back(std::pair <int, int>(itElements->first, itElements->second));
+                std::cout<<"\n\t\t"<<"size = "<<size<<"first = " << itElements->first << ", second = " << itElements->second << "\n";
+            }
+        }
+        shortenedNetwork.push_back(currentBlock);
+    }
+    return shortenedNetwork;
+}
+
 
 std::string NetworkBuilder::printComp(){
     std::string result;

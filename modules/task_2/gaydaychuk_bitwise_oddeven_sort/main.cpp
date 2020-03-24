@@ -76,22 +76,22 @@ TEST(Sequential, Test_RawDataBitwiseSort) {
 //     ASSERT_EQ(true, true);
 // }
 
-TEST(Sequential, Test_LocalSorting1) {
-    int a[] = {99,88,77,6,5,4,333,222,111};
-git     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 4));
-}
+// TEST(Sequential, Test_LocalSorting1) {
+//     int a[] = {99,88,77,6,5,4,333,222,111};
+// git     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 4));
+// }
 
 
-TEST(Sequential, Test_LocalSorting2) {
-    int a[] = {9,8,7,6,5,4,3,2,1};
-    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 2));
-}
+// TEST(Sequential, Test_LocalSorting2) {
+//     int a[] = {9,8,7,6,5,4,3,2,1};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 2));
+// }
 
 
-TEST(Sequential, Test_LocalSorting3) {
-    int a[] = {9,8,7,6,5,4,3,2,1};
-    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
-}
+// TEST(Sequential, Test_LocalSorting3) {
+//     int a[] = {9,8,7,6,5,4,3,2,1};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
+// }
 
 // TEST(Sequential, Test_MergingTest1) {
 //     int a[] = {1,4,5,7,8,9,2,3,6};
@@ -127,18 +127,37 @@ TEST(Sequential, Test_LocalSorting3) {
 //     ASSERT_EQ(true, ok);
 // }
 
-/*
-TEST(Sequential, Comparator) {
-    NetworkBuilder nb;
-    nb.setNetworkSize(32);
-    nb.computeNetwork();
-    std::cout<<"My comparator\n\n\n\n" << 
-    nb.printParallelComp() << nb.printAux() <<"\n^^^^^^^^^^^^^^^^^^\n"
-    <<nb.printComp();
-    std::cout<<"**************** state   ***************\n" << nb.getState();
-    ASSERT_EQ(2*2, 4);
-}
-*/
+
+// TEST(Sequential, Comparator) {
+//     NetworkBuilder nb;
+//     nb.setNetworkSize(8);
+//     nb.computeNetwork();
+//     std::cout<<"My comparator\n\n\n\n" << 
+//     nb.printParallelComp();  // <<
+//     //  nb.printAux() <<"\n^^^^^^^^^^^^^^^^^^\n"
+//     // <<nb.printComp();
+//     std::cout<<"**************** state   ***************\n" << nb.getState();
+//     ASSERT_EQ(2*2, 4);
+// }
+
+// TEST(Sequential, Comparator) {
+//     NetworkBuilder nb;
+//     nb.setNetworkSize(6);
+//     auto parallelArray =  nb.getParallelBlockArray();
+//     std::cout<<"My comparator\n\n\n\n";
+//     for(auto itBlocks = parallelArray.begin();
+//     itBlocks != parallelArray.end();
+//     ++itBlocks){
+//         for(std::vector<std::pair <int, int> >::iterator itElements = itBlocks->begin();
+//         itElements != itBlocks->end();
+//         ++itElements){
+//             std::cout<<"Pair: " << itElements->first << ", " << itElements->second<<"\n";
+//         }
+//         std::cout<<"------------\n";
+//     } 
+//     ASSERT_EQ(2*2, 4);
+// }
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

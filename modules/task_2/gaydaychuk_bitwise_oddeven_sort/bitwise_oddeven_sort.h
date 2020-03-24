@@ -23,6 +23,7 @@ class NetworkBuilder{
 public:
     void setNetworkSize(int size);
     void computeNetwork();
+    std::list<std::vector<std::pair <int, int> > > getParallelBlockArray();
     std::string printComp();
     std::string NetworkBuilder::printParallelComp();
     std::string NetworkBuilder::printAux();
