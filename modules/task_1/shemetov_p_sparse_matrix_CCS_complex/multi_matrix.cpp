@@ -7,13 +7,13 @@
 #include <vector>
 #include "../../../modules/task_1/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
 
-SparseMatrixCCS::SparseMatrixCCS() {
-    n = 0;
-    m = 0;
+SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n) {
+    n = _n;
+    m = _m;
 }
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, size_t nonezero) {
-    if (m < 0 || n < 0 || nonezero < 0) {
+    if (_m <= 0 || _n <= 0 || nonezero <= 0) {
         throw "Error: Input not less then zero";
     }
     n = _n;
@@ -23,7 +23,7 @@ SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, size_t nonezero) {
 }
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, double sparseness) {
-    if (m < 0 || n < 0) {
+    if (_m <= 0 || _n <= 0) {
         throw "Error: Input size matrix not less then zero";
     }
     if (std::fabs(sparseness) < 0.5) {
@@ -137,10 +137,8 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
     if (A.n != B.m) {
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
-    SparseMatrixCCS tempMatrix;
+    SparseMatrixCCS tempMatrix(A.m, B.n);
     tempMatrix.col_offsets.push_back(0);
-    tempMatrix.m = A.m;
-    tempMatrix.n = B.n;
     std::vector <std::complex<double>> tempDataVec(A.n, {0, 0});
     for (size_t i = 0; i < A.m; i++) {
         for (int j = A.col_offsets[i]; j < A.col_offsets[i + 1]; j++) {
