@@ -2,7 +2,7 @@
 #include <vector>
 #include <complex>
 #include <cmath>
-#include "../../../modules/task_1/vdovin_e_crs_mat_mult/crs_mat_mult.h"
+#include "../../../modules/task_2/vdovin_e_crs_mat_mult/crs_mat_mult.h"
 
 CRSMatrix::CRSMatrix(const int n_, const int nz_,
     const std::vector<std::complex<double>> &value_,
