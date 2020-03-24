@@ -15,7 +15,7 @@ class SparseMatrixCCS {
     std::vector<int> col_offsets;
     size_t n, m;
  public :
-    SparseMatrixCCS();
+    SparseMatrixCCS(size_t _m, size_t _n);
     SparseMatrixCCS(size_t m, size_t n, size_t nonezero);
 
     SparseMatrixCCS(size_t m, size_t n, double sparseness);
