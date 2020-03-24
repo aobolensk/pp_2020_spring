@@ -1,10 +1,14 @@
 // Copyright 2020 Gaydaychuk Yury
+#include <omp.h>
 #include <vector>
 #include <list>
 #include <string>
 #include <ctime>
+#include <iostream>
 #include <algorithm>
 #include "../../../modules/task_2/gaydaychuk_bitwise_oddeven_sort/bitwise_oddeven_sort.h"
+
+#define MINIMAL_SINGLE_ARRAY_LENGTH 2
 
 void NetworkBuilder::setNetworkSize(int size){
         this->size = size;
@@ -27,44 +31,29 @@ void NetworkBuilder::pseudoSort_2(int lo, int n)
 {
     if (n>1)
     {
-    // comparatorArray.push_back(std::pair<int, int>(-1, -1));
         int m=n/2;
         pseudoSort_2(lo, m);
         pseudoSort_2(lo+m, m);
-            // comparatorArray.push_back(std::pair<int, int>(-4, -4));
-
-        bMerge_2(lo, n, 1, 1);
+        bMerge_2(lo, n, 1);
     }
 }
 
-void NetworkBuilder::bMerge_2(int lo, int n, int r, int level_of_merge)
+void NetworkBuilder::bMerge_2(int lo, int n, int r)
 {
-    // comparatorArray.push_back(std::pair<int, int>(-2, -r));
-
-    // comparatorArray.push_back(std::pair<int, int>(-222, -level_of_merge));
     // lo is the starting position and
     // n is the length of the piece to be merged,
     // r is the distance of the elements to be compared
     int m=r*2;
     if (m<n)
     {
-            // comparatorArray.push_back(std::pair<int, int>(-2, -r));
-
-        bMerge_2(lo, n, m, level_of_merge + 1);      // even subsequence
-        bMerge_2(lo+r, n, m, level_of_merge + 1);    // odd subsequence
+        bMerge_2(lo, n, m);      // even subsequence
+        bMerge_2(lo+r, n, m);    // odd subsequence
         for (int i=lo+r; i+r<lo+n; i+=m){
-            // comparatorArray.push_back(std::pair<int, int>(-4, -r));
-            // comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
-
             comparatorArray.push_back(std::pair<int, int>(indexArray[i], indexArray[i + r]));
             addComparatorAnother(indexArray[i], indexArray[i + r]);
         }
     }
     else{
-        // comparatorArray.push_back(std::pair<int, int>(-3, -r));
-        // comparatorArray.push_back(std::pair<int, int>(0, -level_of_merge));
-
-
         addComparatorAnother(indexArray[lo], indexArray[lo + r]);
         comparatorArray.push_back(std::pair<int, int>(indexArray[lo], indexArray[lo + r]));
     }
@@ -228,12 +217,26 @@ bool checkAscending(std::vector<int> vec) {
     return std::is_sorted(std::begin(vec), std::end(vec));
 }
 
+bool checkAscending(int *p, int length){
+    return std::is_sorted(p, p + length);
+}
+
 int getMax(std::vector<int> *vec) {
     int n = vec->size();
     int max = vec->at(0);
     for (int i = 1; i < n; i++) {
         if (vec->at(i) > max) {
             max = vec->at(i);
+        }
+    }
+    return max;
+}
+
+int getMax(int *p, int length){
+    int max = *p;
+    for (int i = 1; i < length; i++) {
+        if (*(p + i) > max) {
+            max = *(p + i);
         }
     }
     return max;
@@ -258,10 +261,124 @@ void sortByDigit(std::vector<int> *vec, int digit) {
     }
 }
 
+void sortByDigit(int *p, int length, int digit) {
+    std::vector<int> res(length);
+    int i, count[10] = {0};
+    for (i = 0; i < length; i++) {
+        count[((*(p + i)) / digit) % 10]++;
+    }
+    for (i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+    for (i = length - 1; i >= 0; i--) {
+        res[count[((*(p + i)) / digit) % 10] - 1] = *(p + i);
+        count[((*(p + i)) / digit) % 10]--;
+    }
+    for (i = 0; i < length; i++) {
+        *(p + i) = res[i];
+    }
+}
+
 void bitwiseSort(std::vector<int> *vec) {
     int max = getMax(vec);
     for (int digit = 1; max / digit > 0; digit *= 10)
         sortByDigit(vec, digit);
 }
 
+void bitwiseSort(int *p, int length) {
+    int max = getMax(p, length);
+    for (int digit = 1; max / digit > 0; digit *= 10)
+        sortByDigit(p, length, digit);
+}
 
+void printThreadNum(int maxThreadNumber){
+    omp_set_num_threads(maxThreadNumber);
+    int threadNumber = 0;
+    std::string result = "";
+#pragma omp parallel private(threadNumber)
+    {
+        threadNumber = omp_get_thread_num();
+#pragma omp critical
+        {
+        std::cout<<"\n ------------- " << std::to_string(threadNumber)<<"\n";
+        }
+    }
+}
+
+void printThreadArea(int arraySize, int maxThreadCount){
+
+    int effectiveThreadCount = 0;
+    if(((int) (arraySize / maxThreadCount)) < MINIMAL_SINGLE_ARRAY_LENGTH) {
+        if (arraySize % MINIMAL_SINGLE_ARRAY_LENGTH == 0) {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH);
+        }
+        else {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH) + 1;
+        }
+    } else {
+        effectiveThreadCount = maxThreadCount;
+    }
+    omp_set_num_threads(effectiveThreadCount);
+
+    int threadNumber = 0, beginIndex = 0, endIndex = 0;  // indexes are supposed to be inclusive
+    #pragma omp parallel private(threadNumber, beginIndex, endIndex)
+    {
+        #pragma omp single
+        {
+            std::cout<<"\n  PRINTING THREAD AREA \n";
+        }
+        threadNumber = omp_get_thread_num();
+
+        if(threadNumber > effectiveThreadCount){
+            beginIndex = endIndex = -1; // do nothing
+        } else {
+            if(arraySize % effectiveThreadCount == 0) {
+                int localSize = (int) (arraySize / effectiveThreadCount);
+                beginIndex = threadNumber * localSize;
+                endIndex = beginIndex + localSize - 1;
+            }else{
+                if(effectiveThreadCount == 1){
+                    beginIndex = 0;
+                    endIndex = arraySize - 1;
+                }
+                else{
+                    int localSize = (int) (arraySize / effectiveThreadCount) + 1;
+                    beginIndex = threadNumber * localSize;
+                    if (threadNumber == effectiveThreadCount - 1) {
+                        endIndex = arraySize - 1;
+                    }else{
+                        endIndex = beginIndex + localSize - 1;
+                    }
+                }
+            }
+        }
+        #pragma omp critical
+        {
+            std::cout<<"\n ------------- \n"
+            << "ThreadNumber: " << std::to_string(threadNumber) << "\t\t"
+            << "EffectiveThreadCount: " << std::to_string(effectiveThreadCount) << "\t\t"
+            << "begin: " << std::to_string(beginIndex) << "\t"
+            << "end: " << std::to_string(endIndex)<<"\n";
+        }
+    }
+}
+
+void mergeAndSplit(int *arr1, int size1, int *arr2, int size2) {
+  for (int i = size2 - 1; i >= 0; i--) {
+    int j, last = arr1[size1 - 1];
+    for (j = size1 - 2; j >= 0 && arr1[j] > arr2[i]; j--)
+      arr1[j + 1] = arr1[j];
+    if (j != size1 - 2 || last > arr2[i]) {
+      arr1[j + 1] = arr2[i];
+      arr2[i] = last;
+    }
+  }
+}
+
+bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount){
+    // definr effective threadCount
+    // define areas
+    // sort
+    // check every one
+    return true;
+}
