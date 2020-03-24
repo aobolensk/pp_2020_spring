@@ -5,6 +5,7 @@
 #include <mutex>
 #include <queue>
 #include <random>
+#include <limits.h>
 #include <stdexcept>
 #include <thread>
 #include <utility>
@@ -81,7 +82,6 @@ std::vector<int> STD_Dijkstra_Alg(const Graph& graph, int sourceVertex) {
             for (int v = numth * dose; v < (numth + 1) * dose + r; ++v)
               if (dist[v] > cur_dist + graph[cur_vertex * count_vertex + v]) {
                 dist[v] = cur_dist + graph[cur_vertex * count_vertex + v];
-                std::unique_lock<std::mutex> locker(mtx, std::try_to_lock_t());
                 std::lock_guard<std::mutex> locker(mtx);
                 queue.push(std::make_pair((-1) * dist[v], v));
               }
