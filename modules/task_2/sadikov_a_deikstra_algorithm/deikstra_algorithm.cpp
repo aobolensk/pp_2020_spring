@@ -1,11 +1,11 @@
 // Copyright 2020 Sadikov Artem
+#include <omp.h>
 #include <vector>
 #include <queue>
 #include <limits>
 #include <cmath>
 #include <algorithm>
 #include <utility>
-#include <omp.h>
 #include <iostream>
 #include "../../../modules/task_2/sadikov_a_deikstra_algorithm/deikstra_algorithm.h"
 
@@ -50,8 +50,7 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
 
             #pragma omp critical
             {
-                if (local_min_len < min_len)
-                {
+                if (local_min_len < min_len) {
                     min_len = local_min_len;
                     min_point = local_min_point;
                 }
@@ -70,7 +69,6 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
             }
             visited[min_point] = true;
         }
-
     } while (min_point < max_weight);
 
     way.push_back(end + 1);
