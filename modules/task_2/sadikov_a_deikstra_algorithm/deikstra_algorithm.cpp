@@ -37,7 +37,7 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
 
         #pragma omp parallel
         {
-            int local_min_point;
+            int local_min_point = max_weight;
             int local_min_len = max_weight;
 
             #pragma omp for
