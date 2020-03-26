@@ -139,12 +139,10 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
       while ((iter1 < row_index[i]) && (iter2 < mat.row_index[j])) {
         if (col_index[iter1] == mat.col_index[iter2]) {
           sum += values[iter1++] * mat.values[iter2++];
-        }
-        else {
+        } else {
           if (col_index[iter1] < mat.col_index[iter2]) {
             iter1++;
-          }
-          else {
+          } else {
             iter2++;
           }
         }
