@@ -92,15 +92,15 @@ SparseComplexMatrix SparseComplexMatrix::transpose() {
   SparseComplexMatrix result(cols_num, rows_num);
   std::vector<std::vector<int>> idx(cols_num);
   std::vector<std::vector<std::complex<double>>> vals(cols_num);
-  for (int i = 1; i < row_index.size(); ++i)
-    for (int j = row_index[i - 1]; j < row_index[i]; ++j) {
+  for (unsigned i = 1; i < row_index.size(); ++i)
+    for (unsigned j = row_index[i - 1]; j < row_index[i]; ++j) {
       idx[col_index[j]].push_back(i - 1);
       vals[col_index[j]].push_back(values[j]);
     }
   int size = 0;
   result.row_index.push_back(0);
-  for (int i = 0; i < cols_num; ++i) {
-    for (int j = 0; j < idx[i].size(); ++j) {
+  for (unsigned i = 0; i < cols_num; ++i) {
+    for (unsigned j = 0; j < idx[i].size(); ++j) {
       result.values.push_back(vals[i][j]);
       result.col_index.push_back(idx[i][j]);
     }
@@ -115,7 +115,7 @@ bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
     values != mat.values || col_index != col_index || row_index != mat.row_index) {
     return false;
   } else {
-    for (int i = 0; i < values.size(); ++i) {
+    for (unsigned i = 0; i < values.size(); ++i) {
       if (values[i].real() != mat.values[i].real() || values[i].imag() != mat.values[i].imag())
         return false;
     }
@@ -129,10 +129,10 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
   if (cols_num != mat.cols_num)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
   result.row_index.push_back(0);
-  for (int i = 1; i < row_index.size(); ++i) {
+  for (unsigned i = 1; i < row_index.size(); ++i) {
     std::vector<std::complex<double>> vec;
     std::vector<int> cols;
-    for (int j = 1; j < mat.row_index.size(); ++j) {
+    for (unsigned j = 1; j < mat.row_index.size(); ++j) {
       std::complex<double> sum = 0;
       int iter1 = row_index[i - 1];
       int iter2 = mat.row_index[j - 1];
@@ -153,9 +153,9 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
         not_zero_vals++;
       }
     }
-    for (int i = 0; i < vec.size(); ++i)
+    for (unsigned i = 0; i < vec.size(); ++i)
       result.values.push_back(vec[i]);
-    for (int i = 0; i < cols.size(); ++i)
+    for (unsigned i = 0; i < cols.size(); ++i)
       result.col_index.push_back(cols[i]);
     result.row_index.push_back(not_zero_vals);
   }
@@ -163,13 +163,13 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
 }
 
 void SparseComplexMatrix::printCRS() {
-  for (int i = 0; i < values.size(); ++i)
+  for (unsigned i = 0; i < values.size(); ++i)
     std::cout << values[i] << " ";
   std::cout << "\n";
-  for (int i = 0; i < col_index.size(); ++i)
+  for (unsigned i = 0; i < col_index.size(); ++i)
     std::cout << col_index[i] << " ";
   std::cout << "\n";
-  for (int i = 0; i < row_index.size(); ++i)
+  for (unsigned i = 0; i < row_index.size(); ++i)
     std::cout << row_index[i] << " ";
   std::cout << "\n";
 }
