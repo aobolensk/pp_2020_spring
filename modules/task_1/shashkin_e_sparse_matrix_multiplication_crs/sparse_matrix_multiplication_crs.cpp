@@ -10,17 +10,17 @@ SparseComplexMatrix::SparseComplexMatrix() {
 SparseComplexMatrix::SparseComplexMatrix(int _rows_num, int _cols_num) {
   if (_rows_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of rows!\n");
-  if (_cols_num < 0) 
+  if (_cols_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
   rows_num = _rows_num;
   cols_num = _cols_num;
 }
 
 SparseComplexMatrix::SparseComplexMatrix(int _rows_num, int _cols_num, std::vector<std::complex<double>> _values,
-  std::vector<int> _col_index,std::vector<int> _row_index) {
+  std::vector<int> _col_index, std::vector<int> _row_index) {
   if (_rows_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of rows!\n");
-  if (_cols_num < 0) 
+  if (_cols_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
   rows_num = _rows_num;
   cols_num = _cols_num;
@@ -142,8 +142,9 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
         } else {
           if (col_index[iter1] < mat.col_index[iter2]) {
             iter1++;
-          } else
+          } else {
             iter2++;
+          }
         }
       }
       if (sum.real() != 0.0 || sum.imag() != 0.0) {

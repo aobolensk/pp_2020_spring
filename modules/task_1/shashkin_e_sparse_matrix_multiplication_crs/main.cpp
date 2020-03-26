@@ -74,18 +74,18 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
   int rows2 = 5;
   int cols2 = 12;
   std::vector<std::complex<double>> vals1 = { 
-    std::complex<double>(8, 5), 
-    std::complex<double>(5, 2), 
+    std::complex<double>(8, 5),
+    std::complex<double>(5, 2),
     std::complex<double>(0, 7),
-    std::complex<double>(7, 2), 
+    std::complex<double>(7, 2),
     std::complex<double>(8, 3),
-    std::complex<double>(8, 1), 
-    std::complex<double>(8, 7) 
+    std::complex<double>(8, 1),
+    std::complex<double>(8, 7)
   };
   std::vector<int> col_ind1 = { 2, 2, 3, 0, 3, 4, 2 };
   std::vector<int> row_ind1 = { 0, 0, 1, 2, 3, 3, 3, 6, 6, 6, 7 };
 
-  std::vector<std::complex<double>> vals2 = { 
+  std::vector<std::complex<double>> vals2 = {
     std::complex<double>(8, 5),
     std::complex<double>(5, 2),
     std::complex<double>(0, 7),
@@ -96,12 +96,12 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
     std::complex<double>(8, 0),
     std::complex<double>(2, 6),
     std::complex<double>(6, 2),
-    std::complex<double>(7, 5) 
+    std::complex<double>(7, 5)
   };
   std::vector<int> col_ind2 = { 7, 0, 6, 6, 9, 10, 11, 5, 6, 7, 11 };
   std::vector<int> row_ind2 = { 0, 1, 3, 6, 7, 11 };
 
-  std::vector<std::complex<double>> res = { 
+  std::vector<std::complex<double>> res = {
     std::complex<double>(46, 51),
     std::complex<double>(49, 64),
     std::complex<double>(59, 48),
@@ -115,7 +115,7 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
     std::complex<double>(94, 127),
     std::complex<double>(42, 65),
     std::complex<double>(43, 80),
-    std::complex<double>(57, 64) 
+    std::complex<double>(57, 64)
   };
   std::vector<int> col_ind_res = { 6, 9, 10, 6, 9, 10, 11, 5, 6, 7, 6, 9, 10 };
   std::vector<int> row_ind_res = { 0, 0, 3, 6, 7, 7, 7, 11, 11, 11, 14 };
@@ -125,7 +125,6 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
   SparseComplexMatrix res_mat(cols1, rows2, res, col_ind_res, row_ind_res);
   SparseComplexMatrix csrMat2T;
   SparseComplexMatrix csrMat3;
-  
   csrMat2T = csrMat2.transpose();
   csrMat3 = csrMat1 * csrMat2T;
   ASSERT_TRUE(csrMat3 == res_mat);
