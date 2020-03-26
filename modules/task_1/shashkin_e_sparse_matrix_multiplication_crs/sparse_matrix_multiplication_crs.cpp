@@ -110,6 +110,19 @@ SparseComplexMatrix SparseComplexMatrix::transpose() {
   return result;
 }
 
+bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
+  if (rows_num != mat.rows_num || cols_num != mat.cols_num ||
+    values != mat.values || col_index != col_index || row_index != mat.row_index) {
+    return false;
+  } else {
+    for (unsigned i = 0; i < values.size(); ++i) {
+      if (values[i].real() != mat.values[i].real() || values[i].imag() != mat.values[i].imag())
+        return false;
+    }
+    return true;
+  }
+}
+
 SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& mat) const& {
   SparseComplexMatrix result(cols_num, mat.cols_num);
   int not_zero_vals = 0;
@@ -149,19 +162,6 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
     result.row_index.push_back(not_zero_vals);
   }
   return result;
-}
-
-bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
-  if (rows_num != mat.rows_num || cols_num != mat.cols_num ||
-    values != mat.values || col_index != col_index || row_index != mat.row_index) {
-    return false;
-  } else {
-    for (unsigned i = 0; i < values.size(); ++i) {
-      if (values[i].real() != mat.values[i].real() || values[i].imag() != mat.values[i].imag())
-        return false;
-    }
-    return true;
-  }
 }
 
 void SparseComplexMatrix::printCRS() {
