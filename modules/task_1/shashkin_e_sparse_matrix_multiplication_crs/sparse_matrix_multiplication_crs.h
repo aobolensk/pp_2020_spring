@@ -1,6 +1,6 @@
 // Copyright 2020 Shashkin Evgeny
-#ifndef MODULES_TASK_1_SHASHKIN_E_SPARCE_MATRIX_MULTIPLICATION_CRS_SPARCE_MATRIX_MULTIPLICATION_CRS_H_
-#define MODULES_TASK_1_SHASHKIN_E_SPARCE_MATRIX_MULTIPLICATION_CRS_SPARCE_MATRIX_MULTIPLICATION_CRS_H_
+#ifndef MODULES_TASK_1_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARSE_MATRIX_MULTIPLICATION_CRS_H_
+#define MODULES_TASK_1_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARSE_MATRIX_MULTIPLICATION_CRS_H_
 
 #include <iostream>
 #include <vector>
@@ -20,16 +20,16 @@ private:
 public:
   SparseComplexMatrix();
   SparseComplexMatrix(int _rows_num, int _cols_num);
-  SparseComplexMatrix(int _rows_num, int _cols_num, std::vector<std::complex<double>> _values, std::vector<int> _col_index, 
-    std::vector<int> _row_index);
+  SparseComplexMatrix(int _rows_num, int _cols_num, std::vector<std::complex<double>> _values,
+    std::vector<int> _col_index, std::vector<int> _row_index);
   bool operator==(const SparseComplexMatrix& mat) const&;
-  SparseComplexMatrix operator*(SparseComplexMatrix& mat);
+  SparseComplexMatrix operator*(const SparseComplexMatrix& mat) const&;
   SparseComplexMatrix(const SparseComplexMatrix& sparse_complex_matrix);
-  SparseComplexMatrix matrixToCSR(std::vector<std::vector<std::complex<double>>> matrix);
+  SparseComplexMatrix matrixToCRS(std::vector<std::vector<std::complex<double>>> matrix);
   SparseComplexMatrix transpose();
-  void printCSR();
+  void printCRS();
 };
 
 std::vector<std::vector<std::complex<double>>> randomMatrix(int _rows_num, int _cols_num);
 void print(std::vector<std::vector<std::complex<double>>> matrix);
-#endif  // MODULES_TASK_1_SHASHKIN_E_SPARCE_MATRIX_MULTIPLICATION_CRS_SPARCE_MATRIX_MULTIPLICATION_CRS_H_
+#endif  // MODULES_TASK_1_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARCE_MATRIX_MULTIPLICATION_CRS_H_

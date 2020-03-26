@@ -1,5 +1,6 @@
 // Copyright 2020 Shashkin Evgeny
 #include "../../modules/task_1/shashkin_e_sparse_matrix_multiplication_crs/sparse_matrix_multiplication_crs.h"
+#include <vector>
 
 SparseComplexMatrix::SparseComplexMatrix() {
   rows_num = 0;
@@ -9,20 +10,18 @@ SparseComplexMatrix::SparseComplexMatrix() {
 SparseComplexMatrix::SparseComplexMatrix(int _rows_num, int _cols_num) {
   if (_rows_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of rows!\n");
-  else if (_cols_num < 0) {
+  if (_cols_num < 0) 
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
-  }
   rows_num = _rows_num;
   cols_num = _cols_num;
 }
 
-SparseComplexMatrix::SparseComplexMatrix(int _rows_num, int _cols_num, std::vector<std::complex<double>> _values, std::vector<int> _col_index,
-  std::vector<int> _row_index) {
+SparseComplexMatrix::SparseComplexMatrix(int _rows_num, int _cols_num, std::vector<std::complex<double>> _values,
+  std::vector<int> _col_index,std::vector<int> _row_index) {
   if (_rows_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of rows!\n");
-  else if (_cols_num < 0) {
+  if (_cols_num < 0) 
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
-  }
   rows_num = _rows_num;
   cols_num = _cols_num;
   values = _values;
@@ -42,11 +41,10 @@ std::vector<std::vector<std::complex<double>>> randomMatrix(int _rows_num, int _
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
   std::vector<std::vector<std::complex<double>>> result(_rows_num);
-  for (int i = 0; i < _rows_num; ++i) 
+  for (int i = 0; i < _rows_num; ++i)
     result[i].resize(_cols_num);
-  for(int i = 0; i < _rows_num; ++i)
-    for (int j = 0; j < _cols_num; ++j)
-    {
+  for (int i = 0; i < _rows_num; ++i)
+    for (int j = 0; j < _cols_num; ++j) {
       std::complex<double> val(0.0, 0.0);
       result[i][j] = val;
       if (gen() % 10 >= 8) {
@@ -57,14 +55,13 @@ std::vector<std::vector<std::complex<double>>> randomMatrix(int _rows_num, int _
   return result;
 }
 
-SparseComplexMatrix SparseComplexMatrix::matrixToCSR(std::vector<std::vector<std::complex<double>>> matrix) {
+SparseComplexMatrix SparseComplexMatrix::matrixToCRS(std::vector<std::vector<std::complex<double>>> matrix) {
   rows_num = matrix.size();
   cols_num = matrix[0].size();
   if (rows_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of rows!\n");
-  else if (cols_num < 0) {
+  if (cols_num < 0)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
-  }
   SparseComplexMatrix result(rows_num, cols_num);
   std::complex<double> empty(0.0, 0.0);
   int tmp = -1;
@@ -73,8 +70,7 @@ SparseComplexMatrix SparseComplexMatrix::matrixToCSR(std::vector<std::vector<std
   for (int i = 0; i < rows_num; ++i) {
     count = 0;
     point = tmp;
-    for (int j = 0; j < cols_num; ++j)
-    {
+    for (int j = 0; j < cols_num; ++j) {
       if (matrix[i][j] != empty) {
         values.push_back(matrix[i][j]);
         col_index.push_back(j);
@@ -115,9 +111,10 @@ SparseComplexMatrix SparseComplexMatrix::transpose() {
 }
 
 bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
-  if (rows_num != mat.rows_num || cols_num != mat.cols_num || values != mat.values || col_index != col_index || row_index != mat.row_index)
+  if (rows_num != mat.rows_num || cols_num != mat.cols_num ||
+    values != mat.values || col_index != col_index || row_index != mat.row_index) {
     return false;
-  else {
+  } else {
     for (int i = 0; i < values.size(); ++i) {
       if (values[i].real() != mat.values[i].real() || values[i].imag() != mat.values[i].imag())
         return false;
@@ -126,7 +123,7 @@ bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
   }
 }
 
-SparseComplexMatrix SparseComplexMatrix::operator*(SparseComplexMatrix& mat) {
+SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& mat) const& {
   SparseComplexMatrix result(cols_num, mat.cols_num);
   int not_zero_vals = 0;
   if (cols_num != mat.cols_num)
@@ -140,16 +137,16 @@ SparseComplexMatrix SparseComplexMatrix::operator*(SparseComplexMatrix& mat) {
       int iter1 = row_index[i - 1];
       int iter2 = mat.row_index[j - 1];
       while ((iter1 < row_index[i]) && (iter2 < mat.row_index[j])) {
-        if (col_index[iter1] == mat.col_index[iter2])
+        if (col_index[iter1] == mat.col_index[iter2]) {
           sum += values[iter1++] * mat.values[iter2++];
-        else {
-          if (col_index[iter1] < mat.col_index[iter2])
+        } else {
+          if (col_index[iter1] < mat.col_index[iter2]) {
             iter1++;
-          else
+          } else
             iter2++;
         }
       }
-      if (sum.real() != 0.0 || sum.imag() != 0.0 ) {
+      if (sum.real() != 0.0 || sum.imag() != 0.0) {
         vec.push_back(sum);
         cols.push_back(j - 1);
         not_zero_vals++;
@@ -164,7 +161,7 @@ SparseComplexMatrix SparseComplexMatrix::operator*(SparseComplexMatrix& mat) {
   return result;
 }
 
-void SparseComplexMatrix::printCSR() {
+void SparseComplexMatrix::printCRS() {
   for (int i = 0; i < values.size(); ++i)
     std::cout << values[i] << " ";
   std::cout << "\n";
