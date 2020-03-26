@@ -93,13 +93,13 @@ SparseComplexMatrix SparseComplexMatrix::transpose() {
   std::vector<std::vector<int>> idx(cols_num);
   std::vector<std::vector<std::complex<double>>> vals(cols_num);
   for (unsigned i = 1; i < row_index.size(); ++i)
-    for (unsigned j = row_index[i - 1]; j < row_index[i]; ++j) {
+    for (int j = row_index[i - 1]; j < row_index[i]; ++j) {
       idx[col_index[j]].push_back(i - 1);
       vals[col_index[j]].push_back(values[j]);
     }
   int size = 0;
   result.row_index.push_back(0);
-  for (unsigned i = 0; i < cols_num; ++i) {
+  for (int i = 0; i < cols_num; ++i) {
     for (unsigned j = 0; j < idx[i].size(); ++j) {
       result.values.push_back(vals[i][j]);
       result.col_index.push_back(idx[i][j]);
