@@ -73,7 +73,7 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
   int cols1 = 5;
   int rows2 = 5;
   int cols2 = 12;
-  std::vector<std::complex<double>> vals1 = { 
+  std::vector<std::complex<double>> vals1 = {
     std::complex<double>(8, 5),
     std::complex<double>(5, 2),
     std::complex<double>(0, 7),

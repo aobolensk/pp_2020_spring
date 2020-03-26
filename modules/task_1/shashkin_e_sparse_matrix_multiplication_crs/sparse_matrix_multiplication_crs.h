@@ -32,4 +32,4 @@ class SparseComplexMatrix {
 
 std::vector<std::vector<std::complex<double>>> randomMatrix(int _rows_num, int _cols_num);
 void print(std::vector<std::vector<std::complex<double>>> matrix);
-#endif // MODULES_TASK_1_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARSE_MATRIX_MULTIPLICATION_CRS_H_
+#endif  // MODULES_TASK_1_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARSE_MATRIX_MULTIPLICATION_CRS_H_
