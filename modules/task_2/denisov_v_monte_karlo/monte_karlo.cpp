@@ -36,8 +36,8 @@ double getIntegralMonteCarloPar(const std::function<double(const std::vector<dou
     // Monte-Carlo random
     std::vector<double> point(countDims);
     #pragma omp for
-    for (int i = 0; i < numberPoints; i++) {
-        for (int j = 0; j < countDims; j++)
+    for (int i = 0; i < static_cast<int>(numberPoints); i++) {
+        for (int j = 0; j < static_cast<int>(countDims); j++)
             point[j] = randPoints[j](generator);
         result += func(point);
     }
