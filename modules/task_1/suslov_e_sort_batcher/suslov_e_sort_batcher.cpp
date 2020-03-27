@@ -11,7 +11,7 @@ double* getRandomArray(int  size) {
     std::random_device rd;
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(rd()));
-    double* Array = new double[sz];
+    double* Array = new double[size];
     for (int i = 0; i < size; i++) { Array[i] = (gen()%100000)/100.0-500.0; }
     return Array;
 }
