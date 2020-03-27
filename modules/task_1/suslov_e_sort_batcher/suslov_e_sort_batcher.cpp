@@ -7,12 +7,12 @@
 #include <cstring>
 #include "../../../modules/task_1/suslov_e_sort_batcher/suslov_e_sort_batcher.h"
 
-double* getRandomArray(int  sz) {
+double* getRandomArray(int  size) {
     std::random_device rd;
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(rd()));
     double* Array = new double[sz];
-    for (int i = 0; i < sz; i++) { Array[i] = (gen()%100000)/100.0-500.0; }
+    for (int i = 0; i < size; i++) { Array[i] = (gen()%100000)/100.0-500.0; }
     return Array;
 }
 
