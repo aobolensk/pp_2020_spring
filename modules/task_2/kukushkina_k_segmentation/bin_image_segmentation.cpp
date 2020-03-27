@@ -49,12 +49,18 @@ std::vector<int> Segmentation(const std::vector<int> &source, std::size_t w) {
       if (res[i - w] != 0) {
         res[i] = res[i - w];  // adding to existing segment
       } else {
+        #pragma omp critical (new_segment) 
+        {
+          res[i] = ++color;  // new segment starting
+          segStart.push_back(i / w);
+        }
+      }
+    } else if (res[i - 1] == 0 && res[i - w] == 0) {
+      #pragma omp critical (new_segment) 
+      {
         res[i] = ++color;  // new segment starting
         segStart.push_back(i / w);
       }
-    } else if (res[i - 1] == 0 && res[i - w] == 0) {
-      res[i] = ++color;  // new segment starting
-      segStart.push_back(i / w);
     } else if (res[i - 1] != 0 && res[i - w] == 0) {
       res[i] = res[i - 1];  // adding to left segment
     } else if (res[i - 1] == 0 && res[i - w] != 0) {
