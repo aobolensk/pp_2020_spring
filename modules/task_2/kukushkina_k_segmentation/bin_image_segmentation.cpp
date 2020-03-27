@@ -14,7 +14,7 @@ std::vector<int> Generate_pic(std::size_t w, std::size_t h) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned>(time(0)) + offset++);
   #pragma omp parallel for
-  for (int i = 0; i < h * w; i++) {
+  for (int i = 0; i < static_cast<int>(h * w); i++) {
     pic[i] = gen() % 2;
   }
   return pic;
@@ -43,7 +43,7 @@ std::vector<int> Segmentation(const std::vector<int> &source, std::size_t w) {
     }
   }
   #pragma omp parallel for
-  for (int i = w; i < res.size(); i++) {
+  for (int i = w; i < static_cast<int>(res.size()); i++) {
     if (res[i] == 0) continue;  // empty space skipping
     if (i % w == 0) {  // left edge segmentation
       if (res[i - w] != 0) {
@@ -72,7 +72,7 @@ std::vector<int> Segmentation(const std::vector<int> &source, std::size_t w) {
         int newColor = res[i - 1];
         if (segStart[oldColor] < segStart[newColor])
           segStart[newColor] = segStart[oldColor];  // refreshing current seg start
-        for (size_t j = w * segStart[oldColor]; j < i; j++) {
+        for (int j = static_cast<int>(w * segStart[oldColor]); j < i; j++) {
           if (res[j] == oldColor)
             res[j] = newColor;
         }
