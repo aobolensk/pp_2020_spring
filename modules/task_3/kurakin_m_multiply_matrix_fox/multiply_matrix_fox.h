@@ -1,6 +1,6 @@
 // Copyright 2020 Kurakin Mikhail
-#ifndef MODULES_TASK_2_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
-#define MODULES_TASK_2_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
+#ifndef MODULES_TASK_3_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
+#define MODULES_TASK_3_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
 #include <vector>
 #define NTHREADS 4
 
@@ -16,4 +16,4 @@ bool algFoxMatrixMultiplySeq(const matrix &a, const matrix &b, matrix *out);
 bool algFoxMatrixMultiplyPar(const matrix &a, const matrix &b, matrix *out);
 
 
-#endif  // MODULES_TASK_2_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_
+#endif  // MODULES_TASK_3_KURAKIN_M_MULTIPLY_MATRIX_FOX_MULTIPLY_MATRIX_FOX_H_

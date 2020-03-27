@@ -66,17 +66,17 @@ bool isSquareMatrix(const matrix &a, const matrix &b) {
 }
 
 class TbbFunctorFoxAlg {
-   private:
+ private:
     static uint threadCounter;
     static tbb::mutex myMutex;
     const matrix &a;
     const matrix &b;
     matrix *out;
 
-   public:
-   static void SetToZerothreadCounter() {
+ public:
+    static void SetToZerothreadCounter() {
        threadCounter = 0;
-   }
+    }
     TbbFunctorFoxAlg(const matrix &a_, const matrix &b_, matrix *out_)
         : a(a_), b(b_), out(out_) {}
     void operator()(const tbb::blocked_range<int> &iter) const {
@@ -137,7 +137,7 @@ bool algFoxMatrixMultiplyPar(const matrix &a, const matrix &b, matrix *out) {
     TbbFunctorFoxAlg::SetToZerothreadCounter();
     prepareOutMatrix(out, size, size);
     TbbFunctorFoxAlg tbbHandler(a, b, out);
-    tbb::parallel_for(tbb::blocked_range<int>(0, NTHREADS,1), tbbHandler);
+    tbb::parallel_for(tbb::blocked_range<int>(0, NTHREADS, 1), tbbHandler);
 
     return true;
 }
