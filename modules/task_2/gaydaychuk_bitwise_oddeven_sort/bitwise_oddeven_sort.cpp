@@ -87,7 +87,7 @@ void NetworkBuilder::addComparator(int i, int j) {
                     pairAndSetIntersectionFound = true;
                     break;
                 }
-            };
+            }
             if (pairAndSetIntersectionFound == true) {
                   if (
                       (itBlocks != auxiliaryNodeSetArray.end())
@@ -107,7 +107,7 @@ void NetworkBuilder::addComparator(int i, int j) {
                 break;
             }
             ++parallelBlocksIterator;
-        };
+        }
     }
 }
 
@@ -140,7 +140,7 @@ void NetworkBuilder::addComparatorAnother(int i, int j) {
                     pairAndSetIntersectionFound = true;
                     break;
                 }
-            };
+            }
             if (pairAndSetIntersectionFound == true) {
                 if (itBlocks == auxiliaryNodeSetArray.rbegin()) {
                     auxiliaryNodeSetArray.push_back({i, j});
@@ -169,7 +169,7 @@ void NetworkBuilder::addComparatorAnother(int i, int j) {
                 }
             }
             ++parallelBlocksIterator;
-        };
+        }
     }
 }
 
@@ -220,7 +220,7 @@ std::string NetworkBuilder::printComp() {
     result = result + "\nsize = " +
     std::to_string(parallelBlockArray.size()) + "\n";
     return result;
-};
+}
 
 std::string NetworkBuilder::getState() { return state; }
 
