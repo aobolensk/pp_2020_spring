@@ -104,11 +104,11 @@ void qs_threads(double* a, int n) {
       start_fin[i * 2][1] = start_fin[i * 2 + 1][1];
     }
 
-    for (int i = 0; i < m; i++) {
+    for (size_t i = 0; i < m; i++) {
       threads[i].join();
     }
 
-    for (int i = 1; i <= m; i++) {
+    for (size_t i = 1; i <= m; i++) {
       start_fin.erase(start_fin.begin() + i);  // fin[i] = fin[i + 1] then delete start_fin[i + 1]
     }
     num_threads -= m;
