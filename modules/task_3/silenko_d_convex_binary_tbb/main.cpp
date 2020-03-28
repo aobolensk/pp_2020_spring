@@ -207,7 +207,7 @@ TEST(convex_binary_tbb, test_inside) {
 TEST(convex_binary_tbb, test_rand) {
   std::vector<int*> result;
   int** convex_mas = NULL;
-  int num = 0, n = 900, m = 900;
+  int num = 0, n = 20, m = 20;
 
   int** mas = getRandomMas(n, m);
   int** newmas = new int*[n];
@@ -221,17 +221,10 @@ TEST(convex_binary_tbb, test_rand) {
   int** tbb_convex_mas = NULL;
   int num_thr = 2;
 
-  tbb::tick_count t_seq1, t_seq2, t_par1, t_par2;
-
-  t_seq1 = tbb::tick_count::now();
   result = getComponent(mas, n, m, &convex_mas, &num);
-  t_seq2 = tbb::tick_count::now();
 
-  t_par1 = tbb::tick_count::now();
   tbb_res = getComponent_TBB(newmas, n, m, &tbb_convex_mas, &num, num_thr);
-  t_par2 = tbb::tick_count::now();
 
-  std::cout << "Runtime Seq = " << (t_seq2 - t_seq1).seconds() << "\nRuntime Par = " << (t_par2 - t_par1).seconds() << "\n";
 
   int size = tbb_res.size();
 
