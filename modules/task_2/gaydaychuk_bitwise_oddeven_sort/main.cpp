@@ -87,12 +87,107 @@ TEST(Sequential, Test_RawDataBitwiseSort) {
 //     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 2));
 // }
 
-
 // TEST(Sequential, Test_LocalSorting3) {
+//     int a[] = {9,8,7,6,5,4,3,2,1};
+//     ASSERT_EQ(true, parallelLocalSort(a, 9, 10));
+// }
+
+// TEST(Sequential, Test_GlobalSorting1) {
 //     int a[] = {9,8,7,6,5,4,3,2,1};
 //     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
 // }
 
+// TEST(Sequential, Test_GlobalSorting2) {
+//     int a[] = {9,8,7,6,5,4,3,2,1, 10, 11, 12};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 2));
+// }
+
+// TEST(Sequential, Test_GlobalSorting3) {
+//     int a[] = {9,8,7,6,5,4,3,2,1, 10, 11, 12};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 3));
+// }
+
+
+
+TEST(Sequential, Test_RandomGlobalSorting1) {
+    int size = 100;
+    int *a = new int[size];
+    std::srand((unsigned) 999);
+     
+    for(int i = 0; i < size; i++){
+        a[i] = ((int)(std::rand()) % 100) + 1;
+    }
+    bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 3);
+    for(int i = 0; i < size; i++){
+        std::cout<<a[i] << "\t";
+    }
+    std::cout<<"\n";
+    ASSERT_EQ(true, sortedSuccessfully);
+}
+
+TEST(Sequential, Test_RandomGlobalSorting2) {
+    int size = 10000;
+    int *a = new int[size];
+    std::srand((unsigned) 999);
+     
+    for(int i = 0; i < size; i++){
+        a[i] = ((int)(std::rand()) % 100) + 1;
+    }
+    bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 5);
+    // for(int i = 0; i < size; i++){
+    //     std::cout<<a[i] << "\t";
+    // }
+    // std::cout<<"\n";
+    ASSERT_EQ(true, sortedSuccessfully);
+}
+
+TEST(Sequential, Test_RandomGlobalSorting3) {
+    int size = 100000;
+    int *a = new int[size];
+    std::srand((unsigned) 999);
+     
+    for(int i = 0; i < size; i++){
+        a[i] = ((int)(std::rand()) % 100) + 1;
+    }
+    bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 4);
+    // for(int i = 0; i < size; i++){
+    //     std::cout<<a[i] << "\t";
+    // }
+    // std::cout<<"\n";
+    ASSERT_EQ(true, sortedSuccessfully);
+}
+
+TEST(Sequential, Test_RandomGlobalSorting4) {
+    int size = 3000;
+    int *a = new int[size];
+    std::srand((unsigned) 999);
+     
+    for(int i = 0; i < size; i++){
+        a[i] = ((int)(std::rand()) % 100) + 1;
+    }
+    bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 50);
+    // for(int i = 0; i < size; i++){
+    //     std::cout<<a[i] << "\t";
+    // }
+    // std::cout<<"\n";
+    ASSERT_EQ(true, sortedSuccessfully);
+}
+
+// TEST(Sequential, Test_RandomGlobalSorting3) {
+//     int size = 1000000;
+//     int *a = new int[size];
+//     std::srand((unsigned) 999);
+     
+//     for(int i = 0; i < size; i++){
+//         a[i] = ((int)(std::rand()) % 100) + 1;
+//     }
+//     bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 6);
+//     // for(int i = 0; i < size; i++){
+//     //     std::cout<<a[i] << "\t";
+//     // }
+//     // std::cout<<"\n";
+//     ASSERT_EQ(true, sortedSuccessfully);
+// }
 // TEST(Sequential, Test_MergingTest1) {
 //     int a[] = {1,4,5,7,8,9,2,3,6};
 //     int specimen[] = {1, 2, 3, 7, 8, 9, 4, 5, 6};

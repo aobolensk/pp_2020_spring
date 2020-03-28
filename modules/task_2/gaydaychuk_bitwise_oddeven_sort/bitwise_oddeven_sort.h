@@ -40,6 +40,7 @@ void bitwiseSort(std::vector<int> *vec);
 void bitwiseSort(int *p, int length);
 void mergeAndSplit(int *arr1, int size1, int *arr2, int size2);
 bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount);
+bool parallelLocalSort(int *array, int arraySize, int maxThreadCount);
 
 void printThreadNum(int maxThreadNumber);
 void printThreadArea(int arraySize, int maxThreadCount);

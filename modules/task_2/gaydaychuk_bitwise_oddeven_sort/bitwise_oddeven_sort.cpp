@@ -51,10 +51,13 @@ void NetworkBuilder::bMerge_2(int lo, int n, int r)
         for (int i=lo+r; i+r<lo+n; i+=m){
             comparatorArray.push_back(std::pair<int, int>(indexArray[i], indexArray[i + r]));
             addComparatorAnother(indexArray[i], indexArray[i + r]);
+            // addComparator(indexArray[i], indexArray[i + r]);
+
         }
     }
     else{
         addComparatorAnother(indexArray[lo], indexArray[lo + r]);
+        // addComparator(indexArray[lo], indexArray[lo + r]);
         comparatorArray.push_back(std::pair<int, int>(indexArray[lo], indexArray[lo + r]));
     }
 }
@@ -73,7 +76,7 @@ void NetworkBuilder::addComparator(int i, int j){
     }
     else{
         bool pairAndSetIntersectionFound = false;
-        std::list<std::vector<std::pair <int, int> > >::iterator parallelBlocksIterator = parallelBlockArray.begin();
+        std::list<std::vector<std::pair <int, int> > >::iterator parallelBlocksIterator =git  parallelBlockArray.begin();
         for(
             std::list<std::vector<int > >::iterator itBlocks = auxiliaryNodeSetArray.begin(); 
             itBlocks != auxiliaryNodeSetArray.end(); 
@@ -181,7 +184,7 @@ std::list<std::vector<std::pair <int, int> > > NetworkBuilder::getParallelBlockA
         ++itElements){
             if(itElements->first < size && itElements->second < size){
                 currentBlock.push_back(std::pair <int, int>(itElements->first, itElements->second));
-                std::cout<<"\n\t\t"<<"size = "<<size<<"first = " << itElements->first << ", second = " << itElements->second << "\n";
+                // std::cout<<"\n\t\t"<<"size = "<<size<<"first = " << itElements->first << ", second = " << itElements->second << "\n";
             }
         }
         shortenedNetwork.push_back(currentBlock);
@@ -409,7 +412,145 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount){
     // define areas
     // sort
     // check every one
+    std::list<std::vector<std::pair <int, int> > > parallelArray;
+    bool allSubarraysSortedCorrectly = true;
+    int effectiveThreadCount = 0;
+    if(arraySize < MINIMAL_SINGLE_ARRAY_LENGTH * maxThreadCount) {
+        if (arraySize % MINIMAL_SINGLE_ARRAY_LENGTH == 0) {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH);
+        }
+        else {
+            effectiveThreadCount = (int) (arraySize / MINIMAL_SINGLE_ARRAY_LENGTH) + 1;
+        }
+    } else {
+        if (arraySize < (MINIMAL_SINGLE_ARRAY_LENGTH + 1) * (maxThreadCount - 1) + 1){
+            effectiveThreadCount = maxThreadCount - 1;
+        } else {
+            effectiveThreadCount = maxThreadCount;
+        }
+    }
+    omp_set_num_threads(effectiveThreadCount);
 
+    int threadNumber = 0, beginIndex = 0, endIndex = 0;  // indexes are supposed to be inclusive
+    #pragma omp parallel private(threadNumber, beginIndex, endIndex)
+    {
+        #pragma omp single
+        {
+            std::cout<<"\n SORTING OF EACH SUBARRAY \n";
+        }
+        threadNumber = omp_get_thread_num();
+
+        if(threadNumber > effectiveThreadCount){
+            beginIndex = endIndex = -1; // do nothing
+        } else {
+            if(arraySize % effectiveThreadCount == 0) {
+                int localSize = (int) (arraySize / effectiveThreadCount);
+                beginIndex = threadNumber * localSize;
+                endIndex = beginIndex + localSize - 1;
+            }else{
+                if(effectiveThreadCount == 1){
+                    beginIndex = 0;
+                    endIndex = arraySize - 1;
+                }
+                else{
+                    int localSize = (int) (arraySize / effectiveThreadCount) + 1;
+                    beginIndex = threadNumber * localSize;
+                    if (threadNumber == effectiveThreadCount - 1) {
+                        endIndex = arraySize - 1;
+                    }else{
+                        endIndex = beginIndex + localSize - 1;
+                    }
+                }
+            }
+        }
+
+        bitwiseSort(array + beginIndex, endIndex - beginIndex + 1);
+        bool sortedLocally = checkAscending(array + beginIndex, endIndex - beginIndex + 1);
+        #pragma omp critical
+        {
+            allSubarraysSortedCorrectly &= sortedLocally;
+            // std::cout<<"\n ------------- \n"
+            // << "ThreadNumber: " << std::to_string(threadNumber) << "\t\t"
+            // << "begin: " << std::to_string(beginIndex) << "\t"
+            // << "end: " << std::to_string(endIndex)<<"\nARRAY {";
+            // for(int i = beginIndex; i <= endIndex; i++){
+            //     std::cout<<array[i] << "\t";
+            // }
+            // std::cout<<(sortedLocally ? "}\n SORTED CORRECTLY \n" : "}\n SORTED NOT CORRECTLY \n");
+        }
+        #pragma omp barrier
+        #pragma omp single
+        {
+            std::cout<<(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n" : "\n ARRAYS SORTED NOT CORRECTLY \n");
+            NetworkBuilder nb;
+            nb.setNetworkSize(effectiveThreadCount);
+            parallelArray =  nb.getParallelBlockArray();
+        }
+    }
+    #pragma omp barrier
+
+    for(auto itBlocks = parallelArray.begin();
+    itBlocks != parallelArray.end();
+    ++itBlocks){
+        int parallelblockSize = (int) (itBlocks->size());
+        int firstSubarrayNumber = 0, secondSubarrayNumber = 0;
+        int bI1 = 0, eI1 = 0;
+        int bI2 = 0, eI2 = 0;
+        #pragma omp parallel for private(firstSubarrayNumber, secondSubarrayNumber, bI1, eI1, bI2, eI2)
+        for(int i = 0; i < parallelblockSize; ++i)
+        {
+            firstSubarrayNumber = itBlocks->at(i).first;
+            secondSubarrayNumber = itBlocks->at(i).second;
+            // get areas to merge
+            if(arraySize % effectiveThreadCount == 0) {
+                int localSize = (int) (arraySize / effectiveThreadCount);
+                bI1 = firstSubarrayNumber * localSize;
+                bI2 = secondSubarrayNumber * localSize;
+
+                eI1 = bI1 + localSize - 1;
+                eI2 = bI2 + localSize - 1;
+
+            }else{
+                if(effectiveThreadCount == 1){
+                    break;  // no need to merge
+                }
+                else{
+                    int localSize = (int) (arraySize / effectiveThreadCount) + 1;
+                    bI1 = firstSubarrayNumber * localSize;
+                    bI2 = secondSubarrayNumber * localSize;
+
+                    if (firstSubarrayNumber == effectiveThreadCount - 1) {
+                        eI1 = arraySize - 1;
+                    }else{
+                        eI1 = bI1 + localSize - 1;
+                    }
+                    if (secondSubarrayNumber == effectiveThreadCount - 1) {
+                        eI2 = arraySize - 1;
+                    }else{
+                        eI2 = bI2 + localSize - 1;
+                    }
+                }
+            }
+            // merge
+            mergeAndSplit(array + bI1, eI1 - bI1 + 1, array + bI2, eI2 - bI2 + 1);
+        }
+        // synchronize the phase
+        #pragma omp barrier
+        #pragma omp single
+        {
+            std::cout<<"\n PARALLEL MERGING PHASE ENDED \n";
+        }
+        #pragma omp barrier
+    }
+
+    return checkAscending(array, arraySize);
+}
+
+bool parallelLocalSort(int *array, int arraySize, int maxThreadCount){
+    // define effective threadCount
+    // sort everyone at one time
+    // check every one
+    std::list<std::vector<std::pair <int, int> > > parallelArray;
     bool allSubarraysSortedCorrectly = true;
     int effectiveThreadCount = 0;
     if(arraySize < MINIMAL_SINGLE_ARRAY_LENGTH * maxThreadCount) {
@@ -468,7 +609,6 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount){
             allSubarraysSortedCorrectly &= sortedLocally;
             std::cout<<"\n ------------- \n"
             << "ThreadNumber: " << std::to_string(threadNumber) << "\t\t"
-            // << "EffectiveThreadCount: " << std::to_string(effectiveThreadCount) << "\t\t"
             << "begin: " << std::to_string(beginIndex) << "\t"
             << "end: " << std::to_string(endIndex)<<"\nARRAY {";
             for(int i = beginIndex; i <= endIndex; i++){
@@ -480,7 +620,11 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount){
         #pragma omp single
         {
             std::cout<<(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n" : "\n ARRAYS SORTED NOT CORRECTLY \n");
+            NetworkBuilder nb;
+            nb.setNetworkSize(effectiveThreadCount);
+            parallelArray =  nb.getParallelBlockArray();
         }
     }
+
     return allSubarraysSortedCorrectly;
 }
