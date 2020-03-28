@@ -76,7 +76,7 @@ void NetworkBuilder::addComparator(int i, int j){
     }
     else{
         bool pairAndSetIntersectionFound = false;
-        std::list<std::vector<std::pair <int, int> > >::iterator parallelBlocksIterator =git  parallelBlockArray.begin();
+        std::list<std::vector<std::pair <int, int> > >::iterator parallelBlocksIterator = parallelBlockArray.begin();
         for(
             std::list<std::vector<int > >::iterator itBlocks = auxiliaryNodeSetArray.begin(); 
             itBlocks != auxiliaryNodeSetArray.end(); 
