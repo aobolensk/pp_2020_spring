@@ -1,12 +1,13 @@
 // Copyright 2020 Gaydaychuk Yury
-#ifndef MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_
-#define MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_
+#ifndef MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_H_
+#define MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_H_
 #include <omp.h>
 #include <vector>
 #include <string>
 #include <list>
+#include <utility>
 
-class NetworkBuilder{
+class NetworkBuilder {
     std::list<std::vector<int> > auxiliaryNodeSetArray;
     std::list<std::vector<std::pair <int, int> > > parallelBlockArray;
     std::string state;
@@ -20,7 +21,7 @@ class NetworkBuilder{
 
     void addComparator(int i, int j);
     void NetworkBuilder::addComparatorAnother(int i, int j);
-public:
+ public:
     void setNetworkSize(int size);
     void computeNetwork();
     std::list<std::vector<std::pair <int, int> > > getParallelBlockArray();
@@ -44,4 +45,4 @@ bool parallelLocalSort(int *array, int arraySize, int maxThreadCount);
 
 void printThreadNum(int maxThreadNumber);
 void printThreadArea(int arraySize, int maxThreadCount);
-#endif  // MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_
+#endif  // MODULES_TASK_1_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_H_
