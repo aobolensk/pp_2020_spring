@@ -77,24 +77,24 @@ void qs_threads(double* a, int n) {
   std::vector<std::vector<int>> start_fin(num_threads, std::vector<int>(2));
   // [thread][0] & [thread][1] - start & finish of mini-arrays that will be sort by each thread
 
-  for (int i = 0; i < num_threads - 1; i++) {
+  for (size_t i = 0; i < num_threads - 1; i++) {
     start_fin[i][0] = i * (n / num_threads);
     start_fin[i][1] = start_fin[i][0] + n / num_threads - 1;
   }
   start_fin[num_threads - 1][0] = (num_threads - 1) * (n / num_threads);
   start_fin[num_threads - 1][1] = n - 1;
 
-  for (int i = 0; i < num_threads; i++) {
+  for (size_t i = 0; i < num_threads; i++) {
     threads[i] = std::thread([=]() {
       qs(a, start_fin[i][0], start_fin[i][1]);
       });
   }
 
-  for (int i = 0; i < num_threads; i++) {
+  for (size_t i = 0; i < num_threads; i++) {
     threads[i].join();
   }
 
-  int m = static_cast<int>(num_threads) / 2;  // num of pairs that will be merge by some threads
+  size_t m = static_cast<int>(num_threads) / 2;  // num of pairs that will be merge by some threads
   while (start_fin.size() > 1) {
     for (size_t i = 0; i < m; i++) {
       threads[i] = std::thread([=]() {
