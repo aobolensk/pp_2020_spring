@@ -4,6 +4,7 @@
 #include <math.h>
 #include <random>
 #include <thread>
+#include <stdexcept>
 #include <vector>
 bool canMultiplicate(const matrix &a, const matrix &b) {
     if (a.empty() || b.empty()) return false;
