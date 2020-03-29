@@ -45,4 +45,4 @@ bool parallelLocalSort(int *array, int arraySize, int maxThreadCount);
 
 void printThreadNum(int maxThreadNumber);
 void printThreadArea(int arraySize, int maxThreadCount);
-#endif  // MODULES_TASK_2_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_"
+#endif  // MODULES_TASK_2_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_
