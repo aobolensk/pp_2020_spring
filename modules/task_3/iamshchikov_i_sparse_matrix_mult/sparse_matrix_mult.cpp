@@ -117,9 +117,9 @@ class Multiplicator {
     std::vector<int>* resColIndex;
 
  public:
-    Multiplicator(CcsMatrix& _transposed_A, const CcsMatrix* _B,
+    Multiplicator(const CcsMatrix* _transposed_A, const CcsMatrix* _B,
         std::vector<double>* _value, std::vector<int>* _row,
-        std::vector<int>* _resColIndex) : transposed_A(_transposed_A), B(*_B),
+        std::vector<int>* _resColIndex) : transposed_A(*_transposed_A), B(*_B),
         value(_value), row(_row), resColIndex(_resColIndex) {}
     void operator()(const tbb::blocked_range<int>& r) const {
         int colNZ = 0, first_col = B.N;
@@ -154,7 +154,7 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
 
     int grainsize = 10;
     tbb::parallel_for(tbb::blocked_range<int>(0, m2->N, grainsize),
-    Multiplicator(transposed_m1, m2, value, row, &res.colIndex));
+    Multiplicator(&transposed_m1, m2, value, row, &res.colIndex));
 
     int nz = 0;
     for (int j = 0; j < N; j++) {
@@ -168,7 +168,7 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
     res.row.resize(res.colIndex.back());
 
     int count = 0;
-    for(int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {
         int size = value[i].size();
         if (size > 0) {
             memcpy(&res.value[count], &value[i][0],
