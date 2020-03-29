@@ -534,9 +534,7 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
                 eI2 = bI2 + localSize - 1;
 
             } else {
-                if (effectiveThreadCount == 1) {
-                    break;  // no need to merge
-                } else {
+                if (effectiveThreadCount != 1) {
                     int localSize = static_cast<int>((
                         arraySize / effectiveThreadCount) + 1);
                     bI1 = sa1 * localSize;

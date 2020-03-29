@@ -20,15 +20,15 @@ class NetworkBuilder {
     void printIndexArray();
 
     void addComparator(int i, int j);
-    void NetworkBuilder::addComparatorAnother(int i, int j);
+    void addComparatorAnother(int i, int j);
  public:
     void setNetworkSize(int size);
     void computeNetwork();
     std::list<std::vector<std::pair <int, int> > > getParallelBlockArray();
     std::string printComp();
-    std::string NetworkBuilder::printParallelComp();
-    std::string NetworkBuilder::printAux();
-    std::string NetworkBuilder::getState();
+    std::string printParallelComp();
+    std::string printAux();
+    std::string getState();
 };
 
 bool checkAscending(std::vector<int> vec);
@@ -46,3 +46,4 @@ bool parallelLocalSort(int *array, int arraySize, int maxThreadCount);
 void printThreadNum(int maxThreadNumber);
 void printThreadArea(int arraySize, int maxThreadCount);
 #endif  // MODULES_TASK_2_GAYDAYCHUK_BITWISE_ODDEVEN_SORT_BITWISE_ODDEVEN_SORT_H_
+git push origin 
