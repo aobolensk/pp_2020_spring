@@ -520,10 +520,9 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
         int bI1 = 0, eI1 = 0;
         int bI2 = 0, eI2 = 0;
         #pragma omp parallel for private(sa1, sa2, bI1, eI1, bI2, eI2)
-        sa1 = 0, sa2 = 0;
-        bI1 = 0, eI1 = 0;
-        bI2 = 0, eI2 = 0;
         for (int i = 0; i < parallelblockSize; ++i) {
+            bI1 = 0, eI1 = 0;
+            bI2 = 0, eI2 = 0;
             sa1 = itBlocks->at(i).first;
             sa2 = itBlocks->at(i).second;
             // get areas to merge
