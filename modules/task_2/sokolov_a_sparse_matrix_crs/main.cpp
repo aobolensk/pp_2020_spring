@@ -133,8 +133,8 @@ TEST(Sparse_Matrix, Test_Matrix_Miltiplication) {
                        { 0.0,  42.35, 6.05,  77.44, 0.0,  84.7  },
                        { 0.0,  0.0,   0.0,   0.0,   0.0,  0.0   },
                        { 0.0,  50.82, 32.67, 33.88, 0.0,  43.56 } };
-    double t{};
-    Matrix result = MatMul(matrixA, matrixB, t);
+
+    Matrix result = MatMul(matrixA, matrixB);
 
     ASSERT_EQ(result.size(), goldResult.size());
     ASSERT_EQ(result[0].size(), goldResult[0].size());
@@ -224,8 +224,8 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication) {
     SparseMatrix sparseMatrixB{ matrixB };
 
     SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
-    double t{};
-    Matrix       result = MatMul(matrixA, matrixB, t);
+
+    Matrix       result = MatMul(matrixA, matrixB);
 
     SparseMatrix resultToSparse{ result };
 
@@ -261,8 +261,8 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication_With_Rand_Gen) {
     SparseMatrix sparseMatrixB{ matrixB };
 
     SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
-    double t{};
-    Matrix       result = MatMul(matrixA, matrixB, t);
+
+    Matrix       result = MatMul(matrixA, matrixB);
 
     SparseMatrix resultToSparse{ result };
 #ifdef DEBUG

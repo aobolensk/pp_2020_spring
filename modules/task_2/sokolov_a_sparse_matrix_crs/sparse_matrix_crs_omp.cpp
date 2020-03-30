@@ -179,13 +179,13 @@ SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& ma
     return result;
 }
 
-Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB, const double& time) {
+Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB) {
     size_t rowsA = matrixA.size();
     size_t colsA = matrixA[0].size();
     size_t colsB = matrixB[0].size();
 
     Matrix result(rowsA, std::vector<double>(colsB));
-    double t1 = omp_get_wtime();
+
     for (size_t idx{0}; idx < rowsA; ++idx) {
         for (size_t jdx{0}; jdx < colsB; ++jdx) {
             result[idx][jdx] = 0;
@@ -194,8 +194,6 @@ Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB, const double& time) 
             }
         }
     }
-    double t2 = omp_get_wtime();
-    time = t2 - t1;
     return result;
 }
 
@@ -238,11 +236,11 @@ void SparseMatrix::printDefault() {
 }
 
 void SparseMatrix::printMatrix() {
-    size_t tmpValue{ 0 };
-    size_t tmpRows{ 0 };
-    size_t tmpCols{ 0 };
-    for (size_t idx{ 0 }; idx < rows; ++idx) {
-        for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
+    int tmpValue{ 0 };
+    int tmpRows{ 0 };
+    int tmpCols{ 0 };
+    for (int idx{ 0 }; idx < rows; ++idx) {
+        for (int jdx{ 0 }; jdx < cols; ++jdx) {
             if (tmpRows == rowIndex[idx + 1]) {
                 std::cout << "0   ";
             } else if (jdx == colIndex[tmpCols]) {

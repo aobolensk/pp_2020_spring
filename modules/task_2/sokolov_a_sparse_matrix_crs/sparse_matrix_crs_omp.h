@@ -13,8 +13,8 @@ using Matrix = std::vector<std::vector<double>>;
 
 class SparseMatrix {
  public:
-    size_t rows;
-    size_t cols;
+    int rows;
+    int cols;
     std::vector<double> value;
     std::vector<int> colIndex;  // Column numbers for each item
     std::vector<int> rowIndex;  // Index of the beginning of each line
@@ -40,7 +40,7 @@ class SparseMatrix {
 
 SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matrixB);
 SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& matrixB);
-Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB, const double& time);
+Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB);
 
 Matrix generateMatrix(const size_t& rows, const size_t& cols, const size_t& coeff);
 
