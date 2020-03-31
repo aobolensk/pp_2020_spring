@@ -1,6 +1,7 @@
 // Copyright 2020 Sokolov Andrey
 #ifndef MODULES_TASK_2_SOKOLOV_A_SPARSE_MATRIX_CRS_SPARSE_MATRIX_CRS_OMP_H_
 #define MODULES_TASK_2_SOKOLOV_A_SPARSE_MATRIX_CRS_SPARSE_MATRIX_CRS_OMP_H_
+#include <memory.h>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
