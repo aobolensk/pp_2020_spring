@@ -17,8 +17,8 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
     value.reserve(rows + 1);
     rowIndex.push_back(0);
 
-    for (size_t idx{0}; idx < rows; ++idx) {
-        for (size_t jdx{0}; jdx < cols; ++jdx) {
+    for (int idx{0}; idx < rows; ++idx) {
+        for (int jdx{0}; jdx < cols; ++jdx) {
             if (std::fabs(matrix[idx][jdx]) >= tolerance) {
                 value.push_back(matrix[idx][jdx]);
                 colIndex.push_back(jdx);
@@ -136,7 +136,7 @@ SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& ma
     int tmpCol {0};
 
 #pragma omp parallel for default(shared) private(tmpCol)
-    for (int idx{0}; idx < matrixA.rows; ++idx) {
+    for (int idx = {0}; idx < matrixA.rows; ++idx) {
         std::vector<double> tmpResult(matrixB.rows + 1, 0);
         for (int jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
             tmpCol = matrixA.colIndex[jdx];
@@ -168,8 +168,8 @@ SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& ma
     for (int idx{0}; idx < result.rows; ++idx) {
         size_t size {tmpResultCols[idx].size()};
         if (size != 0) {
-            memcpy(&result.colIndex[count], &tmpResultCols[idx][0], size * sizeof(int));
-            memcpy(&result.value[count], &tmpResultValue[idx][0], size * sizeof(double));
+            std::memcpy(&result.colIndex[count], &tmpResultCols[idx][0], size * sizeof(int));
+            std::memcpy(&result.value[count], &tmpResultValue[idx][0], size * sizeof(double));
             count += size;
         }
     }
