@@ -71,7 +71,7 @@ public:
         cos = min_local;
     }
     // Splitting constructor: вызывается при порождении новой задачи
-    reduce_par(reduce_par& r, split) : cos(1.1), next(0), len(0), points(r.points), prev_p(0, 0), cur_p(0, 0) {}
+    reduce_par(reduce_par& r, split) : cos(1.1), next(0), len(0), points(r.points), prev_p(r.prev_p), cur_p(r.cur_p) {}
     // Join: объединяет результаты двух задач (текущей и r)
 
     void join(const reduce_par& r) {
@@ -98,23 +98,51 @@ private:
 
 int func(std::vector<std::pair<double, double>> points)
 {
-    size_t n = points.size();
-    /*double *x = new double[n];
-    for (size_t i = 0; i < n; ++i) {
-        x[i] = points[i].first;
-        std::cout << x[i] << "\n";
-    }*/
+    size_t size = points.size();
+    size_t base_id = 0;
+    std::vector<std::pair<double, double>> Convex_Hull(1);
     std::pair<double, double> cur_p;
-    std::pair<double, double> prev_p(0, 0);
+    std::pair<double, double> prev_p;
 
-    prev_p.first = points[0].first - 1;
-    prev_p.second = points[0].second;
-    tick_count t0 = tick_count::now();
-    reduce_par r(points, prev_p, cur_p);
-    parallel_reduce(blocked_range<size_t>(0, n), r);
-    tick_count t1 = tick_count::now();
-    std::cout << "Reduce: " << std::fixed << r.cos << "\n";
-    std::cout << "Time: " << (t1 - t0).seconds() << " sec.\n";
+    for (size_t i = 1; i < size; i++) {
+        if (points[i].second < points[base_id].second) {
+            base_id = i;
+        }
+        else if ((points[i].second == points[base_id].second) && (points[i].first < points[base_id].first)) {
+            base_id = i;
+        }
+    }
+
+    Convex_Hull[0] = points[base_id];
+    cur_p = Convex_Hull[0];
+    prev_p.first = Convex_Hull[0].first - 1;
+    prev_p.second = Convex_Hull[0].second;
+    int flag_h = 1;
+    do {
+        tick_count t0 = tick_count::now();
+        reduce_par r(points, prev_p, cur_p);
+        parallel_reduce(blocked_range<size_t>(0, size), r);
+        tick_count t1 = tick_count::now();
+        Convex_Hull.push_back(points[r.next]);
+        flag_h++;
+        prev_p.first = cur_p.first;
+        prev_p.second = cur_p.second;
+        cur_p = points[r.next];
+        std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
+    } while (cur_p != Convex_Hull[0]);
+
+    if (flag_h > 1) {
+        flag_h--;
+        Convex_Hull.pop_back();
+    }
+
+    for (int i = 0; i < Convex_Hull.size(); i++) {
+        std::cout << Convex_Hull[i].first << " ";
+        std::cout << Convex_Hull[i].second << "\n";
+
+    }
+    //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
+    //std::cout << "Time: " << (t1 - t0).seconds() << " sec.\n";
     //delete[] x;
     return 0;
 }
@@ -167,6 +195,9 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
                     max_len = len2;
                 }
             }
+            //std::cout << flag_h << "\n";
+            //std::cout << min_cos << " " << max_len << "\n";
+            //std::cout << "\n";
         }
         Convex_Hull.push_back(points[next]);
         flag_h++;
@@ -178,6 +209,12 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
     if (flag_h > 1) {
         flag_h--;
         Convex_Hull.pop_back();
+    }
+
+    for (int i = 0; i < Convex_Hull.size(); i++) {
+        std::cout << Convex_Hull[i].first << " ";
+        std::cout << Convex_Hull[i].second << "\n";
+
     }
 
     return Convex_Hull;
