@@ -47,8 +47,6 @@ public:
         double scalar;
         double cur_cos;
         int flag_h = 1;
-        std::pair<double, double> base_p = std::make_pair(0, 0);
-        int base_id = 0;
         std::vector<std::pair<double, double>> xloc = points;
         //Convex_Hull.push_back(cur_p);
         size_t end = r.end();
@@ -105,7 +103,8 @@ public:
     }
     // Splitting constructor: вызывается при порождении новой задачи
     reduce_par(reduce_par& r, split) : 
-        cos(1.1), next(0), len(0), points(r.points), Convex_Hull(r.Convex_Hull), prev_p(r.prev_p), cur_p(r.cur_p) {}
+        cos(1.1), next(0), len(0), points(r.points), Convex_Hull(r.Convex_Hull),
+        prev_p(r.prev_p), cur_p(r.cur_p), base_id(r.base_id), base_p(r.base_p) {}
     // Join: объединяет результаты двух задач (текущей и r)
 
     void join(const reduce_par& r) {
@@ -129,12 +128,15 @@ public:
         }*/
     }
         //min_cos = std::min(min_cos, r.sum); }
-    reduce_par(std::vector<std::pair<double, double>> x, std::vector<std::pair<double, double>> l, std::pair<double, double> y, std::pair<double, double> z) :
-        cos(1.1), next(0), len(0), points(x), Convex_Hull(l), prev_p(y), cur_p(z) {}
+    reduce_par(std::vector<std::pair<double, double>> x, std::vector<std::pair<double, double>> l,
+        std::pair<double, double> y, std::pair<double, double> z, int id, std::pair<double, double> p) :
+        cos(1.1), next(0), len(0), points(x), Convex_Hull(l), prev_p(y), cur_p(z), base_id(id), base_p(p) {}
 private:
     std::vector<std::pair<double, double>> points;
     std::pair<double, double > prev_p;
     std::pair<double, double > cur_p;
+    std::pair<double, double> base_p;
+    int base_id;
 };
 
 std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double>> points)
@@ -165,7 +167,7 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
 
     //do {
     tick_count t0 = tick_count::now();
-    reduce_par r(points, Convex_Hull, prev_p, cur_p);
+    reduce_par r(points, Convex_Hull, prev_p, cur_p, base_id, base_p);
     parallel_reduce(blocked_range<size_t>(0, size, size / num_thr), r);
     tick_count t1 = tick_count::now();
     Convex_Hull.push_back(points[r.next]);
