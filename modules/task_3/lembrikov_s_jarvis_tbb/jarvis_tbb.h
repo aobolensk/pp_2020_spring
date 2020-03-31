@@ -9,7 +9,7 @@
 #include <utility>
 #include <tbb/tbb.h>
 
-int func(std::vector<std::pair<double, double>> points);
+std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double>> points);
 
 void Proba_While_Tbb(std::vector<std::pair<double, double>> points);
 

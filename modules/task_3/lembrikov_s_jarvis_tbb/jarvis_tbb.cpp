@@ -96,7 +96,7 @@ private:
     std::pair<double, double > cur_p;
 };
 
-int func(std::vector<std::pair<double, double>> points)
+std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double>> points)
 {
     size_t size = points.size();
     size_t base_id = 0;
@@ -118,6 +118,8 @@ int func(std::vector<std::pair<double, double>> points)
     prev_p.first = Convex_Hull[0].first - 1;
     prev_p.second = Convex_Hull[0].second;
     int flag_h = 1;
+    task_scheduler_init init(2);
+
     do {
         tick_count t0 = tick_count::now();
         reduce_par r(points, prev_p, cur_p);
@@ -128,23 +130,19 @@ int func(std::vector<std::pair<double, double>> points)
         prev_p.first = cur_p.first;
         prev_p.second = cur_p.second;
         cur_p = points[r.next];
-        std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
+        //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
     } while (cur_p != Convex_Hull[0]);
+    init.terminate();
 
     if (flag_h > 1) {
         flag_h--;
         Convex_Hull.pop_back();
     }
 
-    for (int i = 0; i < Convex_Hull.size(); i++) {
-        std::cout << Convex_Hull[i].first << " ";
-        std::cout << Convex_Hull[i].second << "\n";
-
-    }
     //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
     //std::cout << "Time: " << (t1 - t0).seconds() << " sec.\n";
     //delete[] x;
-    return 0;
+    return Convex_Hull;
 }
 std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, double>> points) {
     size_t size = points.size();
@@ -209,12 +207,6 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
     if (flag_h > 1) {
         flag_h--;
         Convex_Hull.pop_back();
-    }
-
-    for (int i = 0; i < Convex_Hull.size(); i++) {
-        std::cout << Convex_Hull[i].first << " ";
-        std::cout << Convex_Hull[i].second << "\n";
-
     }
 
     return Convex_Hull;
