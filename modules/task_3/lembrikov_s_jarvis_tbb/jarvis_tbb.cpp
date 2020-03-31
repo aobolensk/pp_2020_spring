@@ -47,6 +47,8 @@ public:
         double scalar;
         double cur_cos;
         int flag_h = 1;
+        std::pair<double, double> base_p = std::make_pair(0, 0);
+        int base_id = 0;
         std::vector<std::pair<double, double>> xloc = points;
         //Convex_Hull.push_back(cur_p);
         size_t end = r.end();
@@ -70,6 +72,20 @@ public:
                     }
                 }
             }
+            len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+            len2 = sqrt(pow((base_p.first - cur_p.first), 2) + pow((base_p.second - cur_p.second), 2));
+            scalar = ((prev_p.first - cur_p.first) * (base_p.first - cur_p.first) +
+                (prev_p.second - cur_p.second) * (base_p.second - cur_p.second));
+            cur_cos = scalar / len1 / len2;
+
+            if (cur_cos < min_local) {
+                next = base_id;
+            }
+            else if (cur_cos == min_local) {
+                if (len < len2) {
+                    next = base_id;
+                }
+            }
                 Convex_Hull.push_back(points[next]);
                 flag_h++;
                 prev_p.first = cur_p.first;
@@ -78,11 +94,14 @@ public:
                 //if (min_local > xloc[i].first)
                   //  min_local = xloc[i].first;
         } while (cur_p != Convex_Hull[0]);
+        /*for (int i = 0; i < 5; i++) {
+            std::cout << Convex_Hull[i].first << "\n";
+        }*/
         //cos = min_local;
-        if (flag_h > 1) {
+        /*if (flag_h > 1) {
             flag_h--;
             Convex_Hull.pop_back();
-        }
+        }*/
     }
     // Splitting constructor: вызывается при порождении новой задачи
     reduce_par(reduce_par& r, split) : 
@@ -93,10 +112,10 @@ public:
         int size = r.Convex_Hull.size();
         std::pair<double, double > buf;
 
-        for (int i = 0; i < size; i++) {
+        /*for (int i = 0; i < size; i++) {
             buf = r.Convex_Hull[i];
             Convex_Hull.push_back(buf);
-        }
+        }*/
         /*if (cos > r.cos) {
             cos = r.cos;
             len = r.len;
@@ -141,22 +160,83 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
     prev_p.second = Convex_Hull[0].second;
     int flag_h = 1;
     int num_thr = 2;
+    std::pair<double, double> base_p = cur_p;
     task_scheduler_init init(num_thr);
 
     //do {
-        tick_count t0 = tick_count::now();
-        reduce_par r(points, Convex_Hull, prev_p, cur_p);
-        parallel_reduce(blocked_range<size_t>(0, size, size), r);
-        tick_count t1 = tick_count::now();
-        Convex_Hull.push_back(points[r.next]);
-        flag_h++;
-        prev_p.first = cur_p.first;
-        prev_p.second = cur_p.second;
-        cur_p = points[r.next];
-        //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
-    //} while (cur_p != Convex_Hull[0]);
+    tick_count t0 = tick_count::now();
+    reduce_par r(points, Convex_Hull, prev_p, cur_p);
+    parallel_reduce(blocked_range<size_t>(0, size, size / num_thr), r);
+    tick_count t1 = tick_count::now();
+    Convex_Hull.push_back(points[r.next]);
+    flag_h++;
+    prev_p.first = cur_p.first;
+    prev_p.second = cur_p.second;
+    cur_p = points[r.next];
+    //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
+//} while (cur_p != Convex_Hull[0]);
     init.terminate();
+    std::vector<std::pair<double, double>> points_last;
+    int razmer_mas_i;
+    int razmer_mas = 1;
 
+
+    //points_last.push_back(base_p);
+
+    razmer_mas = r.Convex_Hull.size();
+    points_last.resize(razmer_mas);
+    for (int j = 0; j < razmer_mas; j++) {
+        points_last[j] = r.Convex_Hull[j];
+        //points_last[razmer_mas + j] = cur_p;
+    }
+
+    std::pair<double, double > pr_p;
+    int next = 0;
+    flag_h = 1;
+    double mx_ln = 0;
+    double mn_cs;
+    double len1;
+    double len2;
+    double scalar;
+    double cur_cos;
+    cur_p = r.Convex_Hull[0];
+    pr_p.first = Convex_Hull[0].first - 1;
+    pr_p.second = Convex_Hull[0].second;
+    Convex_Hull.pop_back();
+    do {
+        mn_cs = 1.1;
+        for (int i = 0; i < razmer_mas; i++) {
+            len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
+            len2 = sqrt(pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2));
+            scalar = ((pr_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
+                (pr_p.second - cur_p.second) * (points_last[i].second - cur_p.second));
+            if ((len1 == 0) || (len2 == 0))
+                cur_cos = 1.1;
+            else
+                cur_cos = scalar / len1 / len2;
+            if (cur_cos < mn_cs) {
+                mn_cs = cur_cos;
+                mx_ln = len2;
+                next = i;
+            }
+            else if (cur_cos == mn_cs) {
+                if (mx_ln < len2) {
+                    next = i;
+                    mx_ln = len2;
+                }
+            }
+        }
+        Convex_Hull.push_back(points_last[next]);
+        flag_h++;
+        pr_p.first = cur_p.first;
+        pr_p.second = cur_p.second;
+        cur_p = points_last[next];
+    } while (cur_p != Convex_Hull[0]);
+
+    if (flag_h > 1) {
+        flag_h--;
+        Convex_Hull.pop_back();
+    }
     /*if (flag_h > 1) {
         flag_h--;
         Convex_Hull.pop_back();
@@ -165,7 +245,7 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
     //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
     //std::cout << "Time: " << (t1 - t0).seconds() << " sec.\n";
     //delete[] x;
-    return r.Convex_Hull;
+    return Convex_Hull;
 }
 std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, double>> points) {
     size_t size = points.size();
@@ -220,6 +300,7 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
             //std::cout << min_cos << " " << max_len << "\n";
             //std::cout << "\n";
         }
+
         Convex_Hull.push_back(points[next]);
         flag_h++;
         prev_p.first = cur_p.first;
