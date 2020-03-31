@@ -82,14 +82,13 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2, const unsigned& n_
     if (!isSquared(mat1) || !isSquared(mat2) || mat1.size() != mat2.size())
         throw std::logic_error("Matrix should be squared");
 
-    omp_set_num_threads(n_threads);
     size_t n = mat1.size();
     size_t q = std::sqrt(n_threads);
     size_t block_size = n / q;
 
     Matrix res(n, std::vector<double>(n, 0));
 
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(n_threads)
     for (size_t jj = 0; jj < n; jj+=block_size) {
         for (size_t kk = 0; kk < n; kk+=block_size) {
             for (size_t i = 0; i < n; ++i) {

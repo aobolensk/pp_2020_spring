@@ -37,8 +37,8 @@ TEST(Omp_Fox, Parallel_And_Naive_Have_The_Same_Answer) {
 }
 
 TEST(Omp_Fox, Parallel_And_Block_Have_The_Same_Answer) {
-    auto mat1 = getRandomMatrix(500);
-    auto mat2 = getRandomMatrix(500);
+    auto mat1 = getRandomMatrix(1500);
+    auto mat2 = getRandomMatrix(1500);
     
     double t = omp_get_wtime();
     auto res1 = blockMultiplication(mat1, mat2);
