@@ -108,9 +108,9 @@ TEST(monte_carlo_par, integral_par_and_seq_equal_check) {
 }
 
 TEST(monte_carlo_par, DISABLED_integral_time_check) {
-    // ellipse
+    // f = x1 * x1 * x1 + x2 * x2 * x2 + x3 * x3 * x3
     std::function<double(const std::vector<double>&)> func = [](const std::vector<double>& x) {
-        return (-1.0 + pow(x[0] / 3.0, 2) + pow(x[1] / 2.0, 2) + pow(x[2] / 1.0, 2)); };
+        return (x[0] * x[0] * x[0] + x[1] * x[1] * x[1] + x[2] * x[2] * x[2]); };
 
     std::vector<double> lowLimInt = { 0, 0, 0 };
     std::vector<double> highLimInt = { 2, 2, 2 };
