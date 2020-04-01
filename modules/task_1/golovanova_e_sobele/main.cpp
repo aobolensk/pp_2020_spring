@@ -15,11 +15,11 @@ TEST(sobel, uncorrect_height) {
   ASSERT_ANY_THROW(getRandomMatrix(1, 0));
 }
 
-TEST(sobel, uncorrect_size) {
+TEST(sobel, uncorrect_size_1) {
   ASSERT_ANY_THROW(getRandomMatrix(0, 0));
 }
 
-TEST(sobel, correct_size) {
+TEST(sobel, correct_size_2) {
   ASSERT_NO_THROW(getRandomMatrix(1, 1));
 }
 
