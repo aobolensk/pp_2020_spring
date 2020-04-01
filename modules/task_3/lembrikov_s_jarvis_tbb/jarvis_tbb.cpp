@@ -50,8 +50,8 @@ double value_of_cos(std::pair<double, double> prev_p, std::pair<double, double> 
     double scalar;
     double cos;
 
-    len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
-    len2 = sqrt(pow((next_p.first - cur_p.first), 2) + pow((next_p.second - cur_p.second), 2));
+    len1 = length(prev_p, cur_p);
+    len2 = length(next_p, cur_p);
     scalar = ((prev_p.first - cur_p.first) * (next_p.first - cur_p.first) +
         (prev_p.second - cur_p.second) * (next_p.second - cur_p.second));
     if ((len1 == 0) || (len2 == 0))
