@@ -90,7 +90,7 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> answer_omp;
-    size_t size_a = 8;
+    size_t size_a = 10000;
     int num_thr = 1;
     double t1, t2, t3;
 
