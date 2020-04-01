@@ -13,7 +13,7 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
 
 void Proba_While_Tbb(std::vector<std::pair<double, double>> points);
 double length(std::pair<double, double> a, std::pair<double, double> b);
-double value_of_cos(std::pair<double, double> prev_p, std::pair<double, double> cur_p, std::pair<double, double> next_p);
+double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cur, std::pair<double, double> next);
 
 std::vector<std::pair<double, double>> getRandomPoints(int n);
 std::vector<std::pair<double, double>> getNegativePoints(int n);

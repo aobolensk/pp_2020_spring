@@ -44,11 +44,18 @@ double length(std::pair<double, double> a, std::pair<double, double> b) {
     return len;
 }
 
-double value_of_cos(std::pair<double, double> prev_p, std::pair<double, double> cur_p, std::pair<double, double> next_p) {
+double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cur, std::pair<double, double> next) {
     double len1;
     double len2;
     double scalar;
     double cos;
+    std::pair<double, double> cur_p;
+    std::pair<double, double> prev_p;
+    std::pair<double, double> next_p;
+
+    cur_p = cur;
+    prev_p = prev;
+    next_p = next;
 
     len1 = length(prev_p, cur_p);
     len2 = length(next_p, cur_p);
