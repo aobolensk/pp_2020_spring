@@ -40,8 +40,7 @@ double getIntegralMonteCarloPar(const std::function<double(const std::vector<dou
             }
             return partRes;
         },
-        std::plus<double>()
-    );
+        std::plus<double>() );
 
     // Monte-Carlo calc
     for (unsigned int i = 0; i < countDims; i++) {
