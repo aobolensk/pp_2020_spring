@@ -108,7 +108,7 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     //t2 = omp_get_wtime();
     answer_tbb = func(a);
     tbb::tick_count t3 = tbb::tick_count::now();
-    answer_omp = Jarvis_Omp(a, num_thr);
+    //answer_omp = Jarvis_Omp(a, num_thr);
     tbb::tick_count t4 = tbb::tick_count::now();
     //t3 = omp_get_wtime();
 
@@ -116,7 +116,7 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     std::cout << "tbb_time = " << (t3 - t2).seconds() << "\n";
     std::cout << "omp_time = " << (t4 - t3).seconds() << "\n";
 
-    EXPECT_EQ(answer_seq, answer_omp);
+    EXPECT_EQ(answer_seq, answer_tbb);
 }
 /*
 TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
