@@ -68,8 +68,7 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
 }
 
 class reduce_par {
-
-public:
+    public:
     int next;
     double len;
     std::vector<std::pair<double, double>> Convex_Hull;
@@ -143,7 +142,7 @@ public:
         }
     }
 
-    reduce_par(reduce_par& r, tbb::split) :
+    reduce_par(const reduce_par& r, tbb::split) :
         points(r.points), Convex_Hull(r.Convex_Hull),
         pr_p(r.pr_p), cur_p(r.cur_p), base_id(r.base_id), base_po(r.base_po) {}
 
@@ -159,7 +158,8 @@ public:
     reduce_par(std::vector<std::pair<double, double>> x, std::vector<std::pair<double, double>> l,
         std::pair<double, double> y, std::pair<double, double> z, int id, std::pair<double, double> p) :
         next(0), len(0), points(x), Convex_Hull(l), pr_p(y), cur_p(z), base_id(id), base_po(p) {}
-private:
+
+    private:
     std::vector<std::pair<double, double>> points;
     std::pair<double, double > pr_p;
     std::pair<double, double > cur_p;
@@ -177,7 +177,6 @@ std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, 
     if (size < 3) {
         Convex_Hull = Jarvis_Seq(points);
     } else {
-
         for (size_t i = 1; i < size; i++) {
             if (points[i].second < points[base_id].second) {
                 base_id = i;
@@ -217,6 +216,7 @@ std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, 
         double len2;
         double scalar;
         double cur_cos;
+        double buf;
         cur_p = r.Convex_Hull[0];
         pr_p.first = Convex_Hull[0].first - 1;
         pr_p.second = Convex_Hull[0].second;
@@ -224,7 +224,8 @@ std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, 
             mn_cs = 1.1;
             for (int i = 0; i < razmer_mas; i++) {
                 len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
-                len2 = sqrt(pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2));
+                buf = pow((points_last[i].first - cur_p.first), 2) + pow((points_last[i].second - cur_p.second), 2);
+                len2 = sqrt(buf);
                 scalar = ((pr_p.first - cur_p.first) * (points_last[i].first - cur_p.first) +
                     (pr_p.second - cur_p.second) * (points_last[i].second - cur_p.second));
                 if ((len1 == 0) || (len2 == 0))

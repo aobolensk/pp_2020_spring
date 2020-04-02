@@ -1,9 +1,9 @@
 // Copyright 2020 Lembrikov Stepan
+#include <tbb/tbb.h>
 #include <gtest/gtest.h>
 #include <vector>
 #include <utility>
 #include "./jarvis_tbb.h"
-#include <tbb/tbb.h>
 
 TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
     size_t size = 3;
