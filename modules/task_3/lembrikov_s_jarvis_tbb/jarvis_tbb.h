@@ -2,12 +2,11 @@
 #ifndef MODULES_TASK_3_LEMBRIKOV_S_JARVIS_OMP_JARVIS_TBB_H_
 #define MODULES_TASK_3_LEMBRIKOV_S_JARVIS_OMP_JARVIS_TBB_H_
 
-#include <omp.h>
+#include <tbb/tbb.h>
 #include <iostream>
 #include <random>
 #include <vector>
 #include <utility>
-#include <tbb/tbb.h>
 
 double length(std::pair<double, double> a, std::pair<double, double> b);
 double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cur, std::pair<double, double> next);
