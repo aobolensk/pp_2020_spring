@@ -69,14 +69,14 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
 
 class reduce_par {
  public:
-    int next;
-    double len;
+     int next;
+     double len;
     std::vector<std::pair<double, double>> points;
+    std::vector<std::pair<double, double>> Convex_Hull;
     std::pair<double, double > pr_p;
     std::pair<double, double > cur_p;
     std::pair<double, double> base_po;
     int base_id;
-    std::vector<std::pair<double, double>> Convex_Hull;
 
     void operator()(const tbb::blocked_range<size_t> &r) {
         double cos = 1.1;
