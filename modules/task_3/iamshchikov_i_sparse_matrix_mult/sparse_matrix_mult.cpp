@@ -179,5 +179,8 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
         }
     }
 
+    delete[] value;
+    delete[] row;
+
     return res;
 }
