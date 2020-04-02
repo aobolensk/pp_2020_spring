@@ -68,7 +68,7 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
 }
 
 class reduce_par {
-public:
+ public:
     int next;
     double len;
     std::vector<std::pair<double, double>> Convex_Hull;
@@ -159,7 +159,7 @@ public:
         std::pair<double, double> y, std::pair<double, double> z, int id, std::pair<double, double> p) :
         next(0), len(0), points(x), Convex_Hull(l), pr_p(y), cur_p(z), base_id(id), base_po(p) {}
 
-private:
+ private:
     std::vector<std::pair<double, double>> points;
     std::pair<double, double > pr_p;
     std::pair<double, double > cur_p;
