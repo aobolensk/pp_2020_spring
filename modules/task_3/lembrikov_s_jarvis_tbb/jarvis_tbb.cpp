@@ -71,13 +71,13 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
 
 class reduce_par {
 public:
-    double cos;
     int next;
     double len;
     std::vector<std::pair<double, double>> Convex_Hull;
 
     void operator()(const blocked_range<size_t> &r)
     {
+        int cos;
         double min_local = cos;
         double len1;
         double len2;
@@ -86,29 +86,25 @@ public:
         int flag_h = 1;
         std::vector<std::pair<double, double>> xloc = points;
         std::vector<std::pair<double, double>> Convex_Hull_Local;
+
+        std::pair<double, double> base_p = base_po;
+        std::pair<double, double> prev_p = pr_p;
+
         Convex_Hull_Local.push_back(base_p);
+        size_t begin = r.begin();
         size_t end = r.end();
+        //tick_count t0 = tick_count::now();
         do {
             min_local = 1.1;
-            for (size_t i = r.begin(); i != end; ++i) {
-                cur_cos = value_of_cos(prev_p, cur_p, points[i]);
-                len2 = length(points[i], cur_p);
-                if (cur_cos < min_local) {
-                    min_local = cur_cos;
-                    len = len2;
-                    next = i;
-                }
-                else if (cur_cos == min_local) {
-                    if (len < len2) {
-                        next = i;
-                        len = len2;
-                    }
-                }
-                /*len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
-                len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
-                scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
-                    (prev_p.second - cur_p.second) * (points[i].second - cur_p.second));
+            for (size_t i = begin; i != end; ++i) {
+                cur_cos = value_of_cos(prev_p, cur_p, xloc[i]);
+                len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
+                len2 = sqrt(pow((xloc[i].first - cur_p.first), 2) + pow((xloc[i].second - cur_p.second), 2));
+                scalar = ((prev_p.first - cur_p.first) * (xloc[i].first - cur_p.first) +
+                    (prev_p.second - cur_p.second) * (xloc[i].second - cur_p.second));
                 cur_cos = scalar / len1 / len2;
+                //len2 = length(xloc[i], cur_p);
+
                 if (cur_cos < min_local) {
                     min_local = cur_cos;
                     len = len2;
@@ -119,14 +115,10 @@ public:
                         next = i;
                         len = len2;
                     }
-                }*/
+                }
             }
-            len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
-            len2 = sqrt(pow((base_p.first - cur_p.first), 2) + pow((base_p.second - cur_p.second), 2));
-            scalar = ((prev_p.first - cur_p.first) * (base_p.first - cur_p.first) +
-                (prev_p.second - cur_p.second) * (base_p.second - cur_p.second));
-            cur_cos = scalar / len1 / len2;
 
+            cur_cos = value_of_cos(prev_p, cur_p, base_p);
             if (cur_cos < min_local) {
                 next = base_id;
             }
@@ -135,30 +127,32 @@ public:
                     next = base_id;
                 }
             }
-                
-            Convex_Hull_Local.push_back(points[next]);
-                flag_h++;
-                prev_p.first = cur_p.first;
-                prev_p.second = cur_p.second;
-                cur_p = points[next];
-                //if (min_local > xloc[i].first)
-                  //  min_local = xloc[i].first;
+
+            Convex_Hull_Local.push_back(xloc[next]);
+            flag_h++;
+            prev_p.first = cur_p.first;
+            prev_p.second = cur_p.second;
+            cur_p = xloc[next];
         } while (cur_p != Convex_Hull_Local[0]);
-        /*for (int i = 0; i < 5; i++) {
-            std::cout << Convex_Hull[i].first << "\n";
-        }*/
-        //cos = min_local;
-        /*if (flag_h > 1) {
+        //tick_count t1 = tick_count::now();
+        //std::cout << (t1 - t0).seconds() << "\n";
+        if (flag_h > 1) {
             flag_h--;
-            Convex_Hull.pop_back();
-        }*/
-        Convex_Hull.resize(Convex_Hull_Local.size());
-        Convex_Hull = Convex_Hull_Local;
+            Convex_Hull_Local.pop_back();
+        }
+
+        int size = Convex_Hull_Local.size();
+        std::pair<double, double > buf;
+
+        for (int i = 0; i < size; i++) {
+            buf = Convex_Hull_Local[i];
+            Convex_Hull.push_back(buf);
+        }
     }
     // Splitting constructor: вызывается при порождении новой задачи
     reduce_par(reduce_par& r, split) : 
-        cos(1.1), next(0), len(0), points(r.points), Convex_Hull(r.Convex_Hull),
-        prev_p(r.prev_p), cur_p(r.cur_p), base_id(r.base_id), base_p(r.base_p) {}
+        points(r.points), Convex_Hull(r.Convex_Hull),
+        pr_p(r.pr_p), cur_p(r.cur_p), base_id(r.base_id), base_po(r.base_po) {}
     // Join: объединяет результаты двух задач (текущей и r)
 
     void join(const reduce_par& r) {
@@ -169,27 +163,15 @@ public:
             buf = r.Convex_Hull[i];
             Convex_Hull.push_back(buf);
         }
-        /*if (cos > r.cos) {
-            cos = r.cos;
-            len = r.len;
-            next = r.next;
-        }
-        else if (cos == r.cos) {
-            if (len > r.len) {
-                next = r.next;
-                len = r.len;
-            }
-        }*/
     }
-        //min_cos = std::min(min_cos, r.sum); }
     reduce_par(std::vector<std::pair<double, double>> x, std::vector<std::pair<double, double>> l,
         std::pair<double, double> y, std::pair<double, double> z, int id, std::pair<double, double> p) :
-        cos(1.1), next(0), len(0), points(x), Convex_Hull(l), prev_p(y), cur_p(z), base_id(id), base_p(p) {}
+        next(0), len(0), points(x), Convex_Hull(l), pr_p(y), cur_p(z), base_id(id), base_po(p) {}
 private:
     std::vector<std::pair<double, double>> points;
-    std::pair<double, double > prev_p;
+    std::pair<double, double > pr_p;
     std::pair<double, double > cur_p;
-    std::pair<double, double> base_p;
+    std::pair<double, double> base_po;
     int base_id;
 };
 
@@ -215,27 +197,27 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
     prev_p.first = Convex_Hull[0].first - 1;
     prev_p.second = Convex_Hull[0].second;
     int flag_h = 1;
-    int num_thr = 2;
+    int num_thr = 4;
     std::pair<double, double> base_p = cur_p;
-    task_scheduler_init init(num_thr);
 
     //do {
-    tick_count t0 = tick_count::now();
+    //tick_count t0 = tick_count::now();
     reduce_par r(points, Convex_Hull, prev_p, cur_p, base_id, base_p);
-    parallel_reduce(blocked_range<size_t>(0, size, size / num_thr), r);
+    task_scheduler_init init(num_thr);
+    tick_count t0 = tick_count::now();
+    parallel_reduce(blocked_range<size_t>(0, size, size/num_thr), r);
     tick_count t1 = tick_count::now();
-    Convex_Hull.push_back(points[r.next]);
-    flag_h++;
-    prev_p.first = cur_p.first;
-    prev_p.second = cur_p.second;
-    cur_p = points[r.next];
-    //std::cout << "Reduce: " << r.cos << " " << r.len << "\n";
+    //Convex_Hull.push_back(points[r.next]);
+    //flag_h++;
+    //prev_p.first = cur_p.first;
+    //prev_p.second = cur_p.second;
+    //cur_p = points[r.next];
 //} while (cur_p != Convex_Hull[0]);
     init.terminate();
     std::vector<std::pair<double, double>> points_last;
     int razmer_mas_i;
     int razmer_mas = 1;
-
+    //std::cout << "Reduce: " << (t1 - t0).seconds() << "\n";
 
     //points_last.push_back(base_p);
 
@@ -258,7 +240,7 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
     cur_p = r.Convex_Hull[0];
     pr_p.first = Convex_Hull[0].first - 1;
     pr_p.second = Convex_Hull[0].second;
-    Convex_Hull.pop_back();
+    //Convex_Hull.pop_back();
     do {
         mn_cs = 1.1;
         for (int i = 0; i < razmer_mas; i++) {
@@ -341,6 +323,9 @@ std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, 
             scalar = ((prev_p.first - cur_p.first) * (points[i].first - cur_p.first) +
                 (prev_p.second - cur_p.second) * (points[i].second - cur_p.second));
             cur_cos = scalar / len1 / len2;
+            //cur_cos = value_of_cos(prev_p, cur_p, points[i]);
+            //len2 = length(points[i], cur_p);
+
             if (cur_cos < min_cos) {
                 min_cos = cur_cos;
                 max_len = len2;
@@ -645,11 +630,14 @@ std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, 
             mn_cs = 1.1;
 
             for (int i = tid * k; i < ((tid + 1) * k) + ost; i++) {
-                len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
-                len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
-                scalar = ((pr_p.first - cur_p.first) * (points[i].first - cur_p.first) +
-                    (pr_p.second - cur_p.second) * (points[i].second - cur_p.second));
-                cur_cos = scalar / len1 / len2;
+                //len1 = sqrt(pow((pr_p.first - cur_p.first), 2) + pow((pr_p.second - cur_p.second), 2));
+                //len2 = sqrt(pow((points[i].first - cur_p.first), 2) + pow((points[i].second - cur_p.second), 2));
+                //scalar = ((pr_p.first - cur_p.first) * (points[i].first - cur_p.first) +
+                  //  (pr_p.second - cur_p.second) * (points[i].second - cur_p.second));
+                //cur_cos = scalar / len1 / len2;
+
+                cur_cos = value_of_cos(pr_p, cur_p, points[i]);
+                len2 = length(points[i], cur_p);
 
                 if (cur_cos < mn_cs) {
                     mn_cs = cur_cos;

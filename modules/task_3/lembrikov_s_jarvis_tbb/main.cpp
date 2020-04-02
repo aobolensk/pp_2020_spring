@@ -89,25 +89,32 @@ TEST(Vector_Min_MPI, Test_On_2_Equal_Points_EQ) {
 TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer_seq;
+    std::vector<std::pair<double, double>> answer_tbb;
     std::vector<std::pair<double, double>> answer_omp;
-    size_t size_a = 10000;
+    size_t size_a = 10000000;
     int num_thr = 1;
-    double t1, t2, t3;
+    //double t1, t2, t3;
 
     a = getRandomPoints(size_a);
     func(a);
 
 
-    //Proba_While_Tbb(a);
+    //Proba_While_Tbb(a); 
     a = getRandomPoints(size_a);
-    t1 = omp_get_wtime();
+    //t1 = omp_get_wtime();
+    tbb::tick_count t1 = tbb::tick_count::now();
     answer_seq = Jarvis_Seq(a);
-    t2 = omp_get_wtime();
-    answer_omp = func(a);
-    t3 = omp_get_wtime();
+    tbb::tick_count t2 = tbb::tick_count::now();
+    //t2 = omp_get_wtime();
+    answer_tbb = func(a);
+    tbb::tick_count t3 = tbb::tick_count::now();
+    answer_omp = Jarvis_Omp(a, num_thr);
+    tbb::tick_count t4 = tbb::tick_count::now();
+    //t3 = omp_get_wtime();
 
-    std::cout << "seq_time = " << t2 - t1 << "\n";
-    std::cout << "omp_time = " << t3 - t2 << "\n";
+    std::cout << "seq_time = " << (t2 - t1).seconds() << "\n";
+    std::cout << "tbb_time = " << (t3 - t2).seconds() << "\n";
+    std::cout << "omp_time = " << (t4 - t3).seconds() << "\n";
 
     EXPECT_EQ(answer_seq, answer_omp);
 }
