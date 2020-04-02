@@ -170,7 +170,7 @@ private:
     int base_id;
 };
 
-std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double>> points)
+std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, double>> points, int num_thr)
 {
     size_t size = points.size();
     size_t base_id = 0;
@@ -192,7 +192,6 @@ std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double
     prev_p.first = Convex_Hull[0].first - 1;
     prev_p.second = Convex_Hull[0].second;
     int flag_h = 1;
-    int num_thr = 4;
     std::pair<double, double> base_p = cur_p;
 
     reduce_par r(points, Convex_Hull, prev_p, cur_p, base_id, base_p);

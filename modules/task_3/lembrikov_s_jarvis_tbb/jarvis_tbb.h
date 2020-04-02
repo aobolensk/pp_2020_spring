@@ -9,15 +9,12 @@
 #include <utility>
 #include <tbb/tbb.h>
 
-std::vector<std::pair<double, double>> func(std::vector<std::pair<double, double>> points);
-
-void Proba_While_Tbb(std::vector<std::pair<double, double>> points);
 double length(std::pair<double, double> a, std::pair<double, double> b);
 double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cur, std::pair<double, double> next);
 
 std::vector<std::pair<double, double>> getRandomPoints(int n);
 std::vector<std::pair<double, double>> getNegativePoints(int n);
 std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, double>> points);
-std::vector<std::pair<double, double>> Jarvis_Omp(std::vector<std::pair<double, double>> points, int num_threads);
+std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, double>> points, int num_thr);
 
 #endif  // MODULES_TASK_3_LEMBRIKOV_S_JARVIS_TBB_JARVIS_TBB_H_
