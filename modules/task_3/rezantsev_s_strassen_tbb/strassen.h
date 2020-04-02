@@ -1,9 +1,9 @@
 // Copyright 2020 Rezantsev Sergey
 #ifndef MODULES_TASK_3_REZANTSEV_S_STRASSEN_TBB_STRASSEN_H_
 #define MODULES_TASK_3_REZANTSEV_S_STRASSEN_TBB_STRASSEN_H_
-#include <vector>
 #include <tbb/task_group.h>
 #include <tbb/tbb.h>
+#include <vector>
 void splitMatrix(std::vector<double> a, std::vector<double> *a11,
                  std::vector<double> *a22, std::vector<double> *a12,
                  std::vector<double> *a21, int n);

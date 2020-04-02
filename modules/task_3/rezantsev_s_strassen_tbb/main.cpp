@@ -65,7 +65,7 @@ TEST(Strassen_tbb, correct_strassen_16x16_2) {
 }
 
 TEST(Strassen_tbb, correct_strassen_128x128) {
-  int n = 1024;
+  int n = 32;
   std::vector<double> a(n * n), b(n * n), c(n * n), d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;

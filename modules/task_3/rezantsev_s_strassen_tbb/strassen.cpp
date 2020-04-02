@@ -180,7 +180,6 @@ void strassen_tbb(const std::vector<double> &a, const std::vector<double> &b,
     return;
   }
   n = n / 2;
-  
   std::vector<double> a11(n * n);
   std::vector<double> a12(n * n);
   std::vector<double> a21(n * n);
