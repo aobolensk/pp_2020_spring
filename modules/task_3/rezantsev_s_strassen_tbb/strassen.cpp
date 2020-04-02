@@ -206,10 +206,6 @@ void strassen_tbb(const std::vector<double> &a, const std::vector<double> &b,
   std::vector<double> *p5 = &pp5;
   std::vector<double> *p6 = &pp6;
   std::vector<double> *p7 = &pp7;
-  std::vector<double> *rr11 = &r11;
-  std::vector<double> *rr12 = &r12;
-  std::vector<double> *rr21 = &r21;
-  std::vector<double> *rr22 = &r22;
   splitMatrix(a, &a11, &a22, &a12, &a21, n * 2);
   splitMatrix(b, &b11, &b22, &b12, &b21, n * 2);
   tbb::task_scheduler_init init(8);
