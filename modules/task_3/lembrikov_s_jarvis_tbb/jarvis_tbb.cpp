@@ -71,6 +71,11 @@ class reduce_par {
  public:
     int next;
     double len;
+    std::vector<std::pair<double, double>> points;
+    std::pair<double, double > pr_p;
+    std::pair<double, double > cur_p;
+    std::pair<double, double> base_po;
+    int base_id;
     std::vector<std::pair<double, double>> Convex_Hull;
 
     void operator()(const tbb::blocked_range<size_t> &r) {
@@ -158,13 +163,6 @@ class reduce_par {
     reduce_par(std::vector<std::pair<double, double>> x, std::vector<std::pair<double, double>> l,
         std::pair<double, double> y, std::pair<double, double> z, int id, std::pair<double, double> p) :
         next(0), len(0), points(x), Convex_Hull(l), pr_p(y), cur_p(z), base_id(id), base_po(p) {}
-
- private:
-    std::vector<std::pair<double, double>> points;
-    std::pair<double, double > pr_p;
-    std::pair<double, double > cur_p;
-    std::pair<double, double> base_po;
-    int base_id;
 };
 
 std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, double>> points, int num_thr) {
