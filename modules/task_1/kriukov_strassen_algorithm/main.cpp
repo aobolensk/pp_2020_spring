@@ -250,8 +250,8 @@ TEST(SequentialStrassen, Time_Test_Strassen_Mult_size_1029) {
   double seconds_r = static_cast<double>(end_r - start_r) / CLOCKS_PER_SEC;
   std::cout << "Regular : " << seconds_r << std::endl;
 
-  /*double seconds_s = static_cast<double>(end_s - start_s) / CLOCKS_PER_SEC;
-  std::cout << "Strassen : " << seconds_s << std::endl;*/
+  double seconds_s = static_cast<double>(end_s - start_s) / CLOCKS_PER_SEC;
+  std::cout << "Strassen : " << seconds_s << std::endl;
 
   EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
 }
