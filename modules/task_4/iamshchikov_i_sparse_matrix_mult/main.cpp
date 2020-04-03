@@ -1,28 +1,28 @@
 // Copyright 2020 Iamshchikov Ivan
 #include <gtest/gtest.h>
+#include <thread>
 #include <random>
 #include <ctime>
 #include <cmath>
-#include "tbb/tbb.h"
-#include "../../modules/task_3/iamshchikov_i_sparse_matrix_mult/sparse_matrix_mult.h"
+#include "../../modules/task_4/iamshchikov_i_sparse_matrix_mult/sparse_matrix_mult.h"
 
-TEST(sparse_matrix_mult_seq, can_create_matrix) {
+TEST(sparse_matrix_mult_std, can_create_matrix) {
     ASSERT_NO_THROW(CcsMatrix m(1, 1, 1));
 }
 
-TEST(sparse_matrix_mult_seq, throw_when_number_of_rows_are_not_positive) {
+TEST(sparse_matrix_mult_std, throw_when_number_of_rows_are_not_positive) {
     ASSERT_ANY_THROW(CcsMatrix m(-3, 1, 1));
 }
 
-TEST(sparse_matrix_mult_seq, throw_when_number_of_columns_are_not_positive) {
+TEST(sparse_matrix_mult_std, throw_when_number_of_columns_are_not_positive) {
     ASSERT_ANY_THROW(CcsMatrix m(1, 0, 1));
 }
 
-TEST(sparse_matrix_mult_seq, throw_when_number_of_elements_are_not_positive) {
+TEST(sparse_matrix_mult_std, throw_when_number_of_elements_are_not_positive) {
     ASSERT_ANY_THROW(CcsMatrix m(1, 0, -3));
 }
 
-TEST(sparse_matrix_mult_seq, multiply_vector_by_vector) {
+TEST(sparse_matrix_mult_std, multiply_vector_by_vector) {
     CcsMatrix m1(5, 1, 2);
     m1.value = { 2, 1 };
     m1.row = { 1, 2 };
@@ -41,7 +41,7 @@ TEST(sparse_matrix_mult_seq, multiply_vector_by_vector) {
     EXPECT_EQ(m3, matrixMultiplicate(&m1, &m2));
 }
 
-TEST(sparse_matrix_mult_seq, multiply_matrix_by_vector) {
+TEST(sparse_matrix_mult_std, multiply_matrix_by_vector) {
     CcsMatrix m1(4, 5, 6);
     m1.value = { 1, 3, 2, 5, 4, 8 };
     m1.row = { 0, 3, 1, 2, 3, 0 };
@@ -60,7 +60,7 @@ TEST(sparse_matrix_mult_seq, multiply_matrix_by_vector) {
     EXPECT_EQ(m3, matrixMultiplicate(&m1, &m2));
 }
 
-TEST(sparse_matrix_mult_seq, multiply_vector_by_matrix) {
+TEST(sparse_matrix_mult_std, multiply_vector_by_matrix) {
     CcsMatrix m1(1, 4, 2);
     m1.value = { 2, 1 };
     m1.row = { 0, 0 };
@@ -79,7 +79,7 @@ TEST(sparse_matrix_mult_seq, multiply_vector_by_matrix) {
     EXPECT_EQ(m3, matrixMultiplicate(&m1, &m2));
 }
 
-TEST(sparse_matrix_mult_seq, multiply_matrix_by_matrix) {
+TEST(sparse_matrix_mult_std, multiply_matrix_by_matrix) {
     CcsMatrix m1(4, 5, 6);
     m1.value = { 1, 3, 2, 5, 4, 8 };
     m1.row = { 0, 3, 1, 2, 3, 0 };
@@ -99,7 +99,6 @@ TEST(sparse_matrix_mult_seq, multiply_matrix_by_matrix) {
 }
 
 int main(int argc, char** argv) {
-    tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

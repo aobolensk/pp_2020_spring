@@ -3,10 +3,10 @@
 #include <cstring>
 #include <vector>
 #include <random>
-#include <ctime>
+#include <chrono>
 #include <cmath>
-#include "tbb/tbb.h"
-#include "../../modules/task_3/iamshchikov_i_sparse_matrix_mult/sparse_matrix_mult.h"
+#include <thread>
+#include "../../modules/task_4/iamshchikov_i_sparse_matrix_mult/sparse_matrix_mult.h"
 
 CcsMatrix::CcsMatrix(int _M, int _N, int nz) {
     if (_M <= 0 || _N <= 0) throw "wrong size";
@@ -18,22 +18,76 @@ CcsMatrix::CcsMatrix(int _M, int _N, int nz) {
     row.resize(nz);
 }
 
-double measurementOfTime(int M1, int N1, int N2, int num_threads) {
-    if (M1 <= 0 || N1 <= 0 || N2 <= 0) throw "wrong size";
-    if (num_threads <= 0) throw "wrong number of threads";
+int getInvolvedThreadNumber(int n, int th_num) {
+    if (n / th_num == 0) return n;
+    else if (n / th_num > 0) return th_num;
+    else
+        throw - 1;
+}
 
+void setNumberOfColumn(int nthreads, int N, std::vector<int>* number_of_col,
+                       std::vector<int>* start_col) {
+    int count = N / nthreads;
+    if (N % nthreads != 0) {
+        for (int i = 0; i < N % nthreads; ++i)
+            number_of_col->push_back(count + 1);
+
+        for (int i = N % nthreads; i < nthreads; ++i)
+            number_of_col->push_back(count);
+    } else {
+        for (int i = 0; i < nthreads; ++i)
+            number_of_col->push_back(count);
+    }
+
+    int tmp = 0;
+    start_col->push_back(0);
+    for (int i = 1; i < nthreads; i++) {
+        tmp += number_of_col->at(i - 1);
+        start_col->push_back(tmp);
+    }
+}
+
+void  multOnThread(int th_num, std::vector<int>* number_of_col, 
+                  std::vector<int>* start_col, const CcsMatrix* transposed_m1,
+                  const CcsMatrix* m2, CcsMatrix* res, 
+                  std::vector<double>* value, std::vector<int>* row) {
+    int colNZ = 0;
+    double value_tmp;
+    int begin = start_col->at(th_num),
+        end = begin + number_of_col->at(th_num);
+    
+    for (int j = begin; j < end; j++) {
+        colNZ = 0;
+        for (int i = 0; i < transposed_m1->N; i++) {
+            value_tmp = scalarMultiplication(transposed_m1, m2, i, j);
+            if (value_tmp != 0) {
+                value[j].push_back(value_tmp);
+                row[j].push_back(i);
+                colNZ++;
+            }
+        }
+        res->colIndex[j] = colNZ;
+    }
+}
+
+double measurementOfTime(int M1, int N1, int N2, int nthreads) {
+    if (M1 <= 0 || N1 <= 0 || N2 <= 0) throw "wrong size";
+    if (nthreads <= 0) throw "wrong number of threads";
+
+    std::chrono::time_point<std::chrono::steady_clock> begin, end;
+    std::chrono::milliseconds elapsed_ms;
     CcsMatrix m1(generateMatrix(M1, N1));
     CcsMatrix m2(generateMatrix(N1, N2));
 
-    tbb::task_scheduler_init init(num_threads);
+    begin = std::chrono::steady_clock::now();
 
-    tbb::tick_count t1 = tbb::tick_count::now();
-    matrixMultiplicate(&m1, &m2);
-    tbb::tick_count t2 = tbb::tick_count::now();
+    matrixMultiplicate(&m1, &m2, nthreads);
 
-    init.terminate();
+    end = std::chrono::steady_clock::now();
+    elapsed_ms = 
+    std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
-    return (t2 - t1).seconds();
+    return static_cast<double>(elapsed_ms.count());
 }
 
 bool operator==(const CcsMatrix& m1, const CcsMatrix& m2) {
@@ -109,52 +163,28 @@ double scalarMultiplication(const CcsMatrix* transposed_m, const CcsMatrix* m,
     return res;
 }
 
-class Multiplicator {
- private:
-    CcsMatrix transposed_A, B;
-    std::vector<double>* value;
-    std::vector<int>* row;
-    std::vector<int>* resColIndex;
-
- public:
-    Multiplicator(const CcsMatrix* _transposed_A, const CcsMatrix* _B,
-        std::vector<double>* _value, std::vector<int>* _row,
-        std::vector<int>* _resColIndex) : transposed_A(*_transposed_A), B(*_B),
-        value(_value), row(_row), resColIndex(_resColIndex) {}
-    void operator()(const tbb::blocked_range<int>& r) const {
-        int colNZ = 0, first_col = B.N;
-        double value_tmp;
-        int begin = r.begin(), end = r.end();
-
-        for (int j = begin; j < end; j++) {
-            if (j < first_col) first_col = j;
-
-            colNZ = 0;
-            for (int i = 0; i < transposed_A.N; i++) {
-                value_tmp = scalarMultiplication(&transposed_A, &B, i, j);
-                if (value_tmp != 0) {
-                    value[j].push_back(value_tmp);
-                    row[j].push_back(i);
-                    colNZ++;
-                }
-            }
-            (*resColIndex)[j] = colNZ;
-        }
-    }
-};
-
-CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
+CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2, 
+                             const int nthreads) {
     if (m1->N != m2->M) throw "m1 and m2 are incompatible";
 
+    int involved_th_num;
     CcsMatrix res(m1->M, m2->N, 0);
     CcsMatrix transposed_m1(transposeMatrix(m1));
     int N = res.N;
+    std::vector<int> number_of_col, start_col;
     std::vector<double>* value = new std::vector<double>[N];
     std::vector<int>* row = new std::vector<int>[N];
+    std::thread *threads = new std::thread[nthreads];
 
-    int grainsize = 10;
-    tbb::parallel_for(tbb::blocked_range<int>(0, m2->N, grainsize),
-    Multiplicator(&transposed_m1, m2, value, row, &res.colIndex));
+    involved_th_num = getInvolvedThreadNumber(N, nthreads);
+    setNumberOfColumn(involved_th_num, N, &number_of_col, &start_col);
+
+    for (int i = 0; i < involved_th_num; i++)
+        threads[i] = std::thread(multOnThread, i, &number_of_col, &start_col,
+                                &transposed_m1, m2, &res, value, row);
+
+    for (int i = 0; i < involved_th_num; i++)
+        threads[i].join();
 
     int nz = 0;
     for (int j = 0; j < N; j++) {
@@ -181,6 +211,7 @@ CcsMatrix matrixMultiplicate(const CcsMatrix* m1, const CcsMatrix* m2) {
 
     delete[] value;
     delete[] row;
+    delete[] threads;
 
     return res;
 }
