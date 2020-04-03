@@ -51,7 +51,7 @@ void  multOnThread(int th_num, std::vector<int>* number_of_col,
                   std::vector<int>* start_col, const CcsMatrix* transposed_m1,
                   const CcsMatrix* m2, CcsMatrix* res, 
                   std::vector<double>* value, std::vector<int>* row) {
-    int colNZ = 0, first_col = m2->N;
+    int colNZ = 0;
     double value_tmp;
     int begin = start_col->at(th_num),
         end = begin + number_of_col->at(th_num);
