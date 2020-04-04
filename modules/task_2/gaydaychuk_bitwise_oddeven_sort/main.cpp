@@ -42,20 +42,20 @@
 //     ASSERT_EQ(true, parallelLocalSort(a, 9, 10));
 // }
 
-TEST(OpenMP, Test_GlobalSorting1) {
-    int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
-    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
-}
+// TEST(OpenMP, Test_GlobalSorting1) {
+//     int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 9, 10));
+// }
 
-TEST(OpenMP, Test_GlobalSorting2) {
-    int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 11, 12};
-    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 2));
-}
+// TEST(OpenMP, Test_GlobalSorting2) {
+//     int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 11, 12};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 2));
+// }
 
-TEST(OpenMP, Test_GlobalSorting3) {
-    int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 11, 12};
-    ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 3));
-}
+// TEST(OpenMP, Test_GlobalSorting3) {
+//     int a[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 10, 11, 12};
+//     ASSERT_EQ(true, parallelBitwiseBatcherSort(a, 12, 3));
+// }
 
 
 
@@ -195,6 +195,29 @@ TEST(OpenMP, Test_GlobalSorting3) {
 //     }
 //     ASSERT_EQ(2*2, 4);
 // }
+
+TEST(OpenMP, HPC_gain) {
+    int size = 1000000;
+    int *ompArray = new int[size];
+    int *seqArray = new int[size];
+    std::srand(static_cast<unsigned>(999));
+    for (int i = 0; i < size; i++) {
+        ompArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
+        seqArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
+    }
+    double timeSeq = 0, timeOmp = 0;
+    bool ompCheck = true, seqCheck = true;
+    // bitwiseSort(seqArray, size);
+    bitwiseSortWithTiming(seqArray, size, &timeSeq);
+    seqCheck = checkAscending(seqArray, size);
+    // ompCheck = parallelBitwiseBatcherSort(ompArray, size, 4);
+    ompCheck = parallelBitwiseBatcherSort(ompArray, size, 8, &timeOmp);
+    printf("\n batcher_gain = %f", timeSeq / timeOmp);
+    printf("\n timeSeq = %f", timeSeq);
+    printf("\n timeOmp = %f", timeOmp);
+
+    ASSERT_EQ(true, ompCheck && seqCheck);
+}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

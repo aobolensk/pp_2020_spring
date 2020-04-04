@@ -335,6 +335,24 @@ void bitwiseSort(std::vector<int> *vec) {
     }
 }
 
+void bitwiseSortWithTiming(int *p, int length, double *time) {
+    double startTime = 0, endTime = 0;
+    #pragma omp single
+    {
+        if (time != nullptr) {
+            startTime = omp_get_wtime();
+        }
+        int max = getMax(p, length);
+        for (int digit = 1; max / digit > 0; digit *= 10) {
+            sortByDigit(p, length, digit);
+        }
+        if (time != nullptr) {
+            endTime = omp_get_wtime();
+            *time = endTime - startTime;
+        }
+    }
+}
+
 void bitwiseSort(int *p, int length) {
     int max = getMax(p, length);
     for (int digit = 1; max / digit > 0; digit *= 10) {
@@ -432,7 +450,14 @@ void mergeAndSplit(int *arr1, int size1, int *arr2, int size2) {
   }
 }
 
-bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
+bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount, double *time) {
+    double startTime = 0, endTime = 0;
+    #pragma omp single
+    {
+        if (time != nullptr) {
+            startTime = omp_get_wtime();
+        }
+    }
     // definr effective threadCount
     // define areas
     // sort
@@ -464,7 +489,9 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
     {
         #pragma omp single
         {
-            printf("\n SORTING OF EACH SUBARRAY \n");
+            if (time == nullptr) {
+                printf("\n SORTING OF EACH SUBARRAY \n");
+            }
         }
         threadNumber = omp_get_thread_num();
 
@@ -494,17 +521,21 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
         }
 
         bitwiseSort(array + beginIndex, endIndex - beginIndex + 1);
-        bool sortedLocally = checkAscending(
-            array + beginIndex, endIndex - beginIndex + 1);
-        #pragma omp critical
-        {
-            allSubarraysSortedCorrectly &= sortedLocally;
+        if (time != nullptr) {
+            bool sortedLocally = checkAscending(
+                array + beginIndex, endIndex - beginIndex + 1);
+            #pragma omp critical
+            {
+                allSubarraysSortedCorrectly &= sortedLocally;
+            }
         }
         #pragma omp barrier
         #pragma omp single
         {
-            printf(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n"
-            : "\n ARRAYS SORTED NOT CORRECTLY \n");
+            if (time == nullptr) {
+                printf(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n"
+                    : "\n ARRAYS SORTED NOT CORRECTLY \n");
+            }
             NetworkBuilder nb;
             nb.setNetworkSize(effectiveThreadCount);
             parallelArray =  nb.getParallelBlockArray();
@@ -560,13 +591,22 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount) {
         }
         // synchronize the phase
         #pragma omp barrier
-        #pragma omp single
-        {
-            printf("\n PARALLEL MERGING PHASE ENDED \n");
+        if (time == nullptr) {
+            #pragma omp single
+            {
+                printf("\n PARALLEL MERGING PHASE ENDED \n");
+            }
         }
+        
         #pragma omp barrier
     }
-
+    #pragma omp single
+    {
+        if (time != nullptr) {
+            endTime = omp_get_wtime();
+            *time = endTime - startTime;
+        }
+    }
     return checkAscending(array, arraySize);
 }
 
