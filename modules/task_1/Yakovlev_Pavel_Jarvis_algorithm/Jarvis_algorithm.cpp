@@ -5,17 +5,14 @@
 #include <random>
 #include <ctime>
 #include <utility>
+#include <iostream>
 #include "../../../modules/task_1/Yakovlev_Pavel_Jarvis_algorithm/Jarvis_algorithm.h"
 
-std::pair<double, double> getRandomPair() {
-    std::mt19937 gen(static_cast<unsigned int>(time(0)));
-    std::uniform_real_distribution<> distr(0, 50);
-    return std::pair<double, double>(distr(gen), distr(gen));
-}
-
 std::vector<std::pair<double, double>> getRandomVectorOfPair(size_t sz) {
+    std::mt19937 gen(static_cast<unsigned int>(time(0)));
+    std::uniform_real_distribution<> distr(100, 500);
     std::vector<std::pair<double, double>> vec(sz);
-    for (size_t  i = 0; i < sz; i++) { vec[i] = getRandomPair(); }
+    for (size_t i = 0; i < sz; i++) { vec[i] = std::make_pair(distr(gen), distr(gen)); }
     return vec;
 }
 
@@ -24,9 +21,13 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis(std::vector<std::pair<d
     std::vector<std::pair<double, double>> convH;
     size_t firstP = 0;
     for (size_t i = 1; i < sz; i++) {
-        if (points[i].first <= points[firstP].first)
-            if (points[i].second <= points[firstP].second)
+        if (points[i].second < points[firstP].second) {
+            firstP = i;
+        } else if (points[i].second == points[firstP].second) {
+            if (points[i].first <= points[firstP].first) {
                 firstP = i;
+            }
+        }
     }
     convH.push_back(std::make_pair(points[firstP].first, points[firstP].second));
 
@@ -50,7 +51,6 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis(std::vector<std::pair<d
     size_t prev = firstP;
     size_t curr = secondP;
     size_t next = firstP;
-
     while (curr != firstP) {
         double prevX = points[prev].first;
         double prevY = points[prev].second;
