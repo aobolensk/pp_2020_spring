@@ -1,7 +1,7 @@
 // Copyright 2020 Isaev Ilya
+#include <omp.h>
 #include <gtest/gtest.h>
 #include <vector>
-#include <omp.h>
 #include "../../../modules/task_2/isaev_fox_alg/fox_alg.h"
 
 TEST(Omp_Fox, Throws_On_NonEqual_Matrix) {
@@ -29,20 +29,21 @@ TEST(Omp_Fox, Parallel_Implementation_Is_Correct_Size_3x3) {
 TEST(Omp_Fox, Parallel_And_Naive_Have_The_Same_Answer) {
     auto mat1 = getRandomMatrix(15);
     auto mat2 = getRandomMatrix(15);
-    
+
     auto res1 = naiveMultiplication(mat1, mat2);
-    auto res2 = foxAlgParallel(mat1, mat2, 8);
+    auto res2 = foxAlgParallel(mat1, mat2, 4);
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }
 
 TEST(Omp_Fox, Parallel_And_Block_Have_The_Same_Answer) {
-    auto mat1 = getRandomMatrix(1500);
-    auto mat2 = getRandomMatrix(1500);
-    
+    auto mat1 = getRandomMatrix(501);
+    auto mat2 = getRandomMatrix(501);
+
     double t = omp_get_wtime();
     auto res1 = blockMultiplication(mat1, mat2);
     std::cout << "BLOCK " << omp_get_wtime() - t << std::endl;
+
     t = omp_get_wtime();
     auto res2 = foxAlgParallel(mat1, mat2, 4);
     std::cout << "PARALLEL " << omp_get_wtime() - t << std::endl;

@@ -2,14 +2,16 @@
 #ifndef MODULES_TASK_2_ISAEV_FOX_ALG_FOX_ALG_H_
 #define MODULES_TASK_2_ISAEV_FOX_ALG_FOX_ALG_H_
 
+#include <vector>
+
 using Matrix = std::vector<std::vector<double>>;
 
-inline bool isSquared(const Matrix& mat) {
+inline bool isSquared(const Matrix& mat) noexcept {
     return mat.size() == mat[0].size();
 }
 
-inline bool doubleComparison(const double& a, const double& b) {
-    return std::abs(a-b) <= std::numeric_limits<double>::epsilon()*std::max(std::abs(a), std::abs(b));
+inline bool doubleComparison(const double& a, const double& b) noexcept {
+    return std::abs(a-b) <= 0.001*std::abs(a+b);
 }
 
 Matrix getRandomMatrix(const int& n);
