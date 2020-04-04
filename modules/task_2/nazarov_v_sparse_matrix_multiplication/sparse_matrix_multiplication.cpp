@@ -49,11 +49,7 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
     if (col != mat.col)
         throw std::runtime_error("Different numbers of cols");
     for (size_t i = 1; i < rowIndex.size(); ++i) {
-        cpx* tmpVec = new cpx[mat.rowIndex.size()];
-        for (size_t iter = 0; iter < mat.rowIndex.size(); ++iter)
-            tmpVec[iter] = cpx(0,0);
-        // std::vector<size_t> tmpCol;
-#pragma omp parallel for
+        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0,0));
         for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
             cpx sum = 0;
             size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
@@ -69,7 +65,6 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
             }
             if (std::abs(sum.real()) > pow(10, -9) || std::abs(sum.imag()) > pow(10, -9)) {
                 tmpVec[j-1] = sum;
-                // tmpCol.push_back(j-1);
                 NonZeroCounter++;
             }
         }
@@ -79,7 +74,46 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
                 res.colIndex.push_back(iter);
             }
         res.rowIndex.push_back(NonZeroCounter);
-        delete[] tmpVec;
+    }
+    return res;
+}
+
+CRS_Matrix CRS_Matrix::parallelMultiply(const CRS_Matrix& mat) const& {
+    CRS_Matrix res;
+    res.rowIndex.push_back(0);
+    res.row = row;
+    res.col = mat.row;
+    size_t NonZeroCounter = 0;
+    if (col != mat.col)
+        throw std::runtime_error("Different numbers of cols");
+    for (size_t i = 1; i < rowIndex.size(); ++i) {
+        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0,0));
+#pragma omp parallel for schedule(static, 16)
+        for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
+            cpx sum = 0;
+            size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
+            while ((lhsIter < rowIndex[i]) && (rhsIter < mat.rowIndex[j])) {
+                if (colIndex[lhsIter] == mat.colIndex[rhsIter]) {
+                    sum += val[lhsIter++] * mat.val[rhsIter++];
+                } else {
+                    if (colIndex[lhsIter] < mat.colIndex[rhsIter])
+                        lhsIter++;
+                    else
+                        rhsIter++;
+                }
+            }
+            if (std::abs(sum.real()) > pow(10, -9) || std::abs(sum.imag()) > pow(10, -9)) {
+                tmpVec[j-1] = sum;
+#pragma omp atomic
+                NonZeroCounter++;
+            }
+        }
+        for (size_t iter = 0; iter < mat.rowIndex.size(); ++iter)
+            if (std::abs(tmpVec[iter].real()) > pow(10, -9) || std::abs(tmpVec[iter].imag()) > pow(10, -9)) {
+                res.val.push_back(tmpVec[iter]);
+                res.colIndex.push_back(iter);
+            }
+        res.rowIndex.push_back(NonZeroCounter);
     }
     return res;
 }

@@ -24,6 +24,7 @@ class CRS_Matrix {
         rowIndex(rowSize, 0), row(_row), col(_col) {}
     bool operator== (const CRS_Matrix& mat) const&;
     CRS_Matrix operator* (const CRS_Matrix& mat) const&;
+    CRS_Matrix parallelMultiply(const CRS_Matrix& mat) const&;
     CRS_Matrix transpose();
     std::vector<cpx> getVal() {return val;}
     std::vector<size_t> getColIndex() {return colIndex;}

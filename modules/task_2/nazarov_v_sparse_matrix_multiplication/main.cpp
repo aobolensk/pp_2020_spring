@@ -94,24 +94,3 @@ TEST(Sparce_Matrix_Multiplication, Test_Random_CRS_Multiplication) {
     CRS_Matrix multNaive(naiveMultiplication(matr1, matr2));
     EXPECT_EQ(multCRS, multNaive);
 }
-
-TEST(Sparce_Matrix_Multiplication, Test_Big_CRS_Multiply) {
-    auto t1 = omp_get_wtime();
-    size_t rowcol = 1001;
-    size_t col1 = 783;
-    size_t row2 = 561;
-    CRS_Matrix rand1 = getRandomCRSMatrix(rowcol, col1, 0.1);
-    CRS_Matrix rand2 = getRandomCRSMatrix(row2, rowcol, 0.1);
-    auto t2 = omp_get_wtime();
-    std::cout<<"Time to generate matrix: "<<t2-t1<<std::endl;
-    t1 = omp_get_wtime();
-    CRS_Matrix trans = rand2.transpose();
-    t2 = omp_get_wtime();
-    std::cout<<"Time to transpose: "<<t2-t1<<std::endl;
-    t1 = omp_get_wtime();
-    CRS_Matrix multCRS = rand1 * trans;
-    t2 = omp_get_wtime();
-    std::cout<<"Time to multiply: "<<t2-t1<<std::endl;
-    EXPECT_EQ(multCRS.getCol(), row2);
-}
-
