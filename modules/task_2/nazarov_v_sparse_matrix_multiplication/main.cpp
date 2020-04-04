@@ -1,7 +1,7 @@
 // Copyright 2020 Nazarov Vladislav
 #include <gtest/gtest.h>
-#include <vector>
 #include <omp.h>
+#include <vector>
 #include "./sparse_matrix_multiplication.h"
 
 TEST(Sparce_Matrix_Multiplication, Test_Matrix_Create) {

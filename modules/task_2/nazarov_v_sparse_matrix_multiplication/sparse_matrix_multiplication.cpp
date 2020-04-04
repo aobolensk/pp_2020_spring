@@ -1,11 +1,11 @@
 // Copyright 2020 Nazarov Vladislav
 
+#include <omp.h>
 #include <vector>
 #include <stdexcept>
 #include <random>
 #include <set>
 #include <utility>
-#include <omp.h>
 #include "../../../modules/task_2/nazarov_v_sparse_matrix_multiplication/sparse_matrix_multiplication.h"
 
 CRS_Matrix::CRS_Matrix(const std::vector<std::vector<cpx>>& matrix) {
@@ -49,7 +49,7 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
     if (col != mat.col)
         throw std::runtime_error("Different numbers of cols");
     for (size_t i = 1; i < rowIndex.size(); ++i) {
-        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0,0));
+        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0, 0));
         for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
             cpx sum = 0;
             size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
@@ -87,7 +87,7 @@ CRS_Matrix CRS_Matrix::parallelMultiply(const CRS_Matrix& mat) const& {
     if (col != mat.col)
         throw std::runtime_error("Different numbers of cols");
     for (size_t i = 1; i < rowIndex.size(); ++i) {
-        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0,0));
+        std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0, 0));
 #pragma omp parallel for schedule(static, 16)
         for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
             cpx sum = 0;
@@ -211,7 +211,7 @@ CRS_Matrix getRandomCRSMatrix(const size_t& col, const size_t& row, const double
         while (static_cast<size_t>(elem.first) != curRow) {
             curRow++;
             _row.push_back(NonZeroCounter);
-        } 
+        }
         NonZeroCounter++;
         _col.push_back(static_cast<size_t>(elem.second));
         _val.push_back(cpx(disComplex(gen), disComplex(gen)));
