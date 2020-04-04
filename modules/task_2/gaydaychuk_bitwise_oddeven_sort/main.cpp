@@ -198,7 +198,7 @@
 // }
 
 TEST(OpenMP, HPC_gain1) {
-    int size = 200000;
+    int size = 1000000;
     int *ompArray = new int[size];
     int *seqArray = new int[size];
     std::srand(static_cast<unsigned>(999));
