@@ -5,7 +5,7 @@
 #include <utility>
 #include "./jarvis_tbb.h"
 
-TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
+TEST(Jarvis_TBB, Test_On_3_Points_EQ) {
     size_t size = 3;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_seq;
@@ -25,7 +25,7 @@ TEST(Vector_Min_MPI, Test_On_3_Points_EQ) {
     EXPECT_EQ(answer_tbb, answer_seq);
 }
 
-TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
+TEST(Jarvis_TBB, Test_On_7_Points_EQ) {
     size_t size = 8;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_tbb;
@@ -54,7 +54,7 @@ TEST(Vector_Min_MPI, Test_On_7_Points_EQ) {
     EXPECT_EQ(answer_tbb, answer_seq);
 }
 
-TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
+TEST(Jarvis_TBB, Test_On_1_Point_EQ) {
     size_t size = 1;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_tbb;
@@ -69,7 +69,7 @@ TEST(Vector_Min_MPI, Test_On_1_Point_EQ) {
     EXPECT_EQ(answer_tbb, answer_seq);
 }
 
-TEST(Vector_Min_MPI, Test_On_2_Equal_Points_EQ) {
+TEST(Jarvis_TBB, Test_On_2_Equal_Points_EQ) {
     size_t size = 2;
     int num_thr = 2;
     std::vector<std::pair<double, double>> answer_tbb;
@@ -86,7 +86,7 @@ TEST(Vector_Min_MPI, Test_On_2_Equal_Points_EQ) {
     EXPECT_EQ(answer_tbb, answer_seq);
 }
 
-TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
+TEST(Jarvis_TBB, Test_On_Random_Points_EQ) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> answer_tbb;
@@ -107,7 +107,7 @@ TEST(Vector_Min_MPI, Test_On_Random_Points_EQ) {
     EXPECT_EQ(answer_seq, answer_tbb);
 }
 
-TEST(Vector_Min_MPI, Test_On_Negative_Points_EQ) {
+TEST(Jarvis_TBB, Test_On_Negative_Points_EQ) {
     std::vector<std::pair<double, double>> a;
     std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> answer_tbb;

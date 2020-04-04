@@ -1,6 +1,5 @@
 // Copyright 2020 Lembrikov Stepan
 #include <../../../modules/task_3/lembrikov_s_jarvis_tbb/jarvis_tbb.h>
-#include <omp.h>
 #include <vector>
 #include <utility>
 #include <ctime>
@@ -60,7 +59,7 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
     scalar = ((prev_p.first - cur_p.first) * (next_p.first - cur_p.first) +
         (prev_p.second - cur_p.second) * (next_p.second - cur_p.second));
     if ((len1 == 0) || (len2 == 0))
-        cos =  1.1;
+        cos = 1.1;
     else
         cos = scalar / len1 / len2;
 
@@ -69,8 +68,8 @@ double value_of_cos(std::pair<double, double> prev, std::pair<double, double> cu
 
 class reduce_par {
  public:
-     int next;
-     double len;
+    int next;
+    double len;
     std::vector<std::pair<double, double>> points;
     std::vector<std::pair<double, double>> Convex_Hull;
     std::pair<double, double > pr_p;
@@ -98,12 +97,14 @@ class reduce_par {
         do {
             min_local = 1.1;
             for (size_t i = begin; i != end; ++i) {
-                cur_cos = value_of_cos(prev_p, cur_p, xloc[i]);
                 len1 = sqrt(pow((prev_p.first - cur_p.first), 2) + pow((prev_p.second - cur_p.second), 2));
                 len2 = sqrt(pow((xloc[i].first - cur_p.first), 2) + pow((xloc[i].second - cur_p.second), 2));
                 scalar = ((prev_p.first - cur_p.first) * (xloc[i].first - cur_p.first) +
                     (prev_p.second - cur_p.second) * (xloc[i].second - cur_p.second));
-                cur_cos = scalar / len1 / len2;
+                if ((len1 == 0) || (len2 == 0))
+                    cur_cos = 1.1;
+                else
+                    cur_cos = scalar / len1 / len2;
 
                 if (cur_cos < min_local) {
                     min_local = cur_cos;
@@ -256,7 +257,8 @@ std::vector<std::pair<double, double>> Jarvis_Tbb(std::vector<std::pair<double, 
     }
 
     return Convex_Hull;
-}
+}
+
 std::vector<std::pair<double, double>> Jarvis_Seq(std::vector<std::pair<double, double>> points) {
     size_t size = points.size();
     size_t base_id = 0;
