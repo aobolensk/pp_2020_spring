@@ -41,7 +41,8 @@ void bitwiseSort(std::vector<int> *vec);
 void bitwiseSort(int *p, int length);
 void bitwiseSortWithTiming(int *p, int length, double *time = nullptr);
 void mergeAndSplit(int *arr1, int size1, int *arr2, int size2);
-bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount, double *time = nullptr);
+bool parallelBitwiseBatcherSort(int *array, int arraySize,
+    int maxThreadCount, double *time = nullptr);
 bool parallelLocalSort(int *array, int arraySize, int maxThreadCount);
 
 void printThreadNum(int maxThreadNumber);

@@ -173,7 +173,8 @@
 //     nb.setNetworkSize(8);
 //     nb.computeNetwork();
 //     printf("My comparator\n%s", nb.printParallelComp().c_str());
-//     printf("**************** state   ***************%s", nb.getState().c_str());
+//     printf("**************** state   ***************%s",
+//     nb.getState().c_str());
 //     ASSERT_EQ(2*2, 4);
 // }
 

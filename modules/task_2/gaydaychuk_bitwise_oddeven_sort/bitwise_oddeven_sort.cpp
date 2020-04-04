@@ -450,7 +450,8 @@ void mergeAndSplit(int *arr1, int size1, int *arr2, int size2) {
   }
 }
 
-bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount, double *time) {
+bool parallelBitwiseBatcherSort(int *array, int arraySize,
+    int maxThreadCount, double *time) {
     double startTime = 0, endTime = 0;
     #pragma omp single
     {
@@ -533,7 +534,8 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount, d
         #pragma omp single
         {
             if (time == nullptr) {
-                printf(allSubarraysSortedCorrectly ? "\n ARRAYS SORTED CORRECTLY \n"
+                printf(allSubarraysSortedCorrectly ?
+                    "\n ARRAYS SORTED CORRECTLY \n"
                     : "\n ARRAYS SORTED NOT CORRECTLY \n");
             }
             NetworkBuilder nb;
@@ -597,7 +599,6 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize, int maxThreadCount, d
                 printf("\n PARALLEL MERGING PHASE ENDED \n");
             }
         }
-        
         #pragma omp barrier
     }
     #pragma omp single
