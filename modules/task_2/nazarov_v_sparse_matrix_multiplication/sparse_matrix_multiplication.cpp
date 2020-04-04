@@ -49,8 +49,11 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
     if (col != mat.col)
         throw std::runtime_error("Different numbers of cols");
     for (size_t i = 1; i < rowIndex.size(); ++i) {
-        std::vector<cpx> tmpVec;
-        std::vector<size_t> tmpCol;
+        cpx* tmpVec = new cpx[mat.rowIndex.size()];
+        for (size_t iter = 0; iter < mat.rowIndex.size(); ++iter)
+            tmpVec[iter] = cpx(0,0);
+        // std::vector<size_t> tmpCol;
+#pragma omp parallel for
         for (size_t j = 1; j < mat.rowIndex.size(); ++j) {
             cpx sum = 0;
             size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
@@ -65,16 +68,18 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
                 }
             }
             if (std::abs(sum.real()) > pow(10, -9) || std::abs(sum.imag()) > pow(10, -9)) {
-                tmpVec.push_back(sum);
-                tmpCol.push_back(j-1);
+                tmpVec[j-1] = sum;
+                // tmpCol.push_back(j-1);
                 NonZeroCounter++;
             }
         }
-        for (const auto& elem : tmpVec)
-            res.val.push_back(elem);
-        for (const auto& elem : tmpCol)
-            res.colIndex.push_back(elem);
+        for (size_t iter = 0; iter < mat.rowIndex.size(); ++iter)
+            if (std::abs(tmpVec[iter].real()) > pow(10, -9) || std::abs(tmpVec[iter].imag()) > pow(10, -9)) {
+                res.val.push_back(tmpVec[iter]);
+                res.colIndex.push_back(iter);
+            }
         res.rowIndex.push_back(NonZeroCounter);
+        delete[] tmpVec;
     }
     return res;
 }
