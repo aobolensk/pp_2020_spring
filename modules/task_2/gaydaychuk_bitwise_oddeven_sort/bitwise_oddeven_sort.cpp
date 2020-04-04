@@ -611,6 +611,144 @@ bool parallelBitwiseBatcherSort(int *array, int arraySize,
     return checkAscending(array, arraySize);
 }
 
+bool parallelBitwiseBatcherSort_for_timing(int *array, int arraySize,
+    int maxThreadCount, double *time) {
+    double startTime = 0, endTime = 0;
+    std::list<std::vector<std::pair <int, int> > > parallelArray;
+    bool allSubarraysSortedCorrectly = true;
+    int effectiveThreadCount = 0;
+    if (arraySize < MINIMAL_SINGLE_ARRAY_LENGTH * maxThreadCount) {
+        if (arraySize % MINIMAL_SINGLE_ARRAY_LENGTH == 0) {
+            effectiveThreadCount = static_cast<int>((
+                arraySize / MINIMAL_SINGLE_ARRAY_LENGTH));
+        } else {
+            effectiveThreadCount = static_cast<int>((
+                arraySize / MINIMAL_SINGLE_ARRAY_LENGTH) + 1);
+        }
+    } else {
+        if (arraySize < (MINIMAL_SINGLE_ARRAY_LENGTH + 1) *
+        (maxThreadCount - 1) + 1) {
+            effectiveThreadCount = maxThreadCount - 1;
+        } else {
+            effectiveThreadCount = maxThreadCount;
+        }
+    }
+    omp_set_num_threads(effectiveThreadCount);
+    #pragma omp single
+    {
+        if (time != nullptr) {
+            startTime = omp_get_wtime();
+        }
+    }
+    int threadNumber = 0, beginIndex = 0,
+    endIndex = 0;  // indexes are supposed to be inclusive
+    #pragma omp parallel private(threadNumber, beginIndex, endIndex)
+    {
+        threadNumber = omp_get_thread_num();
+
+        if (threadNumber > effectiveThreadCount) {
+            beginIndex = endIndex = -1;  // do nothing
+        } else {
+            if (arraySize % effectiveThreadCount == 0) {
+                int localSize = static_cast<int>(
+                    arraySize / effectiveThreadCount);
+                beginIndex = threadNumber * localSize;
+                endIndex = beginIndex + localSize - 1;
+            } else {
+                if (effectiveThreadCount == 1) {
+                    beginIndex = 0;
+                    endIndex = arraySize - 1;
+                } else {
+                    int localSize = static_cast<int>(
+                        (arraySize / effectiveThreadCount) + 1);
+                    beginIndex = threadNumber * localSize;
+                    if (threadNumber == effectiveThreadCount - 1) {
+                        endIndex = arraySize - 1;
+                    } else {
+                        endIndex = beginIndex + localSize - 1;
+                    }
+                }
+            }
+        }
+
+        bitwiseSort(array + beginIndex, endIndex - beginIndex + 1);
+        if (time != nullptr) {
+            bool sortedLocally = checkAscending(
+                array + beginIndex, endIndex - beginIndex + 1);
+            #pragma omp critical
+            {
+                allSubarraysSortedCorrectly &= sortedLocally;
+            }
+        }
+        #pragma omp barrier
+        #pragma omp single
+        {
+            NetworkBuilder nb;
+            nb.setNetworkSize(effectiveThreadCount);
+            parallelArray =  nb.getParallelBlockArray();
+        }
+    }
+    #pragma omp barrier
+    #pragma omp single
+    {
+        if (time != nullptr) {
+            endTime = omp_get_wtime();
+            *time = endTime - startTime;
+        }
+    }
+
+    for (auto itBlocks = parallelArray.begin();
+    itBlocks != parallelArray.end();
+    ++itBlocks) {
+        int parallelblockSize = static_cast<int>((itBlocks->size()));
+        int sa1 = 0, sa2 = 0;
+        int bI1 = 0, eI1 = 0;
+        int bI2 = 0, eI2 = 0;
+        #pragma omp parallel for private(sa1, sa2, bI1, eI1, bI2, eI2)
+        for (int i = 0; i < parallelblockSize; ++i) {
+            bI1 = 0, eI1 = 0;
+            bI2 = 0, eI2 = 0;
+            sa1 = itBlocks->at(i).first;
+            sa2 = itBlocks->at(i).second;
+            // get areas to merge
+            if (arraySize % effectiveThreadCount == 0) {
+                int localSize = static_cast<int>((
+                    arraySize / effectiveThreadCount));
+                bI1 = sa1 * localSize;
+                bI2 = sa2 * localSize;
+
+                eI1 = bI1 + localSize - 1;
+                eI2 = bI2 + localSize - 1;
+
+            } else {
+                if (effectiveThreadCount != 1) {
+                    int localSize = static_cast<int>((
+                        arraySize / effectiveThreadCount) + 1);
+                    bI1 = sa1 * localSize;
+                    bI2 = sa2 * localSize;
+
+                    if (sa1 == effectiveThreadCount - 1) {
+                        eI1 = arraySize - 1;
+                    } else {
+                        eI1 = bI1 + localSize - 1;
+                    }
+                    if (sa2 == effectiveThreadCount - 1) {
+                        eI2 = arraySize - 1;
+                    } else {
+                        eI2 = bI2 + localSize - 1;
+                    }
+                }
+            }
+            // merge
+            mergeAndSplit(array + bI1, eI1 - bI1 + 1,
+            array + bI2, eI2 - bI2 + 1);
+        }
+        // synchronize the phase
+        #pragma omp barrier
+    }
+    return checkAscending(array, arraySize);
+}
+
 bool parallelLocalSort(int *array, int arraySize, int maxThreadCount) {
     // define effective threadCount
     // sort everyone at one time
