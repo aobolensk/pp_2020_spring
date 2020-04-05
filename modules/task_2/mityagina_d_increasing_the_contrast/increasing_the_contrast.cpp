@@ -24,12 +24,9 @@ std::vector <int> generate_im(int width_im, int height_im) {
   gen.seed(static_cast<unsigned int>(time(0)));
   std::vector <int> grayscale_image(size);
 
-// #pragma omp parallel for
-{
   for (int i = 0; i < size; ++i) {
     grayscale_image[i] = gen() % 255;
   }
-}
   return grayscale_image;
 }
 
@@ -72,7 +69,6 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
 
   if (max != 255 && min != 0)
   {
-    // #pragma omp parallel// num_threads(num)
 #pragma omp parallel private(i, current, step, start) shared(output, grayscale_image, min, max) num_threads(num)
     {
       omp_set_num_threads(num);
