@@ -4,12 +4,12 @@
 #include <vector>
 #include "../../../modules/task_3/mityagina_d_increasing_the_contrast/increasing_the_contrast.h"
 
-void testing_lab(int width, int height) {
-  ASSERT_NO_THROW(contrast_increase_parallel(generate_im(width, height), width, height));
+void testing_lab(std::vector<int> input, int width, int height) {
+  ASSERT_NO_THROW(contrast_increase_parallel(input, width, height));
 }
 
-void testing_lab_2(int width, int height) {
-  ASSERT_NO_THROW(contrast_increase_sequential(generate_im(width, height), width, height));
+void testing_lab_2(std::vector<int> input, int width, int height) {
+  ASSERT_NO_THROW(contrast_increase_sequential(input, width, height));
 }
 
 TEST(contrast_increase, cant_process_images_with_zero_size) {
@@ -58,7 +58,7 @@ TEST(contrast_increase, min_is_greater_then_max) {
 }
 
 TEST(contrast_increase, check_size_10_10) {
-  testing_lab(10, 10);
+  testing_lab(generate_im(10, 10), 10, 10);
 }
 
 // TEST(contrast_increase, check_size_100_100) {
@@ -66,23 +66,23 @@ TEST(contrast_increase, check_size_10_10) {
 // }
 
 TEST(contrast_increase, check_size_1000_1000) {
-  testing_lab(1000, 1000);
+  testing_lab(generate_im(1000, 1000), 1000, 1000);
 }
 
 TEST(contrast_increase, check_size_1000_1000_2) {
-  testing_lab_2(1000, 1000);
+  testing_lab_2(generate_im(1000, 1000), 1000, 1000);
 }
 
 TEST(contrast_increase, check_size_5000_5000) {
-  testing_lab(5000, 5000);
+  testing_lab(generate_im(5000, 5000), 5000, 5000);
 }
 
 TEST(contrast_increase, check_size_5000_5000_2) {
-  testing_lab_2(5000, 5000);
+  testing_lab_2(generate_im(5000, 5000), 5000, 5000);
 }
 
 TEST(contrast_increase, check_size_256_256) {
-  testing_lab(256, 256);
+  testing_lab(generate_im(256, 256), 256, 256);
 }
 
 int main(int argc, char** argv) {

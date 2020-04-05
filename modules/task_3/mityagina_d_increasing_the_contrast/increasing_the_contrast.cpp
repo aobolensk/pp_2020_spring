@@ -10,15 +10,15 @@
 
 class contrast_increase_tbb {
  private:
-     const std::vector<int> gr_sc_image;
-     std::vector<int> &nice_contrast_image;
+     const std::vector<int> &gr_sc_image;
+     std::vector<int> *nice_contrast_image;
      int min_val;
      int max_val;
      int height;
      int width;
 
  public:
-     contrast_increase_tbb(const std::vector<int> src, std::vector<int> &res, int min, int max, int w, int h) : 
+     contrast_increase_tbb(const std::vector<int> &src, std::vector<int> *res, int min, int max, int w, int h) : 
      gr_sc_image(src), 
      nice_contrast_image(res)
      {
@@ -29,16 +29,16 @@ class contrast_increase_tbb {
      }
 
      void operator() (const tbb::blocked_range<int> &range) const {
-        for (int i = range.begin(); i != range.end(); i++) {
-          // for (int j = 0; j < width; j++) {
-            float a = (-1) * (static_cast<float>(255) / (max_val - min_val)) * min_val;
-            float b = static_cast<float>(255) / (max_val - min_val);
+        float a = (-1) * (static_cast<float>(255) / (max_val - min_val)) * min_val;
+        float b = static_cast<float>(255) / (max_val - min_val);
 
+        for (int i = range.begin(); i != range.end(); i++) {
+          for (int j = 0; j < width; j++) {
             if (max_val == min_val)
-              nice_contrast_image[i] = 0;
+              (*nice_contrast_image)[i * width + j] = 0;
             else
-              nice_contrast_image[i] = (a + b * gr_sc_image[i]);
-          // }
+              (*nice_contrast_image)[i * width + j] = (a + b * gr_sc_image[i * width + j]);
+          }
         }
     }
 };
@@ -120,17 +120,16 @@ std::vector <int> contrast_increase_parallel(std::vector<int> grayscale_image, i
   if (max_val < min_val)
     throw -1;
 
-  tbb::parallel_for(
-  tbb::blocked_range<int>(0, size),
-  [=](const tbb::blocked_range<int>& t) {
-    int begin = t.begin(), end = t.end();
-    for (int i = begin; i < end; i++) {
-      output[i] = use_formula(grayscale_image[i], max_val, min_val);
-    }
-  });
-  // std::vector<int> output(grayscale_image);
-  // contrast_increase_tbb body(grayscale_image, output, min_val, max_val, width, height);
-  // tbb::parallel_for(tbb::blocked_range<int>(0, size), body);
+  // tbb::parallel_for(
+  // tbb::blocked_range<int>(0, size),
+  // [=](const tbb::blocked_range<int>& t) {
+  //   int begin = t.begin(), end = t.end();
+  //   for (int i = begin; i < end; i++) {
+  //     output[i] = use_formula(grayscale_image[i], max_val, min_val);
+  //   }
+  // });
+  contrast_increase_tbb body(grayscale_image, &output, min_val, max_val, width, height);
+  tbb::parallel_for(tbb::blocked_range<int>(0, height), body);
 
   return output;
 }
