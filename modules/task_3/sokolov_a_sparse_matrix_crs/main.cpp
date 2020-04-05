@@ -293,27 +293,51 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication_With_Rand_Gen) {
     ASSERT_EQ(resultToSparse, resultSparse);
 }
 
-TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_With_Rand_Gen) {
-    constexpr size_t size{2000};
-    Matrix matrixA{generateMatrix(size, size, 10)};
-    Matrix matrixB{generateMatrix(size, size, 10)};
-
-    std::cout << "Generated!" << std::endl;
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_Case_1) {
+    constexpr size_t size{1U};
+    Matrix matrixA{ generateMatrix(size, size, 10) };
+    Matrix matrixB{ generateMatrix(size, size, 10) };
 
     SparseMatrix sparseMatrixA{ matrixA };
     SparseMatrix sparseMatrixB{ matrixB };
 
-    std::cout << "Sparse created!" << std::endl;
-
-    tbb::tick_count t1Seq = tbb::tick_count::now();
     SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
-    tbb::tick_count t2Seq = tbb::tick_count::now();
 
-    std::cout << "Seq MatMul Done!" << std::endl;
+    SparseMatrix resultSparseTbb = SparseMatMulTbb(sparseMatrixA, sparseMatrixB);
 
-    tbb::tick_count t1Tbb = tbb::tick_count::now();
-    SparseMatrix resultSparseOmp = SparseMatMulTbb(sparseMatrixA, sparseMatrixB);
-    tbb::tick_count t2Tbb = tbb::tick_count::now();
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseTbb, 1e-6);
+}
+
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_Case_2) {
+    constexpr size_t size{23U};
+    Matrix matrixA{ generateMatrix(size, 1U, 10) };
+    Matrix matrixB{ generateMatrix(1U, size, 10) };
+
+    SparseMatrix sparseMatrixA{ matrixA };
+    SparseMatrix sparseMatrixB{ matrixB };
+
+    SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
+
+    SparseMatrix resultSparseTbb = SparseMatMulTbb(sparseMatrixA, sparseMatrixB);
+
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseTbb, 1e-6);
+}
+
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_With_Rand_Gen) {
+    constexpr size_t size{50U};
+    Matrix matrixA{generateMatrix(size, size, 10)};
+    Matrix matrixB{generateMatrix(size, size, 10)};
+
+    SparseMatrix sparseMatrixA{ matrixA };
+    SparseMatrix sparseMatrixB{ matrixB };
+
+    // tbb::tick_count t1Seq = tbb::tick_count::now();
+    SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
+    // tbb::tick_count t2Seq = tbb::tick_count::now();
+
+    // tbb::tick_count t1Tbb = tbb::tick_count::now();
+    SparseMatrix resultSparseTbb = SparseMatMulTbb(sparseMatrixA, sparseMatrixB);
+    // tbb::tick_count t2Tbb = tbb::tick_count::now();
 
 #ifdef DEBUG_LAST
     sparseMatrixA.printDefault();
@@ -339,9 +363,9 @@ TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_With_Rand_Gen) {
     resultSparseOmp.printMatrix();
     std::cout << std::endl;
 #endif
-    std::cout << "OMP_Sparse_Mul: " << (t2Tbb - t1Tbb).seconds() << std::endl;
-    std::cout << "Seq_Sparse_Mul: " << (t2Seq - t1Seq).seconds() << std::endl;
+    // std::cout << "OMP_Sparse_Mul: " << (t2Tbb - t1Tbb).seconds() << std::endl;
+    // std::cout << "Seq_Sparse_Mul: " << (t2Seq - t1Seq).seconds() << std::endl;
 
-    std::cout << "Acseleration_Sparse_Mul " << (t2Seq - t1Seq).seconds() / (t2Tbb - t1Tbb).seconds() << std::endl;
-    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseOmp, 1e-6);
+    // std::cout << "Acseleration_Sparse_Mul " << (t2Seq - t1Seq).seconds() / (t2Tbb - t1Tbb).seconds() << std::endl;
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseTbb, 1e-6);
 }

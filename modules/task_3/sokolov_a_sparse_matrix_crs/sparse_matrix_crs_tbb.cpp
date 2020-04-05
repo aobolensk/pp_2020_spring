@@ -1,7 +1,7 @@
 // Copyright 2020 Sokolov Andrey
 #include <omp.h>
-#include "./sparse_matrix_crs_tbb.h"
-
+#include <vector>
+#include "../../../modules/task_3/sokolov_a_sparse_matrix_crs/sparse_matrix_crs_tbb.h"
 
 SparseMatrix::SparseMatrix(const Matrix& matrix) {
     rows = matrix.size();
@@ -9,9 +9,6 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
 
     size_t elemsInRow{0};
     constexpr double tolerance{1e-6};
-    rowIndex = {};
-    colIndex = {};
-    value = {};
     rowIndex.reserve(rows * cols);
     colIndex.reserve(rows * cols);
     value.reserve(rows + 1);
@@ -89,6 +86,26 @@ Matrix SparseMatrix::SparseToMatrix() {
     return result;
 }
 
+void MatrixMultiplicator::operator()(const tbb::blocked_range<int>& r) const {
+    int tmpCol{ 0 };
+    for (int idx = r.begin(); idx < r.end(); ++idx) {
+        std::vector<double> tmpResult(matrixA.rows + 1, 0);
+        for (int jdx{ matrixA.rowIndex[idx] }; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
+            tmpCol = matrixA.colIndex[jdx];
+            for (int kdx{ matrixB.rowIndex[tmpCol] }; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
+                tmpResult[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
+            }
+        }
+        for (int kdx{ 0 }; kdx < matrixA.rows; ++kdx) {
+            if (tmpResult[kdx] != 0.0) {
+                tmpResultValue[idx].push_back(tmpResult[kdx]);
+                tmpResultCols[idx].push_back(kdx);
+                tmpResultRow[idx]++;
+            }
+        }
+    }
+}
+
 SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matrixB) {
     SparseMatrix result{};
     result.rows = matrixA.rows;
@@ -122,49 +139,13 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
     return result;
 }
 
-class Multiplicator {
-private:
-    SparseMatrix matrixA;
-    SparseMatrix matrixB;
-    std::vector<int>* tmpResultCols;
-    std::vector<double>* tmpResultValue;
-    std::vector<int>& tmpResultRow;
-
-public:
-    Multiplicator(const SparseMatrix&  _matrixA,
-                  const SparseMatrix&  _matrixB,
-                  std::vector<int>*    _tmpResultCols,
-                  std::vector<double>* _tmpResultValue,
-                  std::vector<int>&    _tmpResultRow) : matrixA(_matrixA),
-                                                        matrixB(_matrixB),
-                                                        tmpResultCols(_tmpResultCols),
-                                                        tmpResultValue(_tmpResultValue), 
-                                                        tmpResultRow(_tmpResultRow){}
-
-    void operator()(const tbb::blocked_range<int>& r) const {
-
-        int tmpCol{0};
-        for (int idx = r.begin(); idx < r.end(); ++idx) {
-            std::vector<double> tmpResult(matrixB.rows + 1, 0);
-            for (int jdx{ matrixA.rowIndex[idx] }; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
-                tmpCol = matrixA.colIndex[jdx];
-                for (int kdx{ matrixB.rowIndex[tmpCol] }; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
-                    tmpResult[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
-                }
-            }
-            for (int kdx{ 0 }; kdx < matrixA.rows; ++kdx) {
-                if (tmpResult[kdx] != 0.0) {
-                    tmpResultValue[idx].push_back(tmpResult[kdx]);
-                    tmpResultCols[idx].push_back(kdx);
-                    tmpResultRow[idx]++;
-                }
-            }
-        }
-    }
-};
-
 SparseMatrix SparseMatMulTbb(const SparseMatrix& matrixA, const SparseMatrix& matrixB) {
-    int grainsize {matrixA.rows / 4};
+    int grainsize{0};
+    if (matrixA.rows > 4) {
+        grainsize = matrixA.rows / 4;
+    } else {
+        grainsize = 1;
+    }
 
     SparseMatrix result{};
     result.rows = matrixA.rows;
@@ -175,12 +156,13 @@ SparseMatrix SparseMatMulTbb(const SparseMatrix& matrixA, const SparseMatrix& ma
     std::vector<int>*    tmpResultCols = new std::vector<int>[result.rows];
     std::vector<double>* tmpResultValue = new std::vector<double>[result.rows];
 
-    tbb::parallel_for(tbb::blocked_range<int>(0, result.rows, grainsize), Multiplicator(matrixA, matrixB, tmpResultCols, tmpResultValue, tmpResultRow));
+    tbb::parallel_for(tbb::blocked_range<int>(0, result.rows, grainsize),
+                      MatrixMultiplicator(matrixA, matrixB, tmpResultCols, tmpResultValue, tmpResultRow));
 
-    int count{ 0 };
-    int tmpRows{ 0 };
+    int count{0};
+    int tmpRows{0};
 
-    for (int idx{ 0 }; idx < result.rows; ++idx) {
+    for (int idx{0}; idx < result.rows; ++idx) {
         int tmp = tmpResultRow[idx];
         result.rowIndex[idx] = tmpRows;
         tmpRows += tmp;
@@ -189,7 +171,7 @@ SparseMatrix SparseMatMulTbb(const SparseMatrix& matrixA, const SparseMatrix& ma
     result.rowIndex[matrixA.rows] = tmpRows;
     result.colIndex.resize(tmpRows);
     result.value.resize(tmpRows);
-    for (int idx{ 0 }; idx < result.rows; ++idx) {
+    for (int idx{0}; idx < result.rows; ++idx) {
         size_t size{ tmpResultCols[idx].size() };
         if (size != 0) {
             memcpy(&result.colIndex[count], &tmpResultCols[idx][0], size * sizeof(int));
@@ -224,8 +206,7 @@ Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB) {
 
 // coeff from 0 to 100
 Matrix generateMatrix(const size_t& rows, const size_t& cols, const size_t& coeff) {
-    Matrix result{};
-    result.resize(rows, std::vector<double>(cols));
+    Matrix result(rows, std::vector<double>(cols));
 
     std::random_device rd{};
     std::mt19937 mt {rd()};
