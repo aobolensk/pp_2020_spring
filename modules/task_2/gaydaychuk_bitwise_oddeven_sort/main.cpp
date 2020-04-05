@@ -198,7 +198,7 @@
 // }
 
 TEST(OpenMP, HPC_gain1) {
-    int size = 1000000;
+    int size = 100000;
     int *ompArray = new int[size];
     int *seqArray = new int[size];
     std::srand(static_cast<unsigned>(999));
@@ -216,6 +216,9 @@ TEST(OpenMP, HPC_gain1) {
     printf("\n batcher_gain = %f", timeSeq / timeOmp);
     printf("\n timeSeq = %f", timeSeq);
     printf("\n timeOmp = %f", timeOmp);
+
+    delete[] ompArray;
+    delete[] seqArray;
 
     ASSERT_EQ(true, ompCheck && seqCheck);
 }
