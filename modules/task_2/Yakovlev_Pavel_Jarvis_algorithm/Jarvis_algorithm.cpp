@@ -176,7 +176,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_omp(std::vector<std::pa
             for (int i = 0; i < sz; i++) {
                 if (i == curr) continue;
 
-                double cos = ((prevX - currX) * (points[i].first - currX) + 
+                double cos = ((prevX - currX) * (points[i].first - currX) +
                     (prevY - currY) * (points[i].second - currY)) /
                     sqrt(((prevX - currX) * (prevX - currX) + (prevY - currY) * (prevY - currY)) *
                     ((points[i].first - currX) * (points[i].first - currX) +
