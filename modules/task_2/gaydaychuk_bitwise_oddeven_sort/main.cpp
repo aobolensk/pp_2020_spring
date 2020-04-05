@@ -74,20 +74,20 @@
 //     ASSERT_EQ(true, sortedSuccessfully);
 // }
 
-// TEST(OpenMP, Test_RandomGlobalSorting2) {
-//     int size = 10000;
-//     int *a = new int[size];
-//     std::srand(static_cast<unsigned>(999));
-//     for (int i = 0; i < size; i++) {
-//         a[i] = (static_cast<int>(std::rand()) % 100) + 1;
-//     }
-//     bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 5);
-//     // for(int i = 0; i < size; i++){
-//     //     std::cout<<a[i] << "\t";
-//     // }
-//     // std::cout<<"\n";
-//     ASSERT_EQ(true, sortedSuccessfully);
-// }
+TEST(OpenMP, Test_RandomGlobalSorting2) {
+    int size = 10000;
+    int *a = new int[size];
+    std::srand(static_cast<unsigned>(999));
+    for (int i = 0; i < size; i++) {
+        a[i] = (static_cast<int>(std::rand()) % 100) + 1;
+    }
+    bool sortedSuccessfully = parallelBitwiseBatcherSort(a, size, 5);
+    // for(int i = 0; i < size; i++){
+    //     std::cout<<a[i] << "\t";
+    // }
+    // std::cout<<"\n";
+    ASSERT_EQ(true, sortedSuccessfully);
+}
 
 // TEST(OpenMP, Test_RandomGlobalSorting3) {
 //     int size = 100000;
@@ -197,31 +197,31 @@
 //     ASSERT_EQ(2*2, 4);
 // }
 
-TEST(OpenMP, HPC_gain1) {
-    int size = 100000;
-    int *ompArray = new int[size];
-    int *seqArray = new int[size];
-    std::srand(static_cast<unsigned>(999));
-    for (int i = 0; i < size; i++) {
-        ompArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
-        seqArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
-    }
-    double timeSeq = 0, timeOmp = 0;
-    bool ompCheck = true, seqCheck = true;
-    // bitwiseSort(seqArray, size);
-    bitwiseSortWithTiming(seqArray, size, &timeSeq);
-    seqCheck = checkAscending(seqArray, size);
-    // ompCheck = parallelBitwiseBatcherSort(ompArray, size, 4);
-    ompCheck = parallelBitwiseBatcherSort_for_timing(ompArray, size, 4, &timeOmp);
-    printf("\n batcher_gain = %f", timeSeq / timeOmp);
-    printf("\n timeSeq = %f", timeSeq);
-    printf("\n timeOmp = %f", timeOmp);
+// TEST(OpenMP, HPC_gain1) {
+//     int size = 100000;
+//     int *ompArray = new int[size];
+//     int *seqArray = new int[size];
+//     std::srand(static_cast<unsigned>(999));
+//     for (int i = 0; i < size; i++) {
+//         ompArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
+//         seqArray[i] = (static_cast<int>(std::rand()) % 100) + 1;
+//     }
+//     double timeSeq = 0, timeOmp = 0;
+//     bool ompCheck = true, seqCheck = true;
+//     // bitwiseSort(seqArray, size);
+//     bitwiseSortWithTiming(seqArray, size, &timeSeq);
+//     seqCheck = checkAscending(seqArray, size);
+//     // ompCheck = parallelBitwiseBatcherSort(ompArray, size, 4);
+//     ompCheck = parallelBitwiseBatcherSort_for_timing(ompArray, size, 4, &timeOmp);
+//     printf("\n batcher_gain = %f", timeSeq / timeOmp);
+//     printf("\n timeSeq = %f", timeSeq);
+//     printf("\n timeOmp = %f", timeOmp);
 
-    delete[] ompArray;
-    delete[] seqArray;
+//     delete[] ompArray;
+//     delete[] seqArray;
 
-    ASSERT_EQ(true, ompCheck && seqCheck);
-}
+//     ASSERT_EQ(true, ompCheck && seqCheck);
+// }
 
 
 // TEST(OpenMP, HPC_gain2) {
