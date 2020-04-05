@@ -129,8 +129,7 @@ int main(int argc, char **argv) {
         circle(src, cv::Point(x, y), 5, cv::Scalar(0, 255, 0), CV_FILLED, 8, 0);
     }
 
-    for (size_t i = 0; i < res.size() - 1; i++)
-    {
+    for (size_t i = 0; i < res.size() - 1; i++) {
         uint x1 = static_cast<uint>(res[i].first);
         uint y1 = 600 - static_cast<uint>(res[i].second);
         uint x2 = static_cast<uint>(res[i+1].first);

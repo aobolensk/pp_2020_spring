@@ -6,7 +6,7 @@
 #include <ctime>
 #include <utility>
 #include <iostream>
-#include "../../../modules/task_1/Yakovlev_Pavel_Jarvis_algorithm/Jarvis_algorithm.h"
+#include "../../../modules/task_2/Yakovlev_Pavel_Jarvis_algorithm/Jarvis_algorithm.h"
 
 #define NUM_THREADS 8
 
@@ -142,7 +142,6 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_omp(std::vector<std::pa
             }
         }
     }
-    
     int ind = 0;
     for (int i = 1; i < NUM_THREADS; i++) {
         if (vecMaxCos[ind] <= vecMaxCos[i]) {
@@ -177,7 +176,8 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_omp(std::vector<std::pa
             for (int i = 0; i < sz; i++) {
                 if (i == curr) continue;
 
-                double cos = ((prevX - currX) * (points[i].first - currX) + (prevY - currY) * (points[i].second - currY)) /
+                double cos = ((prevX - currX) * (points[i].first - currX) + 
+                    (prevY - currY) * (points[i].second - currY)) /
                     sqrt(((prevX - currX) * (prevX - currX) + (prevY - currY) * (prevY - currY)) *
                     ((points[i].first - currX) * (points[i].first - currX) +
                         (points[i].second - currY) * (points[i].second - currY)));
