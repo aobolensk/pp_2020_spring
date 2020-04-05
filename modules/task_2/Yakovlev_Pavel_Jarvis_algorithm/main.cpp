@@ -87,7 +87,7 @@ TEST(OMP_algorithm, Test_some_eq_points) {
 }
 
 TEST(OMP_algorithm, Test_time_algo) {
-    auto points = getRandomVectorOfPair(1000000);
+    auto points = getRandomVectorOfPair(10);
 
     double start1 = omp_get_wtime();
     auto  seq = ConvexHull_Jarvis_seq(points);
