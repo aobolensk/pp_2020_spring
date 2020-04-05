@@ -2,6 +2,7 @@
 #ifndef MODULES_TASK_2_ISAEV_FOX_ALG_FOX_ALG_H_
 #define MODULES_TASK_2_ISAEV_FOX_ALG_FOX_ALG_H_
 
+#include <cmath>
 #include <vector>
 
 using Matrix = std::vector<std::vector<double>>;

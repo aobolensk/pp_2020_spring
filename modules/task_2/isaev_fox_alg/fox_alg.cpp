@@ -1,7 +1,7 @@
 // Copyright 2020 Isaev Ilya
 #include "../../../modules/task_2/isaev_fox_alg/fox_alg.h"
 #include <omp.h>
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <random>
 #include <stdexcept>
@@ -137,7 +137,7 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2, const unsigned& n_
         }
         if (n != old_n) {
             #pragma omp parallel for
-            for (size_t i = 0; i < old_n; ++i) {
+            for (int i = 0; i < static_cast<int>(old_n); ++i) {
                 res[i].resize(old_n);
             }
         }
