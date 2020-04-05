@@ -137,7 +137,7 @@ SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& ma
 
 #pragma omp parallel for default(shared) private(tmpCol)
     for (int idx = 0; idx < matrixA.rows; ++idx) {
-        std::vector<double> tmpResult(matrixB.rows + 1, 0);
+        std::vector<double> tmpResult(matrixA.rows + 1, 0);
         for (int jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
             tmpCol = matrixA.colIndex[jdx];
             for (int kdx{matrixB.rowIndex[tmpCol]}; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {

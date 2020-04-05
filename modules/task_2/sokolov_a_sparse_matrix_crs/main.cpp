@@ -293,27 +293,79 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication_With_Rand_Gen) {
     ASSERT_EQ(resultToSparse, resultSparse);
 }
 
-TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_With_Rand_Gen) {
-    constexpr size_t size{100};
-    Matrix matrixA{generateMatrix(size, size, 10)};
-    Matrix matrixB{generateMatrix(size, size, 10)};
-    // std::cout << "Generated!" << std::endl;
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_1_Case) {
+    constexpr size_t size{ 1U };
+    Matrix matrixA{ generateMatrix(size, size, 100) };
+    Matrix matrixB{ generateMatrix(size, size, 100) };
+
     SparseMatrix sparseMatrixA{ matrixA };
     SparseMatrix sparseMatrixB{ matrixB };
 
-    // std::cout << "Sparse created!" << std::endl;
+    Matrix       result = MatMul(matrixA, matrixB);
+    SparseMatrix resultToSparse{ result };
+
+    SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
+
+    SparseMatrix resultSparseOmp = SparseMatMulOmp(sparseMatrixA, sparseMatrixB);
+
+    ASSERT_EQ(resultToSparse, resultSparse);
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseOmp, 1e-6);
+}
+
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_2_Case) {
+    constexpr size_t size{23U};
+    Matrix matrixA{ generateMatrix(size, 1U, 100) };
+    Matrix matrixB{ generateMatrix(1U, size, 100) };
+
+    SparseMatrix sparseMatrixA{ matrixA };
+    SparseMatrix sparseMatrixB{ matrixB };
+
+    Matrix       result = MatMul(matrixA, matrixB);
+    SparseMatrix resultToSparse{ result };
+
+    SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
+
+    SparseMatrix resultSparseOmp = SparseMatMulOmp(sparseMatrixA, sparseMatrixB);
+
+    ASSERT_EQ(resultToSparse, resultSparse);
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseOmp, 1e-6);
+}
+
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_3_Case) {
+    constexpr size_t size{ 23U };
+    Matrix matrixA{ generateMatrix(12U, size, 100) };
+    Matrix matrixB{ generateMatrix(size, 6U, 100) };
+
+    SparseMatrix sparseMatrixA{ matrixA };
+    SparseMatrix sparseMatrixB{ matrixB };
+
+    Matrix       result = MatMul(matrixA, matrixB);
+    SparseMatrix resultToSparse{ result };
+
+    SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
+
+    SparseMatrix resultSparseOmp = SparseMatMulOmp(sparseMatrixA, sparseMatrixB);
+
+    ASSERT_EQ(resultToSparse, resultSparse);
+    ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultSparseOmp, 1e-6);
+}
+
+TEST(Sparse_Matrix, Test_Omp_Matrix_Miltiplication_With_Rand_Gen) {
+    constexpr size_t size{10};
+    Matrix matrixA{generateMatrix(size, size, 10)};
+    Matrix matrixB{generateMatrix(size, size, 10)};
+
+    SparseMatrix sparseMatrixA{ matrixA };
+    SparseMatrix sparseMatrixB{ matrixB };
+
     // double t1Seq = omp_get_wtime();
     SparseMatrix resultSparse = SparseMatMul(sparseMatrixA, sparseMatrixB);
     // double t2Seq = omp_get_wtime();
-    // std::cout << "Seq MatMul Done!" << std::endl;
+
     // double t1Omp = omp_get_wtime();
     SparseMatrix resultSparseOmp = SparseMatMulOmp(sparseMatrixA, sparseMatrixB);
     // double t2Omp = omp_get_wtime();
-    // std::cout << "OMP MatMul Done!" << std::endl;
-    // double tMul = 0;
-    // Matrix result = MatMul(matrixA, matrixB, tMul);
-    // SparseMatrix resultToSparse{ result };
-    // ASSERT_NEAR_SPARSE_MATRIX(resultSparse, resultToSparse, 1e-6);
+
 #ifdef DEBUG_LAST
     sparseMatrixA.printDefault();
     std::cout << std::endl;
