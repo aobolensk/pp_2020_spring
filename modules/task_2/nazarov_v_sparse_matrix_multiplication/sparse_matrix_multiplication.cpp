@@ -89,7 +89,7 @@ CRS_Matrix CRS_Matrix::parallelMultiply(const CRS_Matrix& mat) const& {
     for (size_t i = 1; i < rowIndex.size(); ++i) {
         std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0, 0));
 #pragma omp parallel for schedule(static, 16)
-        for (int j = 1; j < mat.rowIndex.size(); ++j) {
+        for (int j = 1; j < static_cast<int>(mat.rowIndex.size()); ++j) {
             cpx sum = 0;
             size_t lhsIter = rowIndex[i-1], rhsIter = mat.rowIndex[j-1];
             while ((lhsIter < rowIndex[i]) && (rhsIter < mat.rowIndex[j])) {
