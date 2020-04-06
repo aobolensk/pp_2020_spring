@@ -87,8 +87,8 @@ TEST(Jarvis_STD, Test_On_Random_Points_EQ) {
     std::vector<std::pair<double, double>> answer_seq;
     std::vector<std::pair<double, double>> answer_std;
     size_t size_a = 10;
-    std::clock_t t1, t2, t3;
-    double seq_time, std_time;
+    // std::clock_t t1, t2, t3;
+    // double seq_time, std_time;
     int num_thr = 2;
 
     a = getRandomPoints(size_a);
