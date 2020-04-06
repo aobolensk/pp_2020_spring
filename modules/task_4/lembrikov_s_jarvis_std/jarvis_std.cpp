@@ -102,7 +102,6 @@ std::vector<std::pair<double, double>> Jarvis_Std(std::vector<std::pair<double, 
     std::pair<double, double> cur_p;
     std::pair<double, double> pr_p;
     std::thread* threads = new std::thread[nu_th];
-    std::mutex mutex;
     int k;
     int ost = size % nu_th;;
 
