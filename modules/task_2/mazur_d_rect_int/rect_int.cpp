@@ -32,9 +32,6 @@ double rectIntOmp(double (*f)(std::vector<double>), std::vector <std::pair<doubl
   int  blockCount = 1;
   int vSize = cord.size();
   omp_set_num_threads(5);
-  int chunk = 1;
-  int j = 0;
-  int i = 0;
   std::vector<double> blockSize(vSize);
   for (int i = 0; i < vSize; ++i) {
     blockSize[i] = (cord[i].second - cord[i].first) / cuts;
