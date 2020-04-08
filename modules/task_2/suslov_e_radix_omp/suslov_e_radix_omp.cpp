@@ -153,8 +153,7 @@ void OddSplitter(double* mas, double* tmp, int elem, int size2) {
 }
 
 void SimpleComparator(double* mas, int size) {
-#pragma omp parallel for
-for (int i = 1; i < (size+1)/2; i++)
+for (int i = 1; i < (size+1)/2; i++)  // #pragma omp parallel for
     if (mas[2 * i] < mas[2 * i - 1]) {
         double _tmp = mas[2 * i - 1];
         mas[2 * i - 1] = mas[2 * i];
