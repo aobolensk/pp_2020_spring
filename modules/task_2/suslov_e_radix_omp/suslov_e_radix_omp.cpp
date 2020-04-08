@@ -22,8 +22,8 @@ void CountingSortByte(double* inp, double* out, int byteNum, int size) {
         int counter[256];
         int tem;
         memset(counter, 0, sizeof(int) * 256);
-        for (int i = 0; i < size; i++) { //#pragma omp parallel for
-                counter[mas[8 * i + byteNum]]++; //#pragma omp atomic
+        for (int i = 0; i < size; i++) {  //#pragma omp parallel for
+                counter[mas[8 * i + byteNum]]++;  //#pragma omp atomic
             }
         int j = 0;
         for (; j < 256; j++) {
@@ -47,8 +47,8 @@ void CountingSortByte(double* inp, double* out, int byteNum, int size) {
         int counter[256];
         int tem = 0;
         memset(counter, 0, sizeof(int) * 256);
-        for (int i = 0; i < size; i++) //#pragma omp parallel for
-            counter[mas[8 * i + byteNum]]++; //#pragma omp atomic
+        for (int i = 0; i < size; i++)  //#pragma omp parallel for
+            counter[mas[8 * i + byteNum]]++;  //#pragma omp atomic
         int j = 255;
         for (; j >= 128; j--) {
             if (counter[j] != 0)
@@ -162,8 +162,7 @@ for (int i = 1; i < (size+1)/2; i++)
     }
 }
 
-void LSDParallelSortDouble(double* inp, int size, int nThreads)
-{
+void LSDParallelSortDouble(double* inp, int size, int nThreads) {
     omp_set_num_threads(nThreads);
     double* out = new double[size];
     int portion = (size / nThreads);
@@ -228,8 +227,7 @@ void LSDParallelSorter(double* mas, double* tmp, int size, int portion) {
     }
 }
 
-double* array_double_copy(double* Array, int size)
-{
+double* array_double_copy(double* Array, int size) {
     double* Array_copy = new double[size];
     for (int i = 0; i < size; i++) {
         Array_copy[i] = Array[i];

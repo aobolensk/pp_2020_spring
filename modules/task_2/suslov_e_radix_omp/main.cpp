@@ -11,7 +11,7 @@ TEST(radix_sort_for_double, Test_sorter_1) {
     double* tmp = new double[size];
     LSDParallelSorter(Array, tmp, size, 2500);
     std::sort(Array_copy, Array_copy + size);
-    ASSERT_EQ(1, CompareArrays(Array, Array_copy, size)); //CompareArrays(Array, Array_copy, size)
+    ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
 
 TEST(radix_sort_for_double, Test_sorter_2) {
@@ -21,7 +21,7 @@ TEST(radix_sort_for_double, Test_sorter_2) {
     double* tmp = new double[size];
     LSDParallelSorter(Array, tmp, size, 2500);
     std::sort(Array_copy, Array_copy + size);
-    ASSERT_EQ(1, CompareArrays(Array, Array_copy, size)); //CompareArrays(Array, Array_copy, size)
+    ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
 
 TEST(radix_sort_for_double, Test_paralell_sort_1) {
@@ -55,5 +55,4 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
 
