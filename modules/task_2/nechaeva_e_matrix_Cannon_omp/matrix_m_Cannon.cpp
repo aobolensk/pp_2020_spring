@@ -121,6 +121,7 @@ matrix AlgorithmCannon(const matrix &A, const matrix &B, const int &num_threads)
             }
         }
     }
+    
     int block_size = n / q;
     matrix rez(n, std::vector<double>(n));
 
