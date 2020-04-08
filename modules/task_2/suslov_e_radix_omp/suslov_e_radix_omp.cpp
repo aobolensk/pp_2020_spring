@@ -50,7 +50,7 @@ void CountingSortByte(double* inp, double* out, int byteNum, int size) {
         for (int i = 0; i < size; i++)  // #pragma omp parallel for
             counter[mas[8 * i + byteNum]]++;  // #pragma omp atomic
         int j = 255;
-        for (; j >= 128; j--) {
+        for (; j >= 128; j--) {  // negative
             if (counter[j] != 0)
                 break;
         }
