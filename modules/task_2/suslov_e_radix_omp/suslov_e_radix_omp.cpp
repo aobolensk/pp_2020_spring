@@ -22,8 +22,8 @@ void CountingSortByte(double* inp, double* out, int byteNum, int size) {
         int counter[256];
         int tem;
         memset(counter, 0, sizeof(int) * 256);
-        for (int i = 0; i < size; i++) {  //#pragma omp parallel for
-                counter[mas[8 * i + byteNum]]++;  //#pragma omp atomic
+        for (int i = 0; i < size; i++) {  // #pragma omp parallel for
+                counter[mas[8 * i + byteNum]]++;  // #pragma omp atomic
             }
         int j = 0;
         for (; j < 256; j++) {
@@ -47,8 +47,8 @@ void CountingSortByte(double* inp, double* out, int byteNum, int size) {
         int counter[256];
         int tem = 0;
         memset(counter, 0, sizeof(int) * 256);
-        for (int i = 0; i < size; i++)  //#pragma omp parallel for
-            counter[mas[8 * i + byteNum]]++;  //#pragma omp atomic
+        for (int i = 0; i < size; i++)  // #pragma omp parallel for
+            counter[mas[8 * i + byteNum]]++;  // #pragma omp atomic
         int j = 255;
         for (; j >= 128; j--) {
             if (counter[j] != 0)
