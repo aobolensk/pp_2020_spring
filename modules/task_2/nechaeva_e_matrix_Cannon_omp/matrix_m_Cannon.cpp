@@ -128,7 +128,7 @@ matrix AlgorithmCannon(const matrix &A, const matrix &B, const int &num_threads)
     {
         int thread_i = omp_get_thread_num() / q;
         int thread_j = omp_get_thread_num() % q;
-        int block_i_A, block_j_A, block_i_B, block_j_B;
+        int block_i_A = 0, block_j_A = 0, block_i_B = 0, block_j_B = 0;
 
         matrix num1(block_size), num2(block_size),
             numrez(block_size, std::vector<double>(block_size, 0));
