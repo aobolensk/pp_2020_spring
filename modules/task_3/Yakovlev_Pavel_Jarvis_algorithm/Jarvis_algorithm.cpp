@@ -94,8 +94,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
             for (int i = r.begin(); i != r.end(); ++i) {
                 if (points[i].second < points[firstP].second) {
                     firstP = i;
-                }
-                else if (points[i].second == points[firstP].second) {
+                } else if (points[i].second == points[firstP].second) {
                     if (points[i].first <= points[firstP].first) {
                         firstP = i;
                     }
@@ -107,8 +106,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
         [](std::vector<int> v1, std::vector<int> v2) -> std::vector<int> {
             v1.insert(v1.end(), v2.cbegin(), v2.cend());
             return v1;
-        }
-    );
+        });
     int firstP = vecFirst[0];
     for (int i = 1; i < vecFirst.size(); i++) {
         if (points[vecFirst[i]].second < points[firstP].second) {
@@ -122,11 +120,10 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
     convH.push_back(std::make_pair(points[firstP].first, points[firstP].second));
 
 // *****************************************  FIND SECOND POINT  ******************************************
-    struct tmpStruct
-    {
+    struct tmpStruct {
         std::vector<int> numP;
         std::vector<double> cos;
-        tmpStruct() {};
+        tmpStruct() {}
     };
 
     std::vector<std::pair<int, double>> tmp(0);
@@ -149,7 +146,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
         }
         v.cos.push_back(maxCos);
         v.numP.push_back(secondP);
-        return v;  
+        return v;
     },
         [](tmpStruct v1, tmpStruct v2) -> tmpStruct {
         v1.cos.insert(v1.cos.end(), v2.cos.cbegin(), v2.cos.cend());
@@ -173,7 +170,6 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
     int curr = secondP;
     int next = firstP;
     while (curr != firstP) {
-
         double minCos = 2.0;
         tmpStruct numCosNext = tbb::parallel_reduce(tbb::blocked_range<int>(0, sz), tmpStruct(),
             [&](const tbb::blocked_range<int>& r, tmpStruct v) ->tmpStruct {
@@ -206,8 +202,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
             v1.cos.insert(v1.cos.end(), v2.cos.cbegin(), v2.cos.cend());
             v1.numP.insert(v1.numP.end(), v2.numP.cbegin(), v2.numP.cend());
             return v1;
-        }
-        );
+        });
 
         int ind = 0;
         for (int i = 1; i < numCosNext.cos.size(); i++) {
