@@ -153,6 +153,7 @@ void OddSplitter(double* mas, double* tmp, int elem, int size2) {
 }
 
 void SimpleComparator(double* mas, int size) {
+#pragma omp parallel for
 for (int i = 1; i < (size+1)/2; i++)  // #pragma omp parallel for
     if (mas[2 * i] < mas[2 * i - 1]) {
         double _tmp = mas[2 * i - 1];
@@ -167,11 +168,11 @@ void LSDParallelSortDouble(double* inp, int size, int nThreads) {
     int portion = (size / nThreads);
     if (size % nThreads != 0)
         portion++;
-    LSDParallelSorterOMP(inp, out, size, portion);
+    LSDParallelSorter(inp, out, size, portion);  // LSDParallelSorterOMP(inp, out, size, portion);
     delete[] out;
 }
 
-void LSDParallelSorterOMP(double* mas, double* tmp, int size, int portion) {
+/*void LSDParallelSorterOMP(double* mas, double* tmp, int size, int portion) {
     int size_copy = size;
     if (size <= portion) {
         LSDSortDouble(mas, tmp, size);
@@ -211,7 +212,7 @@ void LSDParallelSorterOMP(double* mas, double* tmp, int size, int portion) {
                 SimpleComparator(mas, size);
             }
     }
-}
+}*/
 
 void LSDParallelSorter(double* mas, double* tmp, int size, int portion) {
     if (size <= portion) {

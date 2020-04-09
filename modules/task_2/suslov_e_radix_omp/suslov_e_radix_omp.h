@@ -13,7 +13,6 @@ void EvenSplitter(double* mas, double* tmp, int size1, int size2);
 void OddSplitter(double* mas, double* tmp, int size1, int size2);
 void SimpleComparator(double* mas, int size);
 void LSDParallelSorter(double* mas, double* tmp, int size, int portion);
-void LSDParallelSorterOMP(double* mas, double* tmp, int size, int portion);
 void LSDParallelSortDouble(double* inp, int size, int nThreads);
 double* array_double_copy(double* Array, int size);
 
