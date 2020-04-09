@@ -108,7 +108,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
             return v1;
         });
     int firstP = vecFirst[0];
-    for (int i = 1; i < vecFirst.size(); i++) {
+    for (int i = 1; i < static_cast<int>(vecFirst.size()); i++) {
         if (points[vecFirst[i]].second < points[firstP].second) {
             firstP = vecFirst[i];
         } else if (points[vecFirst[i]].second == points[firstP].second) {
@@ -155,7 +155,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
     });
 
     int ind = 0;
-    for (int i = 1; i < numCosSecondP.cos.size(); i++) {
+    for (int i = 1; i < static_cast<int>(numCosSecondP.cos.size()); i++) {
         if (numCosSecondP.cos[ind] <= numCosSecondP.cos[i]) {
             ind = i;
         }
@@ -205,7 +205,7 @@ std::vector<std::pair<double, double>> ConvexHull_Jarvis_tbb(std::vector<std::pa
         });
 
         int ind = 0;
-        for (int i = 1; i < numCosNext.cos.size(); i++) {
+        for (int i = 1; i < static_cast<int>(numCosNext.cos.size()); i++) {
             if (numCosNext.cos[ind] >= numCosNext.cos[i]) {
                 ind = i;
             }
