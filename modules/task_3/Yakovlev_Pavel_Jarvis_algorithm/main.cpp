@@ -88,7 +88,7 @@ TEST(TBB_algorithm, Test_some_eq_points) {
 
 
 TEST(TBB_algorithm, Test_time_algo) {
-    auto points = getRandomVectorOfPair(10000000);
+    auto points = getRandomVectorOfPair(10);
 
     tbb::tick_count start1 = tbb::tick_count::now();
     auto  seq = ConvexHull_Jarvis_seq(points);
