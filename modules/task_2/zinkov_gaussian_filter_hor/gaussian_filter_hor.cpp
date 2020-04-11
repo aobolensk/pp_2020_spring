@@ -1,8 +1,8 @@
 // Copyright 2020 Zinkov Artem
+#include <omp.h>
 #include <random>
 #include <ctime>
 #include <vector>
-#include <omp.h>
 #include "../../../modules/task_2/zinkov_gaussian_filter_hor/gaussian_filter_hor.h"
 
 bool operator==(const pixel& a, const pixel& b) {
@@ -21,7 +21,7 @@ std::vector<pixel> get_Random_Image(const int& rows, const int& cols) {
   return image;
 }
 
-std::vector<pixel> Gaussian_Filter_seq(const std::vector<pixel>& image, const int& rows, const int& cols) {
+std::vector<pixel> Gaussian_Filter_omp(const std::vector<pixel>& image, const int& rows, const int& cols) {
   int x, y;
   int r, g, b;
   int sum_mask = 16;
