@@ -53,7 +53,7 @@ TEST(Parallel_Operations_TBB, Task_Test2) {
         // printf("%i\t", tbbVec.at(i));
     // }
 
-    std::vector<int> seqVec = getRandomVector(100000);
+    std::vector<int> seqVec = getRandomVector(1000);
     double seqTime = 0;
     bitwiseSort(&seqVec.front(), seqVec.size(), &seqTime);
     printf("\n SEQ time = %f\n", seqTime);
