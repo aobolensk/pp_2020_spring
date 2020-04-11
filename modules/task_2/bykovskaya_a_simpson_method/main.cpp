@@ -11,7 +11,10 @@ TEST(Simson_Method_Seq, Can_Integrate_One_Dim_Func) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0]; };  // y(x) = x
     std::vector<std::pair<double, double>> scope = { {0, 1} };  // expected 0.5
+    // double t1 = omp_get_wtime();
     double res = calcIntegral(scope, f);
+    // double t2 = omp_get_wtime();
+    // std:: cout << "\nTime : " << t2 - t1 << std::endl;
     EXPECT_NEAR(res, 0.5, 0.05);
 }
 
@@ -27,7 +30,10 @@ TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0] + 2 * sin(vec[1]); };  // y(x) = x + 2 * sin(y)
     std::vector<std::pair<double, double>> scope = { {0, 0.2}, {0, 3.14159} };  // expected 0.862832
+    // double t1 = omp_get_wtime();
     double res = calcIntegral(scope, f);
+    // double t2 = omp_get_wtime();
+    // std:: cout << "\nTime : " << t2 - t1 << std::endl;
     EXPECT_NEAR(res, 0.862832, 0.05);
 }
 

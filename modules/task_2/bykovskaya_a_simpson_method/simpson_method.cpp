@@ -17,22 +17,32 @@ double calcIntegral(const std::vector<std::pair<double, double>>& scope,
     double h = (scope[level].second - scope[level].first) / (2 * accurancy);
     std::vector<double> func_res(2 * accurancy);
     if (scope.size() == level + 1) {
-        #pragma omp parallel for
+        #pragma omp parallel for firstprivate(fix_var)
         for (int i = 0; i < accurancy * 2; i++) {
             fix_var[level] = scope[level].first + i * h;
             func_res[i] = f(fix_var);
         }
     } else {
+        #pragma omp parallel for firstprivate(fix_var)
         for (int i = 0; i < accurancy * 2; i++) {
             fix_var[level] = scope[level].first + i * h;
             func_res[i] =  calcIntegral(scope, f, accurancy, level + 1, fix_var);
         }
     }
     double res = func_res[0] + func_res[2 * accurancy - 1];
-    for (int i = 1; i < 2 * accurancy - 1; i += 2)
-        res += 4 * func_res[i];
-    for (int i = 2; i < 2 * accurancy - 2; i += 2)
-        res += 2 * func_res[i];
+    if (level == 0) {
+        #pragma omp parallel for reduction(+: res)
+        for (int i = 1; i < 2 * accurancy - 1; i += 2)
+            res += 4 * func_res[i];
+        #pragma omp parallel for reduction(+: res)
+        for (int i = 2; i < 2 * accurancy - 2; i += 2)
+            res += 2 * func_res[i];
+    } else {
+        for (int i = 1; i < 2 * accurancy - 1; i += 2)
+            res += 4 * func_res[i];
+        for (int i = 2; i < 2 * accurancy - 2; i += 2)
+            res += 2 * func_res[i];
+    }
     res = res * h / 3.0;
     return res;
 }
