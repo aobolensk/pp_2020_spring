@@ -82,6 +82,7 @@ std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int
 
     std::vector<std::vector<int>> newPic(n * m, std::vector<int>(3));
 
+    #pragma omp parallel for
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < n; ++j) {
             for (int k = 0; k < 3; ++k) {
