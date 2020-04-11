@@ -213,8 +213,10 @@ bool IsSorted(std::vector<double>* old_vector,
   bool flag = true;
   for (unsigned int i = 0; i < old_vector->size(); i++) {
     if (old_vector->at(i) != new_vector->at(i)) {
-      flag = false;
-      break;
+      if (std::abs(old_vector->at(i) - new_vector->at(i)) >= 0.0000001) {
+        flag = false;
+        break;
+      }
     }
   }
 
