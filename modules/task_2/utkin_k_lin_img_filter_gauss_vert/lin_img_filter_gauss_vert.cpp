@@ -2,7 +2,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
-#include "../../../modules/task_1/utkin_k_lin_img_filter_gauss_vert/lin_img_filter_gauss_vert.h"
+#include "../../../modules/task_2/utkin_k_lin_img_filter_gauss_vert/lin_img_filter_gauss_vert.h"
 
 std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
 int divKernel = 16;
