@@ -45,18 +45,19 @@ class Integration {
     const std::function<double(const std::vector<double>)>& integrand;
     const std::vector<std::pair<double, double>>& intervals;
     double sum;
-    const std::uniform_real_distribution<double>& dist;
+    std::uniform_real_distribution<double> dist;
     std::mt19937 gen;
 
  public:
     Integration(const std::function<double(const std::vector<double>)>& integ,
-        const std::vector<std::pair<double, double>>& interv, const std::uniform_real_distribution<double>& d) :
-                                                            integrand(integ), intervals(interv), sum(0.0), dist(d) {
+            const std::vector<std::pair<double, double>>& interv) : integrand(integ), intervals(interv), sum(0.0) {
+        dist = std::uniform_real_distribution<double>(0.0, 1.0);
         std::random_device rd;
         gen = std::mt19937(rd());
     }
 
-    Integration(Integration& i, tbb::split) : integrand(i.integrand), intervals(i.intervals), sum(0.0), dist(i.dist) {
+    Integration(Integration& i, tbb::split) : integrand(i.integrand), intervals(i.intervals), sum(0.0) {
+        dist = std::uniform_real_distribution<double>(0.0, 1.0);
         std::random_device rd;
         gen = std::mt19937(rd());
     }
@@ -90,13 +91,11 @@ double ParallelMonteCarloIntegration(const std::function<double(const std::vecto
     if (num_dims <= 0)
         throw std::runtime_error("Number of dims must be more than 0");
 
-    std::uniform_real_distribution<double> dist(0.0, 1.0);
-
-    Integration integr(integrand, intervals, dist);
+    Integration integr(integrand, intervals);
     tbb::parallel_reduce(tbb::blocked_range<int>(0, N), integr);
 
     double mes = 1.0;
-    for (int i = 0; i < num_dims; i++)
+    for (size_t i = 0; i < num_dims; i++)
         mes *= intervals[i].second - intervals[i].first;
 
     double sum = integr.getSum();
