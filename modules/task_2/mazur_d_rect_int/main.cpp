@@ -6,29 +6,28 @@
 #include <iostream>
 #include "../../../modules/task_2/mazur_d_rect_int/rect_int.h"
 
-double f1(std::vector<double> x) {
+std::function<double(const std::vector<double>&)> f1 = [](const std::vector<double>& x) {
   return (x[0] * x[0] * x[0] - x[1] * x[1]);
-}
+};
 
-double f2(std::vector<double> x) {
-  return (cos(x[0]) * cos(x[0])+ x[1]*x[1]);
-}
+std::function<double(const std::vector<double>&)> f2 = [](const std::vector<double>& x) {
+  return (cos(x[0]) * cos(x[0]) + x[1] * x[1]);
+};
 
-double f3(std::vector<double> x) {
+std::function<double(const std::vector<double>&)> f3 = [](const std::vector<double>& x) {
   return (x[2] / (3 * x[0] * x[0] + x[1] * x[1]));
-}
+};
 
-double f4(std::vector<double> x) {
+std::function<double(const std::vector<double>&)> f4 = [](const std::vector<double>& x) {
   return x[0] * x[0] - 2 * x[1] - cos(x[2]) + 2;
-}
-
-double f5(std::vector<double> x) {
+};
+std::function<double(const std::vector<double>&)> f5 = [](const std::vector<double>& x) {
   return x[0] * x[0] - sin(x[0]);
-}
+};
 
-double f6(std::vector<double> x) {
+std::function<double(const std::vector<double>&)> f6 = [](const std::vector<double>& x) {
   return acosh(x[0]) + x[1] * x[1];
-}
+};
 
 TEST(RectangleIntegration, Double_Integral_1) {
   std::vector<std::pair<double, double>> a(2);
