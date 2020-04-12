@@ -60,14 +60,14 @@ void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int n
 #pragma omp parallel num_threads(numTr) shared(A, cols)
     {
 #pragma omp for schedule(static, 1)
-        for (int lj = 0; lj < A.getMatrixSize(); ++lj) {
+        for (int lj = 0; lj < static_cast<int>(A.getMatrixSize()); ++lj) {
             for (size_t i = A.LJ[lj]; i < A.LJ[lj + 1]; ++i) {
                 cols[i] = lj;
             }
         }
     }
     size_t li = 0;
-    for (int n = 0; n < A.getMatrixSize(); ++n) {
+    for (size_t n = 0; n < A.getMatrixSize(); ++n) {
         for (size_t i = 0; i < A.getRealSize(); ++i) {
             if (A.LI[i] == n) {
                 B->A[li] = A.A[i];
