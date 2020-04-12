@@ -1,18 +1,18 @@
 // Copyright 2020 Parshina Sophie
+#include <omp.h>
+#include <ctime>
+#include <cmath>
 #include <utility>
 #include <algorithm>
 #include <random>
 #include <vector>
-#include <ctime>
-#include <cmath>
-#include <omp.h>
 #include <iostream>
 #include "gtest/gtest.h"
 #include "../../../modules/task_2/parshina_s_quick_sort/quick_sort.h"
 
 #define N 100000
 #define THREADS_NUMBER 2
-#define TESTS_NUMBER 10
+#define TESTS_NUMBER 20
 
 TEST(Hoare_Quick_Sort_OpenMP, Can_Sort_Correctly) {
   double* arr = new double[N];
@@ -51,14 +51,12 @@ TEST(Hoare_Quick_Sort_OpenMP, Can_Sort_Opposite_Elements) {
   Copy_elements(arr, arr2, N);
   Parallel_Division_Sort(arr, N, THREADS_NUMBER);
   qHoareSort(arr2, 0, N - 1);
-  //std::sort(&arr2[0], &arr2[N]);
   ASSERT_EQ((int)std::equal(&arr[0], &arr[N], &arr2[0]), 1);
 }
 TEST(Hoare_Quick_Sort_OpenMP, Can_Sort_Already_Sorted_Elements) {
   double* arr = new double[N];
   Get_Random_Array(arr, N);
   qHoareSort(arr, 0, N - 1);
-  //std::sort(&arr[0], &arr[N]);
   double* arr2 = new double[N];
   Copy_elements(arr, arr2, N);
   Parallel_Division_Sort(arr, N, THREADS_NUMBER);
@@ -68,7 +66,6 @@ TEST(Hoare_Quick_Sort_OpenMP, Can_Sort_Mixed_Array) {
   double* arr = new double[N];
   Get_Random_Array(arr, N);
   qHoareSort(arr, 0, N - 1);
-  //std::sort(&arr[0], &arr[N]);
   double* arr2 = new double[N];
   Copy_elements(arr, arr2, N);
   for (int i = 2; i < N; i += 3) {
@@ -84,11 +81,10 @@ TEST(Hoare_Quick_Sort_OpenMP, DISABLED_Compare_Seq_and_Omp_Average_Time) {
   double omp_summary_time = 0;
 
   std::vector<bool> sorted;
-  double* arr = new double[N];  
+  double* arr = new double[N];
   double* arr2 = new double[N];
 
-  for (int threads = THREADS_NUMBER; threads > 0; --threads)
-  {
+  for (int threads = THREADS_NUMBER; threads > 0; --threads) {
     seq_summary_time = 0;
     omp_summary_time = 0;
 
@@ -108,8 +104,7 @@ TEST(Hoare_Quick_Sort_OpenMP, DISABLED_Compare_Seq_and_Omp_Average_Time) {
 
       sorted.push_back(IsSorted(arr, N));
     }
-    
-    std::cout << '\n' << '\n';
+    std::cout << '\n';
     std::cout << "Tests count:" << TESTS_NUMBER << '\n';
     std::cout << "Thread number: " << threads  << '\n';
     std::cout << "Sequential average time: " << (seq_summary_time*1000) / TESTS_NUMBER << " ms \n";

@@ -87,8 +87,7 @@ void Simple_Fusion(double * arr, int n, int m) {
       result[result_index] = a[a_index];
       ++result_index;
       ++a_index;
-    }
-    else {
+    } else {
       result[result_index] = b[b_index];
       ++result_index;
       ++b_index;
@@ -101,13 +100,11 @@ void Simple_Fusion(double * arr, int n, int m) {
     tmp = b;
     tmp_index = b_index;
     tmp_max = m;
-  }
-  else {
+  } else {
     tmp = a;
     tmp_index = a_index;
     tmp_max = n;
   }
-
   int delta = result_index - tmp_index;
 
   for (; tmp_index < tmp_max; ++tmp_index)
@@ -119,14 +116,13 @@ void Simple_Fusion(double * arr, int n, int m) {
 
 // Split array into subarrays based on the number of threads and get the ends of these segments
 std::vector<int> Get_Ends(int thread_num, int n, int threads_value) {
-  int sub_length = round(n / float(threads_value));
+  int sub_length = round(1.0 * n / threads_value);
   if (thread_num < threads_value - 1) {
     std::vector<int> ends(2);
     ends[0] = thread_num * sub_length;
     ends[1] = ends[0] + sub_length - 1;
     return ends;
-  }
-  else {
+  } else {
     std::vector<int> ends(2);
     ends[0] = thread_num * sub_length;
     ends[1] = n - 1;
@@ -162,29 +158,28 @@ void dump_ends(vector<vector<int>> x, int l)
   cout << "-----------" << "\n\n\n";
 }*/
 
-// OMP quick sort with parallel division 
+// OMP quick sort with parallel division
 void Parallel_Division_Sort(double * arr, int n, int threads_value) {
-  //double wt, qt, ft;
-  //wt = qt = ft = 0;
-  //wt = t();
+  // double wt, qt, ft;
+  // wt = qt = ft = 0;
+  // wt = t();
 
   omp_set_num_threads(threads_value);
-  int sub_length = round(n / float(threads_value));
+  // int sub_length = round(1.0 * n / threads_value);
   std::vector<std::vector<int>> splitted_ends(threads_value);
   for (int i = 0; i < threads_value; ++i)
     splitted_ends[i] = Get_Ends(i, n, threads_value);
-  //qt = t();
+  // qt = t();
 #pragma omp parallel
   {
     int thread_num = omp_get_thread_num();
     qHoareSort(arr, splitted_ends[thread_num][0], splitted_ends[thread_num][1]);
 #pragma omp barrier
   }
-  //qt = t() - qt;
-  //ft = t();
+  // qt = t() - qt;
+  // ft = t();
   int length = splitted_ends.size();
-  while (length > 1)
-  {
+  while (length > 1) {
     omp_set_num_threads(length / 2);
 #pragma omp parallel
     {
