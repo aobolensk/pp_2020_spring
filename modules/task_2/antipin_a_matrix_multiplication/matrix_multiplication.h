@@ -28,7 +28,7 @@ class SparseMatrix {
     void printM() const;
 
     friend void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int numTr);
-    friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr);
+    friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
     friend void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B,
         SparseMatrix<CCS>* C, const int numThreads);
  private:
@@ -266,7 +266,7 @@ void getRandomMatrix(std::vector<double>* A, const size_t n);
 
 void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int numTr);
 
-void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr);
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
 
 void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C,
     const int numThreads = omp_get_max_threads());

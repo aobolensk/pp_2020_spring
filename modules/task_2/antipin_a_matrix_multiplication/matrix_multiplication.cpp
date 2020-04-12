@@ -79,7 +79,7 @@ void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int n
     }
 }
 
-void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr) {
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B) {
     B->A.resize(A.getRealSize());
     B->LJ.resize(A.getMatrixSize() + 1);
     B->LI.resize(A.getRealSize());
