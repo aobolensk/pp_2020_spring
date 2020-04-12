@@ -11,7 +11,7 @@ void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B) {
     (*B).resize(n*n);
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < n; ++j) {
-            (*B)[i*n + j] = A.getElem(i, j);
+            (*B)[i * n + j] = A.getElem(i, j);
         }
     }
 }
@@ -21,7 +21,7 @@ void matrixMultiplication(const std::vector<double>& A, const size_t n, const st
     if (A.size() != B.size()) {
         throw("Wrong matrix size");
     }
-    (*C).resize(A.size());
+    (*C).resize(A.size(), 0.0);
     for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < n; ++j) {
             for (size_t k = 0; k < n; ++k) {
@@ -50,21 +50,24 @@ void getRandomMatrix(std::vector<double>* A, const size_t n) {
     }
 }
 
-void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B) {
+void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int numTr) {
     B->A.resize(A.getRealSize());
     B->LI.resize(A.getMatrixSize() + 1);
     B->LJ.resize(A.getRealSize());
     B->n = A.n;
 
     std::vector<size_t> cols(A.getRealSize());
-    for (size_t lj = 0; lj < A.getMatrixSize(); ++lj) {
-        for (size_t i = A.LJ[lj]; i < A.LJ[lj + 1]; ++i) {
-            cols[i] = lj;
+#pragma omp parallel num_threads(numTr) shared(A, cols) 
+    {
+#pragma omp for schedule(static, 1)
+        for (int lj = 0; lj < A.getMatrixSize(); ++lj) {
+            for (size_t i = A.LJ[lj]; i < A.LJ[lj + 1]; ++i) {
+                cols[i] = lj;
+            }
         }
     }
-
     size_t li = 0;
-    for (size_t n = 0; n < A.getMatrixSize(); ++n) {
+    for (int n = 0; n < A.getMatrixSize(); ++n) {
         for (size_t i = 0; i < A.getRealSize(); ++i) {
             if (A.LI[i] == n) {
                 B->A[li] = A.A[i];
@@ -76,7 +79,7 @@ void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B) {
     }
 }
 
-void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B) {
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr) {
     B->A.resize(A.getRealSize());
     B->LJ.resize(A.getMatrixSize() + 1);
     B->LI.resize(A.getRealSize());
@@ -108,25 +111,23 @@ void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
         throw("Matrices have a different range");
     }
 
-    SparseMatrix<CRS> tmp;
-    convertMatrix(A, &tmp);
-
-    C->A.resize(A.getMatrixSize() * B.getMatrixSize());
-    C->LI.resize(A.getMatrixSize() * B.getMatrixSize());
-    C->LJ.resize(A.getMatrixSize() + 1);
-
     size_t iterator = 0;
     size_t numTr = numThreads > omp_get_max_threads() ? omp_get_max_threads() : numThreads;
-    size_t size = tmp.getMatrixSize() / numTr;
+    numTr = numTr > A.getMatrixSize() ? A.getMatrixSize() : numTr;
 
-    // printf("%d\n", omp_get_max_threads());
+    SparseMatrix<CRS> tmp;
+    convertMatrix(A, &tmp, numTr);
 
-#pragma omp parallel num_threads(numTr) shared(tmp, B, C, numTr)  private(iterator)
+    std::vector<std::vector<double>> a(A.getMatrixSize(), std::vector<double>(A.getMatrixSize()));
+    std::vector<std::vector<size_t>> b(A.getMatrixSize(), std::vector<size_t>(A.getMatrixSize() + 1, 0));
+    C->LJ.resize(A.getMatrixSize() + 1);
+
+#pragma omp parallel num_threads(numTr) shared(tmp, B, C, numTr) private(iterator)
     {
         size_t lj = omp_get_thread_num();
-        iterator = omp_get_thread_num() * tmp.getMatrixSize();
-#pragma omp for schedule(static, size)
-        for (int n = 0; n < int(tmp.getMatrixSize()); ++n) {
+        iterator = 0;
+#pragma omp for schedule(static, 1)
+        for (int n = 0; n < static_cast<int>(tmp.getMatrixSize()); ++n) {
             size_t li = 0;
             for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
                 double elem = 0.0;
@@ -135,26 +136,39 @@ void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
                     for (size_t j = B.LJ[lj]; j < B.LJ[lj + 1]; ++j) {
                         elem += isZero(tmp.getElem(i, B.LI[j]) * B.A[j]);
                     }
-                }
-                else {
+                } else {
                     for (size_t j = tmp.LI[i]; j < tmp.LI[i + 1]; ++j) {
-                        elem += isZero(tmp.A[j] * B.getElem(tmp.LJ[j], size_t(n)));
+                        elem += isZero(tmp.A[j] * B.getElem(tmp.LJ[j], static_cast<size_t>(n)));
                     }
                 }
-                // printf("%f ", elem);
                 if (elem != 0.0) {
-                    C->A[iterator] = elem;
-                    C->LI[iterator] = li;
+                    a[n][iterator] = elem;
+                    b[n][iterator] = li;
+                    ++b[n][A.getMatrixSize()];
                     ++iterator;
                 }
                 ++li;
             }
-            C->LJ[size_t(n) + 1] = iterator;
-            // printf("%d thread - %d\n", lj, omp_get_thread_num());
             lj += numTr;
+            iterator = 0;
         }
+    }   
+
+    iterator = 0;
+    for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
+        iterator += b[i][tmp.getMatrixSize()];
+        C->LJ[i + 1] = iterator;
     }
 
     C->A.resize(iterator);
     C->LI.resize(iterator);
+
+    iterator = 0;
+    for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
+        for (size_t j = 0; j < b[i][tmp.getMatrixSize()]; ++j) {
+            C->A[iterator] = (a[i][j]);
+            C->LI[iterator] = (b[i][j]);
+            ++iterator;
+        }
+    }
 }

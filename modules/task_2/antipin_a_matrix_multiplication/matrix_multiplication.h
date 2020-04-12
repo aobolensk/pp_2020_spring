@@ -1,6 +1,6 @@
 // Copyright 2020 Antipin Alexander
-#ifndef MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
-#define MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#ifndef MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#define MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
 
 #include <omp.h>
 #include <vector>
@@ -25,9 +25,10 @@ class SparseMatrix {
         const size_t n);
     size_t getMatrixSize() const;
     size_t getRealSize() const;
+    void printM() const;
 
-    friend void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B);
-    friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
+    friend void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int numTr);
+    friend void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr);
     friend void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B,
         SparseMatrix<CCS>* C, const int numThreads);
  private:
@@ -72,11 +73,13 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
                 ++j;
                 ++colCounter;
             }
-            // printf("%ld  ", LI[i]);
             LI[i] = LI[i] % size;
             ++i;
         }
-        LJ[j] = realSize;
+        while (j != LJ.size()) {
+            LJ[j] = realSize;
+            ++j;
+        }
     } else if (T == CRS) {
         LJ.resize(realSize);
         LI.resize(size + 1);
@@ -101,9 +104,11 @@ SparseMatrix<T>::SparseMatrix(const size_t size, const uint16_t coeff) {
             LJ[j] = LJ[j] % size;
             ++j;
         }
-        LI[i] = realSize;
+        while (i != LI.size()) {
+            LI[i] = realSize;
+            ++i;
+        }
     }
-    // printf("%ld\n", realSize);
 }
 
 template <type T>
@@ -178,7 +183,8 @@ void SparseMatrix<T>::getRandomMatrix(const size_t size, const uint16_t coeff) {
 
 template <type T>
 double SparseMatrix<T>::getElem(const size_t i, const size_t j) const {
-    if (i < 0 || j < 0 || i > A.size() || j > A.size()) {
+    size_t count = T == CCS ? LJ.size() - 1 : LI.size() - 1;
+    if (i > count || j > count) {
         throw("Wrong index of element");
     }
     double res = 0.0;
@@ -210,14 +216,9 @@ void SparseMatrix<T>::setElem(const double elem, const size_t i, const size_t j)
 template <type T>
 void SparseMatrix<T>::setMatrix(const std::vector<double>& A, const std::vector<size_t>& LI,
     const std::vector<size_t>& LJ, const size_t n) {
-    if (T == CCS) {
-        if (LJ.size() > LI.size()) {
-            throw("Wrong matrix type");
-        }
-    } else {
-        if (LI.size() > LJ.size()) {
-            throw("Wrong matrix type");
-        }
+    size_t count = T == CCS ? LI.size() : LJ.size();
+    if (A.size() != count) {
+        throw("Wrong vectors size");
     }
     this->n = n;
     this->A = A;
@@ -235,6 +236,25 @@ size_t SparseMatrix<T>::getRealSize() const {
     return A.size();
 }
 
+template <type T>
+void SparseMatrix<T>::printM() const {
+    if (T == CCS) {
+        for (size_t i = 0; i < A.size(); ++i) {
+            printf("A[%ld] = %f, LI[%ld] = %ld\n", i, A[i], i, LI[i]);
+        }
+        for (size_t i = 0; i < LJ.size(); ++i) {
+            printf("LJ[%ld] = %ld\n", i, LJ[i]);
+        }
+    } else {
+        for (size_t i = 0; i < A.size(); ++i) {
+            printf("A[%ld] = %f, LJ[%ld] = %ld\n", i, A[i], i, LJ[i]);
+        }
+        for (size_t i = 0; i < LI.size(); ++i) {
+            printf("LI[%ld] = %ld\n", i, LI[i]);
+        }
+    }
+}
+
 void constructMatrix(const SparseMatrix<CCS>& A, std::vector<double>* B);
 
 void matrixMultiplication(const std::vector<double>& A, const size_t n, const std::vector<double>& B,
@@ -244,11 +264,11 @@ double isZero(const double nomber);
 
 void getRandomMatrix(std::vector<double>* A, const size_t n);
 
-void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B);
+void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int numTr);
 
-void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B);
+void convertMatrix(const SparseMatrix<CRS>& A, SparseMatrix<CCS>* B, const int numTr);
 
 void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const SparseMatrix<CCS>& B, SparseMatrix<CCS>* C,
     const int numThreads = omp_get_max_threads());
 
-#endif  // MODULES_TASK_1_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
+#endif  // MODULES_TASK_2_ANTIPIN_A_MATRIX_MULTIPLICATION_MATRIX_MULTIPLICATION_H_
