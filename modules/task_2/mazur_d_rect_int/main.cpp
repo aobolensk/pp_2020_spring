@@ -32,43 +32,43 @@ std::function<double(const std::vector<double>&)> f6 = [](const std::vector<doub
 TEST(RectangleIntegration, Double_Integral_1) {
   std::vector<std::pair<double, double>> a(2);
   a = { {5, 17}, {21, 53}};
-  int cuts = 100;
-  EXPECT_NEAR(rectIntOmp(f1, a, cuts), 104704, 50);
+  int cuts = 50;
+  EXPECT_NEAR(rectIntOmp(f1, a, cuts), 104704, 100);
 }
 
 TEST(RectangleIntegration, Double_Integral_2) {
   std::vector<std::pair<double, double>> a(2);
   a = { {5, 20}, {1, 5}};
-  int cuts = 100;
-  EXPECT_NEAR(rectIntOmp(f2, a, cuts), 652.2891, 10);
+  int cuts = 50;
+  EXPECT_NEAR(rectIntOmp(f2, a, cuts), 652.2891, 20);
 }
 
 TEST(RectangleIntegration, Triple_Integral_3) {
   std::vector<std::pair<double, double>> a(3);
   a = { {4, 10}, {15, 20}, {1, 10} };
-  int cuts = 100;
+  int cuts = 50;
   EXPECT_NEAR(rectIntOmp(f3, a, cuts), 3.3218, 1);
 }
 
 TEST(RectangleIntegration, Triple_Integral_4) {
   std::vector<std::pair<double, double>> a(3);
   a = { {15, 25}, {30, 45}, {-1, 0.5} };
-int cuts = 100;
-  EXPECT_NEAR(rectIntOmp(f4, a, cuts), 75251.8655, 50);
+int cuts = 50;
+  EXPECT_NEAR(rectIntOmp(f4, a, cuts), 75251.8655, 200);
 }
 
 TEST(RectangleIntegration, Triple_Integral_5) {
   std::vector<std::pair<double, double>> a(1);
   a = { {-32, 134}};
-  int cuts = 100;
-  EXPECT_NEAR(rectIntOmp(f5, a, cuts), 812956.0353, 50);
+  int cuts = 50;
+  EXPECT_NEAR(rectIntOmp(f5, a, cuts), 812956.0353, 200);
 }
 
 TEST(RectangleIntegration, Triple_Integral_6) {
   std::vector<std::pair<double, double>> a(2);
   a = { {41, 117}, {-10, 13}};
-  int cuts = 100;
-  EXPECT_NEAR(rectIntOmp(f6, a, cuts), 89767.3084, 50);
+  int cuts = 50;
+  EXPECT_NEAR(rectIntOmp(f6, a, cuts), 89767.3084, 200);
 }
 
 int main(int argc, char **argv) {
