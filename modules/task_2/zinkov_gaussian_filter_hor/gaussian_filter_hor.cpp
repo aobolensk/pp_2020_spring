@@ -27,7 +27,7 @@ std::vector<pixel> Gaussian_Filter_omp(const std::vector<pixel>& image, const in
   int sum_mask = 16;
   std::vector<pixel> result(image.size());
 
-#pragma omp parallel for private (r, g, b, x ,y)
+#pragma omp parallel for private (r, g, b, x, y)
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       r = g = b = 0;
