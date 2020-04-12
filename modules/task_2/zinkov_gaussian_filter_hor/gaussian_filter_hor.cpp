@@ -53,7 +53,7 @@ std::vector<pixel> Gaussian_Filter_omp(const std::vector<pixel>& image, const in
       result[i * cols + j].g = g / sum_mask;
       result[i * cols + j].b = b / sum_mask;
     }
-  }  
+  }
 
   return result;
 }
