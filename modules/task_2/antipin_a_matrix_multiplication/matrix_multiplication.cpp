@@ -57,7 +57,7 @@ void convertMatrix(const SparseMatrix<CCS>& A, SparseMatrix<CRS>* B, const int n
     B->n = A.n;
 
     std::vector<size_t> cols(A.getRealSize());
-#pragma omp parallel num_threads(numTr) shared(A, cols) 
+#pragma omp parallel num_threads(numTr) shared(A, cols)
     {
 #pragma omp for schedule(static, 1)
         for (int lj = 0; lj < A.getMatrixSize(); ++lj) {
@@ -152,7 +152,7 @@ void getParallelOMPMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
             lj += numTr;
             iterator = 0;
         }
-    }   
+    }
 
     iterator = 0;
     for (size_t i = 0; i < tmp.getMatrixSize(); ++i) {
