@@ -46,10 +46,6 @@ TEST(Matrix_base, can_create_random_usial_matrix) {
     ASSERT_NO_THROW(getRandomMatrix(&A, 100));
 }
 
-TEST(Matrix_base, can_create_matrix) {
-    ASSERT_NO_THROW((SparseMatrix<CCS>(1000, 10)));
-}
-
 TEST(Matrix_base, can_throw_if_it_is_not_a_sparse_matrix) {
     ASSERT_ANY_THROW((SparseMatrix<CCS>(100, 5)));
 }
