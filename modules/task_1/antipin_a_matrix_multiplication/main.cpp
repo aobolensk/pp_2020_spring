@@ -216,12 +216,7 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1) {
 
 TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
     SparseMatrix<CCS> mat1(10, 8);
-<<<<<<< HEAD
-    mat1.printM();
-=======
     // mat1.printM();
->>>>>>> 70ce61f31d6311ec5e6c1651127481ad8a8be722
-
     std::vector<double> mat2;
     constructMatrix(mat1, &mat2);
 
