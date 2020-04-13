@@ -238,8 +238,8 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
 }*/
 
 TEST(Matrix_multiplication, can_multiply_same_as_usial_matrix) {
-    SparseMatrix<CCS> mat1(144, 50);
-    SparseMatrix<CCS> mat2(144, 50);
+    SparseMatrix<CCS> mat1(100, 12);
+    SparseMatrix<CCS> mat2(100, 12);
     SparseMatrix<CCS> mat3;
 
     std::vector<double> mat_1;
@@ -247,13 +247,13 @@ TEST(Matrix_multiplication, can_multiply_same_as_usial_matrix) {
     std::vector<double> mat_3;
     constructMatrix(mat1, &mat_1);
     constructMatrix(mat2, &mat_2);
-    matrixMultiplication(mat_1, 144, mat_2, &mat_3);
+    matrixMultiplication(mat_1, 100, mat_2, &mat_3);
     getParallelOMPMatrixMultiplication(mat1, mat2, &mat3);
-    EXPECT_NEAR(mat3.getElem(10, 10), mat_3[10 * 144 + 10], 0.000001);
-    EXPECT_NEAR(mat3.getElem(25, 40), mat_3[25 * 144 + 40], 0.000001);
-    EXPECT_NEAR(mat3.getElem(56, 81), mat_3[56 * 144 + 81], 0.000001);
-    EXPECT_NEAR(mat3.getElem(73, 53), mat_3[73 * 144 + 53], 0.000001);
-    EXPECT_NEAR(mat3.getElem(94, 4), mat_3[94 * 144 + 4], 0.000001);
+    EXPECT_NEAR(mat3.getElem(10, 10), mat_3[10 * 100 + 10], 0.000001);
+    EXPECT_NEAR(mat3.getElem(25, 40), mat_3[25 * 100 + 40], 0.000001);
+    EXPECT_NEAR(mat3.getElem(56, 81), mat_3[56 * 100 + 81], 0.000001);
+    EXPECT_NEAR(mat3.getElem(73, 53), mat_3[73 * 100 + 53], 0.000001);
+    EXPECT_NEAR(mat3.getElem(94, 4), mat_3[94 * 100 + 4], 0.000001);
 }
 
 int main(int argc, char** argv) {
