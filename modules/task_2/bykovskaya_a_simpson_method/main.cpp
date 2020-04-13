@@ -7,7 +7,7 @@
 #include <utility>
 #include "./simpson_method.h"
 
-TEST(Simson_Method_Seq, Can_Integrate_One_Dim_Func) {
+TEST(Simson_Method_Omp, Can_Integrate_One_Dim_Func) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0]; };  // y(x) = x
     std::vector<std::pair<double, double>> scope = { {0, 1} };  // expected 0.5
@@ -18,7 +18,7 @@ TEST(Simson_Method_Seq, Can_Integrate_One_Dim_Func) {
     EXPECT_NEAR(res, 0.5, 0.05);
 }
 
-TEST(Simson_Method_Seq, Can_Integrate_One_Dim_Func_2) {
+TEST(Simson_Method_Omp, Can_Integrate_One_Dim_Func_2) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0] * vec[0] * vec[0]; };  // y(x) = x * x * x
     std::vector<std::pair<double, double>> scope = { {0, 1} };  // expected 0.25
@@ -26,7 +26,7 @@ TEST(Simson_Method_Seq, Can_Integrate_One_Dim_Func_2) {
     EXPECT_NEAR(res, 0.25, 0.05);
 }
 
-TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func) {
+TEST(Simson_Method_Omp, Can_Integrate_Two_Dim_Func) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0] + 2 * sin(vec[1]); };  // y(x) = x + 2 * sin(y)
     std::vector<std::pair<double, double>> scope = { {0, 0.2}, {0, 3.14159} };  // expected 0.862832
@@ -37,7 +37,7 @@ TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func) {
     EXPECT_NEAR(res, 0.862832, 0.05);
 }
 
-TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func_2) {
+TEST(Simson_Method_Omp, Can_Integrate_Two_Dim_Func_2) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0] + vec[1] * vec[1]; };  // y(x) = x + y*y
     std::vector<std::pair<double, double>> scope = { {0, 1}, {0, 2} };  // expected 3.6
@@ -45,7 +45,7 @@ TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func_2) {
     EXPECT_NEAR(res, 3.6, 1);
 }
 
-TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func_3) {
+TEST(Simson_Method_Omp, Can_Integrate_Two_Dim_Func_3) {
     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
         return vec[0] + vec[1]; };  // y(x) = x + y
     std::vector<std::pair<double, double>> scope = { {0, 0.5}, {0, 0.5} };  // expected 0.125
@@ -53,7 +53,7 @@ TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func_3) {
     EXPECT_NEAR(res, 0.125, 0.05);
 }
 
-// TEST(Simson_Method_Seq, Can_Integrate_Three_Dim_Func) {
+// TEST(Simson_Method_Omp, Can_Integrate_Three_Dim_Func) {
 //     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec){
 //         return sin(vec[0]) * vec[1] * cos(vec[2]);};  // f(x,y,z) = sin(x) * y * cos(z)
 //     std::vector<std::pair<double, double>> scope = { {0, 1}, {0, 0.5}, {0, 1} };  // expected 0
@@ -61,7 +61,7 @@ TEST(Simson_Method_Seq, Can_Integrate_Two_Dim_Func_3) {
 //     EXPECT_NEAR(res, 0.0483528, 0.01);
 // }
 
-// TEST(Simson_Method_Seq, Can_Integrate_Three_Dim_Func_2) {
+// TEST(Simson_Method_Omp, Can_Integrate_Three_Dim_Func_2) {
 //     std::function<double(const std::vector<double>&)> f = [](const std::vector<double>& vec) {
 //         return vec[0] + vec[1] + vec[2];};  // f(x,y,z) = x + y + z
 //     std::vector<std::pair<double, double>> scope = { {0, 1}, {0, 0.5}, {0, 0.5} };  // expected 0.25
