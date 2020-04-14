@@ -5,12 +5,12 @@
 #include "./radix_sort_w_batcher.h"
 
 TEST(Radix_Sort_W_Batcher, Test_CorrectSort) {
-    std::vector<int> vec = { 1,2,3,4,5,6,7,8,9 };
+    std::vector<int> vec = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     ASSERT_EQ(true, checkSort(vec));
 }
 
 TEST(Radix_Sort_W_Batcher, Test_Sort) {
-    std::vector<int> vec = { 9,4,5,6,3,2,1,7,8 };
+    std::vector<int> vec = { 9, 4, 5, 6, 3, 2, 1, 7, 8 };
     radixSort(&vec);
     ASSERT_EQ(true, checkSort(vec));
 }
