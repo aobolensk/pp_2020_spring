@@ -3,7 +3,7 @@
 #include <omp.h>
 #include <time.h>
 #include <vector>
-#include "./quick_sort.h"
+#include "../../modules/task_2/korobeinikov_a_quick_sort/quick_sort.h"
 
 
 TEST(Quick_Parallel_omp, TestParallelSort) {

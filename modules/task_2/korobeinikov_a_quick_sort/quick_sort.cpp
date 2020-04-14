@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <utility>
-#include "../../modules/task_1/korobeinikov_a_quick_sort/quick_sort.h"
+#include "../../modules/task_2/korobeinikov_a_quick_sort/quick_sort.h"
 
 const int inf = INT_MAX;
 
