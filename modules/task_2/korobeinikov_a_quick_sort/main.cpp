@@ -7,7 +7,7 @@
 
 
 TEST(Quick_Parallel_omp, TestParallelSort) {
-    int n = 364589;
+    int n = 36458;
     std::vector <double> vec = getRandomVector(n);
     quickSortParallel(&vec, 8);
 
@@ -15,7 +15,7 @@ TEST(Quick_Parallel_omp, TestParallelSort) {
 }
 
 TEST(Quick_Parallel_omp, TestParallelAndSeqSort) {
-    int n = 173324;
+    int n = 17332;
     std::vector <double> vec = getRandomVector(n);
     quickSortParallel(&vec, 10);
     ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
@@ -24,7 +24,7 @@ TEST(Quick_Parallel_omp, TestParallelAndSeqSort) {
 }
 
 TEST(Quick_Parallel_omp, TestSeqAndParallelSort) {
-    int n = 100000;
+    int n = 10000;
     std::vector <double> vec = getRandomVector(n);
     quickSort(0, n - 1, &vec);
     ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
@@ -32,7 +32,7 @@ TEST(Quick_Parallel_omp, TestSeqAndParallelSort) {
     ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
-TEST(Quick_Sort_seq, CanSortWithOddNumberOfThreads) {
+TEST(Quick_Parallel_omp, CanSortWithOddNumberOfThreads) {
     int n = 10000;
     int th = 5;
     std::vector <double> vec = getRandomVector(n);
@@ -41,8 +41,8 @@ TEST(Quick_Sort_seq, CanSortWithOddNumberOfThreads) {
     ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
-TEST(Quick_Sort_seq, CanSortWithEvenNumberOfThreads) {
-    int n = 145664;
+TEST(Quick_Parallel_omp, CanSortWithEvenNumberOfThreads) {
+    int n = 14566;
     int th = 4;
     std::vector <double> vec = getRandomVector(n);
 
@@ -50,7 +50,7 @@ TEST(Quick_Sort_seq, CanSortWithEvenNumberOfThreads) {
     ASSERT_EQ(1, checkCorrectnessOfSort(&vec));
 }
 
-TEST(Quick_Sort_seq, CanEvenAndOddSplit) {
+TEST(Quick_Parallel_omp, CanEvenAndOddSplit) {
     int n = 7768;
     int part1 = 2000;
     std::vector <double> vec = getRandomVector(n);
