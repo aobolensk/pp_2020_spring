@@ -1,4 +1,5 @@
 // Copyright 2020 Guseva Catherine
+#include <omp.h>
 #include <vector>
 #include <string>
 #include <utility>
@@ -6,7 +7,6 @@
 #include <iostream>
 #include <ctime>
 #include <random>
-#include <omp.h>
 #include "../../../modules/task_2/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
 
 #define THREADS 4
