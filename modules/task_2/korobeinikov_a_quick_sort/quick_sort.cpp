@@ -1,5 +1,6 @@
 // Copyright 2020 Korobeinikov Aleksei
 #include <omp.h>
+#include <limits.h>
 #include <random>
 #include <ctime>
 #include <algorithm>
@@ -12,13 +13,13 @@ const int inf = INT_MAX;
 void EvenSplitter(int start, size_t size1, size_t size2,
     std::vector <double>* arr) {
     std::vector <double> tmp(size1);
-    for (int i = 0; i < size1; i += 2) {
+    for (size_t i = 0; i < size1; i += 2) {
         tmp[i] = arr->at(start + i);
     }
     size2 = start + size1 + size2;
-    int first_iter = 0;
-    int second_iter = start + size1;
-    int common_iter = start;
+    size_t first_iter = 0;
+    size_t second_iter = start + size1;
+    size_t common_iter = start;
     while (first_iter < size1 && second_iter < size2) {
         if (tmp[first_iter] < arr->at(second_iter)) {
             arr->at(common_iter) = tmp[first_iter];
@@ -30,11 +31,11 @@ void EvenSplitter(int start, size_t size1, size_t size2,
         common_iter += 2;
     }
     if (first_iter >= size1) {
-        for (int i = second_iter; i < size2; i += 2, common_iter += 2) {
+        for (size_t i = second_iter; i < size2; i += 2, common_iter += 2) {
             arr->at(common_iter) = arr->at(i);
         }
     } else {
-        for (int i = first_iter; i < size1; i += 2, common_iter += 2) {
+        for (size_t i = first_iter; i < size1; i += 2, common_iter += 2) {
             arr->at(common_iter) = tmp[i];
         }
     }
@@ -43,13 +44,13 @@ void EvenSplitter(int start, size_t size1, size_t size2,
 void OddSplitter(int start, size_t size1, size_t size2,
     std::vector <double>* arr) {
     std::vector <double> tmp(size1);
-    for (int i = 1; i < size1; i += 2) {
+    for (size_t i = 1; i < size1; i += 2) {
         tmp[i] = arr->at(start + i);
     }
     size2 = start + size1 + size2;
-    int first_iter = 1;
-    int second_iter = start + size1 + 1;
-    int common_iter = start + 1;
+    size_t first_iter = 1;
+    size_t second_iter = start + size1 + 1;
+    size_t common_iter = start + 1;
     while (first_iter  < size1 && second_iter < size2) {
         if (tmp[first_iter] < arr->at(second_iter)) {
             arr->at(common_iter) = tmp[first_iter];
@@ -61,11 +62,11 @@ void OddSplitter(int start, size_t size1, size_t size2,
         common_iter += 2;
     }
     if (first_iter >= size1) {
-        for (int i = second_iter; i < size2; i += 2, common_iter += 2) {
+        for (size_t i = second_iter; i < size2; i += 2, common_iter += 2) {
                 arr->at(common_iter) = arr->at(i);
         }
     } else {
-        for (int i = first_iter; i < size1; i += 2, common_iter += 2) {
+        for (size_t i = first_iter; i < size1; i += 2, common_iter += 2) {
                 arr->at(common_iter) = tmp[i];
         }
     }
@@ -88,7 +89,7 @@ void quickSortParallel(std::vector <double>* arr, int p) {
         #pragma omp for
         for (int i = 0; i < num; ++i) {
             int left = i * a;
-            int right = (i == num - 1) ? right = n + delta - 1 : left + a - 1;
+            int right = (i + 1 == num) ? n + delta - 1 : left + a - 1;
             quickSort(left, right, arr);
         }
     }
