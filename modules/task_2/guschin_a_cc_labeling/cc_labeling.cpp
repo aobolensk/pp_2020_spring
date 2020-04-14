@@ -3,6 +3,8 @@
 #include <omp.h>
 #include <iostream>
 #include <vector>
+#include <random>
+#include <ctime>
 
 std::vector<std::vector<std::int32_t>> Labeling_omp(
     const std::vector<std::vector<std::int8_t>>& pic) {
@@ -13,7 +15,7 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
   std::int32_t h = pic[0].size();
   std::int32_t comp_counter = 1;
   std::int32_t thread_count = 0;
-  omp_set_num_threads(8);
+  //omp_set_num_threads(8);
   #pragma omp parallel
   {
     std::int32_t thread_id = omp_get_thread_num();
@@ -106,5 +108,18 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
     for (std::int32_t i = 0; i < h; ++i) {
       for (std::int32_t j = 0; j < w; ++j) std::cout << A[i][j] << " ";
       std::cout << std::endl;
+    }
+  }
+
+  void Fill_random(std::vector<std::vector<std::int8_t>>* ptr) {
+    std::int32_t h = ptr->size();
+    std::int32_t w = (*ptr)[0].size();
+    std::mt19937 gen(time(0));
+    for (std::int32_t i = 0; i < h; ++i) {
+      for (std::int32_t j = 0; j < w; ++j)
+        if (gen() % 2== 0)
+          (*ptr)[i][j] = 1;
+        else
+          (*ptr)[i][j] = 0;
     }
   }

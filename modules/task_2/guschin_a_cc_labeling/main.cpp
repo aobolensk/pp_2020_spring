@@ -11,3 +11,9 @@ TEST(CC_Labeling_omp, No_Throw) {
        {1, 0, 0, 1}};
     ASSERT_NO_THROW(Labeling_omp(A));
 }
+
+TEST(CC_Labeling_omp, No_Throw2) {
+  std::vector<std::vector<std::int8_t>> A(10, std::vector<std::int8_t>(10));
+  Fill_random(&A);
+  ASSERT_NO_THROW(Labeling_omp(A));
+}
