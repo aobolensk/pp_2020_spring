@@ -15,6 +15,7 @@ class task {
     int num_of_depends;
     virtual void execute() = 0;
     virtual void print() = 0;
+    virtual ~task(){}
 };
 
 class sortTask: public task {
