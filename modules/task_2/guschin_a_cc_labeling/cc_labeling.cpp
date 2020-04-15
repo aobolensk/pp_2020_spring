@@ -87,7 +87,9 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
       if (res[i][j] == 0 || res[i - 1][j] == 0 || res[i][j] == res[i - 1][j]) {
         continue;
       } else {
-        Merge_omp(&res, 0, res[i - 1][j], res[i][j], i, j);
+        std::int32_t shift = h / thread_count;
+        if (ost > 0) shift += 1;
+        Merge_omp(&res, 0, res[i - 1][j], res[i][j], i + shift, 0);
       }
     }
     i += h / thread_count;
