@@ -15,7 +15,7 @@ TEST(CC_Labeling_omp, Can_find_invalid_labeling) {
 TEST(CC_Labeling_omp, Can_find_valid_labeling) {
   std::vector<std::vector<std::int32_t>> A(4, std::vector<std::int32_t>(4));
   A = {{1, 1, 1, 0},
-       {0, 0, 1, 0}, 
+       {0, 0, 1, 0},
        {0, 0, 0, 2},
        {2, 2, 2, 2}};
   EXPECT_EQ(IsLabeled(A), true);
@@ -27,7 +27,7 @@ TEST(CC_Labeling_omp, No_Throw) {
        {0, 1, 0, 1},
        {0, 1, 0, 1},
        {1, 1, 0, 1}};
-   ASSERT_NO_THROW(Labeling_omp(A));
+  ASSERT_NO_THROW(Labeling_omp(A));
 }
 
 TEST(CC_Labeling_omp, Can_lable_omp_with_premade_pic) {

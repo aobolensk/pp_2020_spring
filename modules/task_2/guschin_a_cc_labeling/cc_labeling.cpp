@@ -16,7 +16,6 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
   std::int32_t w = pic[0].size();
   std::int32_t comp_counter = 1;
   std::int32_t thread_count = 0;
-  omp_set_num_threads(4);
 #pragma omp parallel
   {
     std::int32_t thread_id = omp_get_thread_num();
@@ -24,7 +23,7 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
     std::int32_t first_row = -1;
     bool lock = true;
 
-#pragma omp for schedule(static)
+    #pragma omp for schedule(static)
     for (std::int32_t i = 0; i < h; ++i) {
       for (std::int32_t j = 0; j < w; ++j) {
         std::int32_t up_value = 0;
@@ -45,8 +44,6 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
                 (res[i - 1][j] < res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
             std::int32_t max =
                 (res[i - 1][j] > res[i][j - 1] ? res[i - 1][j] : res[i][j - 1]);
-            /*#pragma omp critical(print)
-            std::cout << "i = " << i << " j = " << j << std::endl;*/
             Merge_omp(&res, first_row, max, min, i, j);
             res[i][j] = min;
           }
@@ -55,7 +52,7 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
         } else if (up_value == 0 && left_value == 1) {
           res[i][j] = res[i][j - 1];
         } else if (up_value == 0 && left_value == 0) {
-#pragma omp critical(counter)
+          #pragma omp critical(counter)
           {
             res[i][j] = comp_counter;
             comp_counter++;
@@ -66,15 +63,9 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
       if (lock == true) {
         lock = false;
         first_row = i;
-//#pragma omp critical(print)
-//        std::cout << "start " << first_row << std::endl;
       }
-
-//#pragma omp critical(print)
-//      std::cout << "id = " << thread_id << " i = " << i << std::endl;
     }
   }
-  //Print(res);
 
   std::int32_t i = h / thread_count;
   std::int32_t ost = h % thread_count;
@@ -98,8 +89,6 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
       --ost;
     }
   }
-  //Print(res);
-  //std::cout << "num " << thread_count;
   return res;
 }
 
@@ -139,10 +128,8 @@ void Fill_random(std::vector<std::vector<std::int8_t>>* ptr) {
 }
 
 bool IsLabeled(const std::vector<std::vector<std::int32_t>>& A) {
-  std::vector<std::int32_t> marked_numbers;
   std::int32_t h = A.size();
   std::int32_t w = A[0].size();
-  
   for (std::int32_t i = 0; i < h; ++i) {
     for (std::int32_t j = 0; j < w; ++j) {
       std::int32_t sel_value = A[i][j];
