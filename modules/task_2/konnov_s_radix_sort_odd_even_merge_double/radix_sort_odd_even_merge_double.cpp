@@ -210,14 +210,7 @@ void gen_tasks(double* array, int left, int right, const std::vector<task*>& tas
 }
 
 std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double>& v) {
-    int num_threads;
-    #pragma omp parallel
-    {
-        #pragma omp single
-        {
-            num_threads = omp_get_num_threads();
-        }
-    }
+    int num_threads = omp_get_max_threads();
     std::vector<task*>tmp_queue(num_threads);
     std::vector<double>ans = v;
     std::vector<task*> tasks;
