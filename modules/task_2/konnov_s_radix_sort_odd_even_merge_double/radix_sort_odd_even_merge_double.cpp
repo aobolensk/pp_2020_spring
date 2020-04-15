@@ -18,9 +18,7 @@ sortTask::sortTask(double* array_tmp, int index_tmp, int size_tmp) {
 }
 
 void sortTask::execute() {
-    // std::cout<<"BEGIN OF SORT "<<index<<" "<<size<<"\n";
     radixSortOddEvenMergeDouble(array, index, size);
-    // std::cout<<"END OF SORT "<<index<<" "<<size<<"\n";
 }
 
 oddEvenTask::oddEvenTask(double* array_tmp, int index_tmp, int size_tmp) {
@@ -97,26 +95,12 @@ void countingSort(double* array, int size, int byteNum) {
 void radixSortOddEvenMergeDouble(double* array, int index, int size) {
     for (size_t i = 0; i < 8; i++)
         countingSort(array + index, size, i);
-    // for (int i = index; i < index+size-1; i++) {
-    //     if (array[i] > array[i+1]) {
-    //         std::cout<<"???\n"+std::to_string(index) + " " + std::to_string(size)
-    // +" "+std::to_string(i) + " "+ std::to_string(array[i]) + " " +std::to_string(array[i+1])+"\n";
-    //     }
-    // }
 }
 
 void oddMerge(double* array, int index1, int size1, int index2, int size2) {
-    // std::cout<<index1<<" "<<size1<<" "<<index2<<" "<<size2<<" hmm\n";
-    // for (int i = index1; i < index1+size1; i++)
-    //     std::cout<<array[i]<<" ";
-    // std::cout<<"|";
-    // for (int i = index2; i < index2+size2; i++)
-    //     std::cout<<array[i]<<" ";
-    // std::cout<<"\n";
     std::vector<double>tmp;
     int ind1 = index1 + 1, ind2 = index2 + 1;
     while (ind1-index1 < size1 && ind2-index2 < size2) {
-        // std::cout<<ind1<<" "<<ind2<<" KSBVHKSFH\n";
         if (array[ind1] < array[ind2]) {
             tmp.push_back(array[ind1]);
             ind1 += 2;
@@ -126,42 +110,25 @@ void oddMerge(double* array, int index1, int size1, int index2, int size2) {
         }
     }
     while (ind1-index1 < size1) {
-        // std::cout<<ind1<<" "<<ind2<<" KSBVHKSFH\n";
         tmp.push_back(array[ind1]);
         ind1+=2;
     }
     while (ind2-index2 < size2) {
-        // std::cout<<ind1<<" "<<ind2<<" KSBVHKSFH\n";
         tmp.push_back(array[ind2]);
         ind2+=2;
     }
-    // for (auto y: tmp)
-    //     std::cout<<y<<" ";
-    // std::cout<<"\n";
     int j = index1 + 1;
     for (int i = 0; i < static_cast<int>(tmp.size()); i++) {
         array[j] = tmp[i];
         j+=2;
     }
-    // std::cout<<"END OF ODD MERGE\n";
 }
 
 
 void evenMerge(double* array, int index1, int size1, int index2, int size2) {
-    // std::cout<<index1<<" "<<size1<<" "<<index2<<" "<<size2<<" lel\n";
-    // for (int i = index1; i < index1+size1; i++)
-    //     std::cout<<array[i]<<" ";
-    // std::cout<<"|";
-    // for (int i = index2; i < index2+size2; i++)
-    //     std::cout<<array[i]<<" ";
-    // std::cout<<"\n";
     std::vector<double>tmp;
     int ind1 = index1, ind2 = index2;
     while (ind1-index1 < size1 && ind2-index2 < size2) {
-        // if (ind1 < 0 || ind1 >= 8 || ind2 < 0 || ind2 >= 8) {
-        //     std::cout<<"ALYARMA";
-        //     throw -1;
-        // }
         if (array[ind1] < array[ind2]) {
             tmp.push_back(array[ind1]);
             ind1 += 2;
@@ -171,36 +138,18 @@ void evenMerge(double* array, int index1, int size1, int index2, int size2) {
         }
     }
     while (ind1-index1 < size1) {
-        // if (ind1 < 0 || ind1 >= 8) {
-        //     std::cout<<"ALYARMA";
-        //     throw -1;
-        // }
         tmp.push_back(array[ind1]);
         ind1+=2;
     }
     while (ind2-index2 < size2) {
-        // if (ind2 < 0 || ind2 >= 8) {
-        //     std::cout<<"ALYARMA";
-        //     throw -1;
-        // }
         tmp.push_back(array[ind2]);
         ind2+=2;
     }
-    // for (auto y: tmp)
-    //     std::cout<<y<<" ";
-    // std::cout<<"\n";
     int j = index1;
     for (int i = 0; i < static_cast<int>(tmp.size()); i++) {
-        // std::cout<<i<<" "<<j<<" "<<tmp[i]<<" "<<tmp.size() <<" #$%^%$#$%^%$#$%^%$#$%^%$#\n";
-        // if (j < 0 || j >= 8) {
-
-        //     std::cout<<"ALYARMA";
-        //     throw -1;
-        // }
         array[j] = tmp[i];
         j+=2;
     }
-    // std::cout<<"END OF EVEN MERGE\n";
 }
 
 void oddEvenMerge(double* array, int index, int size) {
@@ -209,22 +158,10 @@ void oddEvenMerge(double* array, int index, int size) {
             std::swap(array[index], array[index+1]);
         return;
     }
-    // std::cout<<"BEGIN OF ODD_EVEN MERGE\n";
-    // for (int i = 0; i < size; i++)
-    //     std::cout<<array[i+index]<<" ";
-    // std::cout<<" &&&&&\n";
     for (int i = index + 1; i < index + size-1; i+=2) {
-        // std::cout<<i<<" "<<array[i]<<" "<<array[i+1]<<"!!!!!!!!!!!!!!!!\n";
         if (array[i] > array[i+1])
             std::swap(array[i], array[i+1]);
     }
-    // for (int i = index; i < index + size-1; i++) {
-    //     if (array[i] > array[i+1]) {
-    //         //std::cout<<"WOW WTF\n";
-    //         std::swap(array[i], array[i+1]);
-    //     }
-    // }
-    // std::cout<<"END OF ODD_EVEN MERGE\n";
 }
 
 std::vector<double> getRandomVector(int size, double lower_bound, double upper_bound, int seed) {
@@ -253,7 +190,6 @@ void gen_tasks(double* array, int left, int right, const std::vector<task*>& tas
         queue[left] = stask;
     } else {
         int average = (left+right)/2+1;
-        // std::cout<<left<<" "<<right<<" "<<average<<" &^%&^%$^\n";
         int index1 = ((left == 0)?0:portion[left-1]);
         int size1 = portion[average-1]-index1;
         int index2 = index1+size1;
@@ -294,7 +230,6 @@ std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double
             ans.push_back(std::numeric_limits<double>::max());
         }
     }
-    // std::cout<<"\n";
     gen_tasks(ans.data(), 0, num_threads-1, tasks, portion, tmp_queue.data(), 1);
     std::queue<task*> task_queue;
     for (int i = 0; i < static_cast<int>(tmp_queue.size()); i++)
@@ -316,17 +251,12 @@ std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double
             }
             task* task1;
             task1 = task_queue.front();
-            // std::cout<<omp_get_thread_num()<<" "<<task->ref.size()<<"\n";
             task_queue.pop();
             if (task1->ref.size() == 0)
                 end = 1;
-            // task1->print();
-            // std::cout<<task1->ref.size()<<"\n";
-            // std::cout<<" "<<omp_get_thread_num()<<" "<<omp_get_num_threads()<<"\n";
             omp_unset_lock(&lock);
             task1->execute();
             omp_set_lock(&lock);
-            // std::cout<<omp_get_thread_num()<<" "<<task->num_of_depends<<"!!!!!\n";
             for (int i = 0; i < static_cast<int>(task1->ref.size()); i++) {
                 task1->ref[i]->num_of_depends--;
                 if (task1->ref[i]->num_of_depends <= 0)
@@ -336,14 +266,8 @@ std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double
             omp_unset_lock(&lock);
         }
     }
-    // std::cout<<" i t  i s  e n d \n";
-    // for (auto y: ans) {
-    //     std::cout<<y<<" ";
-    // }
-    // std::cout<<" <-\n";
     int size = static_cast<int>(ans.size());
     for (int i = v.size(); i < size; i++)
         ans.pop_back();
-    // ans.resize(v.size());
     return ans;
 }

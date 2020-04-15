@@ -6,11 +6,8 @@
 #include <omp.h>
 #include <vector>
 #include <queue>
-#include <map>
 #include <utility>
 #include <iostream>
-// std::vector<task&> tasks;
-// std::queue<task&> queue;
 
 class task {
  public:
@@ -67,22 +64,8 @@ class evenTask: public task {
 
 void gen_tasks(double* array, int left, int right, const std::vector<task*>& tasks,
                             const std::vector<int>& portion, task* queue[], bool is_begin = false);
-
-// std::vector<double> countingSort(std::vector<double> array, int byteNum);
-// std::vector<double> radixSortOddEvenMergeDouble(const std::vector<double>& array);
 std::vector<double> getRandomVector(int size, double lower_bound, double upper_bound, int seed = -1);
-// void oddMerge(double * array, int index1, int size1, int index2, int size2);
-// void evenMerge(double * array, int index1, int size1, int index2, int size2);
-// void oddEvenMerge(double * array, int index, int size);
-// int initialize(int num_threads, double* array, int size);
-
-struct str {
-    int ready_task, ready_merge, ready1, ready2;
-    omp_lock_t lock, lock2, lock3, lock4;
-};
-
 void countingSort(double* array, int size, int byteNum);
-int initialize(int num_threads, double * array, int size);
 void radixSortOddEvenMergeDouble(double* array, int index, int size);
 void oddMerge(double* array, int index1, int size1, int index2, int size2);
 void evenMerge(double* array, int index1, int size1, int index2, int size2);
