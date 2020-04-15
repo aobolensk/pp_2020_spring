@@ -1,19 +1,19 @@
 // Copyright 2020 Konnov Sergey
 
-#ifndef MODULES_TASK_1_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
-#define MODULES_TASK_1_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
+#ifndef MODULES_TASK_2_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
+#define MODULES_TASK_2_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
 
+#include <omp.h>
 #include <vector>
 #include <queue>
 #include <map>
 #include <utility>
-#include <omp.h>
 #include <iostream>
 // std::vector<task&> tasks;
 // std::queue<task&> queue;
 
 class task {
-public:
+ public:
     std::vector<task*> ref;
     int num_of_depends;
     virtual void execute() = 0;
@@ -24,48 +24,49 @@ class sortTask: public task {
     double * array;
     int index, size;
     std::vector<double> ans;
-public:
+ public:
     sortTask(double* array, int index, int size);
     void execute() override;
     void print() {
-        std::cout<<"sort "<<index<<" "<<size<<"\n";
+        std::cout << "sort " << index << " " << size << "\n";
     }
 };
 
 class oddEvenTask: public task {
     double * array;
     int index, size;
-public:
+ public:
     oddEvenTask(double * array, int index, int size);
     void execute() override;
     void print() {
-        std::cout<<"oddEvenMerge "<<index<<" "<<size<<"\n";
+        std::cout << "oddEvenMerge " << index << " " << size << "\n";
     }
 };
 
 class oddTask: public task {
     double * array;
     int index1, size1, index2, size2;
-public:
+ public:
     oddTask(double * array, int index1, int size1, int index2, int size2);
     void execute() override;
     void print() {
-        std::cout<<"oddMerge "<<index1<<" "<<size1<<" "<<index2<<" "<<size2<<"\n";
+        std::cout << "oddMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
 };
 
 class evenTask: public task {
     double * array;
     int index1, size1, index2, size2;
-public:
+ public:
     evenTask(double * array, int index1, int size1, int index2, int size2);
     void execute() override;
     void print() {
-        std::cout<<"evenMerge "<<index1<<" "<<size1<<" "<<index2<<" "<<size2<<"\n";
+        std::cout << "evenMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
 };
 
-void gen_tasks(double* array, int left, int right, const std::vector<task*>& tasks, const std::vector<int>& portion, task* queue[], bool is_begin = false);
+void gen_tasks(double* array, int left, int right, const std::vector<task*>& tasks,
+                            const std::vector<int>& portion, task* queue[], bool is_begin = false);
 
 // std::vector<double> countingSort(std::vector<double> array, int byteNum);
 // std::vector<double> radixSortOddEvenMergeDouble(const std::vector<double>& array);
@@ -87,7 +88,6 @@ void oddMerge(double* array, int index1, int size1, int index2, int size2);
 void evenMerge(double* array, int index1, int size1, int index2, int size2);
 void oddEvenMerge(double* array, int index, int size);
 std::vector<double> getRandomVector(int size, double lower_bound, double upper_bound, int seed);
-void execute(double* array, int size, int left, int right, const std::vector<int>& portion, std::map<std::pair<int, int>, str>& m); 
 std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double>& v);
 
-#endif  // MODULES_TASK_1_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
+#endif  // MODULES_TASK_2_KONNOV_S_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_RADIX_SORT_ODD_EVEN_MERGE_DOUBLE_H_
