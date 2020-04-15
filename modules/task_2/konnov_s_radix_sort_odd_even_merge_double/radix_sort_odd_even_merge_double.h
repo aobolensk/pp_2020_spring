@@ -24,7 +24,7 @@ class sortTask: public task {
  public:
     sortTask(double* array, int index, int size);
     void execute() override;
-    void print() {
+    void print() override {
         std::cout << "sort " << index << " " << size << "\n";
     }
 };
@@ -35,7 +35,7 @@ class oddEvenTask: public task {
  public:
     oddEvenTask(double * array, int index, int size);
     void execute() override;
-    void print() {
+    void print() override {
         std::cout << "oddEvenMerge " << index << " " << size << "\n";
     }
 };
@@ -46,7 +46,7 @@ class oddTask: public task {
  public:
     oddTask(double * array, int index1, int size1, int index2, int size2);
     void execute() override;
-    void print() {
+    void print() override {
         std::cout << "oddMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
 };
@@ -57,7 +57,7 @@ class evenTask: public task {
  public:
     evenTask(double * array, int index1, int size1, int index2, int size2);
     void execute() override;
-    void print() {
+    void print() override {
         std::cout << "evenMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
 };
