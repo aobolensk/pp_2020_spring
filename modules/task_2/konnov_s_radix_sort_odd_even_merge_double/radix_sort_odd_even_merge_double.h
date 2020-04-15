@@ -27,6 +27,7 @@ class sortTask: public task {
     void print() override {
         std::cout << "sort " << index << " " << size << "\n";
     }
+    virtual ~sortTask(){}
 };
 
 class oddEvenTask: public task {
@@ -38,6 +39,7 @@ class oddEvenTask: public task {
     void print() override {
         std::cout << "oddEvenMerge " << index << " " << size << "\n";
     }
+    virtual ~oddEvenTask(){}
 };
 
 class oddTask: public task {
@@ -49,6 +51,7 @@ class oddTask: public task {
     void print() override {
         std::cout << "oddMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
+    virtual ~oddTask(){}
 };
 
 class evenTask: public task {
@@ -60,6 +63,7 @@ class evenTask: public task {
     void print() override {
         std::cout << "evenMerge " << index1 << " " << size1 << " " << index2 << " " << size2 << "\n";
     }
+    virtual ~evenTask(){}
 };
 
 void gen_tasks(double* array, int left, int right, const std::vector<task*>& tasks,
