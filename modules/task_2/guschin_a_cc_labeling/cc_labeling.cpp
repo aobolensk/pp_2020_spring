@@ -21,7 +21,7 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
   {
     std::int32_t thread_id = omp_get_thread_num();
     thread_count = omp_get_num_threads();
-    std::int32_t first_row;
+    std::int32_t first_row = -1;
     bool lock = true;
 
 #pragma omp for schedule(static)
@@ -66,23 +66,23 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
       if (lock == true) {
         lock = false;
         first_row = i;
-#pragma omp critical(push)
-        std::cout << "start " << first_row << std::endl;
+//#pragma omp critical(print)
+//        std::cout << "start " << first_row << std::endl;
       }
 
-#pragma omp critical(print)
-      std::cout << "id = " << thread_id << " i = " << i << std::endl;
+//#pragma omp critical(print)
+//      std::cout << "id = " << thread_id << " i = " << i << std::endl;
     }
   }
-  Print(res);
+  //Print(res);
 
   std::int32_t i = h / thread_count;
   std::int32_t ost = h % thread_count;
+  if (ost > 0) {
+    ++i;
+    --ost;
+  }
   while (i < h) {
-    if (ost > 0) {
-      ++i;
-      --ost;
-    }
     for (std::int32_t j = 0; j < w; ++j) {
       if (res[i][j] == 0 || res[i - 1][j] == 0 || res[i][j] == res[i - 1][j]) {
         continue;
@@ -93,9 +93,13 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
       }
     }
     i += h / thread_count;
+    if (ost > 0) {
+      ++i;
+      --ost;
+    }
   }
-  Print(res);
-  std::cout << "num " << thread_count;
+  //Print(res);
+  //std::cout << "num " << thread_count;
   return res;
 }
 
@@ -132,4 +136,27 @@ void Fill_random(std::vector<std::vector<std::int8_t>>* ptr) {
       else
         (*ptr)[i][j] = 0;
   }
+}
+
+bool IsLabeled(const std::vector<std::vector<std::int32_t>>& A) {
+  std::vector<std::int32_t> marked_numbers;
+  std::int32_t h = A.size();
+  std::int32_t w = A[0].size();
+  
+  for (std::int32_t i = 0; i < h; ++i) {
+    for (std::int32_t j = 0; j < w; ++j) {
+      std::int32_t sel_value = A[i][j];
+      if (sel_value == 0) continue;
+
+      std::int32_t right_value = 0;
+      std::int32_t down_value = 0;
+
+      if (i < h - 1) down_value = A[i + 1][j];
+      if (j < w - 1) right_value = A[i][j + 1];
+
+      if (down_value != 0 && down_value != sel_value) return false;
+      if (right_value != 0 && right_value != sel_value) return false;
+    }
+  }
+  return true;
 }
