@@ -18,7 +18,6 @@ std::vector<std::vector<std::int32_t>> Labeling_omp(
   std::int32_t thread_count = 0;
 #pragma omp parallel
   {
-    std::int32_t thread_id = omp_get_thread_num();
     thread_count = omp_get_num_threads();
     std::int32_t first_row = -1;
     bool lock = true;
