@@ -5,10 +5,10 @@
 
 TEST(CC_Labeling_omp, No_Throw) {
     std::vector<std::vector<std::int8_t>> A(3, std::vector<std::int8_t>(3));
-  A = {{1, 0, 1, 0},
-       {1, 0, 0, 1},
-       {1, 1, 1, 1},
-       {1, 0, 0, 1}};
+  A = {{1, 1, 1, 0},
+       {0, 1, 0, 1},
+       {0, 1, 0, 1},
+       {1, 1, 0, 1}};
     ASSERT_NO_THROW(Labeling_omp(A));
 }
 
