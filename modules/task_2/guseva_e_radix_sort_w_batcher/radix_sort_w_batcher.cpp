@@ -47,7 +47,6 @@ void countSort(std::vector<int> *vec, int exp) {
 int getMax(std::vector<int> *vec) {
     int size = vec->size();
     int maxVal = vec->at(0);
-#pragma omp parallel for reduction(max : maxVal)
     for (int i = 1; i < size; i++) {
         if (vec->at(i) > maxVal) {
             maxVal = vec->at(i);
