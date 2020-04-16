@@ -163,23 +163,20 @@ bool SparceMatrix::operator==(const SparceMatrix& SP) const {
 SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   if (A.nRow != B.nCol)
     throw "wrong matrix size";
-  if (num <= 0)
-    throw "incorrect treads number";
   SparceMatrix ATr = A.Transpose();
   SparceMatrix Res(B.nCol, A.nRow);
-  omp_set_num_threads(num);
+  if (num > 0)
+    omp_set_num_threads(num);
   int end_col = 0;
   std::vector<std::complex<int>> local_val;
   std::vector<int> local_row_num;
-  #pragma omp parallel firstprivate(end_col) private (local_val, local_row_num) 
+  #pragma omp parallel firstprivate(end_col) private(local_val, local_row_num)
   {
     #pragma omp for schedule(static)
     for (int i = 0; i < B.nCol; i++) {
     int n = omp_get_thread_num();
-      //std::cout << "Tread " << n <<" Take " << i << std::endl;
       if (end_col < i) {
         end_col = i;
-        //std::cout <<n<<"start=" << start << std::endl;
       }
       int count = 0;
       for (int j = 0; j < ATr.nCol; j++) {
@@ -193,9 +190,9 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
       Res.point[i] = count;
     }
   #pragma omp barrier
-  #pragma omp single 
+  #pragma omp single
   {
-    for (int i=0; i<Res.nCol-1; i++)
+    for (int i=0; i < Res.nCol-1; i++)
       Res.point[i+1] += Res.point[i];
     int count = Res.point[Res.nCol - 1];
     Res.row_number.resize(count);
@@ -203,7 +200,7 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   }
 
   int end_pos = Res.point[end_col]-1;
-  for (int i=0; i<local_val.size(); i++) {
+  for (int i=0; i < local_val.size(); i++) {
     Res.row_number[end_pos-i] = local_row_num[local_val.size()-i-1];
     Res.val[end_pos-i] = local_val[local_val.size()-i-1];
   }
