@@ -5,6 +5,7 @@
 #include <omp.h>
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -14,21 +15,24 @@ namespace mtrxmult {
 std::string Matrix::to_string() {
   std::string matrix("Matrix(");
 
-  matrix += std::to_string(m_rows) + ", " + std::to_string(m_cols) + ")[ ";
+  matrix += std::to_string(m_rows) + ", " + std::to_string(m_cols) + ")[\n ";
   // insert matrix contents into resulting string
-  for (auto elem : m_data) {
-    matrix += std::to_string(elem) + ", ";
+  for (int i = 0; i < m_rows; i++) {
+    for (int j = 0; j < m_cols; j++) {
+      matrix += std::to_string(m_data.at(i * m_rows + j)) + " ";
+    }
+    matrix += "\n";
   }
   // delete extra comma
   matrix.erase(matrix.size() - 2, 2);
-  matrix += " ]";
+  matrix += "\n]";
 
   return matrix;
 }
 
 bool Matrix::equals(const Matrix &other) {
-  if (m_row_storage != other.m_row_storage || m_rows != other.m_rows ||
-      m_cols != other.m_cols || m_data.size() != other.m_data.size()) {
+  if (m_rows != other.m_rows || m_cols != other.m_cols ||
+      m_data.size() != other.m_data.size()) {
     return false;
   }
 
@@ -45,68 +49,44 @@ bool Matrix::equals(const Matrix &other) {
   return equal;
 }
 
-void Matrix::column_storage() {
-  if (m_row_storage == true) {
-    std::vector<double> column_storage_data;
-    // copy matrix columnwise
-    for (auto j = 0; j < m_cols; j++) {
-      for (auto i = 0; i < m_rows; i++) {
-        column_storage_data.push_back(m_data.at(i * m_cols + j));
+void Matrix::shift_left(const int block_size, const bool sqew) {
+  std::vector<double> row(m_cols);
+
+  for (int i = 0, j = 0; i < m_cols; i += block_size, j++) {
+    for (int k = i; k < (i + block_size); k++) {
+      int step = sqew ? j * block_size : block_size;
+
+      for (int m = 0; m < m_cols; m++) {
+        row.at(m) = m_data.at(k * m_cols + ((m + step) % m_cols));
       }
-    }
 
-    m_data = column_storage_data;
-    m_row_storage = false;
-  } else {
-    throw new std::logic_error("Already stored columnwise");
-  }
-}
-
-void Matrix::row_storage() {
-  if (m_row_storage == false) {
-    m_row_storage = true;
-    column_storage();
-    m_row_storage = true;
-  } else {
-    throw new std::logic_error("Already stored rowwise");
-  }
-}
-
-template <class InputIt, class T>
-void shift_left(InputIt first, InputIt last, const T &value) {
-  for (auto i = first; i < last - value; i++) {
-    auto current = i;
-
-    for (auto j = 0; j < value; j++) {
-      if (current == first) {
-        std::iter_swap(current, last - 1);
-        current = last - 1;
-      } else {
-        std::iter_swap(current, current - 1);
-        current--;
+      for (int m = 0; m < m_cols; m++) {
+        m_data.at(k * m_cols + m) = row.at(m);
       }
     }
   }
 }
 
-template <class InputIt, class T>
-void shift_right(InputIt first, InputIt last, const T &value) {
-  for (auto i = last - 1; i >= first + value; i--) {
-    auto current = i;
+void Matrix::shift_up(const int block_size, const bool sqew) {
+  std::vector<double> col(m_rows);
 
-    for (auto j = 0; j < value; j++) {
-      if (last - current - 2 < 0) {
-        std::iter_swap(first, current);
-        current = first;
-      } else {
-        std::iter_swap(current, current + 1);
-        current++;
+  for (int i = 0, j = 0; i < m_rows; i += block_size, j++) {
+    for (int k = i; k < (i + block_size); k++) {
+      int step = sqew ? j * block_size : block_size;
+
+      for (int m = 0; m < m_cols; m++) {
+        col.at(m) = m_data.at(((m + step) % m_cols) * m_cols + k);
+      }
+
+      for (int m = 0; m < m_cols; m++) {
+        m_data.at(m * m_cols + k) = col.at(m);
       }
     }
   }
 }
 
-Matrix multiply(const Matrix left, const Matrix right) {
+Matrix multiply(const Matrix &left, const Matrix &right,
+                const bool isParallel) {
   if (right.m_data.size() == 0 || left.m_data.size() == 0) {
     throw new std::invalid_argument("Matrices must not be empty");
     return Matrix();
@@ -124,10 +104,18 @@ Matrix multiply(const Matrix left, const Matrix right) {
     for (auto j = 0; j < right.m_cols; j++) {
       result_vector.push_back(0);
       double result = 0;
+
+      if (isParallel) {
 #pragma omp parallel for reduction(+ : result)
-      for (auto k = 0; k < left.m_cols; k++) {
-        result += left.m_data.at(i * left.m_cols + k) *
-                  right.m_data.at(k * right.m_cols + j);
+        for (auto k = 0; k < left.m_cols; k++) {
+          result += left.m_data.at(i * left.m_cols + k) *
+                    right.m_data.at(k * right.m_cols + j);
+        }
+      } else {
+        for (auto k = 0; k < left.m_cols; k++) {
+          result += left.m_data.at(i * left.m_cols + k) *
+                    right.m_data.at(k * right.m_cols + j);
+        }
       }
       result_vector.back() += result;
     }
@@ -136,86 +124,64 @@ Matrix multiply(const Matrix left, const Matrix right) {
   return Matrix(result_vector, left.m_rows, right.m_cols);
 }
 
-Matrix multiply_seq(const Matrix left, const Matrix right) {
-  if (right.m_data.size() == 0 || left.m_data.size() == 0) {
+Matrix multiply_cannon(Matrix *left, Matrix *right) {
+  if (right->m_data.size() == 0 || left->m_data.size() == 0) {
     throw new std::invalid_argument("Matrices must not be empty");
     return Matrix();
   }
 
-  if (right.m_rows != left.m_cols) {
+  if (right->m_rows != left->m_cols) {
     throw new std::invalid_argument(
         "Right matrix must contain left matrix rows number of columns");
     return Matrix();
   }
 
-  std::vector<double> result_vector;
-
-  for (auto i = 0; i < left.m_rows; i++) {
-    for (auto j = 0; j < right.m_cols; j++) {
-      result_vector.push_back(0);
-      for (auto k = 0; k < left.m_cols; k++) {
-        result_vector.back() += left.m_data.at(i * left.m_cols + k) *
-                                right.m_data.at(k * right.m_cols + j);
-      }
-    }
-  }
-
-  return Matrix(result_vector, left.m_rows, right.m_cols);
-}
-
-Matrix multiply_cannon(Matrix left, Matrix right) {
-  if (right.m_data.size() == 0 || left.m_data.size() == 0) {
-    throw new std::invalid_argument("Matrices must not be empty");
+  if (right->m_rows != right->m_cols) {
+    throw new std::invalid_argument("Matrices must be homogenious");
     return Matrix();
   }
 
-  if (right.m_rows != left.m_cols) {
-    throw new std::invalid_argument(
-        "Right matrix must contain left matrix rows number of columns");
-    return Matrix();
+  int size = omp_get_max_threads();
+  if (size < 4) {
+    return multiply(*left, *right, PARALLEL);
   }
 
-  if (right.m_row_storage != false) {
-    throw new std::invalid_argument(
-        "Right matrix must be stored columnwise, call column_storage() on it"
-        "first");
-    return Matrix();
-  }
+  int sqrt_size = std::sqrt(size);
+  int block_size = left->m_cols / sqrt_size;
 
   // left-circular-shift left matrix i-row by i positions
-  for (auto i = 0; i < left.m_rows; i++) {
-    shift_left(left.m_data.begin() + i * left.m_cols,
-               left.m_data.begin() + i * left.m_cols + left.m_cols, i);
-  }
-
+  left->shift_left(block_size, true);
   // Up-circular-shift right matrix i-column by i positions
-  for (auto i = 0; i < right.m_cols; i++) {
-    shift_left(right.m_data.begin() + i * right.m_rows,
-               right.m_data.begin() + i * right.m_rows + right.m_cols, i);
-  }
+  right->shift_up(block_size, true);
 
-  std::vector<double> result_vec;
-  result_vec.resize(left.m_rows * right.m_cols, 0);
+  std::vector<double> result(left->m_data.size());
 
-  for (auto k = 0; k < left.m_rows; k++) {
-    for (auto i = 0; i < left.m_rows; i++) {
-      for (auto j = 0; j < right.m_cols; j++) {
-        result_vec.at(i * right.m_cols + j) +=
-            left.m_data.at(i * left.m_cols + j) *
-            right.m_data.at(j * right.m_rows + i);
+  for (int iter = 0; iter < sqrt_size; iter++) {
+#pragma omp parallel
+    {
+      int rank = omp_get_thread_num();
+      int row_start = (rank / sqrt_size) * block_size;
+      int row_end = row_start + block_size;
+
+      int col_start = (rank % sqrt_size) * block_size;
+      int col_end = col_start + block_size;
+
+      for (auto i = row_start; i < row_end; i++) {
+        for (auto j = col_start; j < col_end; j++) {
+          for (auto k = col_start; k < col_end; k++) {
+            result.at(i * left->m_cols + j) +=
+                left->m_data.at(i * left->m_cols + k) *
+                right->m_data.at(k * right->m_cols + j);
+          }
+        }
       }
-
-      shift_left(left.m_data.begin() + i * left.m_cols,
-                 left.m_data.begin() + i * left.m_cols + left.m_cols, 1);
     }
 
-    for (auto i = 0; i < right.m_cols; i++) {
-      shift_left(right.m_data.begin() + i * right.m_rows,
-                 right.m_data.begin() + i * right.m_rows + right.m_cols, 1);
-    }
+    left->shift_left(block_size, false);
+    right->shift_up(block_size, false);
   }
 
-  return Matrix(result_vec, left.m_rows, right.m_cols);
+  return Matrix(result, left->m_rows, left->m_cols);
 }
 
 Matrix random_matrix(const int rows, const int columns) {
@@ -228,7 +194,7 @@ Matrix random_matrix(const int rows, const int columns) {
   std::vector<double> data;
   data.resize(rows * columns);
 
-  std::generate(data.begin(), data.end() - 1, [&]() { return dist(gen); });
+  std::generate(data.begin(), data.end(), [&]() { return dist(gen); });
 
   return Matrix(data, rows, columns);
 }
