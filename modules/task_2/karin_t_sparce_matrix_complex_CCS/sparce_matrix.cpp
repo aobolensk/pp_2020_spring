@@ -173,7 +173,6 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   {
     #pragma omp for schedule(static)
     for (int i = 0; i < B.nCol; i++) {
-    int n = omp_get_thread_num();
       if (end_col < i) {
         end_col = i;
       }
@@ -199,7 +198,7 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   }
 
   int end_pos = Res.point[end_col]-1;
-  for (int i=0; i < local_val.size(); i++) {
+  for (unsigned i=0; i < local_val.size(); i++) {
     Res.row_number[end_pos-i] = local_row_num[local_val.size()-i-1];
     Res.val[end_pos-i] = local_val[local_val.size()-i-1];
   }
