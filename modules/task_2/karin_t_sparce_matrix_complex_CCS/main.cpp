@@ -146,7 +146,7 @@ TEST(Sparce_Matrix, can_multyplication) {
 
 
 
-TEST(Sparce_Matrix, can_multyplication2) {
+TEST(Sparce_Matrix, can_parallel_multyplication) {
   std::vector<std::complex<int>> val_A(5);
   val_A[0] = std::complex<int>(7, 0);
   val_A[1] = std::complex<int>(5, 0);
@@ -172,4 +172,14 @@ TEST(Sparce_Matrix, can_multyplication2) {
   ASSERT_EQ(C.val[5], std::complex<int>(3, 0));
   ASSERT_EQ(C.val[6], std::complex<int>(10, 0));
   ASSERT_EQ(C.val[7], std::complex<int>(12, 0));
+}
+
+TEST(Sparce_Matrix, values_are_equal) {
+  SparceMatrix A(200, 200, 50);
+  SparceMatrix B(200, 200, 50);
+
+  SparceMatrix ResPar = ParMult(A, B);
+  SparceMatrix ResSeq = A * B;
+
+  ASSERT_EQ(ResSeq, ResPar);
 }
