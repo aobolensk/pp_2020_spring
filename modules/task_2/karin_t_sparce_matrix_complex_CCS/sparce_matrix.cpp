@@ -1,13 +1,12 @@
 // Copyright 2020 Karin Timofey
+#include <omp.h>
 #include <vector>
-#include <string>
 #include <random>
 #include <ctime>
 #include <cmath>
 #include <iostream>
 #include <complex>
 #include <algorithm>
-#include <omp.h>
 #include "../../../modules/task_2/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 SparceMatrix::SparceMatrix(int _nCol, int _nRow) {
