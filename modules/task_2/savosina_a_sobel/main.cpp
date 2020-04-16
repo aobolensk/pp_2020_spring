@@ -1,9 +1,9 @@
 // Copyright 2020 Savosina Aleksandra
 
+#include <omp.h>
 #include <vector>
 #include <string>
 #include <ctime>
-#include <omp.h>
 #include "./sobel.h"
 #include "gtest/gtest.h"
 

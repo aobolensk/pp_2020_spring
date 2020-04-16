@@ -1,7 +1,7 @@
 // Copyright 2020 Savosina Aleksandra
+#include <omp.h>
 #include <cmath>
 #include <vector>
-#include <omp.h>
 #include "../../../modules/task_2/savosina_a_sobel/sobel.h"
 
 mainImage omp(const mainImage& _img) {

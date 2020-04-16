@@ -1,8 +1,8 @@
 // Copyright 2020 Savosina Aleksandra
 
 
-#ifndef MODULES_TASK_2_SAVOSINA_A_SOBEL_SAVOSINA_A_H_
-#define MODULES_TASK_2_SAVOSINA_A_SOBEL_SAVOSINA_A_H_
+#ifndef MODULES_TASK_2_SAVOSINA_A_SOBEL_SOBEL_H_
+#define MODULES_TASK_2_SAVOSINA_A_SOBEL_SOBEL_H_
 
 
 #include <vector>
@@ -73,4 +73,4 @@ using mask = img;
 mask sobel(const mask& _img);
 mask omp(const mask& _img);
 
-#endif  // MODULES_TASK_2_SAVOSINA_A_SOBEL_SAVOSINA_A_H_
+#endif  // MODULES_TASK_2_SAVOSINA_A_SOBEL_SOBEL_H_
