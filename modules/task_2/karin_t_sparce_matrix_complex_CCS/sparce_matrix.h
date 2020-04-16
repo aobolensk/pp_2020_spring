@@ -18,6 +18,7 @@ struct SparceMatrix {
     std::vector<int> _row_number, std::vector<int> _point);
   SparceMatrix Transpose() const;
   SparceMatrix operator*(const SparceMatrix &MB);
+  bool operator==(const SparceMatrix& SP) const;
   void Print();
   int colCount(int col);
 };

@@ -1,6 +1,8 @@
 // Copyright 2020 Karin Timofey
 #include <gtest/gtest.h>
 #include <vector>
+#include <omp.h>
+#include <iostream>
 #include "../../modules/task_2/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 int main(int argc, char **argv) {
@@ -65,6 +67,22 @@ TEST(Sparce_Matrix, can_create_from_vectors) {
     ASSERT_EQ(Matrix.val, val);
     ASSERT_EQ(Matrix.nCol, 3);
     ASSERT_EQ(Matrix.nRow, 4);
+}
+
+TEST(Sparce_matrix, can_compare) {
+  std::vector<std::complex<int>> val(7);
+  val[0] = std::complex<int>(35, 0);
+  val[1] = std::complex<int>(29, 0);
+  val[2] = std::complex<int>(65, 0);
+  val[3] = std::complex<int>(51, 0);
+  val[4] = std::complex<int>(85, 0);
+  val[5] = std::complex<int>(36, 0);
+  val[6] = std::complex<int>(61, 0);
+  SparceMatrix Matrix(3, 4, val, { 0, 1, 0, 1, 2, 0, 1 }, { 2, 5, 7 });
+  SparceMatrix Eq(3, 4, val, { 0, 1, 0, 1, 2, 0, 1 }, { 2, 5, 7 });
+  SparceMatrix NotEq(3, 4, val, { 0, 2, 0, 1, 2, 0, 1 }, { 2, 5, 7 });
+  ASSERT_EQ(Matrix, Eq);
+  ASSERT_FALSE (Matrix == NotEq);
 }
 
 TEST(Sparce_Matrix, can_transpose) {
@@ -156,4 +174,21 @@ TEST(Sparce_Matrix, can_multyplication2) {
   ASSERT_EQ(C.val[5], std::complex<int>(3, 0));
   ASSERT_EQ(C.val[6], std::complex<int>(10, 0));
   ASSERT_EQ(C.val[7], std::complex<int>(12, 0));
+}
+
+TEST(Sparce_Matrix, values_are_equal) {
+  SparceMatrix A(200, 200, 40000);
+  SparceMatrix B(200, 200, 40000);
+
+  double startPar = omp_get_wtime();
+  SparceMatrix ResPar = ParMult(A, B, 8);
+  double endPar = omp_get_wtime();
+
+  double startSeq = omp_get_wtime();
+  SparceMatrix ResSeq = A * B;
+  double endSeq = omp_get_wtime();
+
+  std::cout << "Seq time = " << endSeq - startSeq << std::endl;
+  std::cout << "Par time = " << endPar - startPar << std::endl;
+  ASSERT_EQ(ResSeq, ResPar);
 }

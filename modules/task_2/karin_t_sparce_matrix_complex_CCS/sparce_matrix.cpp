@@ -155,6 +155,11 @@ SparceMatrix SparceMatrix::operator*(const SparceMatrix& B) {
   return Res;
 }
 
+bool SparceMatrix::operator==(const SparceMatrix& SP) const {
+  return (this->nCol == SP.nCol) && (this->nRow == SP.nRow) && (this->val == SP.val)
+          && (this->row_number == SP.row_number) && (this->point == SP.point);
+}
+
 SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   if (A.nRow != B.nCol)
     throw "wrong matrix size";
