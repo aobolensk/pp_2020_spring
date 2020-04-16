@@ -59,39 +59,34 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
     case 1:
       throw std::runtime_error("size <= 0");
   }
+
   std::vector<int> output(grayscale_image);
-  int min = minimum(&grayscale_image);
-  int max = maximum(&grayscale_image);
+  int min = *std::min_element(grayscale_image.begin(), grayscale_image.end());
+  int max = *std::max_element(grayscale_image.begin(), grayscale_image.end());
   int step = 0, current = 0, start = 0, i = 0;
 
   if (max < min)
     throw -1;
 
-  if (max != 255 && min != 0)
-  {
-#pragma omp parallel private(i, current, step, start) shared(output, grayscale_image, min, max) num_threads(num)
-    {
+  if (max != 255 && min != 0) {
+    #pragma omp parallel private(i, current, step, start) shared(output, grayscale_image) num_threads(num)
       omp_set_num_threads(num);
       current = omp_get_thread_num();
       start = current * step;
       step = MIN(size / num, size - current * (size / num));
 
-      #pragma omp for
-      {
+      #pragma omp for 
           for (i = start; i < start + step; i++) {
             float a = (-1) * (static_cast<float>(255) / (max - min)) * min;
             float b = static_cast<float>(255) / (max - min);
-            if (max == min)
+            if (max == min) {
               output[i] =  0;
-            else
+            } else {
               output[i] = (a + b * grayscale_image[i]);
+            }
           }
-      }
-    }
     return output;
-  }
-  else
-  {
+  } else {
     return grayscale_image;
   }
 }
