@@ -2,6 +2,7 @@
 #include "../../../modules/task_2/mityagina_d_increasing_the_contrast/increasing_the_contrast.h"
 #include <ctime>
 #include <random>
+#include <vector>
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
