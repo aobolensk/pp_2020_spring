@@ -71,8 +71,8 @@ TEST(CRSMatrix, test_multiplicate) {
 }
 
 /*TEST(CRSMatrix, test_build) {
-    CRSMatrix a(10000, 50000);
-    CRSMatrix b(10000, 50000);
+    CRSMatrix a(20000, 100000);
+    CRSMatrix b(20000, 100000);
 
     a.buildRandomCRSMatrix();
     b.buildRandomCRSMatrix();

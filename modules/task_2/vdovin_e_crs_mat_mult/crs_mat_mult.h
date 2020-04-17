@@ -8,6 +8,7 @@
 #include <ctime>
 #include <random>
 #include <algorithm>
+#include <utility>
 #include <numeric>
 #include <omp.h>
 
@@ -22,9 +23,9 @@ class CRSMatrix {
 
     CRSMatrix multiplicate(const CRSMatrix &mtx) const;
     bool findElemInVector(const std::vector<std::pair<int, std::complex<double>>>& vec, const int elem);
+
  public:
-    CRSMatrix(const int n_ = 0, const int nz_ = 0) : n(n_), nz(nz_),
-        rowindex(n_ + 1), value(nz_), col(nz_), omp_k(1) {}
+    explicit CRSMatrix(const int n_ = 0, const int nz_ = 0);
     CRSMatrix(const int n_, const int nz_,
         const std::vector<std::complex<double>> &value_,
         const std::vector<int> col_,

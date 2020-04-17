@@ -15,6 +15,14 @@ CRSMatrix::CRSMatrix(const int n_, const int nz_,
         rowindex = rowindex_;
     }
 
+CRSMatrix::CRSMatrix(const int n_, const int nz_) {
+    n = n_;
+    nz = nz_;
+    value.resize(nz);
+    col.resize(nz);
+    rowindex.resize(n + 1);
+}
+
 CRSMatrix::CRSMatrix(const CRSMatrix& mtx) {
     n = mtx.n;
     nz = mtx.nz;

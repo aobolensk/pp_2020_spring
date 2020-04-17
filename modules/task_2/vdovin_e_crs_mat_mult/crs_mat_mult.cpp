@@ -1,6 +1,8 @@
 // Copyright 2020 Vdovin Eugene
 #include <vector>
 #include <complex>
+#include <algorithm>
+#include <utility>
 #include <cmath>
 #include "../../../modules/task_2/vdovin_e_crs_mat_mult/crs_mat_mult.h"
 
@@ -15,6 +17,15 @@ CRSMatrix::CRSMatrix(const int n_, const int nz_,
         rowindex = rowindex_;
         omp_k = 1;
     }
+
+CRSMatrix::CRSMatrix(const int n_, const int nz_) {
+    n = n_;
+    nz = nz_;
+    value.resize(nz);
+    col.resize(nz);
+    rowindex.resize(n + 1);
+    omp_k = 1;
+}
 
 CRSMatrix::CRSMatrix(const CRSMatrix& mtx) {
     n = mtx.n;
