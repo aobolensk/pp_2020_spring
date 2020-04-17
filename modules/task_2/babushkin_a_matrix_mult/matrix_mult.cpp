@@ -5,7 +5,6 @@
 #include <omp.h>
 
 #include <algorithm>
-#include <iostream>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -30,17 +29,17 @@ std::string Matrix::to_string() {
   return matrix;
 }
 
-bool Matrix::equals(const Matrix &other) {
-  if (m_rows != other.m_rows || m_cols != other.m_cols ||
-      m_data.size() != other.m_data.size()) {
+bool operator==(const Matrix &a, const Matrix &b) {
+  if (a.m_rows != b.m_rows || a.m_cols != b.m_cols ||
+      a.m_data.size() != b.m_data.size()) {
     return false;
   }
 
   bool equal = true;
   auto eps = 1e-6;
 
-  for (uint32_t i = 0; i < m_data.size(); i++) {
-    if (std::abs(m_data.at(i) - other.m_data.at(i)) > eps) {
+  for (uint32_t i = 0; i < a.m_data.size(); i++) {
+    if (std::abs(a.m_data.at(i) - b.m_data.at(i)) > eps) {
       equal = false;
       break;
     }
@@ -49,37 +48,37 @@ bool Matrix::equals(const Matrix &other) {
   return equal;
 }
 
-void Matrix::shift_left(const int block_size, const bool sqew) {
-  std::vector<double> row(m_cols);
+bool operator!=(const Matrix &a, const Matrix &b) { return !(a == b); }
 
-  for (int i = 0, j = 0; i < m_cols; i += block_size, j++) {
-    for (int k = i; k < (i + block_size); k++) {
-      int step = sqew ? j * block_size : block_size;
-
-      for (int m = 0; m < m_cols; m++) {
-        row.at(m) = m_data.at(k * m_cols + ((m + step) % m_cols));
-      }
-
-      for (int m = 0; m < m_cols; m++) {
-        m_data.at(k * m_cols + m) = row.at(m);
-      }
-    }
-  }
+void Matrix::shift_left(const int block_size, const bool skew) {
+  shift(block_size, skew, left);
 }
 
-void Matrix::shift_up(const int block_size, const bool sqew) {
-  std::vector<double> col(m_rows);
+void Matrix::shift_up(const int block_size, const bool skew) {
+  shift(block_size, skew, up);
+}
+
+void Matrix::shift(const int block_size, const bool skew, direction d) {
+  std::vector<double> data(m_rows);
 
   for (int i = 0, j = 0; i < m_rows; i += block_size, j++) {
     for (int k = i; k < (i + block_size); k++) {
-      int step = sqew ? j * block_size : block_size;
+      int step = skew ? j * block_size : block_size;
 
       for (int m = 0; m < m_cols; m++) {
-        col.at(m) = m_data.at(((m + step) % m_cols) * m_cols + k);
+        if (d == up) {
+          data.at(m) = m_data.at(((m + step) % m_cols) * m_cols + k);
+        } else {
+          data.at(m) = m_data.at(k * m_cols + ((m + step) % m_cols));
+        }
       }
 
       for (int m = 0; m < m_cols; m++) {
-        m_data.at(m * m_cols + k) = col.at(m);
+        if (d == up) {
+          m_data.at(m * m_cols + k) = data.at(m);
+        } else {
+          m_data.at(k * m_cols + m) = data.at(m);
+        }
       }
     }
   }
@@ -166,13 +165,36 @@ Matrix multiply_cannon(Matrix *left, Matrix *right) {
       int col_start = (rank % sqrt_size) * block_size;
       int col_end = col_start + block_size;
 
-      for (auto i = row_start; i < row_end; i++) {
-        for (auto j = col_start; j < col_end; j++) {
-          for (auto k = col_start; k < col_end; k++) {
-            result.at(i * left->m_cols + j) +=
-                left->m_data.at(i * left->m_cols + k) *
-                right->m_data.at(k * right->m_cols + j);
+      std::vector<double> left_block(block_size * block_size);
+      std::vector<double> right_block(block_size * block_size);
+      std::vector<double> res_block(block_size * block_size);
+
+      // copy blocks
+      for (int r = row_start, l = 0; r < row_end; r++, l++) {
+        for (int c = col_start, m = 0; c < col_end; c++, m++) {
+          left_block.at(l * block_size + m) =
+              left->m_data.at(r * left->m_cols + c);
+          right_block.at(l * block_size + m) =
+              right->m_data.at(r * right->m_cols + c);
+          res_block.at(l * block_size + m) = result.at(r * right->m_cols + c);
+        }
+      }
+
+      // multiply blocks
+      for (int i = 0; i < block_size; i++) {
+        for (int j = 0; j < block_size; j++) {
+          for (int k = 0; k < block_size; k++) {
+            res_block.at(i * block_size + j) +=
+                left_block.at(i * block_size + k) *
+                right_block.at(k * block_size + j);
           }
+        }
+      }
+
+      // write blocks back to the result
+      for (int r = row_start, l = 0; r < row_end; r++, l++) {
+        for (int c = col_start, m = 0; c < col_end; c++, m++) {
+          result.at(r * right->m_cols + c) = res_block.at(l * block_size + m);
         }
       }
     }
@@ -182,7 +204,7 @@ Matrix multiply_cannon(Matrix *left, Matrix *right) {
   }
 
   return Matrix(result, left->m_rows, left->m_cols);
-}
+}  // namespace mtrxmult
 
 Matrix random_matrix(const int rows, const int columns) {
   std::mt19937 gen;
