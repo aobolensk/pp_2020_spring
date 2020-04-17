@@ -151,8 +151,7 @@ void OddEvenMergeSortOMP(double *inp, int size, int portion, int numthreads) {
         if (current_layer.empty()) {
             if (next_layer.empty()) {
                 divided = true;
-            }
-            else {
+            } else {
                 current_layer = next_layer;
                 next_layer = std::queue<std::pair<int, int>>();
                 merge_order.push({ 0, { 0, 0 } });
