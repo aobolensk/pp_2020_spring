@@ -2,6 +2,7 @@
 #ifndef MODULES_TASK_2_VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_
 #define MODULES_TASK_2_VDOVIN_E_CRS_MAT_MULT_CRS_MAT_MULT_H_
 
+#include <omp.h>
 #include <vector>
 #include <complex>
 #include <cmath>
@@ -10,7 +11,6 @@
 #include <algorithm>
 #include <utility>
 #include <numeric>
-#include <omp.h>
 
 class CRSMatrix {
     int n;
