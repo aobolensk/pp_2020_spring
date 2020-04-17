@@ -12,11 +12,10 @@ void test(const int n) {
   mtrxmult::Matrix left = mtrxmult::random_matrix(n, n);
   mtrxmult::Matrix right = mtrxmult::random_matrix(n, n);
 
-  omp_set_num_threads(4);
-  mtrxmult::Matrix mult_res_cannon = mtrxmult::multiply_cannon(
-      &mtrxmult::Matrix(left), &mtrxmult::Matrix(right));
-
   mtrxmult::Matrix mult_res_seq = mtrxmult::multiply(left, right, SEQUENTIAL);
+
+  omp_set_num_threads(4);
+  mtrxmult::Matrix mult_res_cannon = mtrxmult::multiply_cannon(&left, &right);
 
   ASSERT_TRUE(mult_res_cannon == mult_res_seq);
 }
@@ -91,8 +90,7 @@ TEST(Matrix_Mult_Cann, DISABLED_Comparison) {
 
   omp_set_num_threads(4);
   time = omp_get_wtime();
-  res2 = mtrxmult::multiply_cannon(&mtrxmult::Matrix(test_matrix),
-                                   &mtrxmult::Matrix(test_matrix_2));
+  res2 = mtrxmult::multiply_cannon(&test_matrix, &test_matrix_2);
   std::cout << "Elapsed time cannon parll: " << omp_get_wtime() - time << "s"
             << std::endl;
 
