@@ -1,7 +1,7 @@
 // Copyright 2020 Dudchenko Anton
 
-#ifndef MODULES_TASK_1_DUDCHENKO_A_SOBEL_DUDCHENKO_A_SOBEL_H_
-#define MODULES_TASK_1_DUDCHENKO_A_SOBEL_DUDCHENKO_A_SOBEL_H_
+#ifndef MODULES_TASK_2_DUDCHENKO_A_SOBEL_OMP_DUDCHENKO_A_SOBEL_OMP_H_
+#define MODULES_TASK_2_DUDCHENKO_A_SOBEL_OMP_DUDCHENKO_A_SOBEL_OMP_H_
 
 #include <vector>
 
@@ -12,7 +12,11 @@ struct image {
     size_t _rows;
     image(std::vector<T> matrix, size_t columns, size_t rows):_matrix(matrix),
                                                               _columns(columns),
-                                                              _rows(rows) {}
+                                                              _rows(rows) {
+        if (matrix.size() != rows * columns)
+            throw -1;
+    }
+
     image(size_t columns, size_t rows):_columns(columns),
                                        _rows(rows) {
         if (rows <= 0 || columns <= 0) {
@@ -33,4 +37,4 @@ image<uint8_t> sobelSequence(image<uint8_t> inImage);
 image<uint8_t> sobelOmp(image<uint8_t> inImage);
 image<uint8_t> randImage(size_t r, size_t c);
 
-#endif  // MODULES_TASK_1_DUDCHENKO_A_SOBEL_DUDCHENKO_A_SOBEL_H_
+#endif  // MODULES_TASK_2_DUDCHENKO_A_SOBEL_OMP_DUDCHENKO_A_SOBEL_OMP_H_
