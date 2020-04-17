@@ -1,5 +1,6 @@
 // Copyright 2020 Mityagina Daria
 #include "../../../modules/task_2/mityagina_d_increasing_the_contrast/increasing_the_contrast.h"
+#include <omp.h>
 #include <ctime>
 #include <random>
 #include <vector>
@@ -69,10 +70,11 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
     throw -1;
 
   if (max != 255 && min != 0) {
-    #pragma omp parallel private(i, current, step) shared(output, grayscale_image) num_threads(num)
-      omp_set_num_threads(num);
+    omp_set_num_threads(num);
+    #pragma omp parallel private(i, current, step) shared(output, grayscale_image)
+    {
       current = omp_get_thread_num();
-      step = MIN(size / num, size - current * (size / num));
+      step = MIN(one_at_a_time, size - current * one_at_a_time);
 
       #pragma omp for
           for (i = current * one_at_a_time; i < current * one_at_a_time + step; i++) {
@@ -84,7 +86,7 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
               output[i] = (a + b * grayscale_image[i]);
             }
           }
-
+    }
     return output;
   } else {
     return grayscale_image;
