@@ -1,0 +1,190 @@
+\documentclass{report}
+
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{color}
+
+% my style of the listings
+\lstset{language=C++,
+                basicstyle=\footnotesize,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}, 
+		   tabsize=4
+}
+
+% Можно ли избавиться от такого подхода для титульника?
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+}%
+\item[]}{\end{list}}
+%конец подхода
+
+
+% [1] -> 1. in the bibliography
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+% Титульный лист
+\begin{titlepage}
+\begin{changemargin}{-1cm}{-1cm}
+\begin{center}
+Министерство науки и высшего образования Российской Федерации	\\
+\end{center}
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+\end{center}
+\begin{center}
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского	\\
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики \\
+\end{center}
+
+\vspace{4em}
+
+\begin{center}
+\textbf{Отчет по лабораторной работе} \\
+\end{center}
+\begin{center}
+\textbf{«Вычисление многомерных интегралов методом Монте-Карло»} \\
+\end{center}
+
+\vspace{4em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381706-1 \\ Денисов В. Л.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+
+\end{changemargin}
+\end{titlepage}
+
+% Конец титульного листа
+
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+\indent\parВычисление многомерных интегралов - непростая задача.
+\parНовый абзац
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+Текст постановки задачи
+\newpage
+
+\section*{Метод решения}
+\addcontentsline{toc}{section}{Метод решения}
+Текст решения
+\newpage
+
+\section*{Схема распараллеливания}
+\addcontentsline{toc}{section}{Схема распараллеливания}
+Текст схемы распараллеливания
+\newpage
+
+\section*{Описание программной реализации}
+\addcontentsline{toc}{section}{Описание программной реализации}
+
+\subsection*{OpenMP}
+\addcontentsline{toc}{subsection}{OpenMP}
+Текст описания OpenMP
+
+\subsection*{TBB}
+\addcontentsline{toc}{subsection}{TBB}
+Текст описания TBB
+
+\subsection*{std::threads}
+\addcontentsline{toc}{subsection}{std::threads}
+Текст описания std::threads
+
+\newpage
+
+\section*{Подтверждение корректности}
+\addcontentsline{toc}{section}{Подтверждение корректности}
+Текст подтверждения корректности
+\newpage
+
+\section*{Результаты экспериментов}
+\addcontentsline{toc}{section}{Результаты экспериментов}
+Текст результатов экспериментов
+\newpage
+
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+Текст заключения
+\newpage
+
+\begin{thebibliography}{1}
+\addcontentsline{toc}{section}{Список литературы}
+\bibitem{Barkalov} Баркалов К.А. Методы параллельных вычислений. Н. Новгород: Изд-во Нижегородского госуниверситета им. Н.И. Лобачевского, 2011
+\bibitem{Wiki1} Википедия: свободная электронная энциклопедия: на русском языке [Электронный ресурс] // URL: https://ru.wikipedia.org/wiki/ (дата обращения: dd.mm.yyyy)
+\end{thebibliography}
+\newpage
+
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+Здесь будет листинг кода
+
+\begin{lstlisting}[label=testl,caption=Test]
+int main(void) // main routine
+{
+int i, j; // Initialisation of counters
+
+// The code below prints the 3x3 matrix
+for (i=0; i<3; ++i) {
+for (j=0; j<3; ++j) printf("%5.1f", m[i*3+j]);
+putchar('\n');
+}
+
+cblas_dgemv(CblasRowMajor, CblasNoTrans,
+3, 3, 1.0, m, 3, x, 1, 0.0, y, 1);
+
+// The code below prints the 3x3 matrix - result of multiplication
+for (i=0; i<3; ++i) printf("%5.1f\n", y[i]);
+
+return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[label=test2,caption=Test2]
+int main(void) // main routine
+{
+	int i, j; // Initialisation of counters
+
+	cout << i  << j;
+
+	return 0;
+}
+\end{lstlisting}
+
+
+\end{document}
