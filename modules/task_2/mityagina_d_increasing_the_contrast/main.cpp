@@ -5,10 +5,10 @@
 #include "../../../modules/task_2/mityagina_d_increasing_the_contrast/increasing_the_contrast.h"
 
 void testing_lab(int width, int height) {
-  // int num = 4; // 22,8%
-  // int num = 2; // 13%
-  // int num = 3; // 19%
-  int num = 5; // 25%
+  // int num = 4;  // 22,8%
+  // int num = 2;  // 13%
+  int num = 3;  // 19%
+  // int num = 5;  // 25%
   ASSERT_NO_THROW(contrast_increase(generate_im(width, height), width, height, num));
 }
 

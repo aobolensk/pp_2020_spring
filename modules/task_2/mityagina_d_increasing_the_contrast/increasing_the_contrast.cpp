@@ -1,12 +1,10 @@
 // Copyright 2020 Mityagina Daria
-#include <omp.h>
 #include "../../../modules/task_2/mityagina_d_increasing_the_contrast/increasing_the_contrast.h"
-#include <iostream>
-#include <vector>
-#include <stdexcept>
-#include <algorithm>
 #include <ctime>
 #include <random>
+#include <iostream>
+#include <stdexcept>
+#include <algorithm>
 
 #define MIN(a, b)  (a < b)? a:b
 
@@ -63,20 +61,20 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
   std::vector<int> output(grayscale_image);
   int min = *std::min_element(grayscale_image.begin(), grayscale_image.end());
   int max = *std::max_element(grayscale_image.begin(), grayscale_image.end());
-  int step = 0, current = 0, start = 0, i = 0;
+  int step = 0, current = 0, i = 0;
+  int one_at_a_time = size / num;
 
   if (max < min)
     throw -1;
 
   if (max != 255 && min != 0) {
-    #pragma omp parallel private(i, current, step, start) shared(output, grayscale_image) num_threads(num)
+    #pragma omp parallel private(i, current, step) shared(output, grayscale_image) num_threads(num)
       omp_set_num_threads(num);
       current = omp_get_thread_num();
-      start = current * step;
       step = MIN(size / num, size - current * (size / num));
 
-      #pragma omp for 
-          for (i = start; i < start + step; i++) {
+      #pragma omp for
+          for (i = current * one_at_a_time; i < current * one_at_a_time + step; i++) {
             float a = (-1) * (static_cast<float>(255) / (max - min)) * min;
             float b = static_cast<float>(255) / (max - min);
             if (max == min) {
@@ -85,6 +83,7 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
               output[i] = (a + b * grayscale_image[i]);
             }
           }
+
     return output;
   } else {
     return grayscale_image;

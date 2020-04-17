@@ -2,6 +2,7 @@
 #ifndef MODULES_TASK_2_MITYAGINA_D_INCREASING_THE_CONTRAST_INCREASING_THE_CONTRAST_H_
 #define MODULES_TASK_2_MITYAGINA_D_INCREASING_THE_CONTRAST_INCREASING_THE_CONTRAST_H_
 
+#include <omp.h>
 #include <vector>
 
 std::vector<int> generate_im(int im_width, int im_height);
