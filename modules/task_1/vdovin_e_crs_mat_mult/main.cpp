@@ -70,28 +70,6 @@ TEST(CRSMatrix, test_multiplicate) {
   EXPECT_EQ(ab, a * b);
 }
 
-/*TEST(CRSMatrix, test_build) {
-    CRSMatrix a(10000, 50000);
-    CRSMatrix b(10000, 50000);
-
-    a.buildRandomCRSMatrix();
-    b.buildRandomCRSMatrix();
-
-    a.getThreads(1);
-    unsigned int start1_time = clock();
-    a * b;
-    unsigned int end1_time = clock();
-    std::cout << "Lin time: " << (end1_time - start1_time) / 1000.0 << std::endl;
-
-    a.getThreads(4);
-    unsigned int start2_time = clock();
-    a * b;
-    unsigned int end2_time = clock();
-    std::cout << "Par time: " << (end2_time - start2_time) / 1000.0 << std::endl;
-
-    EXPECT_EQ(0, 0);
-}*/
-
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
