@@ -39,8 +39,6 @@ class SparseMatrixCCS {
 
     void PrintCCS();
 
-    void printMatrix();
-
     SparseMatrixCCS transpose();
 };
 
