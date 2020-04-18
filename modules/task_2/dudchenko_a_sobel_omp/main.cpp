@@ -59,7 +59,7 @@ TEST(parallelSobelFilter, sobelChangeMatrix) {
 }
 
 TEST(parallelSobelFilter, seqAndParIsEqual) {
-    auto img = randImage(1000, 1000);
+    auto img = randImage(100, 100);
 
 //    auto startPar = omp_get_wtime();
     auto parRes = sobelOmp(img);
