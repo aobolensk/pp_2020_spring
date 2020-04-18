@@ -1,5 +1,6 @@
 // Copyright 2020 Dudchenko Anton
 
+#include <vector>
 #include <iostream>
 #include <omp.h>
 #include "gtest/gtest.h"
@@ -62,7 +63,7 @@ TEST(parallelSobelFilter, seqAndParIsEqual) {
     auto parRes = sobelOmp(img);
 //    auto stopPar = omp_get_wtime();
 
-//    auto startSeq = omp_get_wtime();/
+//    auto startSeq = omp_get_wtime();
     auto seqRes = sobelSequence(img);
 //    auto stopSeq = omp_get_wtime();
 
