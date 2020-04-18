@@ -26,4 +26,4 @@ std::vector<Point> randomSet(int point_count);
 std::vector<Point> buildHull_seq(std::vector<Point> m_set);
 std::vector<Point> buildHull_omp(std::vector<Point> m_set);
 
-#endif  // MODULES_TASK_2_KONDRINA_T_JARVIS_OPM_JARVIS_OMP_H_
+#endif  // MODULES_TASK_2_KONDRINA_T_JARVIS_OMP_JARVIS_OMP_H_
