@@ -4,15 +4,15 @@
 #define MODULES_TASK_2_KONDRINA_T_JARVIS_OMP_JARVIS_OMP_H_
 
 #include <omp.h>
+
 #include <vector>
+
 
 struct Point {
   double x = 0;
   double y = 0;
 
-  friend bool operator!=(const Point& a, const Point& b) {
-    return !(a == b);
-  }
+  friend bool operator!=(const Point& a, const Point& b) { return !(a == b); }
   friend bool operator==(const Point& a, const Point& b) {
     return (a.x == b.x) && (a.y == b.y);
   }
