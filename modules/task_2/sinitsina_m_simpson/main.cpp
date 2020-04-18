@@ -139,7 +139,7 @@ TEST(Multiple_Simpson_Integraion_OMP, Test_7_Wrong_Data_Negative_in_size_of_firs
   std::vector<double> lim = {};
 
   x = { 2 };
-  y = { -6, 6 };
+  y = { -5, 6 };
   const int n = 100;
 
   ASSERT_ANY_THROW(Simpson_Integr_OMP(f4, x, y, n, dimension, lim));
