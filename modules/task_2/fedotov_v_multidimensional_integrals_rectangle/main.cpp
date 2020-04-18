@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <omp.h>
 #include "./integrals-rectangle.h"
-#define PRINTF 1
+#define PRINTF 0
 
 TEST(MultiDimensionalIntegralRectangle, func1) {
     double x1 = 0;
