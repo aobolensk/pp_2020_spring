@@ -9,8 +9,7 @@
 
 
 struct Point {
-  double x = 0;
-  double y = 0;
+  double x, y;
 
   friend bool operator!=(const Point& a, const Point& b) { return !(a == b); }
   friend bool operator==(const Point& a, const Point& b) {

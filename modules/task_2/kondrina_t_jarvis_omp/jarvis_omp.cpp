@@ -40,7 +40,8 @@ std::vector<Point> buildHull_seq(std::vector<Point> m_set) {
 }
 
 std::vector<Point> buildHull_omp(std::vector<Point> m_set) {
-  if (m_set.size() < 3) throw - 1;
+  int size = m_set.size();
+  if (size < 3) throw - 1;
   Point left_point;
 #pragma omp parallel shared(left_point) num_threads(NUM_THREADS)
   left_point =
@@ -56,10 +57,9 @@ std::vector<Point> buildHull_omp(std::vector<Point> m_set) {
 
 #pragma omp parallel shared(end_point) num_threads(NUM_THREADS)
     {
-      int thr = omp_get_thread_num();
       Point local = end_point;
 #pragma omp for nowait
-      for (int i = 0; i < m_set.size(); i++) {
+      for (int i = 0; i < size; i++) {
         if (rotate(hull.back(), local, m_set[i]) < 0 || local == left_point) {
           local = m_set[i];
         }
