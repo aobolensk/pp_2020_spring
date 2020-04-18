@@ -3,7 +3,7 @@
 #include <vector>
 
 double Simpson_Integr_OMP(double(*func)(std::vector<double>), std::vector <double> x, 
-std::vector <double> y, int n, size_t dimension, std::vector<double> lim) {
+        std::vector <double> y, int n, size_t dimension, std::vector<double> lim) {
   if (x.size() != y.size() || n <= 0) {
     throw "wrong data";
   }
