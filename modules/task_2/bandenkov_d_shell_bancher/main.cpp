@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "./shell_batcher.h"
 
-TEST(test_Shell_Betch_sort_seq, test_on_1000_elements) {
+TEST(test_Shell_Betch_sort_seq, test_on_1000_element) {
   std::vector<int> res = getRandomVector(1000);
   std::vector<int> betch = shellBatcher_seq(res, 2, 1000);
   std::sort(res.begin(), res.end());
