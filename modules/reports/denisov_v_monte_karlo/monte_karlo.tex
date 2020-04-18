@@ -26,7 +26,10 @@
 		stringstyle=\color{red}\ttfamily,
 		commentstyle=\color{green}\ttfamily,
 		morecomment=[l][\color{magenta}]{\#}, 
-		tabsize=4
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
 }
 
 % Замена [1] -> 1. в списке литературы
@@ -221,9 +224,9 @@
 	\multicolumn{2}{c|}{TBB} & 
 	\multicolumn{2}{c|}{std::threads} 
 	\\ \cline{2-8}
-	& t, с		& t, с & speedup		& t, с & speedup		& t, с & speedup		\\ \hline
-2   & time       & time1 & su1           & time2 & su2           & time3 & su3           \\ \hline
-4   & time       & time1 & su1           & time2 & su2           & time3  & su3          \\ \hline
+	& t, с	    & t, с & speedup		& t, с & speedup		& t, с & speedup		\\ \hline
+2   & 11.81     & 6,56 & 1.80       	& 6,51 & 1.81        	& 6.36 & 1.85           \\ \hline
+4   & 11.81     & 5.01 & 2.36       	& 5.00 & 2.36         	& 5.04  & 2.34          \\ \hline
 \end{tabular}
 \end{table}
 
@@ -256,39 +259,22 @@
 % Приложение
 \section*{Приложение}
 \addcontentsline{toc}{section}{Приложение}
-Здесь будет листинг кода
+\indent\par В данном разделе находится листинг всего кода, написанного в рамках лабораторной работы.
 
-\begin{lstlisting}[label=testl,caption=Test]
-int main(void) // main routine
-{
-int i, j; // Initialisation of counters
+\lstinputlisting{../../task_1/denisov_v_monte_karlo/monte_karlo.h}
+\lstinputlisting[language=C++]{../../task_1/denisov_v_monte_karlo/monte_karlo.cpp}
+\lstinputlisting[language=C++]{../../task_1/denisov_v_monte_karlo/main.cpp}
 
-// The code below prints the 3x3 matrix
-for (i=0; i<3; ++i) {
-for (j=0; j<3; ++j) printf("%5.1f", m[i*3+j]);
-putchar('\n');
-}
+\lstinputlisting{../../task_2/denisov_v_monte_karlo/monte_karlo.h}
+\lstinputlisting[language=C++]{../../task_2/denisov_v_monte_karlo/monte_karlo.cpp}
+\lstinputlisting[language=C++]{../../task_2/denisov_v_monte_karlo/main.cpp}
 
-cblas_dgemv(CblasRowMajor, CblasNoTrans,
-3, 3, 1.0, m, 3, x, 1, 0.0, y, 1);
+\lstinputlisting{../../task_3/denisov_v_monte_karlo/monte_karlo.h}
+\lstinputlisting[language=C++]{../../task_3/denisov_v_monte_karlo/monte_karlo.cpp}
+\lstinputlisting[language=C++]{../../task_3/denisov_v_monte_karlo/main.cpp}
 
-// The code below prints the 3x3 matrix - result of multiplication
-for (i=0; i<3; ++i) printf("%5.1f\n", y[i]);
-
-return 0;
-}
-\end{lstlisting}
-
-\begin{lstlisting}[label=test2,caption=Test2]
-int main(void) // main routine
-{
-	int i, j; // Initialisation of counters
-
-	cout << i  << j;
-
-	return 0;
-}
-\end{lstlisting}
-
+\lstinputlisting{../../task_4/denisov_v_monte_karlo/monte_karlo.h}
+\lstinputlisting[language=C++]{../../task_4/denisov_v_monte_karlo/monte_karlo.cpp}
+\lstinputlisting[language=C++]{../../task_4/denisov_v_monte_karlo/main.cpp}
 
 \end{document}
