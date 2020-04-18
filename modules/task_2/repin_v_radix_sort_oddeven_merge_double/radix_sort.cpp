@@ -161,7 +161,7 @@ void OddEvenMergeSortOMP(double *inp, int size, int portion, int numthreads) {
     merge_order.pop();
 
     #pragma omp parallel for num_threads(numthreads)
-    for (unsigned int i = 0; i < parts.size(); i++)
+    for (int i = 0; i < static_cast<int>(parts.size()); i++)
         RadixSortDouble(inp + parts[i].first, temp + parts[i].first,
         parts[i].second);
     std::vector<std::pair<int, std::pair<int, int>>> current_order;
@@ -174,7 +174,7 @@ void OddEvenMergeSortOMP(double *inp, int size, int portion, int numthreads) {
         merge_order.pop();
 
         #pragma omp parallel for num_threads(numthreads)
-        for (unsigned int i = 0; i < current_order.size()*2; i++) {
+        for (int i = 0; i < static_cast<int>(current_order.size()*2); i++) {
             int st = current_order[i/2].first;
             int s1 = current_order[i/2].second.first;
             int s2 = current_order[i/2].second.second;
@@ -182,7 +182,7 @@ void OddEvenMergeSortOMP(double *inp, int size, int portion, int numthreads) {
         }
 
         #pragma omp parallel for num_threads(numthreads)
-        for (unsigned int i = 0; i < current_order.size(); i++) {
+        for (int i = 0; i < static_cast<int>(current_order.size()); i++) {
             int st = current_order[i].first;
             int s1 = current_order[i].second.first;
             int s2 = current_order[i].second.second;
