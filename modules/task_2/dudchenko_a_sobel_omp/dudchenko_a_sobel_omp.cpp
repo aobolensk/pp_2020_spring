@@ -48,8 +48,8 @@ image<uint8_t> sobelOmp(image<uint8_t> inImage) {
     }
     image<uint8_t> result(inImage._columns, inImage._rows);
     #pragma omp parallel for
-    for (int i = 1; i < (int)inImage._rows - 1; ++i)
-        for (int j = 1; j < (int)inImage._columns - 1; ++j) {
+    for (int i = 1; i < static_cast<int>(inImage._rows) - 1; ++i)
+        for (int j = 1; j < static_cast<int>(inImage._columns) - 1; ++j) {
             int index = i * inImage._columns + j;
             int resX = 0, resY = 0;
             int indexKernel = 0;
