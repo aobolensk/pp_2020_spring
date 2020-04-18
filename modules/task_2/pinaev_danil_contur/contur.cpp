@@ -1,6 +1,6 @@
 // Copyright 2020 Pinaev Danil
 
-#include "../../modules/task_1/pinaev_danil_contur/contur.h"
+#include "../../modules/task_2/pinaev_danil_contur/contur.h"
 
 #include <omp.h>
 
