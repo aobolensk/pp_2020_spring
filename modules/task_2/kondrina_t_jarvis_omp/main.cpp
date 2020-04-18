@@ -1,9 +1,9 @@
 // Copyright 2020 Kondrina Tatyana
 
+#include <omp.h>
 #include <gtest/gtest.h>
 #include <vector>
 #include <iostream>
-#include <omp.h>
 
 #include "../../../modules/task_2/kondrina_t_jarvis_omp/jarvis_omp.h"
 

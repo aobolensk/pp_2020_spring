@@ -2,11 +2,11 @@
 
 #include "../../../modules/task_2/kondrina_t_jarvis_omp/jarvis_omp.h"
 
+#include <omp.h>
 #include <algorithm>
 #include <ctime>
 #include <cstdlib>
 #include <vector>
-#include <omp.h>
 
 #define NUM_THREADS 4
 

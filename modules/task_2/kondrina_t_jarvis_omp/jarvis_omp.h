@@ -3,8 +3,8 @@
 #ifndef MODULES_TASK_2_KONDRINA_T_JARVIS_OMP_JARVIS_H_
 #define MODULES_TASK_2_KONDRINA_T_JARVIS_OMP_JARVIS_H_
 
-#include <vector>
 #include <omp.h>
+#include <vector>
 
 struct Point {
   double x = 0;
