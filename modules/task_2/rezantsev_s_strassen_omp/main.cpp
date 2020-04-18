@@ -90,7 +90,7 @@ TEST(Strassen_OMP, correct_strassen_32x32) {
 
 TEST(Strassen_OMP, correct_strassen_256x256) {
   int n = 16;
-  std::vector<double> a(n * n), b(n * n), c, d(n * n);
+  std::vector < double > a(n * n), b(n * n), c, d(n * n);
   for (int i = 0; i < n * n; i++) {
     a[i] = i;
     b[i] = n * n - i;
@@ -107,6 +107,8 @@ TEST(Strassen_OMP, correct_strassen_256x256) {
   t2 = omp_get_wtime();
   t2 -= t1;
   std::cout << t2 << std::endl;
+  std::cout << "strassen_omp in " << p2 / t2 << " faster"
+            << std::endl;
   ASSERT_TRUE(isEqMatrix(c, d, n));
 }
 

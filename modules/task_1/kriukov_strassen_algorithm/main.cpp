@@ -13,7 +13,7 @@
   TYPE::iterator tit = target.begin();\
   unsigned int i = 0;\
   while (rit != ref.end()) {\
-    EXPECT_DOUBLE_EQ(*rit, *tit)\
+    ASSERT_DOUBLE_EQ(*rit, *tit)\
     << "Expected equality of these values:" << std::endl\
     << "  " #ref_ "[" << i << "]" << std::endl << \
     "   Which is : " << *rit << std::endl\
@@ -91,6 +91,13 @@ TEST(SequentialStrassen, Test_Increase_Size_Size_12) {
   EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, toPowerOfTwoSize(mtx, 3), mtx_exp);
 }
 
+TEST(SequentialStrassen, Test_Reduse_Size_Size_9) {
+  std::vector<double> mtx_exp = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, };
+  std::vector<double> mtx = { 1.0, 2.0, 3.0, 0.0, 4.0, 5.0, 6.0, 0.0 , 7.0, 8.0, 9.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+  EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, matrixReduce(mtx, 3), mtx_exp);
+}
+
 TEST(SequentialStrassen, Test_Increase_Size_Size_16) {
   std::vector<double> mtx = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0 };
 
@@ -123,6 +130,26 @@ TEST(SequentialStrassen, Test_Strassen_Mult_size_64) {
   std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
 
   EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
+}
+
+TEST(SequentialStrassen, Test_Strassen_Mult_size_3) {
+  unsigned int sz = 3;
+  std::vector<double> a = getRandomMatrix(sz);
+  std::vector<double> b = getRandomMatrix(sz);
+  std::vector<double> res_regular = regularMultiplication(a, b, sz);
+  std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
+
+  EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
+}
+
+  TEST(SequentialStrassen, Test_Strassen_Mult_size_59) {
+    unsigned int sz = 59;
+    std::vector<double> a = getRandomMatrix(sz);
+    std::vector<double> b = getRandomMatrix(sz);
+    std::vector<double> res_regular = regularMultiplication(a, b, sz);
+    std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
+
+    EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
 }
 
 #define STRASSEN_ALGORITHM_TIME_TEST_OFF
@@ -169,8 +196,48 @@ TEST(SequentialStrassen, Time_Test_Strassen_Mult_size_512) {
   EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
 }
 
+TEST(SequentialStrassen, Time_Test_Strassen_Mult_size_529) {
+  unsigned int sz = 529;
+  std::vector<double> a = getRandomMatrix(sz);
+  std::vector<double> b = getRandomMatrix(sz);
+  clock_t start_r = clock();
+  std::vector<double> res_regular = regularMultiplication(a, b, sz);
+  clock_t end_r = clock();
+  clock_t start_s = clock();
+  std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
+  clock_t end_s = clock();
+
+  double seconds_r = static_cast<double>(end_r - start_r) / CLOCKS_PER_SEC;
+  std::cout << "Regular : " << seconds_r << std::endl;
+
+  double seconds_s = static_cast<double>(end_s - start_s) / CLOCKS_PER_SEC;
+  std::cout << "Strassen : " << seconds_s << std::endl;
+
+  EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
+}
+
 TEST(SequentialStrassen, Time_Test_Strassen_Mult_size_1024) {
   unsigned int sz = 1024;
+  std::vector<double> a = getRandomMatrix(sz);
+  std::vector<double> b = getRandomMatrix(sz);
+  clock_t start_r = clock();
+  std::vector<double> res_regular = regularMultiplication(a, b, sz);
+  clock_t end_r = clock();
+  clock_t start_s = clock();
+  std::vector<double> res_strassen = strassenMultiplication(a, b, sz);
+  clock_t end_s = clock();
+
+  double seconds_r = static_cast<double>(end_r - start_r) / CLOCKS_PER_SEC;
+  std::cout << "Regular : " << seconds_r << std::endl;
+
+  double seconds_s = static_cast<double>(end_s - start_s) / CLOCKS_PER_SEC;
+  std::cout << "Strassen : " << seconds_s << std::endl;
+
+  EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
+}
+
+TEST(SequentialStrassen, Time_Test_Strassen_Mult_size_1029) {
+  unsigned int sz = 1029;
   std::vector<double> a = getRandomMatrix(sz);
   std::vector<double> b = getRandomMatrix(sz);
   clock_t start_r = clock();

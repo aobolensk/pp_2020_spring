@@ -200,22 +200,23 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse) {
 }
 
 TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_1) {
-    std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0, 3.0 };
-    std::vector<size_t> LI1 = { 0, 2, 5, 0, 5, 3, 2, 3, 5 };
-    std::vector<size_t> LJ1 = { 0, 0, 3, 3, 5, 6, 9 };
+    std::vector<double> A1 = { 2.0, 5.0, 8.0, 1.0, 4.0, 9.0, 1.0, 1.0 };
+    std::vector<size_t> LI1 = { 6, 3, 6, 1, 5, 2, 4, 7};
+    std::vector<size_t> LJ1 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0 };
     SparseMatrix<CCS> mat1;
-    mat1.setMatrix(A1, LI1, LJ1, 6);
+    mat1.setMatrix(A1, LI1, LJ1, 10);
 
     std::vector<double> mat2;
     constructMatrix(mat1, &mat2);
 
-    EXPECT_EQ(0, mat2[2*6 + 0]);
-    EXPECT_EQ(9, mat2[3*6 + 4]);
-    EXPECT_EQ(8, mat2[5*6 + 1]);
+    EXPECT_EQ(0, mat2[2*10 + 0]);
+    EXPECT_EQ(9, mat2[2*10 + 5]);
+    EXPECT_EQ(8, mat2[6*10 + 2]);
 }
 
 TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
     SparseMatrix<CCS> mat1(10, 8);
+    // mat1.printM();
 
     std::vector<double> mat2;
     constructMatrix(mat1, &mat2);
