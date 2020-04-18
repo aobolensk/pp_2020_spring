@@ -8,11 +8,13 @@ double getMultipleIntegralUsingRectangleMethod(
     double y1, double y2, double stepX, double stepY) {
     double resultIntegral = 0;
     double cellSquare = stepX * stepY;
+    double xStepsNumber = (x2 - x1) / stepX;
+    double yStepsNumber = (y2 - y1) / stepY;
 
-    for (double i = x1; i < x2; i += stepX) {
-        for (double j = y1; j < y2; j += stepY) {
-            double xMiddle = (i + i + stepX) / 2;
-            double yMiddle = (j + j + stepY) / 2;
+    for (int i = 0; i < xStepsNumber; i++) {
+        for (int j = 0; j < yStepsNumber; j++) {
+            double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;
+            double yMiddle = (y1 + j*stepY + y1 + j*stepY + stepY) / 2;
 
             resultIntegral += function(xMiddle, yMiddle);
         }

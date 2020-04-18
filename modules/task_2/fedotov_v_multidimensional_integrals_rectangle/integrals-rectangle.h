@@ -1,6 +1,7 @@
 // Copyright 2020 Fedotov Vladislav
 #ifndef MODULES_TASK_2_FEDOTOV_V_MULTIDIMENSIONAL_INTEGRALS_RECTANGLE_INTEGRALS_RECTANGLE_H_
 #define MODULES_TASK_2_FEDOTOV_V_MULTIDIMENSIONAL_INTEGRALS_RECTANGLE_INTEGRALS_RECTANGLE_H_
+#include <omp.h>
 
 double getMultipleIntegralUsingRectangleMethod(
     double (*function)(double, double), double x1,
