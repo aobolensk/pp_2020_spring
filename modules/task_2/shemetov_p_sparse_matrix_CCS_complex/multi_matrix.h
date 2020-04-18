@@ -38,8 +38,6 @@ class SparseMatrixCCS {
     bool operator==(const SparseMatrixCCS &) const;
 
     void PrintCCS();
-    
-    void getMN();
 
     void printMatrix();
 
