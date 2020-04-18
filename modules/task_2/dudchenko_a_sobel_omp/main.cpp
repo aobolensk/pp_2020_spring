@@ -1,9 +1,11 @@
 // Copyright 2020 Dudchenko Anton
 
+#include <omp.h>
+#include <gtest/gtest.h>
+
 #include <vector>
 #include <iostream>
-#include <omp.h>
-#include "gtest/gtest.h"
+
 #include "../../../modules/task_2/dudchenko_a_sobel_omp/dudchenko_a_sobel_omp.h"
 
 TEST(imageStructure, canCompareImages) {
