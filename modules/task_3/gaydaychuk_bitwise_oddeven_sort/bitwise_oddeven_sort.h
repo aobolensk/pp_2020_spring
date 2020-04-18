@@ -20,10 +20,10 @@ class HelloTask : public tbb::task {
 };
 
 class SortSubarrayTask : public tbb::task {
-  int *array;
   int taskId;
   int taskCount;
   int size;
+  int *array;
   int bI;
   int eI;
  public:
