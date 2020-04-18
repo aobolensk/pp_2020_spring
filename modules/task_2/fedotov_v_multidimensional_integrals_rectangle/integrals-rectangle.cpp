@@ -8,9 +8,10 @@ double getMultipleIntegralUsingRectangleMethod(
     double y1, double y2, double stepX, double stepY) {
     double resultIntegral = 0;
     double cellSquare = stepX * stepY;
-    double xStepsNumber = (x2 - x1) / stepX;
-    double yStepsNumber = (y2 - y1) / stepY;
+    int xStepsNumber = (x2 - x1) / stepX;
+    int yStepsNumber = (y2 - y1) / stepY;
 
+    #pragma omp parallel for collapse(2) reduction(+: resultIntegral)
     for (int i = 0; i < xStepsNumber; i++) {
         for (int j = 0; j < yStepsNumber; j++) {
             double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;
