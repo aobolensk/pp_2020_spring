@@ -11,9 +11,10 @@ double Simpson_Integr_OMP(double(*func)(std::vector<double>), std::vector <doubl
   std::vector<double> func_res(N);
   double h = (y[dimension] - x[dimension]) / N;
   double result = 0.0;
+  int t = x.size();
 
   if (dimension == 0) {
-    for (int i = 0; i < x.size(); ++i) {
+    for (int i = 0; i < t; ++i) {
       lim.push_back(x[i]);
     }
   }
