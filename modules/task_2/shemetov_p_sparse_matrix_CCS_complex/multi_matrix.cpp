@@ -142,9 +142,9 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
     if (A.n != B.m) {
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
-    SparseMatrixCCS tempMatrix(A.m, B.n);
+    SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
-    tempMatrix.col_offsets.push_back(0);
+    resMatrix.col_offsets.push_back(0);
     std::vector <std::complex<double>> tempDataVec(A.m, {0, 0});
 
     for(size_t j = 0; j < B.n; j++){
@@ -158,14 +158,14 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
         for (size_t count = 0; count < A.m; count++) {
             if (tempDataVec[count].imag() != 0 ||
                 tempDataVec[count].real() != 0) {
-                tempMatrix.row_index.push_back(count);
-                tempMatrix.value.push_back(tempDataVec[count]);
+                resMatrix.row_index.push_back(count);
+                resMatrix.value.push_back(tempDataVec[count]);
                 tempDataVec[count] = 0;
             }
         }
-        tempMatrix.col_offsets.push_back(tempMatrix.value.size());
+        resMatrix.col_offsets.push_back(resMatrix.value.size());
     }
-    return tempMatrix;
+    return resMatrix;
 }
 
 SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
@@ -173,12 +173,18 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
     if (A.n != B.m) {
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
-    SparseMatrixCCS tempMatrix(A.m, B.n);
+    const int NUM_THREADS = 4;
+    SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
-    tempMatrix.col_offsets.push_back(0);
-    std::vector <std::complex<double>> tempDataVec(A.m, {0, 0});
+    resMatrix.col_offsets.push_back(0);
+    
 
+    #pragma omp parallel num_threads(NUM_THREADS) \
+    default(shared) private(tempRowA)
+    {
+    #pragma omp for 
     for(size_t j = 0; j < B.n; j++){
+        std::vector <std::complex<double>> tempDataVec(A.m+1, {0, 0});
         for(int k = B.col_offsets[j]; k < B.col_offsets[j+1]; k++){
             tempRowA = B.row_index[k];
             for(int i = A.col_offsets[tempRowA]; 
@@ -189,14 +195,16 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
         for (size_t count = 0; count < A.m; count++) {
             if (tempDataVec[count].imag() != 0 ||
                 tempDataVec[count].real() != 0) {
-                tempMatrix.row_index.push_back(count);
-                tempMatrix.value.push_back(tempDataVec[count]);
-                tempDataVec[count] = 0;
+                resMatrix.row_index.push_back(count);
+                resMatrix.value.push_back(tempDataVec[count]);
+                
             }
         }
-        tempMatrix.col_offsets.push_back(tempMatrix.value.size());
+        printf("This from %i potoc\n",omp_get_thread_num());
+        resMatrix.col_offsets.push_back(resMatrix.value.size());
     }
-    return tempMatrix;
+    }
+    return resMatrix;
 }
 
 
