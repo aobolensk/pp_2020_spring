@@ -76,7 +76,7 @@ std::vector <int> contrast_increase(std::vector<int> grayscale_image, int width,
       current = omp_get_thread_num();
       step = MIN(one_at_a_time, size - current * one_at_a_time);
 
-      #pragma omp for
+      #pragma omp for schedule(static)
           for (i = current * one_at_a_time; i < current * one_at_a_time + step; i++) {
             float a = (-1) * (static_cast<float>(255) / (max - min)) * min;
             float b = static_cast<float>(255) / (max - min);

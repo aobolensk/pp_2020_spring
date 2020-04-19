@@ -57,33 +57,26 @@ TEST(contrast_increase, simple_example) {
   ASSERT_EQ(output, contrast_increase(input, 3, 3, num));
 }
 
-// TEST(contrast_increase, min_is_greater_then_max) {
-//   ASSERT_ANY_THROW(use_formula(7, 2, 10));
-// }
+TEST(contrast_increase, min_is_greater_then_max) {
+  ASSERT_ANY_THROW(use_formula(7, 2, 10));
+}
 
 TEST(contrast_increase, check_size_10_10) {
   testing_lab(10, 10);
 }
 
-// TEST(contrast_increase, check_size_100_100) {
-//   testing_lab(101, 73);
+// FOLLOWING TESTS TAKE TOO LONG
+// TEST(contrast_increase, check_size_5000_5000) {
+//   testing_lab(5000, 5000);
 // }
 
-// TEST(contrast_increase, check_size_10000_10000) {
-//   testing_lab(10000, 10000);
+// TEST(contrast_increase, check_size_1000_1000) {
+//   testing_lab(1000, 1000);
 // }
 
-TEST(contrast_increase, check_size_5000_5000) {
-  testing_lab(5000, 5000);
-}
-
-TEST(contrast_increase, check_size_1000_1000) {
-  testing_lab(1000, 1000);
-}
-
-TEST(contrast_increase, check_size_256_256) {
-  testing_lab(256, 256);
-}
+// TEST(contrast_increase, check_size_256_256) {
+//   testing_lab(256, 256);
+// }
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
