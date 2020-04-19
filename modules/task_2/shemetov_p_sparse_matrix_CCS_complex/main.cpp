@@ -9,106 +9,97 @@
 
 
 
-// TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
-//      SparseMatrixCCS A(4, 2, 0.9);
-//      SparseMatrixCCS B(3, 2, 0.9);
-    
-//      const int NUM_THREADS = 4;
-//      #pragma omp parallel num_threads(NUM_THREADS) default(none)
-//      #pragma omp for
-//          for (int i = 0; i < 3; i++){
-//             for (int j = 0; j < 4; j++)
-//             {
-//                 printf("This is [%i][%i] from %i potoc",i,j,omp_get_thread_num());
-//             }
-//             for(size_t k=0; k<13;k++){
-//                 printf("This is %zu from %i potoc\n",k,omp_get_thread_num());
-//             }
-//          }
-            
-         
-     
-//      ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrixParallel(A, B));
-// }
+TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
+     SparseMatrixCCS A(4, 2, 0.9);
+     SparseMatrixCCS B(3, 2, 0.9);
+     std::cout << "sector 1" << std::endl;
+     A = A.transpose();
+     std::cout << "sector 2" << std::endl;
+     B = B.transpose();
+     std::cout << "sector 3" << std::endl;
 
-// TEST(multi_matrix, TEST_WRONG_SIZE_M_MATRIX) {
-//     EXPECT_ANY_THROW(SparseMatrixCCS A(-1, 3, 0.7));
-// }
+     ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrix(A, B));
+}
 
-// TEST(multi_matrix, TEST_WRONG_SIZE_N_MATRIX) {
-//     EXPECT_ANY_THROW(SparseMatrixCCS A(2, -1, 0.7));
-// }
+TEST(multi_matrix, TEST_WRONG_SIZE_M_MATRIX) {
+    EXPECT_ANY_THROW(SparseMatrixCCS A(-1, 3, 0.7));
+}
 
-// TEST(multi_matrix, TEST_NOT_SPARSE_MATRIX) {
-//     EXPECT_ANY_THROW(SparseMatrixCCS A(4, 3, 0.4));
-// }
+TEST(multi_matrix, TEST_WRONG_SIZE_N_MATRIX) {
+    EXPECT_ANY_THROW(SparseMatrixCCS A(2, -1, 0.7));
+}
 
-// TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
-//     SparseMatrixCCS A(1000, 1000, 0.9);
-//     SparseMatrixCCS B(1000, 1000, 0.9);
+TEST(multi_matrix, TEST_NOT_SPARSE_MATRIX) {
+    EXPECT_ANY_THROW(SparseMatrixCCS A(4, 3, 0.4));
+}
 
-//     //double start = omp_get_wtime();
-//     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
-//     //double finish = omp_get_wtime();
-//     //printf("Time of quiksort without parallel %f in sec\n",finish-start);
-// }
+TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
+    SparseMatrixCCS A(70, 432, 0.8);
+    SparseMatrixCCS B(432, 1778, 0.8);
+    A = A.transpose();
+    B = B.transpose();
 
-// TEST(multi_matrix, CAN_CREATE_SPARSE_CCS_MATRIX) {
-//     mtxComplex vecA = {{{7, -5}, {0}, {0}},
-//                         {{0}, {4, 3}, {0}},
-//                         {{0}, {0}, {-1, 1}}};
-//     SparseMatrixCCS A(vecA);
-//     A = A.transpose();
+    double start = omp_get_wtime();
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
+    double finish = omp_get_wtime();
+    printf("Time of quiksort without parallel %f in sec\n",finish-start);
+    //ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixParallel(A, B));
+}
+
+TEST(multi_matrix, CAN_CREATE_SPARSE_CCS_MATRIX) {
+    mtxComplex vecA = {{{7, -5}, {0}, {0}},
+                        {{0}, {4, 3}, {0}},
+                        {{0}, {0}, {-1, 1}}};
+    SparseMatrixCCS A(vecA);
+    A = A.transpose();
     
 
-//     std::vector<std::complex<double>> value {{7, -5}, {4, 3}, {-1, 1}};
-//     std::vector<int> row_index {0, 1, 2};
-//     std::vector<int> col_ptr {0, 1, 2, 3};
-//     SparseMatrixCCS B(3, 3, value, row_index, col_ptr);
-//     EXPECT_EQ(A,B);
-// }
+    std::vector<std::complex<double>> value {{7, -5}, {4, 3}, {-1, 1}};
+    std::vector<int> row_index {0, 1, 2};
+    std::vector<int> col_ptr {0, 1, 2, 3};
+    SparseMatrixCCS B(3, 3, value, row_index, col_ptr);
+    EXPECT_EQ(A,B);
+}
 
-// TEST(multi_matrix, TEST_EQUAL_MULTIPLICATION_NOT_RANDOM_CCS_MATRIX) {
-//     mtxComplex vecA = {{{4, 3}, {0}, {9, 6},{0}},
-//                         {{0}, {0}, {0},{3}},
-//                         {{3, 5}, {6}, {0}, {4,8}}};
-//     mtxComplex vecB ={{{3, 2}, {0}, {7}},
-//                         {{0} , {0}, {0}},
-//                         {{0}, {0}, {3,9}},
-//                         {{3},{0},{4}}};
-//     SparseMatrixCCS A(vecA);
-//     SparseMatrixCCS B(vecB);
-//     A = A.transpose();
-//     B = B.transpose();
-//     mtxComplex vec3 = multiMatrix(vecA, vecB);
-//     SparseMatrixCCS expect(vec3);
-//     expect = expect.transpose();
-//     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrix(A, B);
-//     EXPECT_TRUE(expect == result);
+TEST(multi_matrix, TEST_EQUAL_MULTIPLICATION_NOT_RANDOM_CCS_MATRIX) {
+    mtxComplex vecA = {{{4, 3}, {0}, {9, 6},{0}},
+                        {{0}, {0}, {0},{3}},
+                        {{3, 5}, {6}, {0}, {4,8}}};
+    mtxComplex vecB ={{{3, 2}, {0}, {7}},
+                        {{0} , {0}, {0}},
+                        {{0}, {0}, {3,9}},
+                        {{3},{0},{4}}};
+    SparseMatrixCCS A(vecA);
+    SparseMatrixCCS B(vecB);
+    A = A.transpose();
+    B = B.transpose();
+    mtxComplex vec3 = multiMatrix(vecA, vecB);
+    SparseMatrixCCS expect(vec3);
+    expect = expect.transpose();
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
+    EXPECT_TRUE(expect == result);
+}
+
+TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE) {
+    std::vector<std::complex<double>> valueA {{4, 6}, {0, 4}, {3, 7}, 
+                                                {4, 5}, {2, 1}};
+    std::vector<int> row_indexA {0, 1, 1, 1, 2};
+    std::vector<int> col_ptrA {0, 2, 3, 4, 5};
+    SparseMatrixCCS A(3, 4, valueA, row_indexA, col_ptrA);
+
+    std::vector<std::complex<double>> valueB {{0, 5}, {4, 7},{0, 6}};
+    std::vector<int> row_indexB {0, 3, 2};
+    std::vector<int> col_ptrB {0, 2, 3};
+    SparseMatrixCCS B(4, 2, valueB, row_indexB, col_ptrB);
     
-// }
-
-// TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE) {
-//     std::vector<std::complex<double>> valueA {{4, 6}, {0, 4}, {3, 7}, 
-//                                                 {4, 5}, {2, 1}};
-//     std::vector<int> row_indexA {0, 1, 1, 1, 2};
-//     std::vector<int> col_ptrA {0, 2, 3, 4, 5};
-//     SparseMatrixCCS A(3, 4, valueA, row_indexA, col_ptrA);
-
-//     std::vector<std::complex<double>> valueB {{0, 5}, {4, 7},{0, 6}};
-//     std::vector<int> row_indexB {0, 3, 2};
-//     std::vector<int> col_ptrB {0, 2, 3};
-//     SparseMatrixCCS B(4, 2, valueB, row_indexB, col_ptrB);
-    
-//     std::vector<std::complex<double>> valueExpect {{-30,20},{-20},
-//                                                    {1, 18},{-30,24}};
-//     std::vector<int> row_indexExpect {0, 1, 2, 1};
-//     std::vector<int> col_ptrExpect {0, 3, 4};
-//     SparseMatrixCCS expect(3, 2, valueExpect, row_indexExpect, col_ptrExpect);
-//     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
-//     result.PrintCCS();
-//     EXPECT_TRUE(expect == result);
-// }
+    std::vector<std::complex<double>> valueExpect {{-30,20},{-20},
+                                                   {1, 18},{-30,24}};
+    std::vector<int> row_indexExpect {0, 1, 2, 1};
+    std::vector<int> col_ptrExpect {0, 3, 4};
+    SparseMatrixCCS expect(3, 2, valueExpect, row_indexExpect, col_ptrExpect);
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
+    EXPECT_TRUE(expect == result);
+}
 
 TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE_2) {
     std::vector<std::complex<double>> valueA {{4}, {3}, {5}, {3},{7}};                        
@@ -126,7 +117,6 @@ TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE_2) {
     std::vector<int> col_ptrExpect {0, 3, 4, 5};
     SparseMatrixCCS expect(3, 3, valueExpect, row_indexExpect, col_ptrExpect);
     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
-    result.PrintCCS();
     EXPECT_TRUE(expect == result);
 }
 
