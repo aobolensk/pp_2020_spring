@@ -48,7 +48,7 @@ SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, double sparseness) {
             }
         }
     }
-    size_t i,j;
+    size_t i, j;
     int col_offsets_count = 0;
     m = vec.size();
     n = vec[0].size();
@@ -63,9 +63,6 @@ SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, double sparseness) {
         }
         col_offsets.push_back(col_offsets_count);
     }
-    
-
-
 }
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n,
@@ -141,13 +138,13 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
     SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
     resMatrix.col_offsets.push_back(0);
-    std::vector <std::complex<double>> tempDataVec(A.m+1, {0, 0});
+    std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
 
-    for(size_t j = 0; j < B.n; j++){
-        for(int k = B.col_offsets[j]; k < B.col_offsets[j+1]; k++){
+    for (size_t j = 0; j < B.n; j++) {
+        for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
             tempRowA = B.row_index[k];
-            for(int i = A.col_offsets[tempRowA]; 
-                i < A.col_offsets[tempRowA + 1]; i++){
+            for (int i = A.col_offsets[tempRowA];
+                 i < A.col_offsets[tempRowA + 1]; i++) {
                 tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
             }
         }
@@ -170,54 +167,50 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
     const int NUM_THREADS = 4;
-    int k,i;
+    int k, i;
     size_t j, count;
     SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
     resMatrix.col_offsets.push_back(0);
-    std::vector<std::vector<std::complex<double>>> tempVecValue(B.n);
-    std::vector<std::vector<int>> tempVecRowIndex(B.n);
-    std::vector<int> tempVecColPtr(B.n,0);
-    
+    std::vector < std::vector < std::complex < double >> > tempVecValue(B.n);
+    std::vector <std::vector<int>> tempVecRowIndex(B.n);
+    std::vector<int> tempVecColPtr(B.n, 0);
 
-    #pragma omp parallel num_threads(NUM_THREADS) \
-    default(shared) private(tempRowA,k,i,j,count)
-    {
-    #pragma omp for 
-    for(j = 0; j < B.n; j++){
-        std::vector <std::complex<double>> tempDataVec(A.m+1, {0, 0});
-        for(k = B.col_offsets[j]; k < B.col_offsets[j+1]; k++){
-            tempRowA = B.row_index[k];
-            for(i = A.col_offsets[tempRowA]; 
-                i < A.col_offsets[tempRowA + 1]; i++){
-                tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+
+
+#pragma omp parallel for num_threads(NUM_THREADS) \
+private(tempRowA, k, i, j, count)
+        for (j = 0; j < B.n; j++) {
+            std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
+            for (k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
+                tempRowA = B.row_index[k];
+                for (i = A.col_offsets[tempRowA];
+                     i < A.col_offsets[tempRowA + 1]; i++) {
+                    tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+                }
+            }
+            for (count = 0; count < A.m; count++) {
+                if (tempDataVec[count].imag() != 0 ||
+                    tempDataVec[count].real() != 0) {
+                    tempVecRowIndex[j].push_back(count);
+                    tempVecValue[j].push_back(tempDataVec[count]);
+                    tempVecColPtr[j]++;
+                }
             }
         }
-        for (count = 0; count < A.m; count++) {
-            if (tempDataVec[count].imag() != 0 ||
-                tempDataVec[count].real() != 0) {
-                tempVecRowIndex[j].push_back(count);
-                tempVecValue[j].push_back(tempDataVec[count]);
-                tempVecColPtr[j]++;
-            }
-        }
-    }
-    }
     int varTemp = 0;
-    for (size_t i = 0; i < resMatrix.n; i++)
-    {
+    for (size_t i = 0; i < resMatrix.n; i++) {
         varTemp += tempVecColPtr[i];
         resMatrix.col_offsets.push_back(varTemp);
     }
 
     for (size_t i = 0; i < tempVecRowIndex.size(); i++)
-        for (int j = 0; j < tempVecColPtr[i]; j++)
-        {
+        for (int j = 0; j < tempVecColPtr[i]; j++) {
             resMatrix.row_index.push_back(tempVecRowIndex[i][j]);
             resMatrix.value.push_back(tempVecValue[i][j]);
         }
-        
-    
+
+
     return resMatrix;
 }
 
