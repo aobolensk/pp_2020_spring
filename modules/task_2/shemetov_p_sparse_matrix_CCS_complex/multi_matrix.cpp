@@ -14,7 +14,7 @@ SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n) {
 }
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, size_t nonezero) {
-    if (_m <= 0 || _n <= 0 || nonezero < 0) {
+    if (_m <= 0 || _n <= 0) {
         throw "Error: Input not less then zero";
     }
     n = _n;
