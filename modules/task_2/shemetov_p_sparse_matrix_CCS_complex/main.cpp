@@ -12,14 +12,13 @@
 TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
      SparseMatrixCCS A(4, 2, 0.9);
      SparseMatrixCCS B(3, 2, 0.9);
-     std::cout << "sector 1" << std::endl;
      A = A.transpose();
-     std::cout << "sector 2" << std::endl;
      B = B.transpose();
-     std::cout << "sector 3" << std::endl;
 
      ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrix(A, B));
 }
+
+
 
 TEST(multi_matrix, TEST_WRONG_SIZE_M_MATRIX) {
     EXPECT_ANY_THROW(SparseMatrixCCS A(-1, 3, 0.7));
@@ -76,6 +75,25 @@ TEST(multi_matrix, TEST_EQUAL_MULTIPLICATION_NOT_RANDOM_CCS_MATRIX) {
     mtxComplex vec3 = multiMatrix(vecA, vecB);
     SparseMatrixCCS expect(vec3);
     expect = expect.transpose();
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
+    EXPECT_TRUE(expect == result);
+}
+
+TEST(multi_matrix, TEST_MATRIX_CONSISTS_OF_ZERO) {
+    std::vector<std::complex<double>> valueA {};                        
+    std::vector<int> row_indexA {};
+    std::vector<int> col_ptrA {0,0,0,0};
+    SparseMatrixCCS A(3, 3, valueA, row_indexA, col_ptrA);
+    
+    std::vector<std::complex<double>> valueB {};
+    std::vector<int> row_indexB {};
+    std::vector<int> col_ptrB {0, 0, 0, 0};
+    SparseMatrixCCS B(3, 3, valueB, row_indexB, col_ptrB);
+
+    std::vector<std::complex<double>> valueExpect {};
+    std::vector<int> row_indexExpect {};
+    std::vector<int> col_ptrExpect {0, 0, 0, 0};
+    SparseMatrixCCS expect(3, 3, valueExpect, row_indexExpect, col_ptrExpect);
     SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixParallel(A, B);
     EXPECT_TRUE(expect == result);
 }

@@ -14,7 +14,7 @@ SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n) {
 }
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n, size_t nonezero) {
-    if (_m <= 0 || _n <= 0 || nonezero <= 0) {
+    if (_m <= 0 || _n <= 0 || nonezero < 0) {
         throw "Error: Input not less then zero";
     }
     n = _n;
@@ -97,14 +97,12 @@ SparseMatrixCCS SparseMatrixCCS::transpose() {
             tempColIndex = row_index[j];
             tempCountCol[tempColIndex]++;
         }
-
     for (size_t j = 0; j < n; j++) {
         at.col_offsets.push_back(at.col_offsets[j] + tempCountCol[j]);
     }
 
     for (size_t j = 0; j < n; j++)
         tempCountCol[j] = 0;
-
     for (size_t i = 0; i < m; i++) {
         for (int j = col_offsets[i]; j < col_offsets[i + 1]; j++) {
             tempColIndex = row_index[j];
