@@ -128,7 +128,7 @@ bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
   }
 }
 
-SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& mat) const&{
+SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& mat) const& {
   SparseComplexMatrix result(rows_num, mat.cols_num);
   SparseComplexMatrix tmp;
   tmp = mat;
