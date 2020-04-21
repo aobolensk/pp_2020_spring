@@ -132,7 +132,7 @@ TEST(Multiple_Simpson_Integraion_OMP, Test_6_Wrong_Data_Negative_in_n) {
   ASSERT_ANY_THROW(Simpson_Integr_OMP(f4, x, y, n, dimension, lim));
 }
 
-TEST(Multiple_Simpson_Integraion_OMP, Test_7_Wrong_Data_Negative_in_size_of_first_coordinate) {
+TEST(Multiple_Simpson_Integraion_OMP, Test_7_Wrong_Data_Negative_in_size_of_first_coordinat) {
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
