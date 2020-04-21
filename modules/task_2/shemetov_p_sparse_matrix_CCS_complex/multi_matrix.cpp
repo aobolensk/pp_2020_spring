@@ -167,8 +167,7 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
     const int NUM_THREADS = 4;
-    int k, i;
-    size_t j, count;
+    int k, i, j, count;
     SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
     resMatrix.col_offsets.push_back(0);
@@ -180,7 +179,7 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
 
 #pragma omp parallel for num_threads(NUM_THREADS) \
 private(tempRowA, k, i, j, count)
-        for (j = 0; j < B.n; j++) {
+        for (j = 0; size_t(j) < B.n; j++) {
             std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
             for (k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
                 tempRowA = B.row_index[k];
@@ -189,7 +188,7 @@ private(tempRowA, k, i, j, count)
                     tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
                 }
             }
-            for (count = 0; count < A.m; count++) {
+            for (count = 0; size_t(count) < A.m; count++) {
                 if (tempDataVec[count].imag() != 0 ||
                     tempDataVec[count].real() != 0) {
                     tempVecRowIndex[j].push_back(count);
