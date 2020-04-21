@@ -96,21 +96,21 @@ SparseComplexMatrix SparseComplexMatrix::transposeCRS() {
   int k = 0;
   result.row_index.push_back(0);
   for (int i = 0; i < rows_num; ++i) {
-    row_count.push_back(row_index[i + 1] - row_index[i]); //Считаем кол-во элементов в строках исходной матрицы
-    for (int j = 0; j < row_count[i]; ++j) // Находим индексы строк элементов исходной матрицы
+    row_count.push_back(row_index[i + 1] - row_index[i]);
+    for (int j = 0; j < row_count[i]; ++j)
       row_idxs.push_back(i);
   }
   for (int i = 0; i < cols_num; ++i) {
     for (unsigned j = 0; j < values.size(); ++j) {
       if (col_index[j] == i) {
-        result.values.push_back(values[j]); // Заполняем элементы транс матрицы
-        result.col_index.push_back(row_idxs[j]); // Заполняем индексы столбцов элементов транс матрицы
+        result.values.push_back(values[j]);
+        result.col_index.push_back(row_idxs[j]);
         k++;
       }
     }
-    rowT_count.push_back(k); // Считаем кол-во элементов в строках транс матрицы
+    rowT_count.push_back(k);
     k = 0;
-    result.row_index.push_back(result.row_index[i] + rowT_count[i]); // Заполняем индексы строк эл-ов транс матрицы
+    result.row_index.push_back(result.row_index[i] + rowT_count[i]);
   }
   return result;
 }
@@ -134,21 +134,21 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
   tmp = mat;
   tmp = tmp.transposeCRS();
   int not_zero_vals = 0;
-  if (cols_num != /*mat*/tmp.cols_num)
+  if (cols_num != tmp.cols_num)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
   result.row_index.push_back(0);
   for (unsigned i = 1; i < row_index.size(); ++i) {
-    for (unsigned j = 1; j < /*mat*/tmp.row_index.size(); ++j) {
+    for (unsigned j = 1; j < tmp.row_index.size(); ++j) {
       std::complex<double> s = 0;
       int iter1 = row_index[i - 1];
-      int iter2 = /*mat*/tmp.row_index[j - 1];
-      while ((iter1 < row_index[i]) && (iter2 < /*mat*/tmp.row_index[j])) {
-        if (col_index[iter1] == /*mat*/tmp.col_index[iter2]) {
-          s += values[iter1] * /*mat*/tmp.values[iter2];
+      int iter2 = tmp.row_index[j - 1];
+      while ((iter1 < row_index[i]) && (iter2 < tmp.row_index[j])) {
+        if (col_index[iter1] == tmp.col_index[iter2]) {
+          s += values[iter1] * tmp.values[iter2];
           iter1++;
           iter2++;
         } else {
-          if (col_index[iter1] < /*mat*/tmp.col_index[iter2]) {
+          if (col_index[iter1] < tmp.col_index[iter2]) {
             iter1++;
           } else {
             iter2++;
