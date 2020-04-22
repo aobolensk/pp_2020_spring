@@ -79,6 +79,7 @@ class gFilter {
     std::vector<std::vector<int>>& in;
     int n;
     int m;
+
  public:
     std::vector<std::vector<int>>& out;
     gFilter(std::vector<std::vector<int>>& in, int n, int m) : in(in), n(n), m(m), out(in) {
