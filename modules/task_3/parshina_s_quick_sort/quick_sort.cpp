@@ -10,16 +10,14 @@
 #include <cmath>
 #include <iostream>
 
-//////////////////////////////////////////////////////////////////////////////////////////////////using namespace std;
-
 // The main class of quick sort task
 class qHoareSortTask : public tbb::task {
  private:
   double* arr;
   int left_index, right_index;
 
-public:
-  qHoareSortTask(double* arr1, int left_index1, int right_index1) : 
+ public:
+  qHoareSortTask(double* arr1, int left_index1, int right_index1) :
     arr(arr1), left_index(left_index1), right_index(right_index1) {}
   task* execute() {
     int min_parallel_length = 50;

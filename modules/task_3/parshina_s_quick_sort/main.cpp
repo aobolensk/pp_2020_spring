@@ -1,9 +1,4 @@
 // Copyright 2020 Parshina Sophie
-#include "../../../modules/task_3/parshina_s_quick_sort/quick_sort.h"
-#include "gtest/gtest.h"
-#include <tbb/tbb.h>
-#include <tbb/task_group.h>
-#include <tbb/tick_count.h>
 #include <ctime>
 #include <cmath>
 #include <utility>
@@ -11,7 +6,11 @@
 #include <random>
 #include <vector>
 #include <iostream>
-
+#include "gtest/gtest.h"
+#include <tbb/tbb.h>
+#include <tbb/task_group.h>
+#include <tbb/tick_count.h>
+#include "../../../modules/task_3/parshina_s_quick_sort/quick_sort.h"
 #define N 100000
 
 TEST(Hoare_Quick_Sort_TBB, Can_Sort_Correctly) {
