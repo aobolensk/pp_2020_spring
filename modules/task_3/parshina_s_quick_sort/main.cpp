@@ -67,7 +67,7 @@ TEST(Hoare_Quick_Sort_TBB, Can_Sort_Mixed_Array) {
   qHoareSortTbb(arr, N);
   ASSERT_EQ((int)std::equal(&arr[0], &arr[N], &arr2[0]), 1);
 }
-TEST(Hoare_Quick_Sort_TBB, Compare_Seq_and_Tbb_Average_Time) {
+TEST(Hoare_Quick_Sort_TBB, DISABLED_Compare_Seq_and_Tbb_Average_Time) {
   double* arr = new double[N];
   double* arr2 = new double[N];
   std::vector<bool> sorted;
