@@ -83,10 +83,10 @@ class gFilter {
  public:
     std::vector<std::vector<int>>& out;
     gFilter(std::vector<std::vector<int>>& in, int n, int m) : in(in), n(n), m(m), out(in) {
-        if (n <= 0 || m <= 0) {
+        if (this->n <= 0 || this->m <= 0) {
             throw "-1";
         }
-        in = addBorders(in, n, m);
+        this->in = addBorders(this->in, this->n, this->m);
     }
     void operator() (const tbb::blocked_range<int>& m) const {
         for (int i = m.begin(); i != m.end(); ++i) {
