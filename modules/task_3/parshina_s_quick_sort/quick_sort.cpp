@@ -29,13 +29,16 @@ class qHoareSortTask : public tbb::task {
       int pi = arr[(left + right) / 2];
 
       while (left <= right) {
-        if (pi > arr[left]) left++;
-        else if (arr[right] > pi) { 
-          right--; 
-        } else {
-          std::swap(arr[left], arr[right]);
-          right--;
+        if (pi > arr[left]) {
           left++;
+        } else {
+          if (arr[right] > pi) {
+            right--;
+          } else {
+            std::swap(arr[left], arr[right]);
+            right--;
+            left++;
+          }
         }
       }
 

@@ -1,4 +1,7 @@
 // Copyright 2020 Parshina Sophie
+#include <tbb/tbb.h>
+#include <tbb/task_group.h>
+#include <tbb/tick_count.h>
 #include <ctime>
 #include <cmath>
 #include <utility>
@@ -6,9 +9,6 @@
 #include <random>
 #include <vector>
 #include <iostream>
-#include <tbb/tbb.h>
-#include <tbb/task_group.h>
-#include <tbb/tick_count.h>
 #include "gtest/gtest.h"
 #include "../../../modules/task_3/parshina_s_quick_sort/quick_sort.h"
 
