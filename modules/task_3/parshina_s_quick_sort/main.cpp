@@ -85,13 +85,13 @@ TEST(Hoare_Quick_Sort_TBB, Compare_Seq_and_Tbb_Average_Time) {
   qHoareSortTbb(arr, N);
   double parallel_time = (tbb::tick_count::now() - t2).seconds();
   std::cout << "Parallel tbb time: " << parallel_time << " s" << '\n';
-  std::cout<<"Acceleration = seqtime/partime = "<< seq_time/parallel_time << " " << '\n';
+  std::cout << "Acceleration = seqtime/partime = " << seq_time/parallel_time << " " << '\n';
   sorted.push_back(IsSorted(arr, N));
 
   bool x = true;
   for (auto i : sorted)
     x = x && i;
-  
+
   ASSERT_EQ(1, x);
 }
 

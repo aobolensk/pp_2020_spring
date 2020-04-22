@@ -1,3 +1,4 @@
+// Copyright 2020 Parshina Sophie
 #include "../../../modules/task_3/parshina_s_quick_sort/quick_sort.h"
 #include <tbb/tbb.h>
 #include <tbb/task_group.h>
@@ -9,21 +10,22 @@
 #include <cmath>
 #include <iostream>
 
-using namespace std;
+//////////////////////////////////////////////////////////////////////////////////////////////////using namespace std;
 
 // The main class of quick sort task
 class qHoareSortTask : public tbb::task {
-private:
+ private:
   double* arr;
   int left_index, right_index;
+
 public:
-  qHoareSortTask(double* arr1, int left_index1, int right_index1) : arr(arr1), left_index(left_index1), right_index(right_index1) {};
+  qHoareSortTask(double* arr1, int left_index1, int right_index1) : 
+    arr(arr1), left_index(left_index1), right_index(right_index1) {}
   task* execute() {
     int min_parallel_length = 50;
     if (right_index - left_index <= min_parallel_length) {
       qHoareSort(arr, left_index, right_index);
-    }
-    else {
+    } else {
       int left = left_index;
       int right = right_index;
       int pi = arr[(left + right) / 2];
@@ -45,13 +47,11 @@ public:
       if (left_index < right && right_index > left) {
         set_ref_count(3);
         task::spawn_and_wait_for_all(tasks_list);
-      }
-      else {
+      } else {
         set_ref_count(2);
         if (left_index < right) {
           task::spawn_and_wait_for_all(*new(tbb::task::allocate_child()) qHoareSortTask(arr, left_index, right));
-        }
-        else {
+        } else {
           task::spawn_and_wait_for_all(*new(tbb::task::allocate_child()) qHoareSortTask(arr, left, right_index));
         }
       }
@@ -122,7 +122,7 @@ void Copy_elements(double*a1, double* a2, int n) {
   }
 }
 
-/* ÏÐÀÂÈËÜÍÎ, ÍÎ ÌÅÄËÅÍÍÎ
+/* Correct, but slow method
 void qHoareSortTbb(double* arr, int left_index, int right_index) {
   int min_parallel_length = 3;
   if (right_index - left_index > min_parallel_length) {
