@@ -15,7 +15,7 @@ void gen_rnd_arr(int* arr, int size, int bits_value) {
     const int max_rand = pow(2, bits_value);
     srand(unsigned(time(0)));
     for (int i = 0; i < size; ++i)
-        arr[i] = rand() % max_rand;
+        arr[i] = srand(unsigned(time(0))) % max_rand;
 }
 
 void odd_even_simple_merge(int* arr, int size, int* result) {
@@ -67,12 +67,12 @@ void odd_even_merger(int* arr, int size) {
 
 #pragma omp parallel num_threads(2)
     {
-#pragma omp single nowait 
+#pragma omp single nowait
         {
             odd_even_simple_merge(arr, size, left_arr);
         }
 
-#pragma omp single nowait 
+#pragma omp single nowait
         {
             odd_even_simple_merge(arr + 1, size, right_arr);
         }
