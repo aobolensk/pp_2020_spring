@@ -1,5 +1,6 @@
 // Copyright 2020 Khruleva Anastasia
 #include <omp.h>
+#include <stdafx.h>
 #include <utility>
 #include <vector>
 #include <ctime>
@@ -8,7 +9,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
-#include <stdafx.h>
 #include <bitset>
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
