@@ -1,6 +1,5 @@
 // Copyright 2020 Khruleva Anastasia
 #include <omp.h>
-#include <stdafx.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <utility>
