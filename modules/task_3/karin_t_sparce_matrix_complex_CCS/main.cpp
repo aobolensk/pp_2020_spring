@@ -181,6 +181,5 @@ TEST(Sparce_Matrix, values_are_equal) {
   SparceMatrix B(200, 200, 400);
   SparceMatrix ResPar = ParMult(A, B, 8);
   SparceMatrix ResSeq = A * B;
-  tbb::tick_count SeqEnd = tbb::tick_count::now();
   ASSERT_EQ(ResSeq, ResPar);
 }
