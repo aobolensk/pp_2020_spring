@@ -37,7 +37,7 @@ Image contrastImage(Image initImage, int width, int height) {
         throw - 1;
     }
     Image result(initImage);
-    int min = 255, max = 0;
+    int minimum = 255, maximum = 0;
 
     int const numThreads = 3;
 
@@ -47,18 +47,18 @@ Image contrastImage(Image initImage, int width, int height) {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, initImage.size(), gs),
         [&](tbb::blocked_range<size_t> r) {
             for (size_t i = r.begin(); i != r.end(); ++i) {
-                if (initImage[i] > max) {
-                    max = initImage[i];
+                if (initImage[i] > maximum) {
+                    maximum = initImage[i];
                 }
-                if (initImage[i] < min) {
-                    min = initImage[i];
+                if (initImage[i] < minimum) {
+                    minimum = initImage[i];
                 }
             }
         }, tbb::simple_partitioner());
 
 
     for (int i = 0; i < width * height; i++) {
-        result[i] = F(initImage[i], max, min);
+        result[i] = F(initImage[i], maximum, minimum);
     }
 
     return result;
