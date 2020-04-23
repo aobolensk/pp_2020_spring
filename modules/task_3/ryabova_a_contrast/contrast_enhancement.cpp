@@ -53,7 +53,7 @@ Image contrastImage(Image initImage, int width, int height) {
                 if (initImage[i] < min) {
                     min = initImage[i];
                 }
-            }             
+            }
         }, tbb::simple_partitioner());
 
 
