@@ -74,7 +74,6 @@ void show_histogram(std::string const& name, cv::Mat1b const& image) {
 
     int const hist_height = 256;
     cv::Mat3b hist_image = cv::Mat3b::zeros(hist_height, bins);
-
     cv::calcHist(&image, 1, channels, cv::Mat(), hist, 1, histSize, ranges, true, false);
 
     double max_val = 0;
