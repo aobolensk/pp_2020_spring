@@ -31,7 +31,7 @@ SparceMatrix::SparceMatrix(int _nCol, int _nRow, int not_null_count) {
   unsigned count = not_null_count;
   for (int i = 0; i < nCol; i++) {
     unsigned randnum = ran() % nRow;
-    int next = min(count, randnum);
+    int next = (count < randnum) ? count : randnum;
     count -= next;
     point[i] = next;
   }
@@ -169,8 +169,8 @@ class MatrixMultiplicator {
 
  public:
   MatrixMultiplicator(const SparceMatrix& _Atr, const SparceMatrix& _B,
-    std::vector<std::vector<std::complex<int>>>& const _res_val,
-    std::vector<std::vector<int>>& const _res_row_num, std::vector<int>& const _res_point):
+    std::vector<std::vector<std::complex<int>>>& _res_val,
+    std::vector<std::vector<int>>& _res_row_num, std::vector<int>& _res_point):
     Atr(_Atr), B(_B), res_val(_res_val), res_row_num(_res_row_num), res_point(_res_point) {}
   void operator()(const tbb::blocked_range<int>& r) const {
     int begin = r.begin();
