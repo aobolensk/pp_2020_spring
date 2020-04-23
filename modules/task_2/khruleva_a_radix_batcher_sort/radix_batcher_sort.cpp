@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
-#include <cstdlib.h>
+#include <cstdlib>
 #include <bitset>
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
