@@ -1,7 +1,7 @@
 // Copyright 2020 Karin Timofey
 #include <gtest/gtest.h>
-#include <vector>
 #include <tbb/tbb.h>
+#include <vector>
 #include "../../modules/task_3/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 int main(int argc, char **argv) {
@@ -82,7 +82,7 @@ TEST(Sparce_Matrix, can_compare) {
   SparceMatrix Eq(3, 4, val, { 0, 1, 0, 1, 2, 0, 1 }, { 2, 5, 7 });
   SparceMatrix NotEq(3, 4, val, { 0, 2, 0, 1, 2, 0, 1 }, { 2, 5, 7 });
   ASSERT_EQ(Matrix, Eq);
-  ASSERT_FALSE (Matrix == NotEq);
+  ASSERT_FALSE(Matrix == NotEq);
 }
 
 TEST(Sparce_Matrix, can_transpose) {

@@ -1,4 +1,5 @@
 // Copyright 2020 Karin Timofey
+#include <tbb/tbb.h>
 #include <vector>
 #include <string>
 #include <random>
@@ -7,7 +8,6 @@
 #include <iostream>
 #include <complex>
 #include <algorithm>
-#include <tbb/tbb.h>
 #include "../../../modules/task_3/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 SparceMatrix::SparceMatrix(int _nCol, int _nRow) {
@@ -161,14 +161,14 @@ bool SparceMatrix::operator==(const SparceMatrix& SP) const {
 }
 
 class MatrixMultiplicator {
-  private:
+ private:
   const SparceMatrix &Atr, &B;
-  std::vector<std::vector<std::complex<int>>> &res_val;
-  std::vector<std::vector<int>> &res_row_num;
-  std::vector<int> &res_point;
-  public:
-  MatrixMultiplicator(const SparceMatrix& _Atr, const SparceMatrix& _B, 
-    std::vector<std::vector<std::complex<int>>>& _res_val, 
+  std::vector<std::vector<std::complex<int>>>& res_val;
+  std::vector<std::vector<int>>& res_row_num;
+  std::vector<int>& res_point;
+ public:
+  MatrixMultiplicator(const SparceMatrix& _Atr, const SparceMatrix& _B,
+    std::vector<std::vector<std::complex<int>>>& _res_val,
     std::vector<std::vector<int>>& _res_row_num, std::vector<int>& _res_point):
     Atr(_Atr), B(_B), res_val(_res_val), res_row_num(_res_row_num), res_point(_res_point) {}
   void operator()(tbb::blocked_range<int>& r) const {
@@ -199,7 +199,7 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   int grainsize = 15;
   tbb::parallel_for(tbb::blocked_range<int>(0, Res.nCol, grainsize),
     MatrixMultiplicator(Atr, B, res_val, res_row_num, Res.point));
-  
+
   for (int i = 0; i < Res.nCol-1; i++) {
     Res.point[i+1] += Res.point[i];
   }
