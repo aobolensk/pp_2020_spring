@@ -172,7 +172,7 @@ class MatrixMultiplicator {
     std::vector<std::vector<std::complex<int>>>& const _res_val,
     std::vector<std::vector<int>>& const _res_row_num, std::vector<int>& const _res_point):
     Atr(_Atr), B(_B), res_val(_res_val), res_row_num(_res_row_num), res_point(_res_point) {}
-  void operator()(tbb::blocked_range<int>& r) const {
+  void operator()(const tbb::blocked_range<int>& r) const {
     int begin = r.begin();
     int end = r.end();
     for (int i = begin; i < end; i++) {
