@@ -95,7 +95,7 @@ void show_histogram(std::string const& name, cv::Mat1b const& image) {
 #endif
 
 int main(int argc, char** argv) {
-    #ifndef OPENCV  
+    #ifndef OPENCV
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
     #else
