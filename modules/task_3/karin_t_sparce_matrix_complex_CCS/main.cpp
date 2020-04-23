@@ -5,7 +5,7 @@
 #include "../../modules/task_3/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 int main(int argc, char **argv) {
-    tbb::task_scheduler_init init(4);
+    tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
