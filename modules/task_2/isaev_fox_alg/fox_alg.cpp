@@ -135,11 +135,11 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2, const unsigned& n_
                 res[res_i][res_j] = C[i][j];
             }
         }
-        if (n != old_n) {
-            #pragma omp parallel for
-            for (int i = 0; i < static_cast<int>(old_n); ++i) {
-                res[i].resize(old_n);
-            }
+    }
+    if (n != old_n) {
+        #pragma omp parallel for
+        for (int i = 0; i < static_cast<int>(old_n); ++i) {
+            res[i].resize(old_n);
         }
     }
     res.resize(old_n);
