@@ -1,3 +1,4 @@
+// Copyright 2020 Khruleva Anastasia
 #include <omp.h>
 #include <utility>
 #include <vector>
@@ -7,7 +8,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <bitset>
-#include <iostream>
+#include <algorithm>
 #include "gtest/gtest.h"
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
@@ -15,8 +16,6 @@
 #define N 10000
 #define TESTS 10
 #define THREADS 4
-
-using namespace std;
 
 TEST(Radix_Batcher_Sort_OMP, Can_Sort_Properly) {
     omp_set_nested(1);
@@ -59,7 +58,7 @@ TEST(Radix_Batcher_Sort_OMP, Can_Sort_Two_Times) {
     omp_set_nested(1);
     int* array = new int[N];
     gen_rnd_arr(array, N, BITS);
-    radix_batcher_sort(array, N, THREADS); //std::sort(&array[0], &array[n]);
+    radix_batcher_sort(array, N, THREADS);
     int* b = new int[N];
     duplicate_array(array, b, N);
     radix_batcher_sort(array, N, THREADS);
