@@ -62,8 +62,6 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 #include "opencv2/imgproc.hpp"
 #include "opencv2/opencv.hpp"
 
-#include <gtest/gtest.h>
-
 void show_histogram(std::string const& name, cv::Mat1b const& image) {
     int bins = 256;
     int histSize[] = { bins };
