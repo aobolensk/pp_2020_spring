@@ -54,9 +54,9 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 }
 
 #else
+#include <omp.h>
 #include <string>
 #include <vector>
-#include <omp.h>
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
@@ -64,7 +64,6 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 
 
 void show_histogram(std::string const& name, cv::Mat1b const& image) {
-
     int bins = 256;
     int histSize[] = { bins };
 
@@ -100,8 +99,7 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
     #else
-    
-    
+
     cv::Mat img = cv::imread("C:/Users/User/Pictures/4.png");
     cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
     std::vector <int> vec(img.rows * img.cols);
