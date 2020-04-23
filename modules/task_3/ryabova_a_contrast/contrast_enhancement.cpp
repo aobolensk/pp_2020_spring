@@ -43,7 +43,7 @@ Image contrastImage(Image initImage, int width, int height) {
 
     tbb::task_scheduler_init init(numThreads);
 
-    size_t gs = max(initImage.size() / 1000, 1);
+    size_t gs = ((initImage.size() / 1000) > 1 ? (initImage.size() / 1000) : 1);
     tbb::parallel_for(tbb::blocked_range<size_t>(0, initImage.size(), gs),
         [&](tbb::blocked_range<size_t> r) {
             for (size_t i = r.begin(); i != r.end(); ++i) {
