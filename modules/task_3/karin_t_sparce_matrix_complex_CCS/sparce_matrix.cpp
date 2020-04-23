@@ -163,9 +163,10 @@ bool SparceMatrix::operator==(const SparceMatrix& SP) const {
 class MatrixMultiplicator {
  private:
   const SparceMatrix &Atr, &B;
-  std::vector<std::vector<std::complex<int>>>& res_val;
-  std::vector<std::vector<int>>& res_row_num;
-  std::vector<int>& res_point;
+  std::vector<std::vector<std::complex<int>>>& const res_val;
+  std::vector<std::vector<int>>& const res_row_num;
+  std::vector<int>& const res_point;
+
  public:
   MatrixMultiplicator(const SparceMatrix& _Atr, const SparceMatrix& _B,
     std::vector<std::vector<std::complex<int>>>& _res_val,
