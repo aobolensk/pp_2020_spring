@@ -188,11 +188,9 @@ class MatrixMultiplicator {
   }
 };
 
-SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
+SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B) {
   if (A.nRow != B.nCol)
     throw "wrong matrix size";
-  if (num <= 0)
-    throw "incorrect treads number";
   SparceMatrix Atr = A.Transpose();
   SparceMatrix Res(B.nCol, A.nRow);
   std::vector<std::vector<std::complex<int>>> res_val(Res.nCol);
