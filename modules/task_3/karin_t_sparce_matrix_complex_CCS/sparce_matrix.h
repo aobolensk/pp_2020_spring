@@ -1,6 +1,6 @@
 // Copyright 2020 Karin Timofey
-#ifndef MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
-#define MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
+#ifndef MODULES_TASK_3_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
+#define MODULES_TASK_3_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
 
 #include <vector>
 #include <string>
@@ -26,4 +26,4 @@ struct SparceMatrix {
 SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num = 4);
 std::complex<int> ScalarMult(const SparceMatrix &A, int i, const SparceMatrix &B, int j);
 
-#endif  // MODULES_TASK_1_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_
+#endif  // MODULES_TASK_3_KARIN_T_SPARCE_MATRIX_COMPLEX_CCS_SPARCE_MATRIX_H_

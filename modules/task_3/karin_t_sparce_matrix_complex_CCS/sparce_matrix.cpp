@@ -196,20 +196,17 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   SparceMatrix Res(B.nCol, A.nRow);
   std::vector<std::vector<std::complex<int>>> res_val(Res.nCol);
   std::vector<std::vector<int>> res_row_num(Res.nCol);
-  int grainsize = 10;
+  int grainsize = 15;
   tbb::parallel_for(tbb::blocked_range<int>(0, Res.nCol, grainsize),
     MatrixMultiplicator(Atr, B, res_val, res_row_num, Res.point));
   
   for (int i = 0; i < Res.nCol-1; i++) {
     Res.point[i+1] += Res.point[i];
   }
-  /*Res.val.resize(Res.point[Res.nCol-1]);
-  Res.row_number.resize(Res.point[Res.nCol-1]);*/
   for (int i = 0; i < Res.nCol; i++) {
     Res.val.insert(Res.val.end(), res_val[i].begin(), res_val[i].end());
     Res.row_number.insert(Res.row_number.end(), res_row_num[i].begin(), res_row_num[i].end());
   }
-  //Res.Print();
   return Res;
 }
 

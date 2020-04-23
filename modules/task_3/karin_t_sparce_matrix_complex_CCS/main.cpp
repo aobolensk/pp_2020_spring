@@ -1,12 +1,11 @@
 // Copyright 2020 Karin Timofey
 #include <gtest/gtest.h>
 #include <vector>
-#include <iostream>
 #include <tbb/tbb.h>
 #include "../../modules/task_3/karin_t_sparce_matrix_complex_CCS/sparce_matrix.h"
 
 int main(int argc, char **argv) {
-    tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
+    tbb::task_scheduler_init init(4);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
@@ -70,7 +69,7 @@ TEST(Sparce_Matrix, can_create_from_vectors) {
     ASSERT_EQ(Matrix.nRow, 4);
 }
 
-TEST(Sparce_matrix, can_compare) {
+TEST(Sparce_Matrix, can_compare) {
   std::vector<std::complex<int>> val(7);
   val[0] = std::complex<int>(35, 0);
   val[1] = std::complex<int>(29, 0);
@@ -178,12 +177,10 @@ TEST(Sparce_Matrix, can_multyplication2) {
 }
 
 TEST(Sparce_Matrix, values_are_equal) {
-  SparceMatrix A(200, 200, 40000);
-  SparceMatrix B(200, 200, 40000);
-
+  SparceMatrix A(200, 200, 400);
+  SparceMatrix B(200, 200, 400);
   SparceMatrix ResPar = ParMult(A, B, 8);
-
   SparceMatrix ResSeq = A * B;
-
+  tbb::tick_count SeqEnd = tbb::tick_count::now();
   ASSERT_EQ(ResSeq, ResPar);
 }
