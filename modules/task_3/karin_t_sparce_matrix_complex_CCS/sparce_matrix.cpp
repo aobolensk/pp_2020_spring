@@ -162,28 +162,28 @@ bool SparceMatrix::operator==(const SparceMatrix& SP) const {
 
 class MatrixMultiplicator {
  private:
-  const SparceMatrix &Atr, &B;
-  std::vector<std::vector<std::complex<int>>>& res_val;
-  std::vector<std::vector<int>>& res_row_num;
-  std::vector<int>& res_point;
+  const SparceMatrix *Atr, *B;
+  std::vector<std::vector<std::complex<int>>>* res_val;
+  std::vector<std::vector<int>>* res_row_num;
+  std::vector<int>* res_point;
 
  public:
-  MatrixMultiplicator(const SparceMatrix& _Atr, const SparceMatrix& _B,
-    std::vector<std::vector<std::complex<int>>>& _res_val,
-    std::vector<std::vector<int>>& _res_row_num, std::vector<int>& _res_point):
+  MatrixMultiplicator(const SparceMatrix* _Atr, const SparceMatrix* _B,
+    std::vector<std::vector<std::complex<int>>>* _res_val,
+    std::vector<std::vector<int>>* _res_row_num, std::vector<int>* _res_point):
     Atr(_Atr), B(_B), res_val(_res_val), res_row_num(_res_row_num), res_point(_res_point) {}
   void operator()(const tbb::blocked_range<int>& r) const {
     int begin = r.begin();
     int end = r.end();
     for (int i = begin; i < end; i++) {
-      for (int j = 0; j < Atr.nCol; j++) {
-        std::complex<int> sum = ScalarMult(Atr, j, B, i);
+      for (int j = 0; j < Atr->nCol; j++) {
+        std::complex<int> sum = ScalarMult(*(Atr), j, *(B), i);
         if (sum != 0) {
-          res_val[i].push_back(sum);
-          res_row_num[i].push_back(j);
+          (*res_val)[i].push_back(sum);
+          (*res_row_num)[i].push_back(j);
         }
       }
-      res_point[i] = res_val[i].size();
+      (*res_point)[i] = (*res_val)[i].size();
     }
   }
 };
@@ -199,7 +199,7 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int num) {
   std::vector<std::vector<int>> res_row_num(Res.nCol);
   int grainsize = 15;
   tbb::parallel_for(tbb::blocked_range<int>(0, Res.nCol, grainsize),
-    MatrixMultiplicator(Atr, B, res_val, res_row_num, Res.point));
+    MatrixMultiplicator(&Atr, &B, &res_val, &res_row_num, &Res.point));
 
   for (int i = 0; i < Res.nCol-1; i++) {
     Res.point[i+1] += Res.point[i];
