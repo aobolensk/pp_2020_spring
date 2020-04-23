@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <stdafx.h>
 #include <bitset>
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
@@ -15,7 +16,7 @@ void gen_rnd_arr(int* arr, int size, int bits_value) {
     const int max_rand = pow(2, bits_value);
     srand(unsigned(time(0)));
     for (int i = 0; i < size; ++i)
-        arr[i] = srand(unsigned(time(0))) % max_rand;
+        arr[i] = rand() % max_rand;
 }
 
 void odd_even_simple_merge(int* arr, int size, int* result) {
@@ -133,7 +134,8 @@ void duplicate_array(int* a, int* b, int n) {
 void radix_batcher_sort(int* arr, int size, int threads_value) {
     int length = size / threads_value;
 
-#pragma omp parallel num_threads(threads_value) {
+#pragma omp parallel num_threads(threads_value)
+    {
         int number = omp_get_thread_num();
         least_significant_digit_sort(arr + number * length, length);
     }
@@ -141,7 +143,8 @@ void radix_batcher_sort(int* arr, int size, int threads_value) {
     threads_value = threads_value >> 1;
 
     while (threads_value > 0) {
-#pragma omp parallel num_threads(threads_value) {
+#pragma omp parallel num_threads(threads_value)
+        {
             int number = omp_get_thread_num();
             odd_even_merger(arr + 2 * length * number, length * 2);
 #pragma omp barrier
