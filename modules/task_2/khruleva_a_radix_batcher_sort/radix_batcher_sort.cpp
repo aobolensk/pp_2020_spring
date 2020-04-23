@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
-#include <cstdlib>
+#include <cstdlib.h>
 #include <bitset>
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
@@ -15,7 +15,7 @@ void gen_rnd_arr(int* arr, int size, int bits_value) {
     const int max_rand = pow(2, bits_value);
     srand(unsigned(time(0)));
     for (int i = 0; i < size; ++i)
-        arr[i] = rand_r() % max_rand;
+        arr[i] = rand() % max_rand;
 }
 
 void odd_even_simple_merge(int* arr, int size, int* result) {
@@ -65,12 +65,15 @@ void odd_even_merger(int* arr, int size) {
     int* left_arr = new int[half_size];
     int* right_arr = new int[half_size];
 
-#pragma omp parallel num_threads(2) {
-#pragma omp single nowait {
+#pragma omp parallel num_threads(2)
+    {
+#pragma omp single nowait 
+        {
             odd_even_simple_merge(arr, size, left_arr);
         }
 
-#pragma omp single nowait {
+#pragma omp single nowait 
+        {
             odd_even_simple_merge(arr + 1, size, right_arr);
         }
 
