@@ -88,7 +88,6 @@ TEST(Radix_Batcher_Sort_OMP, DISABLED_Compare_Seq_and_Omp_Average_Time) {
     int* array = new int[N];
 
     for (int threads = THREADS; threads > 0; threads = threads >> 1) {
-        //for (int threads = 1; threads >= THREADS; threads = threads << 1) {
         omp_time = 0;
         time1 = 0;
         time2 = 0;
