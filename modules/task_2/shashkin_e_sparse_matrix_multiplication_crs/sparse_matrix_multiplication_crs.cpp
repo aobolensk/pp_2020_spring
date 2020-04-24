@@ -234,7 +234,7 @@ void print(std::vector<std::vector<std::complex<double>>> matrix) {
   int cols = matrix[0].size();
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j)
-      if(matrix[i][j] != std::complex<double>(0.0, 0.0))
+      if (matrix[i][j] != std::complex<double>(0.0, 0.0))
         std::cout << matrix[i][j] << " ";
       else
         std::cout << "     " << " ";
