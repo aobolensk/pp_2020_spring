@@ -1,8 +1,7 @@
 // Copyright 2020 Shashkin Evgeny
 #include "../../modules/task_2/shashkin_e_sparse_matrix_multiplication_crs/sparse_matrix_multiplication_crs.h"
-#include <vector>
 #include <omp.h>
-
+#include <vector>
 SparseComplexMatrix::SparseComplexMatrix() {
   rows_num = 0;
   cols_num = 0;
@@ -192,12 +191,10 @@ SparseComplexMatrix SparseComplexMatrix::crsParallelMult(const SparseComplexMatr
             s += values[iter1] * tmp.values[iter2];
             iter1++;
             iter2++;
-          }
-          else {
+          } else {
             if (col_index[iter1] < tmp.col_index[iter2]) {
               iter1++;
-            }
-            else {
+            } else {
               iter2++;
             }
           }
@@ -237,7 +234,7 @@ void print(std::vector<std::vector<std::complex<double>>> matrix) {
   int cols = matrix[0].size();
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j)
-      if(matrix[i][j]!=std::complex<double>(0.0, 0.0))
+      if(matrix[i][j] != std::complex<double>(0.0, 0.0))
         std::cout << matrix[i][j] << " ";
       else
         std::cout << "     " << " ";

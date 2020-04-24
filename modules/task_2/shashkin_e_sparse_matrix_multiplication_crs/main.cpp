@@ -1,8 +1,8 @@
 // Copyright 2020 Shashkin Evgeny
 #include <gtest/gtest.h>
+#include <omp.h>
 #include <iostream>
 #include <vector>
-#include <omp.h>
 #include "../../modules/task_2/shashkin_e_sparse_matrix_multiplication_crs/sparse_matrix_multiplication_crs.h"
 
 TEST(SparceMatrixMultiplication, throw_when_num_of_rows_or_num_of_cols_is_negative) {
