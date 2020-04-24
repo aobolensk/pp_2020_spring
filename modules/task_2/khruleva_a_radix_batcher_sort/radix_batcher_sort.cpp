@@ -14,10 +14,11 @@
 #include "../../../modules/task_2/khruleva_a_radix_batcher_sort/radix_batcher_sort.h"
 
 void gen_rnd_arr(int* arr, int size, int bits_value) {
+    std::mt19937 gen(time(0));
     const int max_rand = pow(2, bits_value);
-    srand(unsigned(time(0)));
+    std::uniform_int_distribution<> interval(0, max_rand);
     for (int i = 0; i < size; ++i)
-        arr[i] = rand_r(0) % max_rand;
+        arr[i] = interval(gen) % max_rand;
 }
 
 void odd_even_simple_merge(int* arr, int size, int* result) {
