@@ -16,8 +16,8 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
     value.reserve(rows + 1);
     rowIndex.push_back(0);
 
-    for (int idx{ 0 }; idx < rows; ++idx) {
-        for (int jdx{ 0 }; jdx < cols; ++jdx) {
+    for (size_t idx{ 0 }; idx < rows; ++idx) {
+        for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
             if (std::fabs(matrix[idx][jdx]) >= tolerance) {
                 value.push_back(matrix[idx][jdx]);
                 colIndex.push_back(jdx);
@@ -77,7 +77,7 @@ Matrix SparseMatrix::SparseToMatrix() {
     Matrix result(rows, std::vector<double>(cols, 0.0));
 
     int tmpCols{0};
-    for (int idx{0}; idx < rows; ++idx) {
+    for (size_t idx{0}; idx < rows; ++idx) {
         size_t tmpRows{rowIndex[idx+1] - rowIndex[idx]};
         while (tmpRows != 0) {
             result[idx][colIndex[tmpCols]] = value[tmpCols];
