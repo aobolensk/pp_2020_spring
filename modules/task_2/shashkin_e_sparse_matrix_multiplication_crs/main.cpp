@@ -65,14 +65,14 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices) {
   mat2 = randomMatrix(rows2, cols2, percent);
   crsMat1 = crsMat1.matrixToCRS(mat1);
   crsMat2 = crsMat2.matrixToCRS(mat2);
-  double start_seq = omp_get_wtime();
+  /*double start_seq = omp_get_wtime();*/
   crsMat3 = crsMat1 * crsMat2;
-  double end_seq = omp_get_wtime();
-  double start_par = omp_get_wtime();
+  /*double end_seq = omp_get_wtime();
+  double start_par = omp_get_wtime();*/
   crsMat4 = crsMat1.crsParallelMult(crsMat2);
-  double end_par = omp_get_wtime();
+  /*double end_par = omp_get_wtime();
   std::cout << "Seq time: " << end_seq - start_seq << "\n";
-  std::cout << "Par time: " << end_par - start_par << "\n";
+  std::cout << "Par time: " << end_par - start_par << "\n";*/
   ASSERT_TRUE(crsMat3 == crsMat4);
 }
 
