@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <omp.h>
 #include <vector>
-#include "./sparse_matrix_crs_omp.h"
+#include "../../../modules/task_1/sokolov_a_sparse_matrix_string_crs/sparse_matrix_string_crs.h"
 
 // #define DEBUG
 // #define DEBUG_LAST
