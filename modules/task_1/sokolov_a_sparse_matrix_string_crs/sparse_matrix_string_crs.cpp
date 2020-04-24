@@ -1,14 +1,13 @@
 // Copyright 2020 Sokolov Andrey
-#include <omp.h>
-#include "./sparse_matrix_crs_omp.h"
-
+#include <vector>
+#include "../../../modules/task_1/sokolov_a_sparse_matrix_string_crs/sparse_matrix_string_crs.h"
 
 SparseMatrix::SparseMatrix(const Matrix& matrix) {
     rows = matrix.size();
     cols = matrix[0].size();
 
-    size_t elemsInRow{0};
-    constexpr double tolerance{1e-6};
+    size_t elemsInRow{ 0 };
+    constexpr double tolerance{ 1e-6 };
     rowIndex = {};
     colIndex = {};
     value = {};
@@ -17,8 +16,8 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
     value.reserve(rows + 1);
     rowIndex.push_back(0);
 
-    for (int idx{0}; idx < rows; ++idx) {
-        for (int jdx{0}; jdx < cols; ++jdx) {
+    for (int idx{ 0 }; idx < rows; ++idx) {
+        for (int jdx{ 0 }; jdx < cols; ++jdx) {
             if (std::fabs(matrix[idx][jdx]) >= tolerance) {
                 value.push_back(matrix[idx][jdx]);
                 colIndex.push_back(jdx);
@@ -31,8 +30,8 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
 
 SparseMatrix::SparseMatrix(size_t _rows, size_t _cols,
                            std::vector<double> _value,
-                           std::vector<int> _colIndex,
-                           std::vector<int> _rowIndex) {
+                           std::vector<size_t>    _colIndex,
+                           std::vector<size_t>    _rowIndex) {
     rows = _rows;
     cols = _cols;
     value = _value;
@@ -79,7 +78,7 @@ Matrix SparseMatrix::SparseToMatrix() {
 
     int tmpCols{0};
     for (int idx{0}; idx < rows; ++idx) {
-        int tmpRows{rowIndex[idx+1] - rowIndex[idx]};
+        size_t tmpRows{rowIndex[idx+1] - rowIndex[idx]};
         while (tmpRows != 0) {
             result[idx][colIndex[tmpCols]] = value[tmpCols];
             tmpRows--;
@@ -93,24 +92,18 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
     SparseMatrix result{};
     result.rows = matrixA.rows;
     result.cols = matrixB.cols;
-    result.rowIndex = {};
-    result.colIndex = {};
-    result.value = {};
-    result.rowIndex.reserve(result.rows + 1);
-    result.colIndex.reserve(result.rows * result.cols);
-    result.value.reserve(result.rows * result.cols);
     result.rowIndex.push_back(0);
-    std::vector<double> tmpResultRow(matrixA.rows, 0);
+    std::vector<double> tmpResultRow(matrixB.cols, 0);
 
-    for (int idx{ 0 }; idx < matrixA.rows; ++idx) {
-        for (int jdx{ matrixA.rowIndex[idx] }; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
-            int tmpCol{ matrixA.colIndex[jdx] };
-
-            for (int kdx{ matrixB.rowIndex[tmpCol] }; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
+    for (size_t idx{0}; idx < matrixA.rows; ++idx) {
+        for (size_t jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
+            size_t tmpCol {matrixA.colIndex[jdx]};
+            
+            for (size_t kdx{matrixB.rowIndex[tmpCol]}; (kdx < matrixB.rowIndex[tmpCol + 1]); ++kdx) {
                 tmpResultRow[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
             }
         }
-        for (int kdx{ 0 }; kdx < matrixA.rows; ++kdx) {
+        for (size_t kdx{0}; kdx < matrixB.cols; ++kdx) {
             if (tmpResultRow[kdx] != 0) {
                 result.value.push_back(tmpResultRow[kdx]);
                 result.colIndex.push_back(kdx);
@@ -122,74 +115,16 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
     return result;
 }
 
-SparseMatrix SparseMatMulOmp(const SparseMatrix& matrixA, const SparseMatrix& matrixB) {
-    constexpr int numThreads{4};
-    omp_set_num_threads(numThreads);
-
-    SparseMatrix result{};
-    result.rows = matrixA.rows;
-    result.cols = matrixB.cols;
-    result.rowIndex.resize(result.rows + 1);
-    std::vector<int> tmpResultRow(matrixA.rows + 1, 0);
-    std::vector<int>* tmpResultCols = new std::vector<int>[matrixA.rows];
-    std::vector<double>* tmpResultValue = new std::vector<double>[matrixA.rows];
-    int tmpCol {0};
-
-#pragma omp parallel for default(shared) private(tmpCol)
-    for (int idx = 0; idx < matrixA.rows; ++idx) {
-        std::vector<double> tmpResult(matrixA.rows + 1, 0);
-        for (int jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
-            tmpCol = matrixA.colIndex[jdx];
-            for (int kdx{matrixB.rowIndex[tmpCol]}; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
-                tmpResult[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
-            }
-        }
-        for (int kdx{0}; kdx < matrixA.rows; ++kdx) {
-            if (tmpResult[kdx] != 0.0) {
-                tmpResultValue[idx].push_back(tmpResult[kdx]);
-                tmpResultCols[idx].push_back(kdx);
-                tmpResultRow[idx]++;
-            }
-        }
-    }
-
-    int count{0};
-    int tmpRows{0};
-
-    for (int idx{0}; idx < result.rows; ++idx) {
-        int tmp = tmpResultRow[idx];
-        result.rowIndex[idx] = tmpRows;
-        tmpRows += tmp;
-    }
-
-    result.rowIndex[matrixA.rows] = tmpRows;
-    result.colIndex.resize(tmpRows);
-    result.value.resize(tmpRows);
-    for (int idx{0}; idx < result.rows; ++idx) {
-        size_t size {tmpResultCols[idx].size()};
-        if (size != 0) {
-            memcpy(&result.colIndex[count], &tmpResultCols[idx][0], size * sizeof(int));
-            memcpy(&result.value[count], &tmpResultValue[idx][0], size * sizeof(double));
-            count += size;
-        }
-    }
-    delete[]tmpResultCols;
-    delete[]tmpResultValue;
-
-    return result;
-}
-
 Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB) {
-    size_t rowsA = matrixA.size();
-    size_t colsA = matrixA[0].size();
-    size_t colsB = matrixB[0].size();
+    Matrix result{matrixA.size()};
+    for (size_t idx{0}; idx < result.size(); ++idx) {
+        result[idx].resize(matrixB[0].size());
+    }
 
-    Matrix result(rowsA, std::vector<double>(colsB));
-
-    for (size_t idx{0}; idx < rowsA; ++idx) {
-        for (size_t jdx{0}; jdx < colsB; ++jdx) {
+    for (size_t idx{0}; idx < matrixA.size(); ++idx) {
+        for (size_t jdx{0}; jdx < matrixB[0].size(); ++jdx) {
             result[idx][jdx] = 0;
-            for (size_t kdx{0}; kdx < colsA; ++kdx) {
+            for (size_t kdx{0}; kdx < matrixA[0].size(); ++kdx) {
                 result[idx][jdx] += matrixA[idx][kdx] * matrixB[kdx][jdx];
             }
         }
@@ -200,19 +135,20 @@ Matrix MatMul(const Matrix& matrixA, const Matrix& matrixB) {
 // coeff from 0 to 100
 Matrix generateMatrix(const size_t& rows, const size_t& cols, const size_t& coeff) {
     Matrix result{};
-    result.resize(rows, std::vector<double>(cols));
-
+    result.resize(rows);
+    for (size_t idx{0}; idx < rows; ++idx) {
+        result[idx].resize(cols);
+    }
     std::random_device rd{};
     std::mt19937 mt {rd()};
     std::uniform_real_distribution<double> disValue{ 0.0, 10.0 };
     std::uniform_int_distribution<size_t> disProbability {0, 100};
 
-    for (size_t idx{0U}; idx < rows; ++idx) {
-        for (size_t jdx{0U}; jdx < cols; ++jdx) {
+    for (size_t idx{ 0 }; idx < rows; ++idx) {
+        for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
+            result[idx][jdx] = 0.0;
             if (disProbability(mt) <= coeff) {
                 result[idx][jdx] = disValue(mt);
-            } else {
-                result[idx][jdx] = 0.0;
             }
         }
     }
@@ -236,11 +172,11 @@ void SparseMatrix::printDefault() {
 }
 
 void SparseMatrix::printMatrix() {
-    int tmpValue{ 0 };
-    int tmpRows{ 0 };
-    int tmpCols{ 0 };
-    for (int idx{ 0 }; idx < rows; ++idx) {
-        for (int jdx{ 0 }; jdx < cols; ++jdx) {
+    size_t tmpValue{ 0 };
+    size_t tmpRows{ 0 };
+    size_t tmpCols{ 0 };
+    for (size_t idx{ 0 }; idx < rows; ++idx) {
+        for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
             if (tmpRows == rowIndex[idx + 1]) {
                 std::cout << "0   ";
             } else if (jdx == colIndex[tmpCols]) {
