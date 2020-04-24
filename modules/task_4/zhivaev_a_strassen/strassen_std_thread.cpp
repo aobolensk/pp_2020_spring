@@ -1,6 +1,6 @@
 // Copyright 2020 Zhivaev Artem
 
-#include "../../../modules/task_4/zhivaev_a_strassen_std_thread/strassen_std_thread.h"
+#include "../../../modules/task_4/zhivaev_a_strassen/strassen_std_thread.h"
 
 #include <bitset>
 #include <stdexcept>
