@@ -98,7 +98,6 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
     for (size_t idx{0}; idx < matrixA.rows; ++idx) {
         for (size_t jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
             size_t tmpCol {matrixA.colIndex[jdx]};
-            
             for (size_t kdx{matrixB.rowIndex[tmpCol]}; (kdx < matrixB.rowIndex[tmpCol + 1]); ++kdx) {
                 tmpResultRow[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
             }
