@@ -237,7 +237,7 @@ void print(std::vector<std::vector<std::complex<double>>> matrix) {
       if (matrix[i][j] != std::complex<double>(0.0, 0.0))
         std::cout << matrix[i][j] << " ";
       else
-        std::cout << "     " << " ";
+        std::cout << "      ";
     std::cout << "\n";
   }
 }
