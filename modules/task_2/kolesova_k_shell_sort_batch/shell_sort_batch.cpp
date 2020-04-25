@@ -22,7 +22,7 @@ std::vector<int> randVec(int size) {
   return vec;
 }
 
-void compexh(const int& a, const int& b) {
+void compexh(int& a, int& b) {
   if (b < a)
     std::swap(a, b);
 }
