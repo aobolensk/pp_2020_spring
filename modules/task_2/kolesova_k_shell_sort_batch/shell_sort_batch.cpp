@@ -1,11 +1,12 @@
 // Copyright 2020 Kolesova Kristina
+#include <omp.h>
 #include <vector>
 #include <string>
 #include <random>
 #include <ctime>
 #include <algorithm>
 #include <iterator>
-#include <omp.h>
+#include <utility>
 #include "../../../modules/task_2/kolesova_k_shell_sort_batch/shell_sort_batch.h"
 
 std::vector<int> randVec(int size) {
@@ -21,12 +22,12 @@ std::vector<int> randVec(int size) {
   return vec;
 }
 
-void compexh(int& a, int& b) {
+void compexh(const int& a, const int& b) {
   if (b < a)
     std::swap(a, b);
 }
 
-std::vector<int> sortShell(std::vector<int>& vec, int l, int r) {
+std::vector<int> sortShell(const std::vector<int>& vec, int l, int r) {
   int size, step;
   int i, j;
   std::vector<int> sortVec(vec);
@@ -47,7 +48,7 @@ std::vector<int> sortShell(std::vector<int>& vec, int l, int r) {
   return sortVec;
 }
 
-std::vector<int> shuffle(std::vector<int>& vec, int l, int r) {
+std::vector<int> shuffle(const std::vector<int>& vec, int l, int r) {
   int half = (l + r) / 2;
   int size = vec.size();
   std::vector<int> tmp(size);
@@ -60,8 +61,7 @@ std::vector<int> shuffle(std::vector<int>& vec, int l, int r) {
       tmp[k] = vec[i];
       i++;
       k++;
-    }
-    else {
+    } else {
       tmp[k] = vec[j];
       j++;
       k++;
@@ -87,9 +87,9 @@ std::vector<int> shuffle(std::vector<int>& vec, int l, int r) {
   return tmp;
 }
 
-std::vector<int> unshuffle (std::vector<int>& vec, int l, int r) {
+std::vector<int> unshuffle (const std::vector<int>& vec, int l, int r) {
   int half = (l + r) / 2;
-  int size = vec.size();
+  int size = vec.size ();
   std::vector<int> tmp(size);
   int i, j;
   i = l;
@@ -100,7 +100,7 @@ std::vector<int> unshuffle (std::vector<int>& vec, int l, int r) {
   return tmp;
 }
 
-std::vector<int> oneShellBetchSort(std::vector<int>& vec) {
+std::vector<int> oneShellBetchSort(const std::vector<int>& vec) {
   std::vector<int> tmp(vec);
   int size = vec.size();
   int r = size / 2;
@@ -109,12 +109,11 @@ std::vector<int> oneShellBetchSort(std::vector<int>& vec) {
   tmp = sortShell(tmp, 0, r-1);
   tmp = sortShell(tmp, r, size-1);
   tmp = shuffle(tmp, 0, size-1); 
-
   return tmp;
 }
 
 std::vector<int> shellBetchSort_omp (std::vector<int>& vec) {
-  std::vector<int> tmp(vec);
+  std::vector<int> tmp (vec);
   std::vector<int> tmp1, tmp2;
   int size = vec.size();
   int r = size / 2;
