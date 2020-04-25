@@ -1,4 +1,4 @@
-
+// Copyright 2020 Kolesova Kristina
 
 #include <gtest/gtest.h>
 #include <vector>

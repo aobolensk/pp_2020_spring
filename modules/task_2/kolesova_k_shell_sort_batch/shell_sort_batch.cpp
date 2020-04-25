@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <omp.h>
-#include "../../../modules/task_1/kolesova_k_shell_sort_batch/shell_sort_batch.h"
+#include "../../../modules/task_2/kolesova_k_shell_sort_batch/shell_sort_batch.h"
 
 std::vector<int> randVec(int size) {
   std::mt19937 gen(time(0));
