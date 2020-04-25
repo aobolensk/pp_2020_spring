@@ -1,7 +1,7 @@
 // Copyright 2020 Koltyushkina Yanina
 
-#ifndef MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_RADIX_SORT_H_
-#define MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_RADIX_SORT_H_
+#ifndef MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_OMP_RADIX_SORT_H_
+#define MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_OMP_RADIX_SORT_H_
 
 #include <omp.h>
 #include <vector>
@@ -10,7 +10,7 @@
 #include <iostream>
 
 class task {
-public:
+ public:
   task* ref;
   int count_depends;
   virtual void do_task() = 0;
@@ -21,7 +21,7 @@ class sortTask : public task {
   double * mas;
   int index, len;
   std::vector<double> ans;
-public:
+ public:
   sortTask(double* mas, int index, int len);
   void do_task() override;
 };
@@ -29,7 +29,7 @@ public:
 class mergeTask : public task {
   double * inmas;
   int index1, len1, index2, len2;
-public:
+ public:
   mergeTask(double * inmas, int index1, int len1, int index2, int len2);
   void do_task() override;
 };
@@ -41,4 +41,4 @@ void RadixSortPart(double *inmas, double**outmas, int len, int byteN);
 void RadixSortAll(double**inmas, int len);
 void RadixSortAllParallel(double ** inmas, int len);
 
-#endif  // MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_RADIX_SORT_H_
+#endif  // MODULES_TASK_2_KOLTYUSHKINA_YA_RADIX_SORT_FOR_DOUBLE_OMP_RADIX_SORT_H_

@@ -1,6 +1,7 @@
 // Copyright 2020 Koltyushkina Yanina
 
-#include "./radix_sort.h"
+// #include "./radix_sort.h"
+#include "../../../modules/task_2/koltyushkina_ya_radix_sort_for_double_omp/radix_sort.h"
 #include <omp.h>
 #include <vector>
 #include <ctime>
@@ -31,8 +32,7 @@ void mergeTask::do_task() {
   while (ind1 < len1 + index1 && ind2 < len2 + index2) {
     if (inmas[ind1] < inmas[ind2]) {
       tmp[t++] = inmas[ind1++];
-    }
-    else {
+    } else {
       tmp[t++] = inmas[ind2++];
     }
   }
@@ -122,8 +122,7 @@ void get_tree_task(double* inmas, int l, int r, task* prev_task,
     sortTask* stask = new sortTask(inmas, begin, len);
     stask->ref = prev_task;
     task_mas[r] = stask;
-  }
-  else {
+  } else {
     int mid = (l + r) / 2 + 1;
     int indleft = 0;
     if (l)
