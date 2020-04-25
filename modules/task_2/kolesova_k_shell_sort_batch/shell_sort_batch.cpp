@@ -22,11 +22,6 @@ std::vector<int> randVec(int size) {
   return vec;
 }
 
-void compexh(int& a, int& b) {
-  if (b < a)
-    std::swap(a, b);
-}
-
 std::vector<int> sortShell(const std::vector<int>& vec, int l, int r) {
   int size, step;
   int i, j;
