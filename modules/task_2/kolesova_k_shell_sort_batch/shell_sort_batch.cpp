@@ -87,9 +87,9 @@ std::vector<int> shuffle(const std::vector<int>& vec, int l, int r) {
   return tmp;
 }
 
-std::vector<int> unshuffle (const std::vector<int>& vec, int l, int r) {
+std::vector<int> unshuffle(const std::vector<int>& vec, int l, int r) {
   int half = (l + r) / 2;
-  int size = vec.size ();
+  int size = vec.size();
   std::vector<int> tmp(size);
   int i, j;
   i = l;
@@ -108,12 +108,12 @@ std::vector<int> oneShellBetchSort(const std::vector<int>& vec) {
   tmp = unshuffle(tmp, 0, size-1);
   tmp = sortShell(tmp, 0, r-1);
   tmp = sortShell(tmp, r, size-1);
-  tmp = shuffle(tmp, 0, size-1); 
+  tmp = shuffle(tmp, 0, size-1);
   return tmp;
 }
 
-std::vector<int> shellBetchSort_omp (std::vector<int>& vec) {
-  std::vector<int> tmp (vec);
+std::vector<int> shellBetchSort_omp(const std::vector<int>& vec) {
+  std::vector<int> tmp(vec);
   std::vector<int> tmp1, tmp2;
   int size = vec.size();
   int r = size / 2;
