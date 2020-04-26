@@ -10,9 +10,16 @@
 
 
 class reduce_par {
+    std::vector<std::pair<int, int>> points_;
+    std::vector<std::pair<int, int>> res_;
+
  public:
     std::pair<int, int> res;
     double min_cos;
+
+    reduce_par(std::vector<std::pair<int, int>> points, std::vector<std::pair<int, int>> res)
+        : points_(points), res_(res), res(std::make_pair(0, 0)), min_cos(1) {}
+    reduce_par(reduce_par& r, tbb::split) : points_(r.points_), res_(r.res_), res(std::make_pair(0, 0)), min_cos(1) {}
 
     void operator()(const tbb::blocked_range<size_t>& r) {
         std::pair<int, int> local_res = res;
@@ -35,8 +42,6 @@ class reduce_par {
         min_cos = local_min_cos;
     }
 
-    reduce_par(reduce_par& r, tbb::split) : points_(r.points_), res_(r.res_), res(std::make_pair(0, 0)), min_cos(1) {}
-
     void join(const reduce_par& r) {
         if (r.min_cos < min_cos) {
             min_cos = r.min_cos;
@@ -46,12 +51,6 @@ class reduce_par {
             res = r.res;
         }
     }
-
-    reduce_par(std::vector<std::pair<int, int>> points, std::vector<std::pair<int, int>> res)
-         : points_(points), res_(res), res(std::make_pair(0, 0)), min_cos(1) {}
-
- private:
-    std::vector<std::pair<int, int>> points_, res_;
 };
 
 
