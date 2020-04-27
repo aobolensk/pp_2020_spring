@@ -33,7 +33,7 @@ TEST(Radix_Batcher_Sort_OMP, Cannot_Sort_Negative_Elements) {
     int n = 5;
     int* array = new int[n];
     for (int i = 0; i < n; i++) {
-        array[i] = -i;
+        array[i] = i;
     }
     ASSERT_NO_THROW(radix_batcher_sort(array, n, THREADS));
 }
