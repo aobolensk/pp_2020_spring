@@ -9,6 +9,7 @@
 #include <utility>
 #include <random>
 #include <ctime>
+#include <iostream>
 
 std::vector<int> getRandGraph(int size) {
     if (size < 1)
@@ -79,7 +80,6 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
         }
     } while (min_point < max_weight);
 
-
     way.push_back(end + 1);
     int weight = points_len[end];
 
@@ -90,13 +90,13 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
                 for (int i = v.begin(); i < v.end(); i++) {
                     if (graph[end * points_count + i] > 0) {
                         temp = weight - graph[end * points_count + i];
+                        mutex.lock();
                         if (points_len[i] == temp) {
-                            mutex.lock();
                             weight = temp;
                             end = i;
                             way.push_back(i + 1);
-                            mutex.unlock();
                         }
+                        mutex.unlock();
                     }
                 }
             });

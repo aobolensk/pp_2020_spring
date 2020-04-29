@@ -4,8 +4,8 @@
 #include "./deikstra_algorithm.h"
 
 TEST(Deikstra_Algorithm_TBB, Test_On_Large_Graph) {
-    std::vector<int> act = getRandGraph(10);
-    ASSERT_NO_THROW(getMinRange(act, 1, 10));
+    std::vector<int> act = getRandGraph(1000);
+    ASSERT_NO_THROW(getMinRange(act, 1, 1000));
 }
 
 TEST(Deikstra_Algorithm_TBB, Test_On_Six_Points_Graph) {
@@ -22,11 +22,11 @@ TEST(Deikstra_Algorithm_TBB, Test_On_Six_Points_Graph) {
 }
 
 TEST(Deikstra_Algorithm_TBB, Test_On_Three_Points) {
-    std::vector<int> g = {0, 2, 3,
+    std::vector<int> g = {0, 2, 4,
                           2, 0, 1,
-                          3, 1, 0};
+                          4, 1, 0};
 
-    std::vector<int> res = {3, 1};
+    std::vector<int> res = {3, 2, 1};
     EXPECT_EQ(getMinRange(g, 1, 3), res);
 }
 
@@ -50,7 +50,7 @@ TEST(Deikstra_Algorithm_TBB, Test_Return_0_If_Equal_Start_And_End) {
     EXPECT_EQ(getMinRange(g, 3, 3), std::vector<int>(1, 0));
 }
 
-TEST(DISABLED_Deikstra_Algorithm_TBB, Test_On_Six_Points_Graph_Another_Way) {
+TEST(Deikstra_Algorithm_TBB, Test_On_Six_Points_Graph_Another_Way) {
     std::vector<int> g = {0, 7, 9, 0, 0, 14,
                           7, 0, 10, 15, 0, 0,
                           9, 10, 0, 11, 0, 2,
