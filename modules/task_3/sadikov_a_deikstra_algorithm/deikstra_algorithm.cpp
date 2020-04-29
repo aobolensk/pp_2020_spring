@@ -38,7 +38,6 @@ std::vector<int> getMinRange(const std::vector<int>& graph, int start, int end) 
     int max_weight = INT8_MAX;
     int min, min_point, temp;
     tbb::mutex mutex;
-    tbb::task_scheduler_init::automatic;
     std::vector<int> points_len(points_count, max_weight);
     std::vector<int> way;
     std::vector<bool> visisted(points_count, false);
