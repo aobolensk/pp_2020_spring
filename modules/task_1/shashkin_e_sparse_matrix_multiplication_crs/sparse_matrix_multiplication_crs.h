@@ -26,7 +26,7 @@ class SparseComplexMatrix {
   SparseComplexMatrix operator*(const SparseComplexMatrix& mat) const&;
   SparseComplexMatrix(const SparseComplexMatrix& sparse_complex_matrix);
   SparseComplexMatrix matrixToCRS(std::vector<std::vector<std::complex<double>>> matrix);
-  SparseComplexMatrix transpose();
+  SparseComplexMatrix transposeCRS();
   void printCRS();
 };
 
