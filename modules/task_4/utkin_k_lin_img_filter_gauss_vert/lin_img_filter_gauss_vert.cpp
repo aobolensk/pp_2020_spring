@@ -122,6 +122,7 @@ std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int
         }
     } else {
         std::thread thr(threadFunction, std::ref(pic), &newPic, n, 0, m);
+        thr.join();
     }
     return newPic;
 }
