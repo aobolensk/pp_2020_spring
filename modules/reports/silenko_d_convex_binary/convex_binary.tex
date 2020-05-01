@@ -87,15 +87,15 @@
 \par \textbf{Компонентой} на изображении будем считать связанную (рассматриваем 4х связанность, т.е. проверяем окрестность пикселя только по горизонтали и вертикали) фигуру, принадлежащую объекту (состоящую из единиц). 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{1. Binary Image}
-  \caption{Бинарное изображение с несколькими компонентами связанности}\label{fig:1. Binary Image}
+  \includegraphics[width=0.8\textwidth]{1 Binary Image}
+  \caption{Бинарное изображение с несколькими компонентами связанности}\label{fig:1 Binary Image}
 \end{figure}
 \par \textbf{Выпуклая оболочка} множества точек — такое выпуклое множество точек, что все точки фигуры также лежат в нем. Необходимо отметить, что строить мы будем не просто выпуклую оболочку, а минимальную выпуклую оболочку.
 \par \textbf{Минимальная выпуклая} оболочка множества точек — это минимальная по площади выпуклая оболочка.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{2. Convex Hull}
-  \caption{Выпуклая оболочка и минимальная выпуклая оболочка}\label{fig:2. Convex Hull}
+  \includegraphics[width=0.4\textwidth]{2 Convex Hull}
+  \caption{Выпуклая оболочка и минимальная выпуклая оболочка}\label{fig:2 Convex Hull}
 \end{figure}
 \par По сути, минимальная выпуклая оболочка это знакомый всем со школы выпуклый многоугольник, состоящий из точек входного множества так, что все остальные точки этого множества лежат внутри него.
  
@@ -121,8 +121,8 @@
 \par Идея алгоритма основана на использовании уголка (маски) ABC. Проход по изображению (массиву) с ее помощью осуществляется слева направо и сверху вниз. При этом мы считаем, что за границей изображения объектов нет.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{3. ABC}
-  \caption{Маска ABC и ее возможные положения}\label{fig:3. ABC}
+  \includegraphics[width=0.6\textwidth]{3 ABC}
+  \caption{Маска ABC и ее возможные положения}\label{fig:3 ABC}
 \end{figure}
 \par Рассмотрим подробнее все позиции маски:
 \begin{itemize}
@@ -134,8 +134,8 @@
 \end{itemize}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.4\textwidth]{4. Get Component}
-  \caption{Результат выделения компонент}\label{fig:4. Get Component}
+  \includegraphics[width=0.4\textwidth]{4 Get Component}
+  \caption{Результат выделения компонент}\label{fig:4 Get Component}
 \end{figure}
 \par Как видно из рисунка 4, компоненты пронумерованы непоследовательно, но для нас это и не важно. Главное, чтобы мы могли их отличать.
 
@@ -144,8 +144,8 @@
 \par Среди точек  $a_1$, ...,  $a_n$ выберем самую нижнюю (по координате y) левую (по координате x) точку $b_1$, она точно будет являться вершиной выпуклой оболочки. Теперь для каждой текущей точки $b_i$ (1 $\leq$ i $\leq$ n) ищется такая точка $b_i+_1$ (из оставшихся + самая первая), в которой будет образовываться наибольший угол между прямыми $b_i-_1$ $b_i$ и $b_i$ $b_i+_1$. Уточним, что при поиске второй точки в качестве $b_0$ берется точка с координатами ($x_1$ – 2, $y_1$) (к примеру). Найденная таким образом точка $b_i+_1$ будет следующей вершиной выпуклой оболочки. При этом нет необходимости искать сам угол. Достаточно вычислить его косинус (через скалярное произведения, используя координаты точек). При этом ищется минимальный косинус (чем он меньше, чем больше угол). Нахождение вершин продолжается до тех пор, пока $b_i+_1 \neq b_1$. Если для нескольких точек косинус одинаковый (они лежат на одной прямой), то выбирается наиболее удаленная от текущей. 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.4\textwidth]{5. Jarvis}
-  \caption{Построение выпуклой оболочки проходом Джарвиса}\label{fig:5. Jarvis}
+  \includegraphics[width=0.4\textwidth]{5 Jarvis}
+  \caption{Построение выпуклой оболочки проходом Джарвиса}\label{fig:5 Jarvis}
 \end{figure}
 
 \subsection*{ 3.3 Построение внутренней выпуклой оболочки}
@@ -154,13 +154,13 @@
 \par Для этого при проверке ненулевых пикселей изображения заводятся два вектора: корректности и запрета. Вектор корректности будет проверять, есть ли компонента, которой принадлежит текущий пиксель во внешней выпуклой оболочке, а вектор запрета – брали ли уже из этой компоненты пиксели. Итак, для каждого пикселя проверяется есть ли его компонента в векторе корректности. Если нет, то пиксель просто пропускается. Если есть и при этом его компоненты нет в векторе запрета, то пиксель добавляется в внутреннюю выпуклую оболочку, а его компонента – в вектор запрета. Если же пиксель есть и в векторе корректности и в векторе запрета, то он также пропускается.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{6. Outside}
-  \caption{Внешняя выпуклая оболочка}\label{fig:6. Outside}
+  \includegraphics[width=0.6\textwidth]{6 Outside}
+  \caption{Внешняя выпуклая оболочка}\label{fig:6 Outside}
 \end{figure}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.6\textwidth]{7. Inside}
-  \caption{Соответствующая ей внутренняя выпуклая оболочка}\label{fig:7. Inside}
+  \includegraphics[width=0.6\textwidth]{7 Inside}
+  \caption{Соответствующая ей внутренняя выпуклая оболочка}\label{fig:7 Inside}
 \end{figure}
 \par На рисунках 6 и 7 можно увидеть результат выделения как внешней, так и внутренней выпуклых оболочек
 
@@ -261,16 +261,16 @@ https://ru.wikipedia.org/wiki/Алгоритм\_Джарвиса
 \section*{Приложение}
 \end{center}
 \addcontentsline{toc}{section}{Приложение}
-\lstinputlisting[language=C++]{../../task_1/silenko_d_convex_binary/convex_binary.h}
-\lstinputlisting[language=C++]{../../task_1/silenko_d_convex_binary/convex_binary.cpp}
-\lstinputlisting[language=C++]{../../task_1/silenko_d_convex_binary/main.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_1/silenko_d_convex_binary/convex_binary.h}
+\lstinputlisting[language=C++]{../../../modules/task_1/silenko_d_convex_binary/convex_binary.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_1/silenko_d_convex_binary/main.cpp}
 
-\lstinputlisting[language=C++]{../../task_2/silenko_d_convex_binary_omp/convex_binary_omp.h}
-\lstinputlisting[language=C++]{../../task_2/silenko_d_convex_binary_omp/convex_binary_omp.cpp}
-\lstinputlisting[language=C++]{../../task_2/silenko_d_convex_binary_omp/main.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_2/silenko_d_convex_binary_omp/convex_binary_omp.h}
+\lstinputlisting[language=C++]{../../../modules/task_2/silenko_d_convex_binary_omp/convex_binary_omp.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_2/silenko_d_convex_binary_omp/main.cpp}
 
-\lstinputlisting[language=C++]{../../task_3/silenko_d_convex_binary_tbb/convex_binary_tbb.h}
-\lstinputlisting[language=C++]{../../task_3/silenko_d_convex_binary_tbb/convex_binary_tbb.cpp}
-\lstinputlisting[language=C++]{../../task_3/silenko_d_convex_binary_tbb/main.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_3/silenko_d_convex_binary_tbb/convex_binary_tbb.h}
+\lstinputlisting[language=C++]{../../../modules/task_3/silenko_d_convex_binary_tbb/convex_binary_tbb.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_3/silenko_d_convex_binary_tbb/main.cpp}
 
 \end{document}
