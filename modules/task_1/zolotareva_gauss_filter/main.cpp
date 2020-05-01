@@ -30,7 +30,6 @@ TEST(sequential_gauss_filter, filtering_is_correct) {
     unsigned char dst[9] = { 0, 0, 0, 0, 20, 0, 0, 0, 0 };
     Image in = Image(3, 3, src);
     Image out = Image(3, 3, dst);
-    Image wtf = in.GaussFilter();
     EXPECT_EQ((in.GaussFilter() == out), true);
 }
 
