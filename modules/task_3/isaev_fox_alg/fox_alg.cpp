@@ -5,6 +5,8 @@
 #include "../../../modules/task_3/isaev_fox_alg/fox_alg.h"
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/blocked_range2d.h>
+#include <tbb/task_scheduler_init.h>
 #include <random>
 #include <cmath>
 #include <vector>
@@ -85,6 +87,78 @@ bool matrixComparison(const Matrix& mat1, const Matrix& mat2) {
             }
     }
     return isequal;
+}
+
+
+Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2) {
+    if (!isSquared(mat1) || !isSquared(mat2) || mat1.size() != mat2.size())
+        throw std::logic_error("Matrix should be squared");
+    
+    tbb::task_scheduler_init sheduler;
+    size_t n_threads = sheduler.default_num_threads();
+
+    size_t n = mat1.size();
+    size_t q = std::sqrt(n_threads);
+    size_t block_size = n / q;
+
+    auto mat1_clone = mat1;
+    auto mat2_clone = mat2;
+
+    auto old_n = n;
+    while (n%q != 0) {
+        mat1_clone.push_back(std::vector<double>(n, 0));
+        mat2_clone.push_back(std::vector<double>(n, 0));
+        std::for_each(mat1_clone.begin(), mat1_clone.end(), [](std::vector<double>& a){a.push_back(0);});
+        std::for_each(mat2_clone.begin(), mat2_clone.end(), [](std::vector<double>& a){a.push_back(0);});
+        n++;
+        block_size = n / q;
+    }
+
+    Matrix res(n, std::vector<double>(n));
+
+    auto body = [&](const tbb::blocked_range2d<size_t>& it) {
+        auto thread_i = it.rows().begin() / block_size;
+        auto thread_j = it.cols().begin() / block_size;
+
+        Matrix A(block_size), B(block_size), C(block_size, std::vector<double>(block_size, 0));
+
+        for (size_t step = 0; step < q; ++step) {
+            auto k_bar = (thread_i+step) % q;
+            for (size_t k = 0; k < block_size; ++k) {
+                A[k] = std::vector<double>(mat1_clone[thread_i * block_size+k].begin()+(k_bar*block_size),
+                                          mat1_clone[thread_i * block_size+k].begin()+(k_bar*block_size+block_size));
+                B[k] = std::vector<double>(mat2_clone[k_bar * block_size+k].begin()+(thread_j*block_size),
+                                           mat2_clone[k_bar * block_size+k].begin()+(thread_j*block_size+block_size));
+            }
+            for (size_t i = 0; i < block_size; ++i) {
+                for (size_t j = 0; j < block_size; ++j) {
+                    for (size_t kk = 0; kk < block_size; ++kk)
+                    C[i][j] += A[i][kk]*B[kk][j];
+                }
+            }
+        }
+        for (size_t i = 0; i < block_size; ++i) {
+            for (size_t j = 0; j < block_size; ++j) {
+                auto res_i = i+thread_i*block_size;
+                auto res_j = j+thread_j*block_size;
+                res[res_i][res_j] = C[i][j];
+            }
+        }
+    };
+
+    auto resize_if_changed = [&] (tbb::blocked_range<size_t>& r) { 
+        if (n != old_n) {
+            for (int i = 0; i < static_cast<int>(old_n); ++i) {
+                res[i].resize(old_n);
+            }
+        }
+    };
+    tbb::parallel_for(tbb::blocked_range2d<size_t>(0, n, block_size, 0, n, block_size), body);
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, n), resize_if_changed);
+    if (old_n != n)
+        res.resize(old_n);
+
+    return res;
 }
 
 #endif  // MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
