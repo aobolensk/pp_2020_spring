@@ -76,16 +76,14 @@ std::vector<std::vector<int>> addBorders(const std::vector<std::vector<int>>& pi
 
 class gFilter {
  private:
-    std::vector<std::vector<int>>& in;
+    const std::vector<std::vector<int>>& in;
     int col;
     int row;
     std::vector<std::vector<int>>* out;
 
  public:
-    gFilter(std::vector<std::vector<int>>& in, int col, int row, std::vector<std::vector<int>>* out) :
-        in(in), col(col), row(row), out(out) {
-        this->in = addBorders(this->in, this->col, this->row);
-    }
+    gFilter(const std::vector<std::vector<int>>& in, int col, int row, std::vector<std::vector<int>>* out) :
+        in(in), col(col), row(row), out(out) {}
     void operator() (const tbb::blocked_range<int>& cols) const {
         for (int i = cols.begin(); i != cols.end(); ++i) {
             for (int j = 0; j < row; ++j) {
@@ -111,7 +109,7 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
         throw "-1";
     }
 
-    std::vector<std::vector<int>> in(pic);
+    const std::vector<std::vector<int>>& in(addBorders(pic, col, row));
     std::vector<std::vector<int>> out(pic);
 
     gFilter gf(in, col, row, &out);

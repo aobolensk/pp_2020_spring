@@ -122,5 +122,6 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
         std::thread thr(threadFunction, std::cref(in), &out, col, 0, col, row);
         thr.join();
     }
+
     return out;
 }
