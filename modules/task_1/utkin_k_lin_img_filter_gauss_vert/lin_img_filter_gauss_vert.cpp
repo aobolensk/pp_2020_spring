@@ -82,20 +82,20 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
 
     std::vector<std::vector<int>> newPic(col * row, std::vector<int>(3));
 
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j < col; ++j) {
+    for (int i = 0; i < col; ++i) {
+        for (int j = 0; j < row; ++j) {
             for (int k = 0; k < 3; ++k) {
                 for (int l = 0; l < 9; ++l) {
-                    newPic[i * col + j][k] =
-                        (tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2 + 1)][k] * kernel[0] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2)][k] * kernel[1] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2 - 1)][k] * kernel[2] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) - 1][k] * kernel[3] +
-                         tmp[(i + 1) * (col + 2) + (j + 1)][k] * kernel[4] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) + 1][k] * kernel[5] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2 - 1)][k] * kernel[6] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2)][k] * kernel[7] +
-                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2 + 1)][k] * kernel[8]) / divKernel;
+                    newPic[j * col + i][k] =
+                        (tmp[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
+                         tmp[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
+                         tmp[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
                 }
             }
         }
