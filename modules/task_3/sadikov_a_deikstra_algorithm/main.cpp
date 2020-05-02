@@ -5,9 +5,9 @@
 #include <ctime>
 #include "./deikstra_algorithm.h"
 
-TEST(Deikstra_Algorithm_TBB, Test_On_Large_Graph) {
-    std::vector<int> act = getRandGraph(100);
-    std::vector<int> res = getMinRange(act, 1, 20);
+TEST(DISABLED_Deikstra_Algorithm_TBB, Test_On_Large_Graph) {
+    std::vector<int> act = getRandGraph(10);
+    std::vector<int> res = getMinRange(act, 1, 9);
     ASSERT_EQ(1, 1);
 }
 
@@ -46,9 +46,9 @@ TEST(Deikstra_Algorithm_TBB, Test_On_Wrong_Arguments) {
 }
 
 TEST(Deikstra_Algorithm_TBB, Test_Return_0_If_Equal_Start_And_End) {
-    std::vector<int> g = {0, 2, 3,
+    std::vector<int> g = {0, 2, 4,
                           2, 0, 1,
-                          3, 1, 0};
+                          4, 1, 0};
 
     EXPECT_EQ(getMinRange(g, 3, 3), std::vector<int>(1, 0));
 }
