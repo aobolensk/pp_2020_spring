@@ -133,7 +133,7 @@ void ParallelProcessing::operator()(const tbb::blocked_range<int> &r) const {
     }
 }
 
-Image gaussianFilter(const Image &a) {
+Image pattalelContur(const Image &a) {
     Image res(a.cols /*+ 2*/, a.rows /*+ 2*/); // ??
 
     ParallelProcessing pp(a, &res);

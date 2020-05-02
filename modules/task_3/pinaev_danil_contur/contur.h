@@ -36,6 +36,6 @@ class ParallelProcessing {
         res(res) {}
 };
 
-Image gaussianFilter(const Image &in);
+Image pattalelContur(const Image &in);
 
 #endif  // MODULES_TASK_3_PINAEV_DANIL_CONTUR_CONTUR_H_

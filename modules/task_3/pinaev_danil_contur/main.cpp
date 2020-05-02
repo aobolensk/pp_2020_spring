@@ -60,6 +60,16 @@ TEST(Contur_ceq, Can_Get_Contur_Weird_Size_2) {
     ASSERT_NE(img.data, res.data);
 }
 
+TEST(Contur_ceq, Can_Get_Patallel_Contur) {
+    const int width = 640;
+    const int height = 420;
+
+    Image img = generateRandomImage(width, height);
+    Image res = pattalelContur(img);
+
+    ASSERT_NE(img.data, res.data);
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
