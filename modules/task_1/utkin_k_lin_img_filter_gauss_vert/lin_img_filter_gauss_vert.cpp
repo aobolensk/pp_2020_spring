@@ -28,7 +28,7 @@ std::vector<std::vector<int>> getRandomPic(int col, int row) {
     return pic;
 }
 
-std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int col, int row) {
+std::vector<std::vector<int>> addBorders(const std::vector<std::vector<int>>& pic, int col, int row) {
     if (col <= 0 || row <= 0) {
         throw "-1";
     }
@@ -73,12 +73,12 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
     return newPic;
 }
 
-std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int col, int row) {
+std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& pic, int col, int row) {
     if (col <= 0 || row <= 0) {
         throw "-1";
     }
-
-    pic = addBorders(pic, col, row);
+    
+    std::vector<std::vector<int>> tmp(addBorders(pic, col, row));
 
     std::vector<std::vector<int>> newPic(col * row, std::vector<int>(3));
 
@@ -87,15 +87,15 @@ std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int
             for (int k = 0; k < 3; ++k) {
                 for (int l = 0; l < 9; ++l) {
                     newPic[i * col + j][k] =
-                            (pic[(i + 1) * (col + 2) + (j + 1) - (col + 2 + 1)][k] * kernel[0] +
-                             pic[(i + 1) * (col + 2) + (j + 1) - (col + 2)][k] * kernel[1] +
-                             pic[(i + 1) * (col + 2) + (j + 1) - (col + 2 - 1)][k] * kernel[2] +
-                             pic[(i + 1) * (col + 2) + (j + 1) - 1][k] * kernel[3] +
-                             pic[(i + 1) * (col + 2) + (j + 1)][k] * kernel[4] +
-                             pic[(i + 1) * (col + 2) + (j + 1) + 1][k] * kernel[5] +
-                             pic[(i + 1) * (col + 2) + (j + 1) + (col + 2 - 1)][k] * kernel[6] +
-                             pic[(i + 1) * (col + 2) + (j + 1) + (col + 2)][k] * kernel[7] +
-                             pic[(i + 1) * (col + 2) + (j + 1) + (col + 2 + 1)][k] * kernel[8]) / divKernel;
+                        (tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2 + 1)][k] * kernel[0] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2)][k] * kernel[1] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) - (col + 2 - 1)][k] * kernel[2] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) - 1][k] * kernel[3] +
+                         tmp[(i + 1) * (col + 2) + (j + 1)][k] * kernel[4] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) + 1][k] * kernel[5] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2 - 1)][k] * kernel[6] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2)][k] * kernel[7] +
+                         tmp[(i + 1) * (col + 2) + (j + 1) + (col + 2 + 1)][k] * kernel[8]) / divKernel;
                 }
             }
         }
