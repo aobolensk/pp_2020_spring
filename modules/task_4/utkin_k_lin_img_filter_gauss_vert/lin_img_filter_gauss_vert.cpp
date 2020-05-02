@@ -34,18 +34,16 @@ void threadFunction(const std::vector<std::vector<int>>& in, std::vector<std::ve
     for (int i = col1; i < col2; ++i) {
         for (int j = 0; j < row; ++j) {
             for (int k = 0; k < 3; ++k) {
-                for (int l = 0; l < 9; ++l) {
-                    (*out)[j * col + i][k] =
-                        (in[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
-                         in[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
-                         in[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
-                         in[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
-                         in[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
-                         in[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
-                         in[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
-                         in[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
-                         in[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
-                }
+                (*out)[j * col + i][k] =
+                    (in[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
+                     in[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
+                     in[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
+                     in[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
+                     in[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
+                     in[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
+                     in[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
+                     in[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
+                     in[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
             }
         }
     }

@@ -86,18 +86,16 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
     for (int i = 0; i < col; ++i) {
         for (int j = 0; j < row; ++j) {
             for (int k = 0; k < 3; ++k) {
-                for (int l = 0; l < 9; ++l) {
-                    newPic[j * col + i][k] =
-                        (tmp[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
-                         tmp[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
-                         tmp[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
-                }
+                newPic[j * col + i][k] =
+                    (tmp[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
+                     tmp[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
             }
         }
     }
