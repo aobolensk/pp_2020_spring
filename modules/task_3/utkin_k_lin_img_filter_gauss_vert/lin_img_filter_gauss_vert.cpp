@@ -79,10 +79,11 @@ class gFilter {
     std::vector<std::vector<int>>& in;
     int col;
     int row;
+    std::vector<std::vector<int>>* out;
 
  public:
-    std::vector<std::vector<int>>& out;
-    gFilter(std::vector<std::vector<int>>& in, int col, int row) : in(in), col(col), row(row), out(in) {
+    gFilter(std::vector<std::vector<int>>& in, int col, int row, std::vector<std::vector<int>>* out) :
+        in(in), col(col), row(row), out(out) {
         this->in = addBorders(this->in, this->col, this->row);
     }
     void operator() (const tbb::blocked_range<int>& cols) const {
@@ -90,7 +91,7 @@ class gFilter {
             for (int j = 0; j < row; ++j) {
                 for (int k = 0; k < 3; ++k) {
                     for (int l = 0; l < 9; ++l) {
-                        out[j * col + i][k] =
+                        (*out)[j * col + i][k] =
                             (in[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
                              in[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
                              in[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
@@ -113,9 +114,10 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
     }
 
     std::vector<std::vector<int>> in(pic);
+    std::vector<std::vector<int>> out(pic);
 
-    gFilter gf(in, col, row);
+    gFilter gf(in, col, row, &out);
     tbb::parallel_for(tbb::blocked_range<int>(0, col), gf);
 
-    return gf.out;
+    return out;
 }
