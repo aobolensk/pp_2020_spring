@@ -62,13 +62,13 @@ TEST(TBB_Fox, Parallel_And_Block_Have_The_Same_Answer15x15) {
     auto mat1 = getRandomMatrix(15);
     auto mat2 = getRandomMatrix(15);
 
-    auto t = tbb::tick_count::now();
+    // auto t = tbb::tick_count::now();
     auto res1 = blockMultiplication(mat1, mat2);
-    std::cout << "SEQ: " << (tbb::tick_count::now()-t).seconds() << std::endl;
+    // std::cout << "SEQ: " << (tbb::tick_count::now()-t).seconds() << std::endl;
 
-    t = tbb::tick_count::now();
+    // t = tbb::tick_count::now();
     auto res2 = foxAlgParallel(mat1, mat2);
-    std::cout << "PAR: " << (tbb::tick_count::now()-t).seconds() << std::endl;
+    // std::cout << "PAR: " << (tbb::tick_count::now()-t).seconds() << std::endl;
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }
