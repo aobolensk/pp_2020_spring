@@ -110,9 +110,11 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
 
         std::vector<std::thread> thr(NUM_THREADS);
 
-        thr[0] = std::thread(threadFunction, std::cref(in), &out, col, 0, block[0], row);
-        for (int i = 1; i < NUM_THREADS; ++i) {
-            thr[i] = std::thread(threadFunction, std::cref(in), &out, col, block[i - 1], block[i - 1] + block[i], row);
+        int step = 0;
+
+        for (int i = 0; i < NUM_THREADS; ++i) {
+            thr[i] = std::thread(threadFunction, std::cref(in), &out, col, step, step + block[i], row);
+            step += block[i];
         }
 
         for (int i = 0; i < NUM_THREADS; ++i) {
