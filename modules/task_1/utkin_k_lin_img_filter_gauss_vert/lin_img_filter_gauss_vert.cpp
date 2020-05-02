@@ -77,7 +77,7 @@ std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& p
     if (col <= 0 || row <= 0) {
         throw "-1";
     }
-    
+
     std::vector<std::vector<int>> tmp(addBorders(pic, col, row));
 
     std::vector<std::vector<int>> newPic(col * row, std::vector<int>(3));
