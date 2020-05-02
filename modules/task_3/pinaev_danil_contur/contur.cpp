@@ -134,7 +134,7 @@ void ParallelProcessing::operator()(const tbb::blocked_range<int> &r) const {
 }
 
 Image pattalelContur(const Image &a) {
-    Image res(a.cols /*+ 2*/, a.rows /*+ 2*/); // ??
+    Image res(a.cols /* + 2 */, a.rows /* + 2 */);  // ??
 
     ParallelProcessing pp(a, &res);
     tbb::parallel_for(tbb::blocked_range<int>(0, a.rows - 2 /*!!!*/), pp);
