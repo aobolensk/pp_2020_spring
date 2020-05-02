@@ -1,4 +1,6 @@
 // Copyright 2020 Isaev Ilya
+#ifndef MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
+#define MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
 
 #include <cmath>
 #include <vector>
@@ -19,3 +21,5 @@ Matrix blockMultiplication(const Matrix& mat1, const Matrix& mat2);
 bool matrixComparison(const Matrix& mat1, const Matrix& mat2);
 
 Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2);
+
+#endif  // MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_

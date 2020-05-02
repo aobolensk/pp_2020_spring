@@ -1,13 +1,10 @@
 // Copyright 2020 Isaev Ilya
-#ifndef MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
-#define MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
 
 #include "../../../modules/task_3/isaev_fox_alg/fox_alg.h"
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/blocked_range2d.h>
 #include <tbb/task_scheduler_init.h>
-#include <random>
 #include <cmath>
 #include <vector>
 #include <random>
@@ -93,7 +90,7 @@ bool matrixComparison(const Matrix& mat1, const Matrix& mat2) {
 Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2) {
     if (!isSquared(mat1) || !isSquared(mat2) || mat1.size() != mat2.size())
         throw std::logic_error("Matrix should be squared");
-    
+
     tbb::task_scheduler_init sheduler;
     size_t n_threads = sheduler.default_num_threads();
 
@@ -145,10 +142,9 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2) {
             }
         }
     };
-
-    auto resize_if_changed = [&] (tbb::blocked_range<size_t>& r) { 
+    auto resize_if_changed = [&](tbb::blocked_range<size_t>& r) {
         if (n != old_n) {
-            for (int i = 0; i < static_cast<int>(old_n); ++i) {
+            for (size_t i = r.begin(); i < r.end(); ++i) {
                 res[i].resize(old_n);
             }
         }
@@ -160,5 +156,3 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2) {
 
     return res;
 }
-
-#endif  // MODULES_TASK_3_ISAEV_FOX_ALG_FOX_ALG_H_
