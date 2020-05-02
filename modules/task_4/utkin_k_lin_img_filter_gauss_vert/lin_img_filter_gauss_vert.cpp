@@ -61,7 +61,7 @@ std::vector<std::vector<int>> addBorders(const std::vector<std::vector<int>>& pi
     // Edges:
     for (int i = 0; i < 3; ++i) {
         newPic[0][i] = pic[0][i];
-        newPic[newCol - 1][i] = pic[newCol - 1][i];
+        newPic[newCol - 1][i] = pic[col - 1][i];
         newPic[(newRow - 1) * newCol][i] = pic[(row - 1) * col][i];
         newPic[newCol * newRow - 1][i] = pic[col * row - 1][i];
     }
