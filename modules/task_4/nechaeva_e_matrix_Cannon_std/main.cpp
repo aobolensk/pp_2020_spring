@@ -1,6 +1,5 @@
 // Copyright 2020 Nechaeva Ekaterina
 #include <gtest/gtest.h>
-#include <omp.h>
 #include <iostream>
 #include <utility>
 #include <numeric>
@@ -26,15 +25,15 @@ TEST(Matrix_Cannon_std, time_for_parallel) {
     matrix A = RandomMatrix(151);
     matrix B = RandomMatrix(151);
 
-    auto t1 = std::chrono::high_resolution_clock::now();
-    matrix rez1 = BlockMulti(A, B, 4);
-    auto t2 = std::chrono::high_resolution_clock::now();
-    auto dif1 = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
+    // auto t1 = std::chrono::high_resolution_clock::now();
+    matrix rez1 = NaiveMulti(A, B);
+    // auto t2 = std::chrono::high_resolution_clock::now();
+    // auto dif1 = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
 
-    auto t3 = std::chrono::high_resolution_clock::now();
+    // auto t3 = std::chrono::high_resolution_clock::now();
     matrix rez2 = AlgorithmCannonSTD(A, B, 4);
-    auto t4 = std::chrono::high_resolution_clock::now();
-    auto dif2 = std::chrono::duration_cast<std::chrono::duration<double>>(t4-t3);
+    // auto t4 = std::chrono::high_resolution_clock::now();
+    // auto dif2 = std::chrono::duration_cast<std::chrono::duration<double>>(t4-t3);
     // std::cout << "seq = " << dif1.count() << std::endl << "par = " << dif2.count() << std::endl;
 
     ASSERT_TRUE(CompareMatrix(rez1, rez2));
