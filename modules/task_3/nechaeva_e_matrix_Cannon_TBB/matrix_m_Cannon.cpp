@@ -77,9 +77,9 @@ matrix BlockMulti(const matrix &A, const matrix &B, const int &blockSize) {
     matrix rez(n, std::vector<double>(n, 0));
 
     for (int jj = 0; jj < n; jj += blockSize) {
-        jjMin = std::min(jj + blockSize, n);
+        jjMin = std::min<int>(jj + blockSize, n);
        for (int kk = 0; kk < n; kk += blockSize) {
-           kkMin = std::min(kk+ blockSize, n);
+           kkMin = std::min<int>(kk+ blockSize, n);
            for (int i = 0; i < n; i++) {
                for (int k = kk; k < kkMin; k++) {
                    for (int j = jj; j < jjMin; j++) {
