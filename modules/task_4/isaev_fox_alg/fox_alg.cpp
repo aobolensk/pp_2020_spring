@@ -138,7 +138,7 @@ Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2) {
         }
     };
 
-    std::vector<std::thread> threads(n_threads);
+    std::vector<std::thread> threads(q*q);
     for (size_t i = 0; i < threads.size(); ++i) {
         threads[i] = std::thread(body, i);
     }
