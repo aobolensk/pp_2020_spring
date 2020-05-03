@@ -1,5 +1,5 @@
 // Copyright 2020 Bykovskaya Alina
-#include "../../../modules/task_1/bykovskaya_a_simpson_method/simpson_method.h"
+#include "../../../modules/task_3/bykovskaya_a_simpson_method/simpson_method.h"
 #include <vector>
 #include <functional>
 #include <utility>
@@ -20,7 +20,7 @@ double calcIntegral(const std::vector<std::pair<double, double>>& scope,
     if (scope.size() == level + 1) {
         tbb::parallel_for(tbb::blocked_range<int>{0, accurancy * 2, 100},
                 [&](const tbb::blocked_range<int>& r) {
-                    for(int i = r.begin(); i != r.end(); ++i) {
+                    for (int i = r.begin(); i != r.end(); ++i) {
                         fix_var[level] = scope[level].first + i * h;
                         func_res[i] = f(fix_var);
                     }
@@ -28,7 +28,7 @@ double calcIntegral(const std::vector<std::pair<double, double>>& scope,
     } else {
          tbb::parallel_for(tbb::blocked_range<int>{0, accurancy * 2, 100},
                 [&](const tbb::blocked_range<int>& r) {
-                    for(int i = r.begin(); i != r.end(); ++i) {
+                    for (int i = r.begin(); i != r.end(); ++i) {
                         fix_var[level] = scope[level].first + i * h;
                         func_res[i] = calcIntegral(scope, f,
                                     accurancy, level + 1, fix_var);
@@ -36,24 +36,23 @@ double calcIntegral(const std::vector<std::pair<double, double>>& scope,
                 });
     }
     double res = func_res[0] + func_res[2 * accurancy - 1];
-    if(level == 0) {
+    if (level == 0) {
         res += tbb::parallel_reduce(tbb::blocked_range<int>{1, 2 * accurancy - 1},
                     0.f,
                     [&](const tbb::blocked_range<int>& r, double part) -> double {
                         for (int i = r.begin(); i != r.end(); ++i)
                             if (i % 2 == 1) {
                                 part += 4 * func_res[i];
-                            }
-                            else {
+                            } else {
                                 part += 2 * func_res[i];
                             }
                         return part;
-                    }, 
+                    },
                     std::plus<double>() );
     } else {
-        for (size_t i = 1; i < 2 * accurancy - 1; i += 2)
+        for (int i = 1; i < 2 * accurancy - 1; i += 2)
             res += 4 * func_res[i];
-        for (size_t i = 2; i < 2 * accurancy - 2; i += 2)
+        for (int i = 2; i < 2 * accurancy - 2; i += 2)
             res += 2 * func_res[i];
     }
     // for (size_t i = 1; i < 2 * accurancy - 1; i += 2)
