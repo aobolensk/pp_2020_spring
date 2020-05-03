@@ -90,7 +90,7 @@ CRS_Matrix CRS_Matrix::parallelMultiply(const CRS_Matrix& mat) const& {
         throw std::runtime_error("Different numbers of cols");
     for (size_t i = 1; i < rowIndex.size(); ++i) {
         std::vector<cpx> tmpVec(mat.rowIndex.size(), cpx(0, 0));
-        tbb::parallel_for(tbb::blocked_range<int>{0, static_cast<int>(mat.rowIndex.size())},
+        tbb::parallel_for(tbb::blocked_range<int>{1, static_cast<int>(mat.rowIndex.size())},
                 [&](const tbb::blocked_range<int>& r) {
             for (int j = r.begin(); j < r.end(); ++j) {
                 cpx sum = 0;
