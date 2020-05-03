@@ -95,17 +95,17 @@ TEST(Sparce_Matrix_Multiplication, Test_Random_CRS_Multiplication) {
     EXPECT_EQ(multCRS, multNaive);
 }
 
-TEST(Sparce_Matrix_Multiplication, Test_Big_Matrix) {
-    CRS_Matrix rand1 = getRandomCRSMatrix(1500, 1499, 0.1);
-    CRS_Matrix rand2 = getRandomCRSMatrix(1503, 1500, 0.1);
-    CRS_Matrix trans = rand2.transpose();
-    auto time1 = tbb::tick_count::now();
-    CRS_Matrix multCRSPar = rand1.parallelMultiply(trans);
-    auto time2 = tbb::tick_count::now();;
-    printf("PAR %f\n", (time2 - time1).seconds());
-    time1 = tbb::tick_count::now();;
-    CRS_Matrix multCRSSeq = rand1 * trans;
-    time2 = tbb::tick_count::now();;
-    printf("SEQ %f\n", (time2 - time1).seconds());
-    EXPECT_EQ(multCRSSeq, multCRSPar);
-}
+// TEST(Sparce_Matrix_Multiplication, Test_Big_Matrix) {
+//     CRS_Matrix rand1 = getRandomCRSMatrix(1500, 1499, 0.1);
+//     CRS_Matrix rand2 = getRandomCRSMatrix(1503, 1500, 0.1);
+//     CRS_Matrix trans = rand2.transpose();
+//     auto time1 = tbb::tick_count::now();
+//     CRS_Matrix multCRSPar = rand1.parallelMultiply(trans);
+//     auto time2 = tbb::tick_count::now();;
+//     printf("PAR %f\n", (time2 - time1).seconds());
+//     time1 = tbb::tick_count::now();;
+//     CRS_Matrix multCRSSeq = rand1 * trans;
+//     time2 = tbb::tick_count::now();;
+//     printf("SEQ %f\n", (time2 - time1).seconds());
+//     EXPECT_EQ(multCRSSeq, multCRSPar);
+// }
