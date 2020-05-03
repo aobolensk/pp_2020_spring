@@ -1,13 +1,14 @@
 // Copyright 2020 Isaev Ilya
 #include <gtest/gtest.h>
 #include <vector>
+#include <chrono>
 #include "../../../modules/task_4/isaev_fox_alg/fox_alg.h"
 
 TEST(STD_Fox, Throws_On_NonEqual_Matrix) {
     auto a = getRandomMatrix(5);
     auto b = getRandomMatrix(6);
 
-    ASSERT_ANY_THROW(foxAlgParallel(a, b, 2));
+    ASSERT_ANY_THROW(foxAlgParallel(a, b));
 }
 
 TEST(STD_Fox, Parallel_Implementation_Is_Correct3x3) {
@@ -20,7 +21,7 @@ TEST(STD_Fox, Parallel_Implementation_Is_Correct3x3) {
     Matrix answer = {{28.2, 28.2, 28.2},
                     {50.76, 50.76, 50.76},
                     {67.68, 67.68, 67.68}};
-    auto res = foxAlgParallel(mat1, mat2, 2);
+    auto res = foxAlgParallel(mat1, mat2);
 
     ASSERT_EQ(matrixComparison(res, answer), true);
 }
@@ -30,7 +31,7 @@ TEST(STD_Fox, Parallel_And_Naive_Have_The_Same_Answer4x4) {
     auto mat2 = getRandomMatrix(4);
 
     auto res1 = naiveMultiplication(mat1, mat2);
-    auto res2 = foxAlgParallel(mat1, mat2, 4);
+    auto res2 = foxAlgParallel(mat1, mat2);
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }
@@ -41,7 +42,7 @@ TEST(STD_Fox, Parallel_And_Block_Have_The_Same_Answer4x4) {
 
     auto res1 = blockMultiplication(mat1, mat2);
 
-    auto res2 = foxAlgParallel(mat1, mat2, 4);
+    auto res2 = foxAlgParallel(mat1, mat2);
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }
@@ -52,22 +53,27 @@ TEST(STD_Fox, Parallel_And_Naive_Have_The_Same_Answer15x15) {
     auto mat2 = getRandomMatrix(15);
 
     auto res1 = naiveMultiplication(mat1, mat2);
-    auto res2 = foxAlgParallel(mat1, mat2, 4);
+    auto res2 = foxAlgParallel(mat1, mat2);
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }
 
-TEST(Omp_Fox, Parallel_And_Block_Have_The_Same_Answer15x15) {
+TEST(STD_Fox, Parallel_And_Block_Have_The_Same_Answer15x15) {
     auto mat1 = getRandomMatrix(15);
     auto mat2 = getRandomMatrix(15);
 
-    // double t = omp_get_wtime();
+    // auto t1 = std::chrono::high_resolution_clock::now();
     auto res1 = blockMultiplication(mat1, mat2);
-    // std::cout << "BLOCK " << omp_get_wtime() - t << std::endl;
+    // auto t2 = std::chrono::high_resolution_clock::now();
+    // auto diff =
+        // std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
+    // std::cout << "BLOCK " << diff.count() << std::endl;
 
-    // t = omp_get_wtime();
-    auto res2 = foxAlgParallel(mat1, mat2, 4);
-    // std::cout << "PARALLEL " << omp_get_wtime() - t << std::endl;
+    // t1 = std::chrono::high_resolution_clock::now();
+    auto res2 = foxAlgParallel(mat1, mat2);
+    // t2 = std::chrono::high_resolution_clock::now();
+    // diff = std::chrono::duration_cast<std::chrono::duration<double>>(t2-t1);
+    // std::cout << "PARALLEL " << diff.count() << std::endl;
 
     ASSERT_TRUE(matrixComparison(res1, res2));
 }

@@ -20,6 +20,6 @@ Matrix naiveMultiplication(const Matrix& mat1, const Matrix& mat2);
 Matrix blockMultiplication(const Matrix& mat1, const Matrix& mat2);
 bool matrixComparison(const Matrix& mat1, const Matrix& mat2);
 
-Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2, const unsigned& n_threads);
+Matrix foxAlgParallel(const Matrix& mat1, const Matrix& mat2);
 
 #endif  // MODULES_TASK_4_ISAEV_FOX_ALG_FOX_ALG_H_
