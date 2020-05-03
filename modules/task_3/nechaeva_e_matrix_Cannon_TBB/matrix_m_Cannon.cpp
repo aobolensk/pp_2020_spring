@@ -1,7 +1,6 @@
 // Copyright 2020 Nechaeva Ekaterina
 
 #include "../../../modules/task_3/nechaeva_e_matrix_Cannon_TBB/matrix_m_Cannon.h"
-#include <omp.h>
 #include <tbb/tbb.h>
 #include <random>
 #include <iostream>
@@ -96,13 +95,12 @@ matrix BlockMulti(const matrix &A, const matrix &B, const int &blockSize) {
 
 
 
-matrix AlgorithmCannonTBB(const matrix &A, const matrix &B, const int &num_threads) {
+matrix AlgorithmCannonTBB(const matrix &A, const matrix &B) {
     if (A[0].size() != B.size())
         throw std::invalid_argument("Different values for col and row");
-    if (num_threads <= 0)
-        throw std::invalid_argument("Wrong number of threads");
 
-    tbb::task_scheduler_init init(num_threads);
+    tbb::task_scheduler_init init;
+    auto num_threads = init.default_num_threads();
     int n = A[0].size();
     int n_old = n;
     int q = std::sqrt(num_threads);
@@ -125,7 +123,8 @@ matrix AlgorithmCannonTBB(const matrix &A, const matrix &B, const int &num_threa
     int block_size = n / q;
     matrix rez(n, std::vector<double>(n));
 
-    tbb::parallel_for(tbb::blocked_range2d<size_t>(0, n, block_size, 0, n, block_size), [&](const tbb::blocked_range2d<size_t>& r) {
+    tbb::parallel_for(tbb::blocked_range2d<size_t>(0, n, block_size, 0, n, block_size),
+                        [&](const tbb::blocked_range2d<size_t>& r) {
         int thread_i = r.rows().begin() / block_size;
         int thread_j = r.cols().begin() / block_size;
         int block_i_A = 0, block_j_A = 0, block_i_B = 0, block_j_B = 0;
