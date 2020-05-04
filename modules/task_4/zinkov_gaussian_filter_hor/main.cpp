@@ -55,7 +55,7 @@ TEST(Gaussian_Gilter_hor, Test_One_Pixel) {
 
     image = Gaussian_Filter_Thread(image, rows, cols);
 
-    ASSERT_EQ(image, copy);
+    ASSERT_EQ(image, copy);  //?
 }
 
 TEST(Gaussian_Gilter_hor, Test_Const_Image) {
