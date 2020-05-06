@@ -184,7 +184,7 @@ class SimpleComparator {
 
  public:
     SimpleComparator(double* _mas, int _size) : 
-        mas(_mas), size(_size )
+        mas(_mas), size(_size)
     {}
     void operator()(const tbb::blocked_range<int>& r) const {
         int begin = r.begin(), end = r.end();
