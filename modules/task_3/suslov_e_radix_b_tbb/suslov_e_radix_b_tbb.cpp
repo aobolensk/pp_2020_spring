@@ -180,7 +180,6 @@ class OddSplitter :public tbb::task {
 class SimpleComparator {
  private:
     double* mas;
-    
 
  public:
     int size;
