@@ -180,10 +180,10 @@ class OddSplitter :public tbb::task {
 class SimpleComparator {
  private:
     double* mas;
-    int size;
+    int size1;
 
  public:
-    SimpleComparator(double* _mas, int size) : mas(_mas), size(size)
+    SimpleComparator(double* _mas, int _size) : mas(_mas), size1(_size)
     {}
     void operator()(const tbb::blocked_range<int>& r) const {
         int begin = r.begin(), end = r.end();
