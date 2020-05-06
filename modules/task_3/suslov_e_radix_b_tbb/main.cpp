@@ -13,7 +13,7 @@ TEST(suslov_e_radix_sort_for_double, Test_on_100_tbbsort) {
     for (int i = 0; i < size; i++) {
         Array_copy[i] = Array[i];
     }
-    LSDParallelSortDouble(Array, size, 4);
+    LSDParallelSortDouble(Array, size, 2);
     tbb::parallel_sort(Array_copy, Array_copy + size);
     ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
@@ -27,7 +27,7 @@ TEST(suslov_e_radix_sort_for_double, Test_on_10000_tbbsort) {
         Array_copy[i] = Array[i];
     }
     //  clock_t start = clock();
-    LSDParallelSortDouble(Array, size, 4);
+    LSDParallelSortDouble(Array, size, 2);
     //  clock_t end = clock();
     //  double seconds = (double)(end - start) / CLOCKS_PER_SEC;
     //  printf("The time: %f seconds\n", seconds);
@@ -43,7 +43,7 @@ TEST(suslov_e_radix_sort_for_double, Test_on_10001_tbbsort) {
     for (int i = 0; i < size; i++) {
         Array_copy[i] = Array[i];
     }
-    LSDParallelSortDouble(Array, size, 4);
+    LSDParallelSortDouble(Array, size, 2);
     tbb::parallel_sort(Array_copy, Array_copy + size);
     ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
@@ -56,7 +56,7 @@ TEST(suslov_e_radix_sort_for_double, Test_on_11111_tbbsort) {
     for (int i = 0; i < size; i++) {
         Array_copy[i] = Array[i];
     }
-    LSDParallelSortDouble(Array, size, 4);
+    LSDParallelSortDouble(Array, size, 2);
     tbb::parallel_sort(Array_copy, Array_copy + size);
     ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
@@ -69,7 +69,7 @@ TEST(suslov_e_radix_sort_for_double, Test_on_12121_tbbsort) {
     for (int i = 0; i < size; i++) {
         Array_copy[i] = Array[i];
     }
-    LSDParallelSortDouble(Array, size, 4);
+    LSDParallelSortDouble(Array, size, 2);
     tbb::parallel_sort(Array_copy, Array_copy + size);
     ASSERT_EQ(1, CompareArrays(Array, Array_copy, size));
 }
