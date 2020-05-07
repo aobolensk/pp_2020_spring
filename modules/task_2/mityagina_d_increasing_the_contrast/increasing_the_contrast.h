@@ -2,8 +2,8 @@
 #ifndef MODULES_TASK_2_MITYAGINA_D_INCREASING_THE_CONTRAST_INCREASING_THE_CONTRAST_H_
 #define MODULES_TASK_2_MITYAGINA_D_INCREASING_THE_CONTRAST_INCREASING_THE_CONTRAST_H_
 
-#include <vector>
 #include <omp.h>
+#include <vector>
 
 std::vector<int> generate_im(int im_width, int im_height);
 std::vector<int> contrast_increase(std::vector<int> input, int im_width, int im_height);
