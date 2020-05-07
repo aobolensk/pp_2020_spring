@@ -3,7 +3,7 @@
 #include <omp.h>
 #include "./gaussian_image_filtering.h"
 
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
+TEST(Gaussian_Image_Filtering_omp, Can_Filter_Small_Image) {
     const int width = 10;
     const int height = 10;
 
@@ -13,9 +13,9 @@ TEST(Gaussian_Image_Filtering_seq, Can_Filter_Small_Image) {
     ASSERT_NE(res, img);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Filter_Big_Image) {
-    const int width = 1000;
-    const int height = 1000;
+TEST(Gaussian_Image_Filtering_omp, Can_Filter_Big_Image) {
+    const int width = 200;
+    const int height = 200;
 
     Image img = generateRandomImage(width, height);
     Image res = gaussianFilter(img, width, height);
@@ -23,7 +23,7 @@ TEST(Gaussian_Image_Filtering_seq, Can_Filter_Big_Image) {
     ASSERT_NE(res, img);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
+TEST(Gaussian_Image_Filtering_omp, Can_Handle_Empty_Image) {
     const int width = 0;
     const int height = 0;
 
@@ -32,17 +32,17 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Empty_Image) {
     ASSERT_EQ(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
+TEST(Gaussian_Image_Filtering_omp, Can_Handle_Images_With_Width_Less_Than_Kernel_Size) {
     const int width = 2;
-    const int height = 480;
+    const int height = 50;
 
     Image img = generateRandomImage(width, height);
 
     ASSERT_NE(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
-    const int width = 480;
+TEST(Gaussian_Image_Filtering_omp, Can_Handle_Images_With_Height_Less_Than_Kernel_Size) {
+    const int width = 50;
     const int height = 2;
 
     Image img = generateRandomImage(width, height);
@@ -50,18 +50,18 @@ TEST(Gaussian_Image_Filtering_seq, Can_Handle_Images_With_Height_Less_Than_Kerne
     ASSERT_NE(img, gaussianFilter(img, width, height));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Height) {
-    const int width = 100;
-    const int height = 100;
+TEST(Gaussian_Image_Filtering_omp, Can_Handle_Incorrect_Image_Height) {
+    const int width = 10;
+    const int height = 10;
 
     Image img = generateRandomImage(width, height);
 
     ASSERT_ANY_THROW(gaussianFilter(img, width, height - 1));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Can_Handle_Incorrect_Image_Width) {
-    const int width = 100;
-    const int height = 100;
+TEST(Gaussian_Image_Filtering_omp, Can_Handle_Incorrect_Image_Width) {
+    const int width = 10;
+    const int height = 10;
 
     Image img = generateRandomImage(width, height);
 
