@@ -72,7 +72,7 @@ TEST(OMPStrassen, Test_Strassen_Mult_size_3) {
     EXPECT_CONTAINER_DOUBLE_EQ(std::vector<double>, res_regular, res_strassen);
 }
 
-#define STRASSEN_ALGORITHM_TIME_TEST_ON
+#define STRASSEN_ALGORITHM_TIME_TEST_OFF
 
 #ifdef STRASSEN_ALGORITHM_TIME_TEST_ON
 
