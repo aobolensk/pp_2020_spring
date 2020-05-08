@@ -115,7 +115,7 @@ matrix AlgorithmCannon(const matrix &A, const matrix &B, const int &num_threads)
            n++;
        }
         for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n - n_old - 1; ++j) {
+            for (int j = 0; j < n - n_old; ++j) {
                 tempA[i].push_back(0);
                 tempB[i].push_back(0);
             }
@@ -172,6 +172,7 @@ matrix AlgorithmCannon(const matrix &A, const matrix &B, const int &num_threads)
                     rez[ii][jj] = numrez[i][j];
                 }
             }
+            #pragma omp barrier
             if (n_old != n) {
                 #pragma omp parallel for
                     for (int i = 0; i < n_old; ++i) {

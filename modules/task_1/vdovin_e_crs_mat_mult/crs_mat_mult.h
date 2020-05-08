@@ -16,7 +16,7 @@ class CRSMatrix {
 
     CRSMatrix multiplicate(const CRSMatrix &mtx) const;
  public:
-    explicit CRSMatrix(const int n_ = 0, const int nz_ = 0) : n(n_), nz(nz_), value(nz), col(nz), rowindex(n + 1) {}
+    explicit CRSMatrix(const int n_ = 0, const int nz_ = 0);
     CRSMatrix(const int n_, const int nz_,
         const std::vector<std::complex<double>> &value_,
         const std::vector<int> col_,

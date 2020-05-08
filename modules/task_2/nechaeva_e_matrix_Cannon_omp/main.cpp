@@ -25,15 +25,15 @@ TEST(Matrix_Cannon_omp, throw_when_different_size_mat) {
 }
 
 TEST(Matrix_Cannon_omp, time_for_parallel) {
-    matrix A = RandomMatrix(100);
-    matrix B = RandomMatrix(100);
+    matrix A = RandomMatrix(12);
+    matrix B = RandomMatrix(12);
 
     double t1 = omp_get_wtime();
-    matrix rez1 = BlockMulti(A, B, 10);
+    matrix rez1 = BlockMulti(A, B, 4);
     t1 = omp_get_wtime() - t1;
 
     double t2 = omp_get_wtime();
-    matrix rez2 = AlgorithmCannon(A, B, 25);
+    matrix rez2 = AlgorithmCannon(A, B, 4);
     t2 = omp_get_wtime() - t2;
 
     // std::cout<<t1<<std::endl<<t2<<std::endl;
