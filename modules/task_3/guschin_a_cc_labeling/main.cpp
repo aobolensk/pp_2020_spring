@@ -44,8 +44,8 @@ TEST(CC_Labeling_tbb, Can_lable_omp_with_premade_pic) {
   EXPECT_EQ(IsLabeled(res), true);
 }
 
-TEST(CC_Labeling_tbb, Can_lable_omp_with_10000_pixel) {
-  std::vector<std::vector<std::int8_t>> A(100, std::vector<std::int8_t>(100));
+TEST(CC_Labeling_tbb, Can_lable_omp_with_2500_pixel) {
+  std::vector<std::vector<std::int8_t>> A(50, std::vector<std::int8_t>(50));
   Fill_random(&A);
   std::vector<std::vector<std::int32_t>>  res = Labeling_tbb(A);
   EXPECT_EQ(IsLabeled(res), true);
