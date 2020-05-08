@@ -1,10 +1,10 @@
 // Copyright 2020 Kriukov Dmitry
 
+#include <../../../modules/task_3/kriukov_strassen_algorithm/strassen_algorithm.h>
 #include <tbb/tbb.h>
 #include <random>
 #include <ctime>
 #include <vector>
-#include <../../../modules/task_3/kriukov_strassen_algorithm/strassen_algorithm.h>
 
 std::vector<double> getRandomMatrix(int sz) {
   std::mt19937 gen;
