@@ -23,7 +23,6 @@ std::vector<std::vector<std::int32_t>> Labeling_tbb(
         std::int32_t end = r.end();
         std::int32_t first_row = -1;
         bool lock = true;
-        std::int32_t h = res.size();
         std::int32_t w = res[0].size();
         for (int i = start; i != end; ++i) {
           for (std::int32_t j = 0; j < w; ++j) {
@@ -73,7 +72,6 @@ std::vector<std::vector<std::int32_t>> Labeling_tbb(
     for (std::int32_t j = 0; j < w; ++j) {
       std::int32_t sel_v = res[i][j];
       std::int32_t up_value = 0;
-      std::int32_t left_value = 0;
 
       if (i > 0) up_value = res[i - 1][j];
 
