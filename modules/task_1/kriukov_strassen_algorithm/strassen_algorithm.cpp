@@ -77,7 +77,7 @@ void mergeMatrix(std::vector<double> *mtx, const std::vector<double> &a, const s
   }
 }
 
-std::vector<double> toPowerOfTwoSize(const std::vector<double> &mtx, unsigned int sz) {
+std::vector<double> toPowerOfTwoSize(const std::vector<double>& mtx, unsigned int sz) {
   unsigned int power = 2;
   while (sz > power)
     power *= 2;
@@ -95,12 +95,46 @@ std::vector<double> toPowerOfTwoSize(const std::vector<double> &mtx, unsigned in
   return res;
 }
 
+std::vector<double> toPowerOfTwoSize(const std::vector<double> &mtx, unsigned* power, unsigned int sz) {
+  *power = 2;
+  while (sz > *power)
+    *power *= 2;
+  unsigned tpow = *power;
+  std::vector<double> res;
+  for (unsigned i = 0; i < sz; i++) {
+    for (unsigned j = 0; j < sz; j++)
+      res.push_back(mtx[j + i * sz]);
+    for (unsigned j = sz; j < tpow; j++)
+      res.push_back(0);
+  }
+  for (unsigned i = sz; i < tpow; i++) {
+    for (unsigned j = 0; j < tpow; j++)
+      res.push_back(0);
+  }
+  return res;
+}
+
+std::vector<double> matrixReduce(const std::vector<double>& mtx, unsigned int sz) {
+  std::vector<double> res(sz*sz);
+  unsigned mtxsize = static_cast<unsigned>(std::sqrt(mtx.size()));
+
+  for (unsigned i = 0; i < sz; i++)
+    for (unsigned j = 0; j < sz; j++) {
+      res[i * sz + j] = mtx[i * mtxsize + j];
+    }
+
+  return res;
+}
+
 std::vector<double> strassenMultiplication(const std::vector<double>& a,
                                            const std::vector<double>& b, unsigned int sz) {
-  std::vector<double> a_ = toPowerOfTwoSize(a, sz);
+  unsigned tpow;
+  std::vector<double> a_ = toPowerOfTwoSize(a, &tpow, sz);
   std::vector<double> b_ = toPowerOfTwoSize(b, sz);
 
-  return strassenMultiplication_NoCastToPowerOfTwo(a_, b_, sz);
+  std::vector<double> res = strassenMultiplication_NoCastToPowerOfTwo(a_, b_, tpow);
+
+  return matrixReduce(res, sz);
 }
 
 std::vector<double> strassenMultiplication_NoCastToPowerOfTwo(const std::vector<double>& a_,
