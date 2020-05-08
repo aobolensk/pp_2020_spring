@@ -90,7 +90,7 @@ TEST(Matrix_multiplication, can_construct_usial_matrix_from_sparse_correct_2) {
 
     SparseMatrix<CCS> res;
 
-    ASSERT_NO_THROW(getParallelTBBMatrixMultiplication(mat, mat1, &res, 4));
+    ASSERT_NO_THROW(getParallelTBBMatrixMultiplication(mat, mat1, &res, 12));
 }*/
 
 TEST(Matrix_multiplication, can_multiply_same_as_usial_matrix) {
