@@ -1,7 +1,7 @@
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-if ( USE_SEQ )
-    set(ProjectId "${ProjectId}_seq")
+if ( USE_TBB )
+    set(ProjectId "${ProjectId}_tbb")
     project( ${ProjectId} )
     message( STATUS "-- " ${ProjectId} )
 
@@ -13,10 +13,15 @@ if ( USE_SEQ )
     add_executable(${ProjectId} ${source_files})
 
     target_link_libraries(${ProjectId} ${PACK_LIB})
+    if( WIN32 )
+        target_link_libraries(${ProjectId} ${TBB_IMPORTED_TARGETS})
+    else( WIN32 )
+        target_link_libraries(${ProjectId} ${TBB_LIBRARIES})
+    endif( WIN32 )
     target_link_libraries(${ProjectId} gtest gtest_main)
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-else( USE_SEQ )
+else( USE_TBB )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
-endif( USE_SEQ )
+endif( USE_TBB )

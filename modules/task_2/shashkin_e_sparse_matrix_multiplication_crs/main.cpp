@@ -1,8 +1,9 @@
 // Copyright 2020 Shashkin Evgeny
 #include <gtest/gtest.h>
+#include <omp.h>
 #include <iostream>
 #include <vector>
-#include "../../modules/task_1/shashkin_e_sparse_matrix_multiplication_crs/sparse_matrix_multiplication_crs.h"
+#include "../../modules/task_2/shashkin_e_sparse_matrix_multiplication_crs/sparse_matrix_multiplication_crs.h"
 
 TEST(SparceMatrixMultiplication, throw_when_num_of_rows_or_num_of_cols_is_negative) {
   ASSERT_ANY_THROW(SparseComplexMatrix mat(10, -1));
@@ -13,7 +14,7 @@ TEST(SparceMatrixMultiplication, throw_when_num_of_rows_or_num_of_cols_is_negati
 TEST(SparceMatrixMultiplication, can_convert_regular_matrix_to_csr) {
   std::vector<std::vector<std::complex<double>>> mat;
   SparseComplexMatrix crsMat;
-  mat = randomMatrix(5, 5);
+  mat = randomMatrix(5, 5, 30);
   ASSERT_NO_THROW(crsMat.matrixToCRS(mat));
 }
 
@@ -41,28 +42,38 @@ TEST(SparceMatrixMultiplication, can_multimply_square_csr_matrices) {
   SparseComplexMatrix crsMat1;
   SparseComplexMatrix crsMat2;
   SparseComplexMatrix crsMat3;
-  mat1 = randomMatrix(size, size);
-  mat2 = randomMatrix(size, size);
+  mat1 = randomMatrix(size, size, 30);
+  mat2 = randomMatrix(size, size, 30);
   crsMat1 = crsMat1.matrixToCRS(mat1);
   crsMat2 = crsMat2.matrixToCRS(mat2);
   ASSERT_NO_THROW(crsMat3 = crsMat1 * crsMat2);
 }
 
 TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices) {
-  int rows1 = 5;
-  int cols1 = 3;
-  int rows2 = 3;
-  int cols2 = 6;
+  int rows1 = 60;
+  int cols1 = 30;
+  int rows2 = 30;
+  int cols2 = 40;
+  double percent = 10;
   std::vector<std::vector<std::complex<double>>> mat1;
   std::vector<std::vector<std::complex<double>>> mat2;
   SparseComplexMatrix crsMat1;
   SparseComplexMatrix crsMat2;
   SparseComplexMatrix crsMat3;
-  mat1 = randomMatrix(rows1, cols1);
-  mat2 = randomMatrix(rows2, cols2);
+  SparseComplexMatrix crsMat4;
+  mat1 = randomMatrix(rows1, cols1, percent);
+  mat2 = randomMatrix(rows2, cols2, percent);
   crsMat1 = crsMat1.matrixToCRS(mat1);
   crsMat2 = crsMat2.matrixToCRS(mat2);
-  ASSERT_NO_THROW(crsMat3 = crsMat1 * crsMat2);
+  /*double start_seq = omp_get_wtime();*/
+  crsMat3 = crsMat1 * crsMat2;
+  /*double end_seq = omp_get_wtime();
+  double start_par = omp_get_wtime();*/
+  crsMat4 = crsMat1.crsParallelMult(crsMat2);
+  /*double end_par = omp_get_wtime();
+  std::cout << "Seq time: " << end_seq - start_seq << "\n";
+  std::cout << "Par time: " << end_par - start_par << "\n";*/
+  ASSERT_TRUE(crsMat3 == crsMat4);
 }
 
 TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly) {
@@ -128,5 +139,4 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
-  return 0;
 }
