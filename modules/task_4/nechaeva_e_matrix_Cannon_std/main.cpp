@@ -22,8 +22,8 @@ TEST(Matrix_Cannon_std, throw_when_different_size_mat) {
 }
 
 TEST(Matrix_Cannon_std, time_for_parallel) {
-    matrix A = RandomMatrix(151);
-    matrix B = RandomMatrix(151);
+    matrix A = RandomMatrix(4);
+    matrix B = RandomMatrix(4);
 
     // auto t1 = std::chrono::high_resolution_clock::now();
     matrix rez1 = NaiveMulti(A, B);
