@@ -103,7 +103,6 @@ std::vector <int> contrast_increase_sequential(std::vector<int> grayscale_image,
 }
 
 std::vector <int> contrast_increase_parallel(std::vector<int> grayscale_image, int width, int height) {
-  // tbb::task_scheduler_init init(num_thr);
   int size = grayscale_image.size(), error = 0;
   if (size <= 0) {
     error = 1;
