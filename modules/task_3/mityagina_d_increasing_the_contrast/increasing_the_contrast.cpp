@@ -18,10 +18,9 @@ class contrast_increase_tbb {
      int width;
 
  public:
-     contrast_increase_tbb(const std::vector<int> &src, std::vector<int> *res, int min, int max, int w, int h) : 
-     gr_sc_image(src), 
-     nice_contrast_image(res)
-     {
+     contrast_increase_tbb(const std::vector<int> &src, std::vector<int> *res, int min, int max, int w, int h) :
+     gr_sc_image(src),
+     nice_contrast_image(res) {
         min_val = min;
         max_val = max;
         width = w;
@@ -120,14 +119,6 @@ std::vector <int> contrast_increase_parallel(std::vector<int> grayscale_image, i
   if (max_val < min_val)
     throw -1;
 
-  // tbb::parallel_for(
-  // tbb::blocked_range<int>(0, size),
-  // [=](const tbb::blocked_range<int>& t) {
-  //   int begin = t.begin(), end = t.end();
-  //   for (int i = begin; i < end; i++) {
-  //     output[i] = use_formula(grayscale_image[i], max_val, min_val);
-  //   }
-  // });
   contrast_increase_tbb body(grayscale_image, &output, min_val, max_val, width, height);
   tbb::parallel_for(tbb::blocked_range<int>(0, height), body);
 

@@ -53,36 +53,148 @@ TEST(contrast_increase, simple_example) {
   ASSERT_EQ(output, contrast_increase_parallel(input, 3, 3));
 }
 
+// TEST(contrast_increase, simple_example_parallel_1000) {
+//   std::vector<int> input = generate_im(1000, 1000);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = *std::min_element(input.begin(), input.end());
+//   int max = *std::max_element(input.begin(), input.end());
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_parallel(input, 1000, 1000));
+// }
+
+// TEST(contrast_increase, simple_example_seq_1000) {
+//   std::vector<int> input = generate_im(1000, 1000);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = static_cast<int>(*std::min_element(input.begin(), input.end()));
+//   int max = static_cast<int>(*std::max_element(input.begin(), input.end()));
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_sequential(input, 1000, 1000));
+// }
+
+// TEST(contrast_increase, simple_example_seq_10000) {
+//   std::vector<int> input = generate_im(10000, 10000);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = static_cast<int>(*std::min_element(input.begin(), input.end()));
+//   int max = static_cast<int>(*std::max_element(input.begin(), input.end()));
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_sequential(input, 10000, 10000));
+// }
+
+// TEST(contrast_increase, simple_example_parallel_10000) {
+//   std::vector<int> input = generate_im(10000, 10000);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = *std::min_element(input.begin(), input.end());
+//   int max = *std::max_element(input.begin(), input.end());
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_parallel(input, 10000, 10000));
+// }
+
+// TEST(contrast_increase, simple_example_seq_10001) {
+//   std::vector<int> input = generate_im(10001, 10001);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = static_cast<int>(*std::min_element(input.begin(), input.end()));
+//   int max = static_cast<int>(*std::max_element(input.begin(), input.end()));
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_sequential(input, 10001, 10001));
+// }
+
+// TEST(contrast_increase, simple_example_parallel_10001) {
+//   std::vector<int> input = generate_im(10001, 10001);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = *std::min_element(input.begin(), input.end());
+//   int max = *std::max_element(input.begin(), input.end());
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_parallel(input, 10001, 10001));
+// }
+
+// TEST(contrast_increase, simple_example_seq_13331) {
+//   std::vector<int> input = generate_im(13331, 13331);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = static_cast<int>(*std::min_element(input.begin(), input.end()));
+//   int max = static_cast<int>(*std::max_element(input.begin(), input.end()));
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_sequential(input, 13331, 13331));
+// }
+
+// TEST(contrast_increase, simple_example_parallel_13331) {
+//   std::vector<int> input = generate_im(13331, 13331);
+//   std::vector<int> output = std::vector<int>(input);
+
+//   int min = *std::min_element(input.begin(), input.end());
+//   int max = *std::max_element(input.begin(), input.end());
+//   for (int i = 0; i < static_cast<int>(input.size()); i++) {
+//     output[i] = static_cast<int>(use_formula(input[i], max, min));
+//   }
+
+//   ASSERT_EQ(output, contrast_increase_parallel(input, 13331, 13331));
+// }
+
 TEST(contrast_increase, min_is_greater_then_max) {
   ASSERT_ANY_THROW(use_formula(7, 2, 10));
 }
 
-TEST(contrast_increase, check_size_10_10) {
+TEST(contrast_increase, check_size_par_10_10) {
   testing_lab(generate_im(10, 10), 10, 10);
 }
 
-// TEST(contrast_increase, check_size_100_100) {
-//   testing_lab(100, 100);
+TEST(contrast_increase, check_size_seq_10_10) {
+  testing_lab_2(generate_im(10, 10), 10, 10);
+}
+
+// TEST(contrast_increase, check_size_1000_1000) {
+//   testing_lab(generate_im(1000, 1000), 1000, 1000);
 // }
 
-TEST(contrast_increase, check_size_1000_1000) {
-  testing_lab(generate_im(1000, 1000), 1000, 1000);
+// TEST(contrast_increase, check_size_1000_1000_2) {
+//   testing_lab_2(generate_im(1000, 1000), 1000, 1000);
+// }
+
+// TEST(contrast_increase, check_size_5000_5000) {
+//   testing_lab(generate_im(5000, 5000), 5000, 5000);
+// }
+
+// TEST(contrast_increase, check_size_5000_5000_2) {
+//   testing_lab_2(generate_im(5000, 5000), 5000, 5000);
+// }
+
+// TEST(contrast_increase, check_size_256_256) {
+//   testing_lab(generate_im(256, 256), 256, 256);
+// }
+
+TEST(contrast_increase, check_size_seq_100_100) {
+  testing_lab_2(generate_im(100, 100), 100, 100);
 }
 
-TEST(contrast_increase, check_size_1000_1000_2) {
-  testing_lab_2(generate_im(1000, 1000), 1000, 1000);
-}
-
-TEST(contrast_increase, check_size_5000_5000) {
-  testing_lab(generate_im(5000, 5000), 5000, 5000);
-}
-
-TEST(contrast_increase, check_size_5000_5000_2) {
-  testing_lab_2(generate_im(5000, 5000), 5000, 5000);
-}
-
-TEST(contrast_increase, check_size_256_256) {
-  testing_lab(generate_im(256, 256), 256, 256);
+TEST(contrast_increase, check_size_par_100_100) {
+  testing_lab(generate_im(100, 100), 100, 100);
 }
 
 int main(int argc, char** argv) {
