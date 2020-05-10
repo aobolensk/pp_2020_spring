@@ -224,7 +224,7 @@ std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double
             ans.push_back(std::numeric_limits<double>::max());
         }
     }
-    tbb::task::spawn_root_and_wait(*(new(tbb::task::allocate_root()) 
+    tbb::task::spawn_root_and_wait(*(new(tbb::task::allocate_root())
                                         oddEvenTask(ans.data(), 0, num_threads-1, portion.data())));
     int size = static_cast<int>(ans.size());
     for (int i = v.size(); i < size; i++)
