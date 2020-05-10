@@ -56,21 +56,21 @@ TEST(Radix_Sort_Odd_Even_Merge, Can_Sort_Vector_With_Large_Numbers) {
     EXPECT_EQ(vec1, vec2);
 }
 
-TEST(Radix_Sort_Odd_Even_Merge, Speed_Test) {
-    for(int i = 1; i <= 16; i++) {
-        double minn = 293485234;
-        for (int j = 0; j < 5; j++) {
-            std::vector<double> vec1 = getRandomVector(5000000, -500, 500);
-            std::vector<double> vec2 = vec1;
-            tbb::tick_count t1 = tbb::tick_count::now();
-            vec1 = radixSortOddEvenMergeDoubleParallel(vec1, i);
-            tbb::tick_count t2 = tbb::tick_count::now();
-            double time = static_cast<double>((t2-t1).seconds());
-            minn = std::min(minn, time);
-        }
-        std::cout<<i<<" "<<minn<<"\n";
-    }
-}
+// TEST(Radix_Sort_Odd_Even_Merge, Speed_Test) {
+//     for(int i = 1; i <= 16; i++) {
+//         double minn = 293485234;
+//         for (int j = 0; j < 5; j++) {
+//             std::vector<double> vec1 = getRandomVector(5000000, -500, 500);
+//             std::vector<double> vec2 = vec1;
+//             tbb::tick_count t1 = tbb::tick_count::now();
+//             vec1 = radixSortOddEvenMergeDoubleParallel(vec1, i);
+//             tbb::tick_count t2 = tbb::tick_count::now();
+//             double time = static_cast<double>((t2-t1).seconds());
+//             minn = std::min(minn, time);
+//         }
+//         std::cout<<i<<" "<<minn<<"\n";
+//     }
+// }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
