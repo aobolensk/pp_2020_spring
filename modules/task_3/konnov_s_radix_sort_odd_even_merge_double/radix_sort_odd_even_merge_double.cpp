@@ -43,7 +43,6 @@ tbb::task* oddEvenTask::execute() {
     int size1 = portion[average-1]-index1;
     int index2 = index1+size1;
     int size2 = portion[right]-portion[average-1];
-    // std::cout<<" left: "<<left<<" right: "<<right<<" average: "<<average<<"!!!!!!\n";
     if (average-left-1 == 0) {
         list_of_tasks.push_back(*(new(task::allocate_child()) sortTask(array, index1, size1)));
     } else if (average-left-1 > 0) {
@@ -225,7 +224,8 @@ std::vector<double> radixSortOddEvenMergeDoubleParallel(const std::vector<double
             ans.push_back(std::numeric_limits<double>::max());
         }
     }
-    tbb::task::spawn_root_and_wait(*(new(tbb::task::allocate_root()) oddEvenTask(ans.data(), 0, num_threads-1, portion.data())));
+    tbb::task::spawn_root_and_wait(*(new(tbb::task::allocate_root()) 
+                                        oddEvenTask(ans.data(), 0, num_threads-1, portion.data())));
     int size = static_cast<int>(ans.size());
     for (int i = v.size(); i < size; i++)
         ans.pop_back();
