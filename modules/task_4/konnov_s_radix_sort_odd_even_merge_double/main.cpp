@@ -9,7 +9,6 @@
 #include "./radix_sort_odd_even_merge_double.h"
 
 TEST(Radix_Sort_Odd_Even_Merge, Simple_Test) {
-    omp_set_num_threads(8);
     std::vector<double> a = {0., 10., 1., 11., 2., 12., 3., 13., -499.921,
                             -478.018, -270.971, -318.089, -180.188, -253.165, 269.783, 85.646};
     std::vector<double> a1 = a;
