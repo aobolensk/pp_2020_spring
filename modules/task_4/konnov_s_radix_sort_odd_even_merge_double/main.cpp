@@ -1,7 +1,7 @@
 // Copyright 2020 Konnov Sergey
 
 #include <gtest/gtest.h>
-#include <omp.h>
+// #include <omp.h>
 #include <thread>
 #include <iostream>
 #include <vector>
@@ -57,21 +57,21 @@ TEST(Radix_Sort_Odd_Even_Merge, Can_Sort_Vector_With_Large_Numbers) {
     EXPECT_EQ(vec1, vec2);
 }
 
-TEST(Radix_Sort_Odd_Even_Merge, Speed_Test) {
-    for (int i = 1; i <= 16; i*=2) {
-        double minn = 293485234;
-        omp_set_num_threads(i);
-        std::vector<double> vec1 = getRandomVector(5000000, -500, 500);
-        for (int j = 0; j < 5; j++) {
-            std::vector<double> vec2 = vec1;
-            double t1 = omp_get_wtime();
-            vec1 = radixSortOddEvenMergeDoubleParallel(vec1, i);
-            double t2 = omp_get_wtime();
-            minn = std::min(minn, t2-t1);
-        }
-        std::cout<<i<<" "<<minn<<"\n";
-    }
-}
+// TEST(Radix_Sort_Odd_Even_Merge, Speed_Test) {
+//     for (int i = 1; i <= 16; i*=2) {
+//         double minn = 293485234;
+//         omp_set_num_threads(i);
+//         std::vector<double> vec1 = getRandomVector(5000000, -500, 500);
+//         for (int j = 0; j < 5; j++) {
+//             std::vector<double> vec2 = vec1;
+//             double t1 = omp_get_wtime();
+//             vec1 = radixSortOddEvenMergeDoubleParallel(vec1, i);
+//             double t2 = omp_get_wtime();
+//             minn = std::min(minn, t2-t1);
+//         }
+//         std::cout << i << " " << minn << "\n";
+//     }
+// }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
