@@ -11,7 +11,6 @@
 #include <utility>
 #include "../../modules/task_3/korobeinikov_a_quick_sort/quick_sort.h"
 
-const int inf = INT_MAX;
 
 tbb::task* EvenSplitter::execute() {
     for (int i = 0; i < size1; i += 2)
