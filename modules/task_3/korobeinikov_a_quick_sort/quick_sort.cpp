@@ -96,7 +96,7 @@ tbb::task* QuickParallelSorter::execute() {
         spawn_and_wait_for_all(splitter2);
 
         tbb::parallel_for(tbb::blocked_range<int>(1, (size + 1) / 2),
-            SimpleComparator(mas, size));
+            SimpleComparator(mas));
     }
     return NULL;
 }
