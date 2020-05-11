@@ -11,14 +11,14 @@ struct Graph {
   explicit Graph(int vertex_n);
 };
 class RooTaskDujkstra : public tbb::task {
-public:
+ public:
   RooTaskDujkstra(std::vector<int>* _distance, const Graph& _g,
     std::vector <bool>* _visit) : distance(_distance),
     visit(_visit), g(_g) {
   }
   tbb::task* execute();
 
-private:
+ private:
   std::vector<int>* distance;
   std::vector <bool>* visit;
   const Graph& g;

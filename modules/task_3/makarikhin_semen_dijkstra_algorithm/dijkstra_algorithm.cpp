@@ -8,7 +8,7 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
-#include "./dijkstra_algorithm.h"
+#include "../../../modules/task_3/makarikhin_semen_dijkstra_algorithm/dijkstra_algorithm.h"
 
 Graph::Graph(int vertex_n) :vertex_num(vertex_n) {
   weight_list.resize(vertex_n);
@@ -50,7 +50,6 @@ Graph get_Random_Graph(const int& vertex_n, const int& edge_n) {
 }
 
 std::vector<int> Dijkstra(const Graph& g, int selected_vertex) {
-
   if (selected_vertex < 0 || selected_vertex > g.vertex_num - 1) {
     throw std::out_of_range("out of range selected vertex");
   }
