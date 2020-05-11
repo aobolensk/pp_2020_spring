@@ -60,7 +60,7 @@ std::vector<int> Dijkstra(const Graph& g, int selected_vertex) {
   std::vector<int> distance(g.vertex_num, INT8_MAX);
   distance[selected_vertex] = 0;
   std::vector <bool> visit(g.vertex_num, false);
-  int v_num, cur_vert;
+  int v_num;
   for (v_num = 0; v_num < g.vertex_num - 1; v_num++) {
     tl.push_back(*new (tbb::task::allocate_root()) RooTaskDujkstra(&distance, g, &visit));
   }
