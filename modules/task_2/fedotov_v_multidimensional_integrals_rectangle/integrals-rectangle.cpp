@@ -11,7 +11,7 @@ double getMultipleIntegralUsingRectangleMethod(
     int xStepsNumber = (x2 - x1) / stepX;
     int yStepsNumber = (y2 - y1) / stepY;
 
-    // #pragma omp parallel for reduction(+: resultIntegral)
+    #pragma omp parallel for reduction(+: resultIntegral)
     for (int i = 0; i < xStepsNumber; i++) {
         for (int j = 0; j < yStepsNumber; j++) {
             double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;

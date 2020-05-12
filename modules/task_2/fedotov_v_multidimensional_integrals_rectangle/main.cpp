@@ -80,7 +80,7 @@ TEST(MultiDimensionalIntegralRectangle, func4) {
     ASSERT_NEAR(trueIntegral, integral, 0.1);
 }
 
-TEST(MultiDimensionalIntegralRectangle, func5) {
+TEST(MultiDimensionalIntegralRectangle, DISABLED_func5) {
     double x1 = 2;
     double x2 = 8;
     double y1 = 1;
