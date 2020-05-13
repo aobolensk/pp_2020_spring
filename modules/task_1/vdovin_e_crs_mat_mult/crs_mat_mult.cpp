@@ -15,6 +15,14 @@ CRSMatrix::CRSMatrix(const int n_, const int nz_,
         rowindex = rowindex_;
     }
 
+CRSMatrix::CRSMatrix(const int n_, const int nz_) {
+    n = n_;
+    nz = nz_;
+    value.resize(nz);
+    col.resize(nz);
+    rowindex.resize(n + 1);
+}
+
 CRSMatrix::CRSMatrix(const CRSMatrix& mtx) {
     n = mtx.n;
     nz = mtx.nz;
@@ -119,7 +127,7 @@ CRSMatrix CRSMatrix::multiplicate(const CRSMatrix &mtx) const {
             rowindex_res.push_back(rownz + rowindex_res[i]);
         }
 
-        CRSMatrix res(n, rownz);
+        CRSMatrix res(n, value_res.size());
         res.value = value_res;
         res.col = col_res;
         res.rowindex = rowindex_res;
