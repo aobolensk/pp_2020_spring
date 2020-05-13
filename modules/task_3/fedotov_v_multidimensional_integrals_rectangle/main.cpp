@@ -15,7 +15,7 @@ TEST(MultiDimensionalIntegralRectangle, func1) {
     double trueIntegral = 10.67;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 1 test time: %f", endTime - startTime);
@@ -34,7 +34,7 @@ TEST(MultiDimensionalIntegralRectangle, func2) {
     double trueIntegral = 1.59;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 2 test time: %f", endTime - startTime);
@@ -53,7 +53,7 @@ TEST(MultiDimensionalIntegralRectangle, func3) {
     double trueIntegral = -0.34;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 3 test time: %f", endTime - startTime);
@@ -72,7 +72,7 @@ TEST(MultiDimensionalIntegralRectangle, func4) {
     double trueIntegral = 1.76;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 4 test time: %f", endTime - startTime);
@@ -80,7 +80,7 @@ TEST(MultiDimensionalIntegralRectangle, func4) {
     ASSERT_NEAR(trueIntegral, integral, 0.1);
 }
 
-TEST(MultiDimensionalIntegralRectangle, DISABLED_func5) {
+TEST(MultiDimensionalIntegralRectangle, func5) {
     double x1 = 2;
     double x2 = 8;
     double y1 = 1;
@@ -91,7 +91,7 @@ TEST(MultiDimensionalIntegralRectangle, DISABLED_func5) {
     double trueIntegral = 2880;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 5 test time: %f", endTime - startTime);
@@ -110,7 +110,7 @@ TEST(MultiDimensionalIntegralRectangle, func6) {
     double trueIntegral = 2.25;
     // double startTime, endTime;
     // startTime = omp_get_wtime();
-    double integral = getMultipleIntegralUsingRectangleMethod(passingFunc,
+    double integral = getMultipleIntegralUsingRectangleMethodTBB(passingFunc,
                x1, x2, y1, y2, stepX, stepY);
     // endTime = omp_get_wtime();
     // if (PRINTF) printf("Func 6 test time: %f", endTime - startTime);

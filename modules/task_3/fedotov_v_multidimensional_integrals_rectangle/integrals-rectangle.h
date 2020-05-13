@@ -2,6 +2,7 @@
 #ifndef MODULES_TASK_3_FEDOTOV_V_MULTIDIMENSIONAL_INTEGRALS_RECTANGLE_INTEGRALS_RECTANGLE_H_
 #define MODULES_TASK_3_FEDOTOV_V_MULTIDIMENSIONAL_INTEGRALS_RECTANGLE_INTEGRALS_RECTANGLE_H_
 #include <tbb/tbb.h>
+#include <tbb/parallel_reduce.h>
 
 double getMultipleIntegralUsingRectangleMethod(
     double (*function)(double, double), double x1,
