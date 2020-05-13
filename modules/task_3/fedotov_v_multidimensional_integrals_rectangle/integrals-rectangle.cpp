@@ -36,7 +36,10 @@ double getMultipleIntegralUsingRectangleMethodTBB(
     printf("yStepsNumber %d\n", yStepsNumber);
 
 
-    resultIntegral = tbb::parallel_reduce(tbb::blocked_range2d<int, int>{0, xStepsNumber, 0, yStepsNumber}, 0.f, [&](const tbb::blocked_range2d<int, int> &r, double localIntegral)->double {
+    resultIntegral = tbb::parallel_reduce(
+        tbb::blocked_range2d<int, int>{0, xStepsNumber, 0, yStepsNumber},
+         0.f, [&](const tbb::blocked_range2d<int, int> &r,
+          double localIntegral)->double {
         int x_begin = r.rows().begin();
         int x_end = r.rows().end();
         int y_begin = r.cols().begin();
@@ -52,9 +55,9 @@ double getMultipleIntegralUsingRectangleMethodTBB(
 
                 localIntegral += function(xMiddle, yMiddle);
             }
-        }   
+        }
         return localIntegral;
-    }, []( double localIntegral1, double localIntegral2 )-> double {
+    }, [](double localIntegral1, double localIntegral2)-> double {
             return localIntegral1 + localIntegral2;
         });
 
