@@ -108,7 +108,7 @@ TEST(Sort_Shell_TBB, Test_8_Random_Merge) {
   ASSERT_EQ(vec, res);
 }
 
-TEST(Sort_Shell_TBB, Test_9_Random_Merge_10000) {
+/*TEST(Sort_Shell_TBB, Test_9_Random_Merge_10000) {
   const int size = 10000;
   const int thread_count = 4;
   std::vector<int> vec = getRandom(size);
@@ -221,7 +221,7 @@ TEST(Sort_Shell_TBB, Test_12_Random_Merge_10000002_2) {
   std::cout << "time of tbb = " << dt1 << std::endl;
 
   ASSERT_EQ(res1, res2);
-}
+}*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
