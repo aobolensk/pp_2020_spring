@@ -127,8 +127,8 @@ class Filter {
   }
 };
 
-std::vector<int> imageFilteringTBB(std::vector<int>& sourceImage, int rows,
-                                   int columns) {
+std::vector<int> imageFilteringTBB(const std::vector<int>& sourceImage,
+                                   int rows, int columns) {
   const std::vector<int>& sourceImg(getTempImage(sourceImage, rows, columns));
   std::vector<int> resultImg(sourceImage);
 
