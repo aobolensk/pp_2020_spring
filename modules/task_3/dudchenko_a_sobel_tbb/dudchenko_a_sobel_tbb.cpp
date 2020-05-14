@@ -1,10 +1,11 @@
 // Copyright 2020 Dudchenko Anton
 
+#include <tbb/tbb.h>
+
 #include <random>
 #include <ctime>
 #include <vector>
-#include <iostream>
-#include <tbb/tbb.h>
+
 #include "../../../modules/task_3/dudchenko_a_sobel_tbb/dudchenko_a_sobel_tbb.h"
 
 const image<char> KERNEL_X({1, 0, -1, 2, 0, -2, 1, 0, -1}, 3, 3);
@@ -45,11 +46,11 @@ image<uint8_t> sobelSequence(image<uint8_t> inImage) {
 }
 
 class sTbb {
-private:
+ private:
     const image<uint8_t> &input;
     image<uint8_t> *result;
 
-public:
+ public:
     sTbb(const image<uint8_t> &in, image<uint8_t>* res) : input(in),
                                                          result(res) {}
 
