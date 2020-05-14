@@ -4,8 +4,10 @@
 \usepackage[russian,english]{babel}
 \usepackage[pdftex]{hyperref}
 \pagestyle{plain}
-\usepackage{mathtext} 
+\usepackage[left=3cm, right=1cm, vmargin=2cm]{geometry}
+
 \usepackage[14pt]{extsizes}
+\usepackage{mathtext} 
 \usepackage{placeins}
 \usepackage{indentfirst} 
 \frenchspacing
@@ -37,10 +39,6 @@
 \captionsetup*[table]{labelformat=gosttable, margin={1.25cm,0pt}}
 \captionsetup*[figure]{labelformat=gostfigure,justification=centering}
 \renewcommand{\thesubfigure}{\asbuk{subfigure}}
-
-
-\usepackage[T2A]{fontenc}
-\usepackage[left=3cm, right=1cm, vmargin=2cm]{geometry}
 
 \usepackage[final]{listings}
 \usepackage{xcolor}
@@ -81,12 +79,12 @@
 	\begin{titlepage}
 	
 		\begin{center} 
-			\par \MakeUppercase{Министерство образования и науки Российской федерации} 
-			\par \MakeUppercase{Федеральное государственное автономное образовательное учреждение}			\par «Нижегородский государственный университет им. Н.И. Лобачевского\\[0.2cm]
-			\par Национальный исследовательский университет\\[0.1cm]
-			\par Институт информационных технологий, математики и механики \\[0.1cm]
-			\par Кафедра математического обеспечения и суперкомпьютерных технологий\\[2.5cm]		
-
+			\MakeUppercase{Министерство образования и науки Российской федерации} \linebreak  
+			\MakeUppercase{Федеральное государственное автономное образовательное учреждение} \linebreak
+			«Нижегородский государственный университет им. Н.И. Лобачевского\\[0.2cm] 
+			Национальный исследовательский университет\\[0.1cm] 
+			Институт информационных технологий, математики и механики \\[0.1cm]  
+			Кафедра математического обеспечения и суперкомпьютерных технологий\\[2.5cm]
 			{\huge \bfseries Отчет \\[0.1cm]
 				\Large \mdseries по лабораторной работе \\[0,1cm]
 				\Large \mdseries по дисциплине «Параллельное программирование» \\[1cm]
