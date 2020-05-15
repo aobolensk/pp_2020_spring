@@ -206,7 +206,7 @@ SparseComplexMatrix SparseComplexMatrix::crsParallelMult(const SparseComplexMatr
     std::vector<std::complex<double>> vals(tmp.row_index.size(), std::complex<double>(0.0, 0.0));
     std::vector<int> cols(tmp.row_index.size(), 0);
     tbb::parallel_for(tbb::blocked_range<int>(1, static_cast<int>(tmp.row_index.size())),
-      MatrixMultiplicator((*this), tmp, vals, cols, i, not_zero_vals));
+      MatrixMultiplicator((*this), tmp, &vals, &cols, i, not_zero_vals));
     for (unsigned j = 0; j < tmp.row_index.size(); ++j)
       if (vals[j].real() != 0.0 || vals[j].imag() != 0.0) {
         result.values.push_back(vals[j]);

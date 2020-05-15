@@ -11,7 +11,7 @@
 #include <algorithm>
 
 class SparseComplexMatrix {
-public:
+ public:
   int rows_num;
   int cols_num;
 
@@ -34,7 +34,7 @@ public:
 };
 
 class MatrixMultiplicator {
-private:
+ private:
   const SparseComplexMatrix& matA;
   const SparseComplexMatrix& matB;
 
@@ -43,10 +43,10 @@ private:
 
   const unsigned& i;
   tbb::atomic<int>& not_zero_vals;
-public:
+ public:
   MatrixMultiplicator(const SparseComplexMatrix& _matA, const SparseComplexMatrix& _matB,
-    std::vector<std::complex<double>>& _vals, std::vector<int>& _cols, const unsigned& _i,
-    tbb::atomic<int>& _not_zero_vals) : matA(_matA), matB(_matB), vals(_vals), cols(_cols), i(_i),
+    std::vector<std::complex<double>>* _vals, std::vector<int>* _cols, const unsigned& _i,
+    tbb::atomic<int>& _not_zero_vals) : matA(_matA), matB(_matB), vals(*_vals), cols(*_cols), i(_i),
     not_zero_vals(_not_zero_vals) {}
 
   void operator()(const tbb::blocked_range<int>& r) const;
