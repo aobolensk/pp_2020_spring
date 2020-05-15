@@ -131,14 +131,14 @@ std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2) {
 
     if (i1 >= size1) {
         for (int l = i2; l < size2; l += 2) {
-             res[i] = vec2[l];
-             i++;
-        } else {
+            res[i] = vec2[l];
+            i++;
+        }
+    } else {
         for (int l = i1; l < size1; l += 2) {
             res[i] = vec1[l];
             i++;
         }
-    }
     }
 
     return res;
