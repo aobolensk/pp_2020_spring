@@ -16,7 +16,7 @@ double getIntegralSimpsonTBB(const std::function<double(const std::vector<double
   for (int i = 0; i < multiplicity; i++) {
     h[i] = (b[i] - a[i]) / n;
   }
-  std::vector<double> sum(num_threads);
+  std::vector<double> sum(num_threads + 1);
   tbb::task_scheduler_init init(static_cast<int>(num_threads));
   tbb::task_group group;
   for (int i = 0; i < num_threads; i++) {
@@ -50,7 +50,7 @@ double getIntegralSimpsonTBB(const std::function<double(const std::vector<double
     });
   }
   group.wait();
-  for (int i = 0; i < num_threads; i++) {
+  for (int i = 0; i < num_threads + 1; i++) {
     global_sum += sum[i];
   }
   global_sum += f(a) - f(b);
