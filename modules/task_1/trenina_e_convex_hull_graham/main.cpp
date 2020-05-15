@@ -34,7 +34,7 @@ TEST(Graham_Alg, Test_cmp3) {
     point C(10.0, 2.0);
     point D(10.0, 3.0);
     bool res = cmp(C, D);
-    ASSERT_EQ(res,1);
+    ASSERT_EQ(res, 1);
     res = cmp(D, B);
     ASSERT_EQ(res, 1);
     res = cmp(C, B);
@@ -44,7 +44,7 @@ TEST(Graham_Alg, Test_cmp3) {
 
 TEST(Graham_Alg, Test_sort) {
     std::vector<point> Q{ {0, 0}, {-1, 3}, {2, 5}, {4, 2}, {2, 0} };
-    std::vector<point> exp{ {0, 0}, {2,0}, {4,2}, {2,5}, {-1, 3} };
+    std::vector<point> exp{ {0, 0}, {2, 0}, {4, 2}, {2, 5}, {-1, 3} };
 
     std::sort(Q.begin() + 1, Q.end(), cmp);
 
@@ -71,11 +71,9 @@ TEST(Graham_Alg, Test_Getrand3) {
 
 TEST(Graham_Alg, Graham_Test) {
     std::vector<point> Q{ {-1, 3}, {2, 5}, {4, 2}, {2, 0}, {-2, -1},
-                               {-4, 1}, {2, 3}, {-1, 2}, {0, 1}, {1, 2} }; // 10 points
+                               {-4, 1}, {2, 3}, {-1, 2}, {0, 1}, {1, 2} };
     std::vector<point> hull = Graham(Q);
-    std::vector<point> exp_hull{ {-2, -1}, {2, 0}, {4, 2}, {2, 5}, {-1, 3}, {-4, 1} }; // 6 points
-
- 
+    std::vector<point> exp_hull{ {-2, -1}, {2, 0}, {4, 2}, {2, 5}, {-1, 3}, {-4, 1} };
     ASSERT_EQ(hull.size(), exp_hull.size());
     for (int i = 0; i < hull.size(); i++) {
         ASSERT_DOUBLE_EQ(hull[i].x, exp_hull[i].x);
