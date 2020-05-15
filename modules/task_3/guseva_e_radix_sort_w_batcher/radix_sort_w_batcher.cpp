@@ -1,6 +1,6 @@
 // Copyright 2020 Guseva Catherine
 #include "../../../modules/task_3/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
-#include "tbb\tbb.h"
+#include "tbb/tbb.h"
 #include <vector>
 #include <string>
 #include <algorithm>
