@@ -28,7 +28,7 @@ void countSort(std::vector<int> *vec, int exp) {
     int i, count[10] = { 0 };
     tbb::task_scheduler_init init(THREADS);
     tbb::parallel_for(
-        tbb::blocked_range<int>(0, size),
+        tbb::blocked_range<int>(0, size, 4),
         [&](const tbb::blocked_range<int>& v) {
             for (i = v.begin(); i < v.end(); i++) {
                 count[(vec->at(i) / exp) % 10]++;
@@ -138,6 +138,7 @@ std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2) {
             res[i] = vec1[l];
             i++;
         }
+    }
     }
 
     return res;
