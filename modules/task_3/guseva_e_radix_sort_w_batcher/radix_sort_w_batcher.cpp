@@ -1,5 +1,5 @@
 // Copyright 2020 Guseva Catherine
-#include "../../../modules/task_2/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
+#include "../../../modules/task_3/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
 #include "tbb\tbb.h"
 #include <vector>
 #include <string>
@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ctime>
 #include <random>
+#include <utility>
 
 #define THREADS 4
 
@@ -67,7 +68,7 @@ int getMax(std::vector<int> *vec) {
     return maxVal;
 }
 
-std::vector<int> EvenOddBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
+std::vector<int> EvenOddBatch(std::vector<int> vec1, std::vector<int> vec2) {
     int size1 = vec1.size();
     int size2 = vec2.size();
     int size = size1 + size2;
@@ -108,7 +109,7 @@ std::vector<int> EvenOddBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
     return res;
 }
 
-std::vector<int> evenBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
+std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2) {
     int size1 = vec1.size();
     int size2 = vec2.size();
     int res_size = size1 / 2 + size2 / 2 + size1 % 2 + size2 % 2;
@@ -121,8 +122,7 @@ std::vector<int> evenBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
         if (vec1[i1] <= vec2[i2]) {
             res[i] = vec1[i1];
             i1 += 2;
-        }
-        else {
+        } else {
             res[i] = vec2[i2];
             i2 += 2;
         }
@@ -133,9 +133,7 @@ std::vector<int> evenBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
         for (int l = i2; l < size2; l += 2) {
              res[i] = vec2[l];
              i++;
-        }
-    }
-    else {
+        } else {
         for (int l = i1; l < size1; l += 2) {
             res[i] = vec1[l];
             i++;
@@ -145,7 +143,7 @@ std::vector<int> evenBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
     return res;
 }
 
-std::vector<int> oddBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
+std::vector<int> oddBatch(std::vector<int> vec1, std::vector<int> vec2) {
     int size1 = vec1.size();
     int size2 = vec2.size();
     int res_size = size1 / 2 + size2 / 2;
@@ -158,8 +156,7 @@ std::vector<int> oddBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
         if (vec1[i1] <= vec2[i2]) {
             res[i] = vec1[i1];
             i1 += 2;
-        }
-        else {
+        } else {
             res[i] = vec2[i2];
             i2 += 2;
         }
@@ -171,8 +168,7 @@ std::vector<int> oddBatch(std::vector<int> &vec1, std::vector<int> &vec2) {
             res[i] = vec2[l];
             i++;
         }
-    }
-    else {
+    } else {
         for (int l = i1; l < size1; l += 2) {
             res[i] = vec1[l];
             i++;

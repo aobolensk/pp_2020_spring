@@ -6,12 +6,12 @@
 #include "./radix_sort_w_batcher.h"
 
 TEST(Radix_Sort_W_Batcher, Test_CorrectSort) {
-    std::vector<int> vec = { 1,2,3,4,5,6,7,8,9 };
+    std::vector<int> vec = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     ASSERT_EQ(true, checkSort(vec));
 }
 
 TEST(Radix_Sort_W_Batcher, Test_Sort) {
-    std::vector<int> vec = { 9,4,5,6,3,2,1,7,8 };
+    std::vector<int> vec = { 9, 4, 5, 6, 3, 2, 1, 7, 8 };
     radixSort(&vec);
     ASSERT_EQ(true, checkSort(vec));
 }
@@ -32,8 +32,6 @@ TEST(Radix_Sort_W_Batcher, Test_Batcher_W_RadixSort) {
     std::vector<int> part2 = GetRandVector(10);
     radixSort(&part1);
     radixSort(&part2);
-    //std::sort(part1.begin(), part1.end());
-    //std::sort(part2.begin(), part2.end());
     std::vector<int> even = evenBatch(part1, part2);
     std::vector<int> odd = oddBatch(part1, part2);
     std::vector<int> res = EvenOddBatch(even, odd);
