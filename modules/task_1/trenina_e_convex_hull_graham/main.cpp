@@ -63,8 +63,9 @@ TEST(Graham_Alg, Test_rotate2) {
 }
 
 TEST(Graham_Alg, Test_Getrand3) {
-    std::vector<point> Q = GetRandSet(5);
-    ASSERT_EQ(Q.size(), 5);
+    unsigned int n = 5;
+    std::vector<point> Q = GetRandSet(n);
+    ASSERT_EQ(Q.size(), n);
 }
 
 
