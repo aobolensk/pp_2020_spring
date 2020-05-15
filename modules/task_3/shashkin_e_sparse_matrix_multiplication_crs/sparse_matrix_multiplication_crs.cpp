@@ -177,12 +177,10 @@ void MatrixMultiplicator::operator()(const tbb::blocked_range<int>& r) const {
         s += matA.values[iter1] * matB.values[iter2];
         iter1++;
         iter2++;
-      }
-      else {
+      } else {
         if (matA.col_index[iter1] < matB.col_index[iter2]) {
           iter1++;
-        }
-        else {
+        } else {
           iter2++;
         }
       }
