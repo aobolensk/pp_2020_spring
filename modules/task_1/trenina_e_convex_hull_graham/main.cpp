@@ -75,7 +75,7 @@ TEST(Graham_Alg, Graham_Test) {
     std::vector<point> hull = Graham(Q);
     std::vector<point> exp_hull{ {-2, -1}, {2, 0}, {4, 2}, {2, 5}, {-1, 3}, {-4, 1} };
     ASSERT_EQ(hull.size(), exp_hull.size());
-    for (int i = 0; i < hull.size(); i++) {
+    for (size_t i = 0; i < hull.size(); i++) {
         ASSERT_DOUBLE_EQ(hull[i].x, exp_hull[i].x);
         ASSERT_DOUBLE_EQ(hull[i].y, exp_hull[i].y);
     }
