@@ -1,12 +1,10 @@
 // Copyright 2020 Okmyanskiy Andrey
-#include "../../../modules/task_3/okmyanskiy_a_contrast_enhancement/contrast_enhancement.h"
+#include <tbb/tbb.h>
 #include <algorithm>
 #include <ctime>
 #include <random>
 #include <vector>
-#include <tbb/tbb.h>
-#include "tbb/parallel_for.h"
-#include "tbb/blocked_range.h"
+#include "../../../modules/task_3/okmyanskiy_a_contrast_enhancement/contrast_enhancement.h"
 
 class ContrastEnhancementTbb {
  private:
