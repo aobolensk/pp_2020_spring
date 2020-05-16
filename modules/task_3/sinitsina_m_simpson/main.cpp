@@ -144,7 +144,7 @@ TEST(Multiple_Simpson_Integraion_TBB, Test_7_Wrong_Data_Negative_in_size_of_firs
   ASSERT_ANY_THROW(Simpson_Integr_TBB(f4, x, y, n, dimension, lim));
 }
 
-TEST(Multiple_Simpson_Integraion_TBB, Test_8_Wrong_Data_Negative_in_size_of_second_coord) {
+TEST(Multiple_Simpson_Integraion_TBB, Test_8_Wrong_Data_Negative_in_size_of_second_coordinat) {
   int dimension = 2;
   std::vector<double> x(dimension);
   std::vector<double> y(dimension);
