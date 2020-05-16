@@ -24,7 +24,8 @@ std::vector<int> generateImage(int rows, int columns) {
   return image;
 }
 
-std::vector<int> getTempImage(std::vector<int> image, int rows, int columns) {
+std::vector<int> getTempImage(const std::vector<int>& image, int rows,
+                              int columns) {
   if (rows <= 0 || columns <= 0) {
     throw "Error: count of columns and rows can't be negative or equals zero.";
   }
