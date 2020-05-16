@@ -5,7 +5,7 @@
 #include <vector>
 
 std::vector<int> generateImage(int, int);
-std::vector<int> getTempImage(const std::vector<int>, int, int);
+std::vector<int> getTempImage(const std::vector<int>&, int, int);
 std::vector<int> imageFiltering(std::vector<int>, std::vector<int>, int, int);
 std::vector<int> imageFilteringTBB(const std::vector<int>&, int, int);
 
