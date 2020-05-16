@@ -3,7 +3,7 @@
 #include <omp.h>
 #include "./integrals-rectangle.h"
 #define PRINTF 1
-#define STD_THREAD 0  // if 0, then sequential
+#define STD_THREAD 1  // if 0, then sequential
 
 TEST(MultiDimensionalIntegralRectangle, func1) {
     double x1 = 0;
