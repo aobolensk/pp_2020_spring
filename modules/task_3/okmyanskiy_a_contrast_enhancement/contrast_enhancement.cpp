@@ -1,5 +1,5 @@
 // Copyright 2020 Okmyanskiy Andrey
-#include <omp.h>
+#include "../../../modules/task_3/okmyanskiy_a_contrast_enhancement/contrast_enhancement.h"
 #include <algorithm>
 #include <ctime>
 #include <random>
@@ -7,15 +7,14 @@
 #include <tbb/tbb.h>
 #include "tbb/parallel_for.h"
 #include "tbb/blocked_range.h"
-#include "../../../modules/task_3/okmyanskiy_a_contrast_enhancement/contrast_enhancement.h"
 
 class ContrastEnhancementTbb {
-private:
+ private:
     const std::vector<int> &initial;
     std::vector<int> *result;
     const int minimum, maximum;
-public:
-    ContrastEnhancementTbb(std::vector<int> &init, std::vector<int> *res,
+ public:
+    ContrastEnhancementTbb(const std::vector<int> &init, std::vector<int> *res,
         int min, int max): initial(init), result(res), minimum(min), maximum(max) {}
 
     void operator() (const tbb::blocked_range<int> &r) const {
