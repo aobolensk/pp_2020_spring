@@ -24,7 +24,7 @@ std::vector<std::vector<int>> splitVector(const std::vector<int>& vec, size_t n)
   size_t begin = 0;
   size_t end = 0;
 
-  for (size_t i = 0; i < min(n, vec.size()); ++i) {
+  for (size_t i = 0; i < fmin(n, vec.size()); ++i) {
     end += (remain > 0) ? (length + !!(remain--)) : length;
     outVec.push_back(std::vector<int>(vec.begin() + begin, vec.begin() + end));
     begin = end;
@@ -87,7 +87,6 @@ std::vector<int> oddevenMerge_seq(const std::vector<std::vector<int>>& A, const 
   }
   return res;
 }
-
 
 std::vector<int> evenBatcher(const std::vector<int>& A, const std::vector<int>& B) {
   int size1 = A.size();
