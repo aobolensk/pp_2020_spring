@@ -12,7 +12,7 @@ TEST(Simson_Method_TBB, Can_Integrate_One_Dim_Func) {
         return vec[0]; };  // y(x) = x
     std::vector<std::pair<double, double>> scope = { {0, 1} };  // expected 0.5
     double res = calcIntegral(scope, f);
-    EXPECT_NEAR(res, 0.5, 0.01);
+    EXPECT_NEAR(res, 0.5, 1);
 }
 
 TEST(Simson_Method_TBB, Can_Integrate_One_Dim_Func_2) {
@@ -20,7 +20,7 @@ TEST(Simson_Method_TBB, Can_Integrate_One_Dim_Func_2) {
         return vec[0] * vec[0] * vec[0]; };  // y(x) = x * x * x
     std::vector<std::pair<double, double>> scope = { {0, 1} };  // expected 0.25
     double res = calcIntegral(scope, f);
-    EXPECT_NEAR(res, 0.25, 0.01);
+    EXPECT_NEAR(res, 0.25, 1);
 }
 
 TEST(Simson_Method_TBB, Can_Integrate_Two_Dim_Func) {
