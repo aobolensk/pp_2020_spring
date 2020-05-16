@@ -37,8 +37,8 @@ std::vector<int> getResultMatrixTbb(std::vector<int> initial, int width, int hei
     }
 
     std::vector<int> result(width * height);
-    int min = *std::min_element(initial.begin(), initial.end());
     int max = *std::max_element(initial.begin(), initial.end());
+    int min = *std::min_element(initial.begin(), initial.end());
 
     parallel_for(tbb::blocked_range<int>(0, width*height), ContrastEnhancementTbb(initial, &result, min, max));
 
