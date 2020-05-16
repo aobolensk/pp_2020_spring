@@ -1,11 +1,11 @@
 // Copyright 2020 Vlasov Andrey
-#ifndef MODULES_TASK_3_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
-#define MODULES_TASK_3_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
+#ifndef MODULES_TASK_4_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
+#define MODULES_TASK_4_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
 
 #include <vector>
-#include "tbb/tbb.h"
+#include <functional>
 
-double getIntegralSimpsonTBB(const std::function<double(const std::vector<double>&)>& f,
+double getIntegralSimpsonThread(const std::function<double(const std::vector<double>&)>& f,
   const std::vector<double>& a, const std::vector<double>& b, int n, int num_threads = 2);
 
 double getSum(const std::function<double(const std::vector<double>&)>& f,
@@ -14,4 +14,4 @@ double getSum(const std::function<double(const std::vector<double>&)>& f,
 double getSum_odd(const std::function<double(const std::vector<double>&)>& f,
   const std::vector<double>& a, const std::vector<double>& b, int n);
 
-#endif  // MODULES_TASK_3_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_
+#endif  // MODULES_TASK_4_VLASOV_A_MULTI_INTEGRATION_SIMPSON_MULTI_INTEGRATION_SIMPSON_H_

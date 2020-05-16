@@ -1,8 +1,9 @@
 // Copyright 2020 Vlasov Andrey
 #include <vector>
-#include "../../../modules/task_3/vlasov_a_multi_integration_simpson/multi_integration_simpson.h"
+#include <thread>
+#include "../../../modules/task_4/vlasov_a_multi_integration_simpson/multi_integration_simpson.h"
 
-double getIntegralSimpsonTBB(const std::function<double(const std::vector<double>&)>& f,
+double getIntegralSimpsonThread(const std::function<double(const std::vector<double>&)>& f,
   const std::vector<double>& a, const std::vector<double>& b, int n_, int num_threads) {
   if (n_ <= 0)
     throw "n is negative";
@@ -17,10 +18,9 @@ double getIntegralSimpsonTBB(const std::function<double(const std::vector<double
     h[i] = (b[i] - a[i]) / n;
   }
   std::vector<double> sum(num_threads + 1);
-  tbb::task_scheduler_init init(static_cast<int>(num_threads));
-  tbb::task_group group;
+  std::thread* threads = new std::thread[num_threads];
   for (int i = 0; i < num_threads; i++) {
-    group.run([local_n, h, a, multiplicity, f, i, &sum]() {
+    threads[i] = std::thread([local_n, h, a, b, multiplicity, f, i, &sum, num_threads]() {
       std::vector<double> local_a = a;
       for (int j = 0; j < multiplicity; j++) {
         local_a[j] += h[j] * i * local_n;
@@ -29,27 +29,26 @@ double getIntegralSimpsonTBB(const std::function<double(const std::vector<double
       for (int j = 0; j < multiplicity; j++) {
         local_b[j] += h[j] * local_n;
       }
-      if ((local_n * i) % 2 == 0) {
-        sum[i] = getSum(f, local_a, local_b, local_n);
+      if (i != num_threads - 1) {
+        if ((local_n * i) % 2 == 0) {
+          sum[i] = getSum(f, local_a, local_b, local_n);
+        } else {
+          sum[i] = getSum_odd(f, local_a, local_b, local_n);
+        }
       } else {
-        sum[i] = getSum_odd(f, local_a, local_b, local_n);
+        if ((local_n * i) % 2 == 0) {
+          sum[i] = getSum(f, local_a, b, local_n);
+        }
+        else {
+          sum[i] = getSum_odd(f, local_a, b, local_n);
+        }
       }
     });
   }
-  if ((n % num_threads) != 0) {
-    group.run([local_n, n, h, a, b, multiplicity, f, num_threads, &sum]() {
-      std::vector<double> local_a = a;
-      for (int i = 0; i < multiplicity; i++) {
-        local_a[i] = a[i] + h[i] * num_threads * local_n;
-      }
-      if ((local_n * num_threads) % 2 == 0) {
-        sum[num_threads] += getSum(f, local_a, b, n % num_threads);
-      } else {
-        sum[num_threads] += getSum_odd(f, local_a, b, n % num_threads);
-      }
-    });
+  for (int i = 0; i < num_threads; ++i) {
+    threads[i].join();
   }
-  group.wait();
+  delete[] threads;
   for (int i = 0; i < num_threads + 1; i++) {
     global_sum += sum[i];
   }
