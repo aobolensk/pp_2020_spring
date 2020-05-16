@@ -50,7 +50,7 @@ TEST(Jarvis_Algorithm, Hull_Wrong_Test) {
   ASSERT_ANY_THROW(buildHull_omp(set));
 }
 
-TEST(Jarvis_Algorithm, Test_Eff) {
+TEST(Jarvis_Algorithm, DISABLED_Test_Eff) {
   std::vector<Point> set = randomSet(10000);
   double s_s = omp_get_wtime();
   std::vector<Point> hull_s = buildHull_seq(set);
