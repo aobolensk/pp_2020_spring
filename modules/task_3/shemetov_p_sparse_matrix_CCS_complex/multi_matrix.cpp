@@ -1,13 +1,13 @@
 // Copyright 2020 Shemetov Philipp
 
-#include "tbb/tbb.h"
 #include <cmath>
 #include <random>
 #include <iostream>
 #include <vector>
+#include "tbb/tbb.h"
 #include "../../../modules/task_3/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
 
-
+typedef std::vector <std::vector<std::complex < double>>> mtxComplex;
 
 SparseMatrixCCS::SparseMatrixCCS(size_t _m, size_t _n) {
     n = _n;
@@ -95,7 +95,6 @@ SparseMatrixCCS SparseMatrixCCS::transpose() {
             tempColIndex = row_index[j];
             tempCountCol[tempColIndex]++;
         }
-        
     for (size_t j = 0; j < n; j++) {
         at.col_offsets.push_back(at.col_offsets[j] + tempCountCol[j]);
     }
@@ -164,47 +163,14 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
     return resMatrix;
 }
 
+
+
 SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
         const SparseMatrixCCS &A, const SparseMatrixCCS &B) {
     if (A.n != B.m) {
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
-    SparseMatrixCCS resMatrix(A.m, B.n);
-    int tempRowA;
-    resMatrix.col_offsets.push_back(0);
-    std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
 
-    // tbb::parallel_for(tbb::blocked_range<)
-    for (size_t j = 0; j < B.n; j++) {
-        for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
-            tempRowA = B.row_index[k];
-            for (int i = A.col_offsets[tempRowA];
-                 i < A.col_offsets[tempRowA + 1]; i++) {
-                tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
-            }
-        }
-        for (size_t count = 0; count < A.m; count++) {
-            if (tempDataVec[count].imag() != 0 ||
-                tempDataVec[count].real() != 0) {
-                resMatrix.row_index.push_back(count);
-                resMatrix.value.push_back(tempDataVec[count]);
-                tempDataVec[count] = 0;
-            }
-        }
-        resMatrix.col_offsets.push_back(resMatrix.value.size());
-    }
-    return resMatrix;
-}
-
-
-SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
-        const SparseMatrixCCS &A, const SparseMatrixCCS &B) {
-    if (A.n != B.m) {
-        throw "Error(Size col matrix A not equal size row matrix B)";
-    }
-    const int NUM_THREADS = 4;
-    int k, i;
-    size_t j, count;
     SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
     resMatrix.col_offsets.push_back(0);
@@ -213,19 +179,19 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixParallel(
     std::vector<int> tempVecColPtr(B.n, 0);
 
 
-
-#pragma omp parallel for num_threads(NUM_THREADS) \
-private(tempRowA, k, i, j, count)
-        for (j = 0; j < B.n; j++) {
+    int gz = (B.n > 4) ? B.n / 4 : 1;
+    tbb::parallel_for(0, static_cast<int>(B.n), gz,
+    [&tempRowA, &resMatrix, &tempVecValue,
+    &tempVecRowIndex, &tempVecColPtr, A, B](int j) {
             std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
-            for (k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
+            for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
                 tempRowA = B.row_index[k];
-                for (i = A.col_offsets[tempRowA];
+                for (int i = A.col_offsets[tempRowA];
                      i < A.col_offsets[tempRowA + 1]; i++) {
                     tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
                 }
             }
-            for (count = 0; count < A.m; count++) {
+            for (size_t count = 0; count < A.m; count++) {
                 if (tempDataVec[count].imag() != 0 ||
                     tempDataVec[count].real() != 0) {
                     tempVecRowIndex[j].push_back(count);
@@ -233,7 +199,7 @@ private(tempRowA, k, i, j, count)
                     tempVecColPtr[j]++;
                 }
             }
-        }
+        });
     int varTemp = 0;
     for (size_t i = 0; i < resMatrix.n; i++) {
         varTemp += tempVecColPtr[i];
@@ -249,6 +215,7 @@ private(tempRowA, k, i, j, count)
 
     return resMatrix;
 }
+
 
 
 mtxComplex multiMatrix(const mtxComplex &mtxA, const mtxComplex &mtxB) {
@@ -283,28 +250,28 @@ bool SparseMatrixCCS::operator==(const SparseMatrixCCS &newMtx) const {
 
 
 //  Debug
-void Print(const mtxComplex &mt) {
-    for (size_t i = 0; i < mt.size(); i++) {
-        for (size_t j = 0; j < mt[0].size(); j++)
-            std::cout << mt[i][j] << " \n"[j == mt[0].size() - 1];
-    }
-}
+// void Print(const mtxComplex &mt) {
+//     for (size_t i = 0; i < mt.size(); i++) {
+//         for (size_t j = 0; j < mt[0].size(); j++)
+//             std::cout << mt[i][j] << " \n"[j == mt[0].size() - 1];
+//     }
+// }
 
 //  Debug
-void SparseMatrixCCS::PrintCCS() {
-    std::cout << "Value:" << std::endl;
-    for (size_t i = 0; i < value.size(); i++) {
-        std::cout << value[i] << "|";
-    }
-    std::cout << "rowIndex:" << std::endl;
-    for (size_t i = 0; i < row_index.size(); i++) {
-        std::cout << row_index[i] << "|";
-    }
-    std::cout << "col_offsets:" << std::endl;
-    for (size_t i = 0; i < col_offsets.size(); i++) {
-        std::cout << col_offsets[i] << "|";
-    }
-}
+// void SparseMatrixCCS::PrintCCS() {
+//     std::cout << "Value:" << std::endl;
+//     for (size_t i = 0; i < value.size(); i++) {
+//         std::cout << value[i] << "|";
+//     }
+//     std::cout << "rowIndex:" << std::endl;
+//     for (size_t i = 0; i < row_index.size(); i++) {
+//         std::cout << row_index[i] << "|";
+//     }
+//     std::cout << "col_offsets:" << std::endl;
+//     for (size_t i = 0; i < col_offsets.size(); i++) {
+//         std::cout << col_offsets[i] << "|";
+//     }
+// }
 
 
 
