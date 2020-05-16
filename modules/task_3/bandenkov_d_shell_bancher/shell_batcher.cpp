@@ -7,8 +7,7 @@
 #include <ctime>
 #include <iterator>
 #include <utility>
-#include "../../../modules/task_2/bandenkov_d_shell_bancher/shell_batcher.h"
-#include "shell_batcher.h"
+#include "../../../modules/task_3/bandenkov_d_shell_bancher/shell_batcher.h"
 
 std::vector<int> getRandomVector(int sz) {
   std::mt19937 gen;
@@ -17,8 +16,6 @@ std::vector<int> getRandomVector(int sz) {
   for (int i = 0; i < sz; i++) { vec[i] = gen() % 100; }
   return vec;
 }
-
-
 
 std::vector<std::vector<int>> splitVector(const std::vector<int>& vec, size_t n) {
   std::vector<std::vector<int>> outVec;

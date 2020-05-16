@@ -9,14 +9,11 @@
 #include "./shell_batcher.h"
 
 TEST(test_Shell_Betch_sort_seq, test_on_1000_element) {
-  int n = 1000;
-  int part = 4;
-  std::vector<int> res = getRandomVector(n);
-  std::vector<int> betch = shellBatcher_seq(res, 4, n);
+  std::vector<int> res = getRandomVector(1000);
+  std::vector<int> betch = shellBatcher_seq(res, 4, 1000);
   std::sort(res.begin(), res.end());
   ASSERT_EQ(betch, res);
 }
-
 
 TEST(test_Shell_Betch_sort_tbb, test_on_20_elements_2_thread) {
   std::vector<int> res = getRandomVector(20);

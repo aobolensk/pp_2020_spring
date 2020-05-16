@@ -16,4 +16,4 @@ std::vector<int> oddevenMerge_seq(const std::vector<std::vector<int>>& A, const 
 std::vector<int> shellBatcher_seq(const std::vector<int>& A, const int n, int size);
 std::vector<int> shellBatcher_tbb(const std::vector<int>& A, const int n, int size);
 
-#endif  // MODULES_TASK_2_BANDENKOV_D_SHELL_BANCHER_SHELL_BATCHER_H_
+#endif  // MODULES_TASK_3_BANDENKOV_D_SHELL_BANCHER_SHELL_BATCHER_H_
