@@ -2,7 +2,10 @@
 
 #include "../../../modules/task_3/babushkin_a_matrix_mult/matrix_mult.h"
 
-#include <tbb/tbb.h>
+#include <tbb/blocked_range.h>
+#include <tbb/blocked_range2d.h>
+#include <tbb/parallel_for.h>
+#include <tbb/task_arena.h>
 
 #include <algorithm>
 #include <random>
@@ -88,19 +91,20 @@ struct Mult {
   const Matrix &left;
   const Matrix &right;
 
-  std::vector<double> &result;
+  std::vector<double> *result;
 
-  Mult(const Matrix &t_left, const Matrix &t_right, std::vector<double> &res)
+  Mult(const Matrix &t_left, const Matrix &t_right, std::vector<double> *res)
       : left(t_left), right(t_right), result(res) {}
 
   void operator()(const tbb::blocked_range<int> &r) const {
-    result.resize(left.get_rows() * right.get_cols());
-
     for (auto i = r.begin(); i != r.end(); i++) {
       for (auto j = 0; j < right.get_cols(); j++) {
+        double mult_res = 0.0;
         for (auto k = 0; k < left.get_cols(); k++) {
-          result.at(i * right.get_cols() + j) += left.at(i, k) * right.at(k, j);
+          mult_res += left.at(i, k) * right.at(k, j);
         }
+
+        result->at(i * right.get_cols() + j) += mult_res;
       }
     }
   }
@@ -122,8 +126,9 @@ Matrix multiply(const Matrix &left, const Matrix &right,
   std::vector<double> result_vector;
 
   if (isParallel) {
+    result_vector.resize(left.get_rows() * right.get_cols(), 0);
     tbb::parallel_for(tbb::blocked_range<int>(0, right.m_rows),
-                      Mult(left, right, result_vector));
+                      Mult(left, right, &result_vector));
   } else {
     for (auto i = 0; i < left.m_rows; i++) {
       for (auto j = 0; j < right.m_cols; j++) {
@@ -140,6 +145,102 @@ Matrix multiply(const Matrix &left, const Matrix &right,
   }
 
   return Matrix(result_vector, left.m_rows, right.m_cols);
+}
+
+struct MultCann {
+  const int block_size;
+  const Matrix &left;
+  const Matrix &right;
+
+  std::vector<double> *result;
+
+  MultCann(int t_block_size, const Matrix &t_left, const Matrix &t_right,
+           std::vector<double> *res)
+      : block_size(t_block_size), left(t_left), right(t_right), result(res) {}
+
+  void operator()(const tbb::blocked_range2d<int, int> &r) const {
+    std::vector<double> left_block(block_size * block_size);
+    std::vector<double> right_block(block_size * block_size);
+    std::vector<double> res_block(block_size * block_size);
+
+    // copy blocks
+    for (auto row = r.rows().begin(), l = 0; row != r.rows().end();
+         row++, l++) {
+      for (auto col = r.cols().begin(), m = 0; col != r.cols().end();
+           col++, m++) {
+        left_block.at(l * block_size + m) = left.at(row, col);
+        right_block.at(l * block_size + m) = right.at(row, col);
+        res_block.at(l * block_size + m) =
+            result->at(row * right.get_cols() + col);
+      }
+    }
+
+    // multiply blocks
+    for (int i = 0; i < block_size; i++) {
+      for (int j = 0; j < block_size; j++) {
+        for (int k = 0; k < block_size; k++) {
+          res_block.at(i * block_size + j) +=
+              left_block.at(i * block_size + k) *
+              right_block.at(k * block_size + j);
+        }
+      }
+    }
+
+    // write blocks back to the result
+    for (auto row = r.rows().begin(), l = 0; row != r.rows().end();
+         row++, l++) {
+      for (auto col = r.cols().begin(), m = 0; col != r.cols().end();
+           col++, m++) {
+        result->at(row * right.get_cols() + col) =
+            res_block.at(l * block_size + m);
+      }
+    }
+  }
+};
+
+Matrix multiply_cannon(Matrix *left, Matrix *right) {
+  if (right->m_data.size() == 0 || left->m_data.size() == 0) {
+    throw new std::invalid_argument("Matrices must not be empty");
+    return Matrix();
+  }
+
+  if (right->m_rows != left->m_cols) {
+    throw new std::invalid_argument(
+        "Right matrix must contain left matrix rows number of columns");
+    return Matrix();
+  }
+
+  if (right->m_rows != right->m_cols) {
+    throw new std::invalid_argument("Matrices must be homogenious");
+    return Matrix();
+  }
+
+  int size = tbb::this_task_arena::max_concurrency();
+  if (size < 4) {
+    return multiply(*left, *right, PARALLEL);
+  }
+
+  int sqrt_size = std::sqrt(size);
+  int block_size = left->m_cols / sqrt_size;
+
+  // left-circular-shift left matrix i-row by i positions
+  left->shift_left(block_size, true);
+  // Up-circular-shift right matrix i-column by i positions
+  right->shift_up(block_size, true);
+
+  std::vector<double> result(left->m_data.size());
+
+  for (int iter = 0; iter < sqrt_size; iter++) {
+    tbb::parallel_for(
+        tbb::blocked_range2d<int, int>(0, left->m_rows, block_size, 0,
+                                       left->m_cols, block_size),
+        MultCann(block_size, *left, *right, &result));
+
+    left->shift_left(block_size, false);
+    right->shift_up(block_size, false);
+  }
+
+  return Matrix(result, left->m_rows, left->m_cols);
 }
 
 Matrix random_matrix(const int rows, const int columns) {
