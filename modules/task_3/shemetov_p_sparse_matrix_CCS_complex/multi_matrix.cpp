@@ -181,8 +181,7 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
 
     int gz = (B.n > 4) ? B.n / 4 : 1;
     tbb::parallel_for(0, static_cast<int>(B.n), gz,
-    [&tempRowA, &resMatrix, &tempVecValue,
-    &tempVecRowIndex, &tempVecColPtr, A, B](int j) {
+    [&tempRowA, &tempVecValue, &tempVecRowIndex, &tempVecColPtr, A, B](int j) {
             std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
             for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
                 tempRowA = B.row_index[k];
