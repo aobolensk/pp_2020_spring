@@ -13,12 +13,15 @@ if ( USE_TBB )
     add_executable(${ProjectId} ${source_files})
 
     target_link_libraries(${ProjectId} ${PACK_LIB})
-    target_link_libraries(${ProjectId} ${TBB_LIBRARIES})
+    if( WIN32 )
+        target_link_libraries(${ProjectId} ${TBB_IMPORTED_TARGETS})
+    else( WIN32 )
+        target_link_libraries(${ProjectId} ${TBB_LIBRARIES})
+    endif( WIN32 )
     target_link_libraries(${ProjectId} gtest gtest_main)
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-
 else( USE_TBB )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
 endif( USE_TBB )
