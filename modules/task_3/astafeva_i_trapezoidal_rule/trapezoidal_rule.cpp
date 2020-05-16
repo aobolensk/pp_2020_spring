@@ -1,6 +1,7 @@
 // Copyright 2020 Astafeva Irina
 
 #include <cmath>
+#include <functional>
 #include <iostream>
 #include <vector>
 #include <utility>
@@ -17,8 +18,7 @@ double calculateIntegral(double(*function)(std::vector<double>), std::vector <st
         segments *= partition[i];
     }
     double res = tbb::parallel_reduce(tbb::blocked_range<int>(0, segments), 0.0,
-        [&](tbb::blocked_range<int> r, double result)
-            {
+        [&](tbb::blocked_range<int> r, double result) {
             for (int i = r.begin(); i != r.end(); i++) {
                 std::vector<double> params(dimensionality);
                 int k = i;
