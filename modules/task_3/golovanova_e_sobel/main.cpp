@@ -1,5 +1,6 @@
 // Copyright 2020 Golovanova Elena
 #include <iostream>
+#include <vector>
 #include "../../../modules/task_3/golovanova_e_sobel/sobel.h"
 #include "gtest/gtest.h"
 
@@ -25,7 +26,7 @@ TEST(sobel, uncorrect_sizes) {
 }
 
 TEST(sobel, uncorrect_width_in_random) {
-  ASSERT_ANY_THROW(image Example(0,1));
+  ASSERT_ANY_THROW(image Example(0, 1));
 }
 
 TEST(sobel, uncorrect_height_in_random) {

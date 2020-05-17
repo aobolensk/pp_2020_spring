@@ -4,8 +4,8 @@
 #include <vector>
 #include <ctime>
 #include <iostream>
-#include <tbb/tbb.h>
 #include "../../../modules/task_3/golovanova_e_sobel/sobel.h"
+#include <tbb/tbb.h>
 
 image::image(int _width, int _height, std::vector<int>_matrix) {
   if ((_width <= 0) || (_height <= 0))
@@ -14,7 +14,7 @@ image::image(int _width, int _height, std::vector<int>_matrix) {
   height = _height;
   matrix.resize(_width * _height);
   for (int i = 0; i < _width * _height; i++)
-    matrix[i] =_matrix[i];
+    matrix[i] = _matrix[i];
 }
 
 image::image(int _width, int _height) {
@@ -39,8 +39,7 @@ image image::GetRandom(int _width, int _height) {
   return random;
 }
 
-image& image::operator=(const image& Example)
-{
+image& image::operator=(const image& Example) {
   if (this != &Example)
   {
     width = Example.width;
@@ -58,7 +57,7 @@ image image::SeqSobel() {
   Gy.resize(9);
   Gx = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
   Gy = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
-  image result(width-2, height-2); 
+  image result(width-2, height-2);
   int i = 0;
   while (i <= width-3) {
     int j = 0;
