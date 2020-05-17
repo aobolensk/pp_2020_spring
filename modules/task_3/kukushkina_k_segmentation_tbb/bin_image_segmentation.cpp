@@ -5,8 +5,6 @@
 #include <ctime>
 #include <iostream>
 
-using namespace tbb;
-
 static int offset = 0;
 
 std::vector<int> Generate_pic(std::size_t w, std::size_t h) {
@@ -21,8 +19,7 @@ std::vector<int> Generate_pic(std::size_t w, std::size_t h) {
     curx = gen() % w;
     cury = gen() % h;
     int segsize = gen() % (h * w / segcount);
-    for (size_t j = 0; j < segsize; j++)
-    {
+    for (size_t j = 0; j < segsize; j++) {
       pic[curx + w * cury] = 1;
       int dir = gen() % 4;
       switch (dir) {
@@ -61,12 +58,11 @@ std::vector<int> Generate_pic(std::size_t w, std::size_t h) {
 }
 
 void Segmentation::operator() (const tbb::blocked_range<int>& r) const {
-  spin_mutex::scoped_lock lock;
-  spin_mutex::scoped_lock lock1;
+  tbb::spin_mutex::scoped_lock lock;
+  tbb::spin_mutex::scoped_lock lock1;
   (*workingThreads)++;
   int begin = r.begin();
   int end = r.end();
-
 }
 
 void Output(const std::vector<int>& source, std::size_t w) {
