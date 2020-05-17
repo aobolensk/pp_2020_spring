@@ -11,18 +11,18 @@ static tbb::spin_mutex mut_new_seg;
 static tbb::spin_mutex mut_recolor;
 
 class Segmentation {
-  int* color;
-  tbb::atomic<int>* workingThreads;
-  std::vector<int>* newColor;
   const std::vector<int>& source;
   std::vector<int>* result;
   std::size_t w;
   std::size_t h;
+  int* color;
+  tbb::atomic<int>* workingThreads;
+  std::vector<int>* newColor;
  public:
   Segmentation(const std::vector<int>& tsource, std::vector<int>* tresult,
     std::size_t tw, std::size_t th, int* tcolor, tbb::atomic<int>* twt,
-    std::vector<int>* tnc) : source(tsource), color(tcolor),
-    w(tw), h(th), result(tresult), workingThreads(twt), newColor(tnc) {}
+    std::vector<int>* tnc) : source(tsource), result(tresult),
+    w(tw), h(th), color(tcolor), workingThreads(twt), newColor(tnc) {}
 
   void operator() (const tbb::blocked_range<int>& r) const;
 };
