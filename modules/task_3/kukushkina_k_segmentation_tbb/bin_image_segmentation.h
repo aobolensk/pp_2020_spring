@@ -30,7 +30,7 @@ class Recolor {
   std::size_t w;
   std::size_t h;
   const std::vector<std::size_t>& newColor;
-public:
+ public:
   Recolor(std::vector<std::size_t>* tresult, std::size_t tw,
     std::size_t th, const std::vector<std::size_t>& tnc) :
     result(tresult), w(tw), h(th), newColor(tnc) {}

@@ -50,7 +50,7 @@ TEST(Bin_image_segmentation, empty_space_large) {
 }
 
 TEST(Bin_image_segmentation, correctness_square) {
-  std::size_t w = 30;
+  std::size_t w = 20;
   std::vector<std::size_t> vec = Generate_pic(w, w);
   std::vector<std::size_t> res = Process(vec, w, w);
   bool corr = 1;
@@ -79,7 +79,7 @@ TEST(Bin_image_segmentation, correctness_square) {
 
 TEST(Bin_image_segmentation, correctness_rectangle) {
   std::size_t w = 30;
-  std::size_t h = 50;
+  std::size_t h = 20;
   std::vector<std::size_t> vec = Generate_pic(w, h);
   std::vector<std::size_t> res = Process(vec, w, h);
   bool corr = 1;
