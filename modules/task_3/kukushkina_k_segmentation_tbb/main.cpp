@@ -15,15 +15,15 @@ TEST(Bin_image_segmentation, negative_dim_image) {
 }
 
 TEST(Bin_image_segmentation, image_dim) {
-  std::vector<int> vec = Generate_pic(3, 3);
+  std::vector<std::size_t> vec = Generate_pic(3, 3);
   ASSERT_EQ(vec.size(), static_cast<unsigned int>(9));
 }
 
 TEST(Bin_image_segmentation, empty_space_small) {
-  int h = 5;
-  int w = 5;
-  std::vector<int> vec = Generate_pic(w, h);
-  std::vector<int> res = Process(vec, w, h);
+  std::size_t h = 30;
+  std::size_t w = 20;
+  std::vector<std::size_t> vec = Generate_pic(w, h);
+  std::vector<std::size_t> res = Process(vec, w, h);
   bool eq = 1;
   for (size_t i = 0; i < 25; i++) {
     if ((vec[i] == 0 || res[i] == 0) && (vec[i] != res[i])) {
@@ -35,10 +35,10 @@ TEST(Bin_image_segmentation, empty_space_small) {
 }
 
 TEST(Bin_image_segmentation, empty_space_large) {
-  int w = 99;
-  int h = 100;
-  std::vector<int> vec = Generate_pic(w, h);  // 999*1000
-  std::vector<int> res = Process(vec, w, h);
+  std::size_t w = 99;
+  std::size_t h = 100;
+  std::vector<std::size_t> vec = Generate_pic(w, h);  // 999*1000
+  std::vector<std::size_t> res = Process(vec, w, h);
   bool eq = 1;
   for (size_t i = 0; i < 9900; i++) {
     if ((vec[i] == 0 || res[i] == 0) && (vec[i] != res[i])) {
@@ -50,38 +50,11 @@ TEST(Bin_image_segmentation, empty_space_large) {
 }
 
 TEST(Bin_image_segmentation, correctness_square) {
-  int w = 100;
-  std::vector<int> vec = Generate_pic(w, w);
-  std::vector<int> res = Process(vec, w, w);
+  std::size_t w = 30;
+  std::vector<std::size_t> vec = Generate_pic(w, w);
+  std::vector<std::size_t> res = Process(vec, w, w);
   bool corr = 1;
-  for (size_t i = 11; i < 89; i++) {
-    if (res[i] == 0) continue;
-    if (i % 10 == 0) {
-      if (res[i] != res[i - 10] && res[i - 10] != 0
-        && res[i] != res[i + 10] && res[i + 10] != 0) {
-        corr = 0;
-        break;
-      }
-    } else {
-      if ((res[i] != res[i - 10] && res[i - 10] != 0)
-        && (res[i] != res[i + 10] && res[i + 10] != 0)
-        && (res[i] != res[i - 1] && res[i - 1] != 0)
-        && (res[i] != res[i + 1] && res[i + 1] != 0)) {
-        corr = 0;
-        break;
-      }
-    }
-  }
-  ASSERT_EQ(1, corr);
-}
-
-TEST(Bin_image_segmentation, correctness_rectangle) {
-  int w = 50;
-  int h = 100;
-  std::vector<int> vec = Generate_pic(w, h);
-  std::vector<int> res = Process(vec, w, h);
-  bool corr = 1;
-  for (std::size_t i = static_cast<std::size_t>(w + 1); i < static_cast<std::size_t>(h * w - w - 1); i++) {
+  for (size_t i = w; i < w * w - w; i++) {
     if (res[i] == 0) continue;
     if (i % w == 0) {
       if (res[i] != res[i - w] && res[i - w] != 0
@@ -99,11 +72,41 @@ TEST(Bin_image_segmentation, correctness_rectangle) {
       }
     }
   }
-  ASSERT_EQ(1, corr);
+  if (corr == false)
+    Output(res, w);
+  ASSERT_EQ(true, corr);
+}
+
+TEST(Bin_image_segmentation, correctness_rectangle) {
+  std::size_t w = 30;
+  std::size_t h = 50;
+  std::vector<std::size_t> vec = Generate_pic(w, h);
+  std::vector<std::size_t> res = Process(vec, w, h);
+  bool corr = 1;
+  for (std::size_t i = w + 1; i < h * w - w - 1; i++) {
+    if (res[i] == 0) continue;
+    if (i % w == 0) {
+      if (res[i] != res[i - w] && res[i - w] != 0
+        && res[i] != res[i + w] && res[i + w] != 0) {
+        corr = 0;
+        break;
+      }
+    } else {
+      if ((res[i] != res[i - w] && res[i - w] != 0)
+        && (res[i] != res[i + w] && res[i + w] != 0)
+        && (res[i] != res[i - 1] && res[i - 1] != 0)
+        && (res[i] != res[i + 1] && res[i + 1] != 0)) {
+        corr = 0;
+        break;
+      }
+    }
+  }
+  if (corr == false)
+    Output(res, w);
+  ASSERT_EQ(true, corr);
 }
 
 int main(int argc, char** argv) {
-    tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
