@@ -110,10 +110,8 @@ image image::TbbSobel() {
           result.matrix[ind] = 255;
         else
           result.matrix[ind] = sqrt(X * X + Y * Y);
-        j++;
+        }
       }
-      i++;
-    }
   });
   return result;
 }
