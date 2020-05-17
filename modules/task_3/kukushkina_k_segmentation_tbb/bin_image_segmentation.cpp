@@ -61,7 +61,7 @@ std::vector<std::size_t> Process(const std::vector<std::size_t>& source, std::si
   tbb::task_scheduler_init init(tbb::task_scheduler_init::automatic);
   std::vector<std::size_t> res(source);
   std::size_t color = 2;
-  Segmentation pic(source, &res, w, h, &color);
+  Segmentation pic(&res, w, h, &color);
   tbb::parallel_for(tbb::blocked_range<std::size_t>(0, h), pic);
   std::vector<std::size_t> tnc(color + 1);
   std::iota(tnc.begin(), tnc.end(), 0);
@@ -75,7 +75,7 @@ std::vector<std::size_t> Process(const std::vector<std::size_t>& source, std::si
         tnc[j] = tnc[up];
     }
   }
-  Recolor rec(&res, w, h, tnc);
+  Recolor rec(&res, w, tnc);
   tbb::parallel_for(tbb::blocked_range<std::size_t>(0, h), rec);
   init.terminate();
   return res;

@@ -12,15 +12,13 @@ static tbb::spin_mutex mut_new_seg;
 static tbb::spin_mutex mut_recolor;
 
 class Segmentation {
-  const std::vector<std::size_t>& source;
   std::vector<std::size_t>* result;
   std::size_t w;
-  std::size_t h;
   std::size_t* color;
  public:
-  Segmentation(const std::vector<std::size_t>& tsource, std::vector<std::size_t>* tresult,
-    std::size_t tw, std::size_t th, std::size_t* tcolor) : source(tsource),
-    result(tresult), w(tw), h(th), color(tcolor) {}
+  Segmentation(std::vector<std::size_t>* tresult,
+    std::size_t tw, std::size_t th, std::size_t* tcolor) :
+    result(tresult), w(tw), color(tcolor) {}
 
   void operator() (const tbb::blocked_range<std::size_t>& r) const;
 };
@@ -28,12 +26,11 @@ class Segmentation {
 class Recolor {
   std::vector<std::size_t>* result;
   std::size_t w;
-  std::size_t h;
   const std::vector<std::size_t>& newColor;
  public:
   Recolor(std::vector<std::size_t>* tresult, std::size_t tw,
-    std::size_t th, const std::vector<std::size_t>& tnc) :
-    result(tresult), w(tw), h(th), newColor(tnc) {}
+    const std::vector<std::size_t>& tnc) :
+    result(tresult), w(tw), newColor(tnc) {}
 
   void operator() (const tbb::blocked_range<std::size_t>& r) const;
 };
