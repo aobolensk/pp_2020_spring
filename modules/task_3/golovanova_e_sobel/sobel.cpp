@@ -1,11 +1,11 @@
 // Copyright 2020 Golovanova Elena
+#include <tbb/tbb.h>
 #include <algorithm>
 #include <random>
 #include <vector>
 #include <ctime>
 #include <iostream>
 #include "../../../modules/task_3/golovanova_e_sobel/sobel.h"
-#include <tbb/tbb.h>
 
 image::image(int _width, int _height, std::vector<int>_matrix) {
   if ((_width <= 0) || (_height <= 0))
@@ -40,8 +40,7 @@ image image::GetRandom(int _width, int _height) {
 }
 
 image& image::operator=(const image& Example) {
-  if (this != &Example)
-  {
+  if (this != &Example) {
     width = Example.width;
     height = Example.height;
     for (int i = 0; i < height*width; i++)

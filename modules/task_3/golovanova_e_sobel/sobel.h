@@ -1,6 +1,6 @@
 // Copyright 2020 Golovanova Elena
 
-#ifndef MODULES_TASK_3_GOLOVANOVA_E_SOBEL_SOBEL_H_ 
+#ifndef MODULES_TASK_3_GOLOVANOVA_E_SOBEL_SOBEL_H_
 #define MODULES_TASK_3_GOLOVANOVA_E_SOBEL_SOBEL_H_
 
 #include <vector>
@@ -21,4 +21,4 @@ class image {
   image TbbSobel();
 };
 
-#endif  //  MODULES_TASK_3_GOLOVANOVA_E_SOBELE_SOBELE_H_
+#endif  // MODULES_TASK_3_GOLOVANOVA_E_SOBEL_SOBEL_H_
