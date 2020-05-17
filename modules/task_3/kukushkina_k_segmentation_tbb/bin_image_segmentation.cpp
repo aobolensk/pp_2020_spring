@@ -12,7 +12,7 @@ std::vector<std::size_t> Generate_pic(std::size_t w, std::size_t h) {
   std::vector<std::size_t> pic(h * w, 0);
   std::mt19937 gen;
   gen.seed(static_cast<unsigned>(time(0)) + offset++);
-  int segcount = gen() % w + 1;
+  std::size_t segcount = gen() % w + 1;
   segcount *= 2;
   for (size_t i = 0; i < segcount; i++) {
     size_t curx, cury;
@@ -69,7 +69,7 @@ std::vector<std::size_t> Process(const std::vector<std::size_t>& source, std::si
     if (res[i] == 0 || res[i - w] == 0)
       continue;
     std::size_t cur = res[i];
-    std::size_t up = res[i - w];
+    std::size_t up = tnc[res[i - w]];
     for (std::size_t j = 0; j < tnc.size(); j++) {
       if (tnc[j] == tnc[cur])
         tnc[j] = tnc[up];
