@@ -29,7 +29,7 @@ std::vector<point> Graham_TBB(std::vector<point> Q, std::size_t threads_num) {
             auto right = begin + step * (i + 1);
             auto local_scan = Graham_Seq(left, right);
             for (std::size_t j = 0; j < local_scan.size(); ++j) {
-                tbb::spin_mutex::scoped_lock lock;  
+                tbb::spin_mutex::scoped_lock lock;
                 lock.acquire(mutex);
                 last_points.push_back(local_scan[j]);
                 lock.release();
@@ -47,8 +47,6 @@ std::vector<point> Graham_TBB(std::vector<point> Q, std::size_t threads_num) {
         });
     g.wait();
     return Graham_Seq(last_points.begin(), last_points.end());
-
-
 }
 
 

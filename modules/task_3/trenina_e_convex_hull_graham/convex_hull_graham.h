@@ -1,6 +1,6 @@
 // Copyright 2020 Trenina Elizaveta
-#ifndef MODULES_TASK_1_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
-#define MODULES_TASK_1_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
+#ifndef MODULES_TASK_3_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
+#define MODULES_TASK_3_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
 
 #include <vector>
 
@@ -28,4 +28,4 @@ std::vector<point> Graham_TBB(std::vector<point> Q, std::size_t threads_num);
 
 std::vector<point> Graham_Seq(std::vector<point>::iterator begin, std::vector<point>::iterator end);
 
-#endif  // MODULES_TASK_1_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
+#endif  // MODULES_TASK_3_TRENINA_E_CONVEX_HULL_GRAHAM_CONVEX_HULL_GRAHAM_H_
