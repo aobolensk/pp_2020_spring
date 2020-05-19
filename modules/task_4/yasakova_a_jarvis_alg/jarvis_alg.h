@@ -19,4 +19,5 @@ std::pair<int, int> seq_FindSecondPoint(const std::vector<std::pair<int, int>>& 
 double CountCos(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c);
 double distance(std::pair<int, int> a, std::pair<int, int> b);
 
+
 #endif   // MODULES_TASK_4_YASAKOVA_A_JARVIS_ALG_JARVIS_ALG_H_
