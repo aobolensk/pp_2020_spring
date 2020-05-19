@@ -1,7 +1,7 @@
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-if ( USE_SEQ )
-    set(ProjectId "${ProjectId}_seq")
+if ( USE_OMP )
+    set(ProjectId "${ProjectId}_omp")
     project( ${ProjectId} )
     message( STATUS "-- " ${ProjectId} )
 

@@ -17,6 +17,6 @@ if ( USE_SEQ )
 
     enable_testing()
     add_test(NAME ${ProjectId} COMMAND ${ProjectId})
-else( USE_OMP )
+else( USE_SEQ )
     message( STATUS "-- ${ProjectId} - NOT BUILD!"  )
-endif( USE_OMP )
+endif( USE_SEQ )
