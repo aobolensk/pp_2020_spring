@@ -1,6 +1,6 @@
 // Copyright 2020 Guseva Catherine
-#include "../../../modules/task_3/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
-#include <tbb/tbb.h>
+#include "../../../modules/task_2/guseva_e_radix_sort_w_batcher/radix_sort_w_batcher.h"
+#include <omp.h>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -26,15 +26,11 @@ void countSort(std::vector<int> *vec, int exp) {
     int size = vec->size();
     std::vector<int> output(size);
     int i, count[10] = { 0 };
-    tbb::task_scheduler_init init(THREADS);
-    tbb::parallel_for(
-        tbb::blocked_range<int>(0, size, 4),
-        [&](const tbb::blocked_range<int>& v) {
-            for (i = v.begin(); i < v.end(); i++) {
-                count[(vec->at(i) / exp) % 10]++;
-            }
-        });
-    init.terminate();
+#pragma omp parallel for num_threads(THREADS)
+    for (i = 0; i < size; i++) {
+        #pragma omp atomic
+        count[(vec->at(i) / exp) % 10]++;
+    }
     for (i = 1; i < 10; i++) {
         count[i] += count[i - 1];
     }
@@ -42,6 +38,7 @@ void countSort(std::vector<int> *vec, int exp) {
         output[count[(vec->at(i) / exp) % 10] - 1] = vec->at(i);
         count[(vec->at(i) / exp) % 10]--;
     }
+#pragma omp parallel for num_threads(THREADS)
     for (i = 0; i < size; i++) {
         vec->at(i) = output[i];
     }
@@ -49,22 +46,12 @@ void countSort(std::vector<int> *vec, int exp) {
 
 int getMax(std::vector<int> *vec) {
     int size = vec->size();
-    tbb::task_scheduler_init init(THREADS);
-    int maxVal = tbb::parallel_reduce(
-        tbb::blocked_range<int> (1, size),
-        vec->at(0),
-        [&](const tbb::blocked_range<int>& v, int maximum) {
-            for (int i = v.begin(); i < v.end(); i++) {
-                if (vec->at(i) > maximum) {
-                    maximum = vec->at(i);
-                }
-            }
-            return maximum;
-        },
-        [](int x, int y) {
-            return std::max<int>(x, y);
-        });
-    init.terminate();
+    int maxVal = vec->at(0);
+    for (int i = 1; i < size; i++) {
+        if (vec->at(i) > maxVal) {
+            maxVal = vec->at(i);
+        }
+    }
     return maxVal;
 }
 
@@ -83,28 +70,19 @@ std::vector<int> EvenOddBatch(std::vector<int> vec1, std::vector<int> vec2) {
         k++;
     }
 
-    tbb::task_scheduler_init init(THREADS);
     if ((k >= size2) && (j < size1)) {
-        tbb::parallel_for(
-            tbb::blocked_range<int> (i, size),
-        [&](const tbb::blocked_range<int>& v) {
-            for (int l = v.begin(); l < v.end(); l++) {
-                res[l] = vec1[j];
-                j++;
-            }
-        });
-    }
-
-    tbb::parallel_for(
-        tbb::blocked_range<int> (0, size - 1),
-    [&](const tbb::blocked_range<int>& v) {
-        for (int i = v.begin(); i < v.end(); i++) {
-            if (res[i] > res[i + 1]) {
-                std::swap(res[i], res[i + 1]);
-            }
+#pragma omp parallel for num_threads(THREADS)
+        for (int l = i; l < size; l++) {
+            res[l] = vec1[j];
+            j++;
         }
-    });
-    init.terminate();
+    }
+#pragma omp parallel for num_threads(THREADS)
+    for (int i = 0; i < size - 1; i++) {
+        if (res[i] > res[i + 1]) {
+            std::swap(res[i], res[i + 1]);
+        }
+    }
 
     return res;
 }
@@ -130,11 +108,13 @@ std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2) {
     }
 
     if (i1 >= size1) {
+#pragma omp parallel for num_threads(THREADS)
         for (int l = i2; l < size2; l += 2) {
             res[i] = vec2[l];
             i++;
         }
     } else {
+#pragma omp parallel for num_threads(THREADS)
         for (int l = i1; l < size1; l += 2) {
             res[i] = vec1[l];
             i++;
@@ -165,11 +145,13 @@ std::vector<int> oddBatch(std::vector<int> vec1, std::vector<int> vec2) {
     }
 
     if (i1 >= size1) {
+#pragma omp parallel for num_threads(THREADS)
         for (int l = i2; l < size2; l += 2) {
             res[i] = vec2[l];
             i++;
         }
     } else {
+#pragma omp parallel for num_threads(THREADS)
         for (int l = i1; l < size1; l += 2) {
             res[i] = vec1[l];
             i++;
@@ -186,7 +168,7 @@ std::vector<int> GetRandVector(int size) {
     std::mt19937 gen;
     std::vector<int> vec(size);
     for (int i = 0; i < size; i++) {
-        vec[i] = gen() % 1000;
+        vec[i] = gen() % 100;
     }
 
     return vec;
