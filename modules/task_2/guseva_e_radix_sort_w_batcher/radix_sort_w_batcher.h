@@ -1,6 +1,6 @@
 // Copyright 2020 Guseva Catherine
-#ifndef MODULES_TASK_2_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
-#define MODULES_TASK_2_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
+#ifndef MODULES_TASK_3_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
+#define MODULES_TASK_3_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
 #include <vector>
 
 bool checkSort(std::vector<int> arr);
@@ -12,4 +12,4 @@ std::vector<int> evenBatch(std::vector<int> vec1, std::vector<int> vec2);
 std::vector<int> oddBatch(std::vector<int> vec1, std::vector<int> vec2);
 std::vector<int> GetRandVector(int size);
 
-#endif  // MODULES_TASK_2_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
+#endif  // MODULES_TASK_3_GUSEVA_E_RADIX_SORT_W_BATCHER_RADIX_SORT_W_BATCHER_H_
