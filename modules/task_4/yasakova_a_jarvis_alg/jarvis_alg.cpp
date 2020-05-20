@@ -24,7 +24,6 @@ std::vector < std::pair<int, int>> GetRandomPoints(int n) {
     return res;
 }
 
-
 std::vector < std::pair<int, int>> std_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
     std::vector<std::pair<int, int>> res;
     int size = points.size();
