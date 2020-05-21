@@ -15,7 +15,6 @@ void Labeling_divided(const std::vector<std::vector<std::int8_t>>& pic,
                       int32_t end) {
   std::int32_t first_row = -1;
   bool lock = true;
-  std::int32_t h = pic.size();
   std::int32_t w = pic[0].size();
   for (std::int32_t i = start; i < end; ++i) {
     for (std::int32_t j = 0; j < w; ++j) {
@@ -47,7 +46,6 @@ void Labeling_divided(const std::vector<std::vector<std::int8_t>>& pic,
       } else if (up_value == 0 && left_value == 1) {
         (*res)[i][j] = (*res)[i][j - 1];
       } else if (up_value == 0 && left_value == 0) {
-        //#pragma omp critical(counter)
         {
           g_lock.lock();
           (*res)[i][j] = *counter;
@@ -68,8 +66,6 @@ std::vector<std::vector<std::int32_t>> Labeling_std(
     const std::vector<std::vector<std::int8_t>>& pic) {
   std::vector<std::vector<std::int32_t>> res(
       pic.size(), std::vector<int>(pic[0].size(), 0));
-
-  std::vector<std::int32_t> sec_start;
   std::int32_t h = pic.size();
   std::int32_t w = pic[0].size();
   std::int32_t comp_counter = 1;
