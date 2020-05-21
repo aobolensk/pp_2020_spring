@@ -10,7 +10,7 @@ TEST(Shell_Merge_Sort_TBB, Simple_Test) {
   v1 = getRandomVector(size);
   v1 = v2;
   v1 = mySortTbb(v1, 2);
-  v2 = ShellSort(v2);
+  v2 = ShellSort(v2, size);
   for (int i = 0; i < size; i++) {
     ASSERT_EQ(v2[i], v1[i]);
   }
@@ -23,7 +23,7 @@ TEST(Shell_Merge_Sort_TBB, Simple_Test_With_2_Thr) {
   v1 = getRandomVector(size);
   v1 = v2;
   v1 = mySortTbb(v1, 2);
-  v2 = ShellSort(v2);
+  v2 = ShellSort(v2, size);
   for (int i = 0; i < size; i++) {
     ASSERT_EQ(v2[i], v1[i]);
   }
@@ -36,7 +36,7 @@ TEST(Shell_Merge_Sort_TBB, Simple_Test_With_3_Thr) {
   v1 = getRandomVector(size);
   v1 = v2;
   v1 = mySortTbb(v1, 3);
-  v2 = ShellSort(v2);
+  v2 = ShellSort(v2, size);
   for (int i = 0; i < size; i++) {
     ASSERT_EQ(v2[i], v1[i]);
   }
@@ -48,7 +48,7 @@ TEST(Shell_Merge_Sort_TBB, Test_With_Odd_Amount) {
   v1 = getRandomVector(size);
   std::vector<int> v2(v1);
   v1 = mySortTbb(v1, 2);
-  v2 = ShellSort(v2);
+  v2 = ShellSort(v2, size);
   for (int i = 0; i < size; i++) {
     ASSERT_EQ(v2[i], v1[i]);
   }
@@ -73,7 +73,7 @@ TEST(Shell_Merge_Sort_TBB, Test_With_Negative_Vec) {
   }
   std::vector<int> v2(v1);
   v1 = mySortTbb(v1, 4);
-  v2 = ShellSort(v2);
+  v2 = ShellSort(v2, size);
   for (int i = 0; i < size; i++) {
     ASSERT_EQ(v2[i], v1[i]);
   }
