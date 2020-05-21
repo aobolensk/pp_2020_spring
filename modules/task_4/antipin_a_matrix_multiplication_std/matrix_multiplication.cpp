@@ -142,7 +142,8 @@ void getParallelSTDMatrixMultiplication(const SparseMatrix<CCS>& A, const Sparse
     }
 
     size_t iterator = 0;
-    size_t numTr = numThreads > std::thread::hardware_concurrency() ? std::thread::hardware_concurrency() : numThreads;
+    size_t numTr = static_cast<uint32_t>(numThreads) > std::thread::hardware_concurrency()
+        ? std::thread::hardware_concurrency() : numThreads;
     numTr = numTr > A.getMatrixSize() ? A.getMatrixSize() : numTr;
 
     SparseMatrix<CRS> tmp;
