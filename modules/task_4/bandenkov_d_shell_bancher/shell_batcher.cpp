@@ -77,7 +77,7 @@ std::vector<int> shellBatcher_std(const std::vector<int>& A, const int n, int si
   std::vector<std::vector<int>> vec = splitVector(A, n);
   std::vector<std::thread> threads;
   int countOfTreads = vec.size();
-  for (size_t i = 0; i < countOfTreads; ++i) {
+  for (int i = 0; i < countOfTreads; ++i) {
     threads.push_back(std::thread(shellSorter, std::ref(vec[i]), vec[i].size()));
   }
   for (auto& t : threads)
