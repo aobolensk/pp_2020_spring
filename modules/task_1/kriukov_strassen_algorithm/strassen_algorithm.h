@@ -16,6 +16,8 @@ void splitMatrix(const std::vector<double> &mtx, std::vector<double> *a,
 void mergeMatrix(std::vector<double> *mtx, const std::vector<double> &a,
                  const std::vector<double> &b, const std::vector<double> &c,
                  const std::vector<double> &d, unsigned int sz);
-std::vector<double> toPowerOfTwoSize(const std::vector<double> &mtx, unsigned int sz);
+std::vector<double> toPowerOfTwoSize(const std::vector<double>& mtx, unsigned* power, unsigned int sz);
+std::vector<double> toPowerOfTwoSize(const std::vector<double>& mtx, unsigned int sz);
+std::vector<double> matrixReduce(const std::vector<double>& mtx, unsigned int sz);
 
 #endif  // MODULES_TASK_1_KRIUKOV_STRASSEN_ALGORITHM_STRASSEN_ALGORITHM_H_

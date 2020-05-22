@@ -72,40 +72,45 @@ SparseComplexMatrix SparseComplexMatrix::matrixToCRS(std::vector<std::vector<std
     point = tmp;
     for (int j = 0; j < cols_num; ++j) {
       if (matrix[i][j] != empty) {
-        values.push_back(matrix[i][j]);
-        col_index.push_back(j);
+        result.values.push_back(matrix[i][j]);
+        result.col_index.push_back(j);
         tmp++;
         count++;
       }
     }
     if (count == 0)
-      row_index.push_back(point+1);
+      result.row_index.push_back(point+1);
     else
-      row_index.push_back(tmp-count+1);
+      result.row_index.push_back(tmp-count+1);
   }
   tmp++;
-  row_index.push_back(tmp);
+  result.row_index.push_back(tmp);
   return result;
 }
 
-SparseComplexMatrix SparseComplexMatrix::transpose() {
+SparseComplexMatrix SparseComplexMatrix::transposeCRS() {
   SparseComplexMatrix result(cols_num, rows_num);
-  std::vector<std::vector<int>> idx(cols_num);
-  std::vector<std::vector<std::complex<double>>> vals(cols_num);
-  for (unsigned i = 1; i < row_index.size(); ++i)
-    for (int j = row_index[i - 1]; j < row_index[i]; ++j) {
-      idx[col_index[j]].push_back(i - 1);
-      vals[col_index[j]].push_back(values[j]);
-    }
-  int size = 0;
+  std::vector<int> rowT_count;
+  std::vector<int> row_count;
+  std::vector<int> row_idxs;
+  int k = 0;
   result.row_index.push_back(0);
+  for (int i = 0; i < rows_num; ++i) {
+    row_count.push_back(row_index[i + 1] - row_index[i]);
+    for (int j = 0; j < row_count[i]; ++j)
+      row_idxs.push_back(i);
+  }
   for (int i = 0; i < cols_num; ++i) {
-    for (unsigned j = 0; j < idx[i].size(); ++j) {
-      result.values.push_back(vals[i][j]);
-      result.col_index.push_back(idx[i][j]);
+    for (unsigned j = 0; j < values.size(); ++j) {
+      if (col_index[j] == i) {
+        result.values.push_back(values[j]);
+        result.col_index.push_back(row_idxs[j]);
+        k++;
+      }
     }
-    size += idx[i].size();
-    result.row_index.push_back(size);
+    rowT_count.push_back(k);
+    k = 0;
+    result.row_index.push_back(result.row_index[i] + rowT_count[i]);
   }
   return result;
 }
@@ -124,39 +129,38 @@ bool SparseComplexMatrix::operator==(const SparseComplexMatrix& mat) const& {
 }
 
 SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& mat) const& {
-  SparseComplexMatrix result(cols_num, mat.cols_num);
+  SparseComplexMatrix result(rows_num, mat.cols_num);
+  SparseComplexMatrix tmp;
+  tmp = mat;
+  tmp = tmp.transposeCRS();
   int not_zero_vals = 0;
-  if (cols_num != mat.cols_num)
+  if (cols_num != tmp.cols_num)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
   result.row_index.push_back(0);
   for (unsigned i = 1; i < row_index.size(); ++i) {
-    std::vector<std::complex<double>> vec;
-    std::vector<int> cols;
-    for (unsigned j = 1; j < mat.row_index.size(); ++j) {
-      std::complex<double> sum = 0;
+    for (unsigned j = 1; j < tmp.row_index.size(); ++j) {
+      std::complex<double> s = 0;
       int iter1 = row_index[i - 1];
-      int iter2 = mat.row_index[j - 1];
-      while ((iter1 < row_index[i]) && (iter2 < mat.row_index[j])) {
-        if (col_index[iter1] == mat.col_index[iter2]) {
-          sum += values[iter1++] * mat.values[iter2++];
+      int iter2 = tmp.row_index[j - 1];
+      while ((iter1 < row_index[i]) && (iter2 < tmp.row_index[j])) {
+        if (col_index[iter1] == tmp.col_index[iter2]) {
+          s += values[iter1] * tmp.values[iter2];
+          iter1++;
+          iter2++;
         } else {
-          if (col_index[iter1] < mat.col_index[iter2]) {
+          if (col_index[iter1] < tmp.col_index[iter2]) {
             iter1++;
           } else {
             iter2++;
           }
         }
       }
-      if (sum.real() != 0.0 || sum.imag() != 0.0) {
-        vec.push_back(sum);
-        cols.push_back(j - 1);
+      if (s.real() != 0.0 || s.imag() != 0.0) {
+        result.values.push_back(s);
+        result.col_index.push_back(j - 1);
         not_zero_vals++;
       }
     }
-    for (unsigned i = 0; i < vec.size(); ++i)
-      result.values.push_back(vec[i]);
-    for (unsigned i = 0; i < cols.size(); ++i)
-      result.col_index.push_back(cols[i]);
     result.row_index.push_back(not_zero_vals);
   }
   return result;
