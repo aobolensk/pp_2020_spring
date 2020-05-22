@@ -15,7 +15,8 @@ std::vector<int> getRandomVector(int n) {
 }
 
 std::vector <int> ShellSort(const std::vector <int>& vec, std::size_t size) {
-  int step, i, j, tmp;
+  std::size_t step, i, j;
+  int tmp;
   std::vector <int> resulVec(vec);
   for (step = size / 2; step > 0; step /= 2)
     for (i = step; i < size; i++)
@@ -93,7 +94,7 @@ std::vector<int> mySortTbb(const std::vector<int>& vec, std::size_t nthreads) {
 
   init.terminate();
   resVec = splited[0];
-  for (int i = 1; i < nthreads; i++) {
+  for (std::size_t i = 1; i < nthreads; i++) {
     resVec = myMerge(resVec, splited[i]);
   }
   return resVec;
