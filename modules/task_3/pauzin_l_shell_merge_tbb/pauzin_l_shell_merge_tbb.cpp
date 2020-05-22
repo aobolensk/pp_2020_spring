@@ -14,8 +14,8 @@ std::vector<int> getRandomVector(int n) {
   return vec;
 }
 
-std::vector <int> ShellSort(const std::vector <int>& vec, std::size_t size) {
-  std::size_t step, i, j;
+std::vector <int> ShellSort(const std::vector <int>& vec, int size) {
+  int step, i, j;
   int tmp;
   std::vector <int> resulVec(vec);
   for (step = size / 2; step > 0; step /= 2)
