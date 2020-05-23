@@ -29,7 +29,7 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t> &source, st
 
   //  Segmentation
   if (res[0] == 1) {  // first elem
-    #pragma omp critical (segment)
+    #pragma omp critical(segment)
     {
       color++;
       res[0] = color;
@@ -41,7 +41,7 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t> &source, st
     if (res[i] == 0)  // empty cell
       continue;
     if (res[i - 1] == 0 || i % w == 0) {  // new seg
-  #pragma omp critical (segment)
+  #pragma omp critical(segment)
       {
         color++;
         res[i] = color;
@@ -56,8 +56,8 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t> &source, st
   for (std::size_t i = w; i < res.size(); i++) {  // other rows
     if (res[i] == 0)  // empty cell
       continue;
-    if ((res[i - 1] < 2  || i % w == 0 ) && res[i - w] < 2) {  // new seg
-    #pragma omp critical (segment)
+    if ((res[i - 1] < 2  || i % w == 0) && res[i - w] < 2) {  // new seg
+    #pragma omp critical(segment)
       {
         color++;
         res[i] = color;
