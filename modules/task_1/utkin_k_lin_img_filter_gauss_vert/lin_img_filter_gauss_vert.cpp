@@ -7,12 +7,12 @@
 std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
 int divKernel = 16;
 
-std::vector<std::vector<int>> getRandomPic(int n, int m) {
-    if (n <= 0 || m <= 0) {
+std::vector<std::vector<int>> getRandomPic(int col, int row) {
+    if (col <= 0 || row <= 0) {
         throw "-1";
     }
 
-    int size = n * m;
+    int size = col * row;
 
     std::mt19937 gen;
     gen.seed(static_cast<unsigned int>(time(0)));
@@ -28,44 +28,44 @@ std::vector<std::vector<int>> getRandomPic(int n, int m) {
     return pic;
 }
 
-std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int n, int m) {
-    if (n <= 0 || m <= 0) {
+std::vector<std::vector<int>> addBorders(const std::vector<std::vector<int>>& pic, int col, int row) {
+    if (col <= 0 || row <= 0) {
         throw "-1";
     }
 
-    int newN = n + 2;
-    int newM = m + 2;
-    std::vector<std::vector<int>> newPic(newN * newM, std::vector<int>(3));
+    int newCol = col + 2;
+    int newRow = row + 2;
+    std::vector<std::vector<int>> newPic(newCol * newRow, std::vector<int>(3));
 
     // Edges:
     for (int i = 0; i < 3; ++i) {
         newPic[0][i] = pic[0][i];
-        newPic[newN - 1][i] = pic[n - 1][i];
-        newPic[(newM - 1) * newN][i] = pic[(m - 1) * n][i];
-        newPic[newN * newM - 1][i] = pic[n * m - 1][i];
+        newPic[newCol - 1][i] = pic[col - 1][i];
+        newPic[(newRow - 1) * newCol][i] = pic[(row - 1) * col][i];
+        newPic[newCol * newRow - 1][i] = pic[col * row - 1][i];
     }
 
     // Top and bottom borders:
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < col; ++i) {
         for (int j = 0; j < 3; ++j) {
             newPic[i + 1][j] = pic[i][j];
-            newPic[(newM - 1) * newN + 1 + i][j] = pic[(m - 1) * n + i][j];
+            newPic[(newRow - 1) * newCol + 1 + i][j] = pic[(row - 1) * col + i][j];
         }
     }
 
     // Right and left borders:
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < row; ++i) {
         for (int j = 0; j < 3; ++j) {
-            newPic[(i + 1) * newN][j] = pic[i * n][j];
-            newPic[(i + 1) * newN + newN - 1][j] = pic[i * n + n - 1][j];
+            newPic[(i + 1) * newCol][j] = pic[i * col][j];
+            newPic[(i + 1) * newCol + newCol - 1][j] = pic[i * col + col - 1][j];
         }
     }
 
     // Copy image:
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
             for (int k = 0; k < 3; ++k) {
-                newPic[(i + 1) * newN + 1 + j][k] = pic[i * n + j][k];
+                newPic[(i + 1) * newCol + 1 + j][k] = pic[i * col + j][k];
             }
         }
     }
@@ -73,30 +73,28 @@ std::vector<std::vector<int>> addBorders(std::vector<std::vector<int>> pic, int 
     return newPic;
 }
 
-std::vector<std::vector<int>> gaussFilter(std::vector<std::vector<int>> pic, int n, int m) {
-    if (n <= 0 || m <= 0) {
+std::vector<std::vector<int>> gaussFilter(const std::vector<std::vector<int>>& pic, int col, int row) {
+    if (col <= 0 || row <= 0) {
         throw "-1";
     }
 
-    pic = addBorders(pic, n, m);
+    std::vector<std::vector<int>> tmp(addBorders(pic, col, row));
 
-    std::vector<std::vector<int>> newPic(n * m, std::vector<int>(3));
+    std::vector<std::vector<int>> newPic(col * row, std::vector<int>(3));
 
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (int i = 0; i < col; ++i) {
+        for (int j = 0; j < row; ++j) {
             for (int k = 0; k < 3; ++k) {
-                for (int l = 0; l < 9; ++l) {
-                    newPic[i * n + j][k] =
-                            (pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 + 1)][k] * kernel[0] +
-                             pic[(i + 1) * (n + 2) + (j + 1) - (n + 2)][k] * kernel[1] +
-                             pic[(i + 1) * (n + 2) + (j + 1) - (n + 2 - 1)][k] * kernel[2] +
-                             pic[(i + 1) * (n + 2) + (j + 1) - 1][k] * kernel[3] +
-                             pic[(i + 1) * (n + 2) + (j + 1)][k] * kernel[4] +
-                             pic[(i + 1) * (n + 2) + (j + 1) + 1][k] * kernel[5] +
-                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 - 1)][k] * kernel[6] +
-                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2)][k] * kernel[7] +
-                             pic[(i + 1) * (n + 2) + (j + 1) + (n + 2 + 1)][k] * kernel[8]) / divKernel;
-                }
+                newPic[j * col + i][k] =
+                    (tmp[(j + 1) * (col + 2) + (i + 1) - col - 1][k] * kernel[0] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - col][k] * kernel[1] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - col + 1][k] * kernel[2] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) - 1][k] * kernel[3] +
+                     tmp[(j + 1) * (col + 2) + (i + 1)][k] * kernel[4] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + 1][k] * kernel[5] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col - 1][k] * kernel[6] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col][k] * kernel[7] +
+                     tmp[(j + 1) * (col + 2) + (i + 1) + col + 1][k] * kernel[8]) / divKernel;
             }
         }
     }

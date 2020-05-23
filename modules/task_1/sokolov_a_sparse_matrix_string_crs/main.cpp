@@ -1,10 +1,9 @@
 // Copyright 2020 Sokolov Andrey
 #include <gtest/gtest.h>
 #include <vector>
-#include "./sparse_matrix_string_crs.h"
+#include "../../../modules/task_1/sokolov_a_sparse_matrix_string_crs/sparse_matrix_string_crs.h"
 
 // #define DEBUG
-// #define DEBUG_LAST
 
 TEST(Sparse_Matrix, Test_Create_Sparse_Matrix) {
     Matrix matrix{ { 1.1, 0.0, 0.0, 0.0, 2.2, 0.0 },
@@ -27,10 +26,10 @@ TEST(Sparse_Matrix, Test_Create_Sparse_Matrix) {
 
 TEST(Sparse_Matrix, Test_Compare_Sparse_Matrix) {
     size_t rowsA{ 6 };
-    size_t colsA{6};
-    std::vector<double> valueA{1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6};
-    std::vector<size_t> colIndexA{0, 4, 2, 3, 3, 5, 1, 2, 5};
-    std::vector<size_t> rowIndexA{0, 2, 4, 4, 6, 6, 9};
+    size_t colsA{ 6 };
+    std::vector<double> valueA{ 1.1, 2.2, 3.3, 4.4, 8.8, 5.5, 7.7, 1.1, 6.6 };
+    std::vector<size_t> colIndexA{ 0, 4, 2, 3, 3, 5, 1, 2, 5 };
+    std::vector<size_t> rowIndexA{ 0, 2, 4, 4, 6, 6, 9 };
 
     size_t rowsB{ 6 };
     size_t colsB{ 6 };
@@ -60,7 +59,7 @@ TEST(Sparse_Matrix, Test_Sparse_To_Matrix) {
     std::cout << std::endl;
     matrixSparse.printMatrix();
     std::cout << std::endl;
-    std::cout << "Matrix: "<< std::endl;
+    std::cout << "Matrix: " << std::endl;
     print(matrix);
     std::cout << "Result:" << std::endl;
     result.printDefault();
@@ -167,27 +166,6 @@ TEST(Sparse_Matrix, Test_Sparse_Matrix_Miltiplication) {
 
     SparseMatrix result = SparseMatMul(sparseMatrixA, sparseMatrixB);
 
-#ifdef DEBUG
-    sparseMatrixA.printMatrix();
-    std::cout << std::endl;
-    sparseMatrixB.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "Result:";
-    std::cout << std::endl;
-    result.printDefault();
-    std::cout << std::endl;
-    result.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "GoldResult:";
-    std::cout << std::endl;
-    goldResult.printDefault();
-    std::cout << std::endl;
-    goldResult.printMatrix();
-    std::cout << std::endl;
-#endif
-
     ASSERT_EQ(result, goldResult);
 }
 
@@ -214,27 +192,6 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication) {
     SparseMatrix resultToSparse{ result };
 
     ASSERT_EQ(resultToSparse, resultSparse);
-
-#ifdef DEBUG
-    sparseMatrixA.printMatrix();
-    std::cout << std::endl;
-    sparseMatrixB.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "Result:";
-    std::cout << std::endl;
-    resultToSparse.printDefault();
-    std::cout << std::endl;
-    resultToSparse.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "Result Sparse:";
-    std::cout << std::endl;
-    resultSparse.printDefault();
-    std::cout << std::endl;
-    resultSparse.printMatrix();
-    std::cout << std::endl;
-#endif
 }
 
 TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication_With_Rand_Gen) {
@@ -248,30 +205,6 @@ TEST(Sparse_Matrix, Test_Both_Matrix_Miltiplication_With_Rand_Gen) {
     Matrix       result = MatMul(matrixA, matrixB);
 
     SparseMatrix resultToSparse{ result };
-#ifdef DEBUG_LAST
-    sparseMatrixA.printDefault();
-    std::cout << std::endl;
-    sparseMatrixA.printMatrix();
-    std::cout << std::endl;
-    sparseMatrixB.printDefault();
-    std::cout << std::endl;
-    sparseMatrixB.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "Result:";
-    std::cout << std::endl;
-    resultToSparse.printDefault();
-    std::cout << std::endl;
-    resultToSparse.printMatrix();
-    std::cout << std::endl;
-
-    std::cout << "Result Sparse:";
-    std::cout << std::endl;
-    resultSparse.printDefault();
-    std::cout << std::endl;
-    resultSparse.printMatrix();
-    std::cout << std::endl;
-#endif
 
     ASSERT_EQ(resultToSparse, resultSparse);
 }
