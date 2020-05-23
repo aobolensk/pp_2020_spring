@@ -14,7 +14,7 @@ std::vector<std::size_t> Generate_pic(std::size_t w, std::size_t h) {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned>(time(0)) + offset++);
   #pragma omp parallel for
-  for (int i = 0; i < h * w; i++) {
+  for (int i = 0; i < static_cast<int>(h * w); i++) {
     pic[i] = gen() % 2;
   }
   return pic;
@@ -53,7 +53,7 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t> &source, st
   }
 
   #pragma omp parallel for schedule(dynamic, w)
-  for (int i = w; i < res.size(); i++) {  // other rows
+  for (int i = w; i < static_cast<int>(res.size()); i++) {  // other rows
     if (res[i] == 0)  // empty cell
       continue;
     if ((res[i - 1] < 2  || i % w == 0) && res[i - w] < 2) {  // new seg
@@ -92,7 +92,7 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t> &source, st
 
   // Recoloring
   #pragma omp parallel for
-  for (int i = 0; i < res.size(); i++)
+  for (int i = 0; i < static_cast<int>(res.size()); i++)
     res[i] = tnc[res[i]];
 
   return res;
