@@ -152,7 +152,7 @@ MatrixCRS matrixCRSMult(const MatrixCRS &first, const MatrixCRS &second_a) {
     }
     clock_t End = clock();
     double secTime = static_cast<double>(End - Start) / CLOCKS_PER_SEC;
-    std::cout<< "Mult time SEQ: " << secTime << std::endl;
+    //  std::cout<< "Mult time SEQ: " << secTime << std::endl;
 
     return out;
 }
@@ -251,7 +251,7 @@ MatrixCRS matrixCRSMultTBB(const MatrixCRS &first, const MatrixCRS &second_a) {
     }
     clock_t End = clock();
     double secTime = static_cast<double>(End - Start) / CLOCKS_PER_SEC;
-    std::cout<< "Mult time TBB: " << secTime << std::endl;
+    //  std::cout<< "Mult time TBB: " << secTime << std::endl;
 
     delete[]tmpResultColsPose;
     delete[]tmpResultValue;

@@ -185,45 +185,6 @@ TEST(CRS_Matrix_Mult, D) {
     EXPECT_EQ(res.ptrs, multRes.ptrs);
 }
 
-TEST(CRS_Matrix_Mult, PerfRandMatrixTest) {
-    int row, col;
-    row = col = 350;
-
-    std::cout<< "Start generating " << std::endl;
-    Matrix  firstNorm  = generateRandomMat(row, col);
-    Matrix  secondNorm = generateRandomMat(row, col);
-    std::cout<< "End generating " << std::endl;
-
-    std::cout<< "Start converting" << std::endl;
-    MatrixCRS firstCRS  = convert(firstNorm);
-    MatrixCRS secondCRS = convert(secondNorm);
-    std::cout<< "End converting" << std::endl;
-
-    std::cout<< "Start sec" << std::endl;
-    clock_t secStart, secFinish;
-    secStart = clock();
-    MatrixCRS multRes = matrixCRSMult(firstCRS, secondCRS);
-    secFinish = clock();
-    double secTime = static_cast<double>(secFinish - secStart) / CLOCKS_PER_SEC;
-    std::cout<< "End sec" << std::endl;
-
-    std::cout<< "Start paral" << std::endl;
-    clock_t parStart, parFinish;
-    parStart = clock();
-    MatrixCRS multResOMP = matrixCRSMultTBB(firstCRS, secondCRS);
-    parFinish = clock();
-    double parTime = static_cast<double>(parFinish - parStart) / CLOCKS_PER_SEC;
-    std::cout<< "End paral" << std::endl;
-
-    std::cout<< "secTime / parTime: " << secTime / parTime << std::endl;
-    std::cout<< "secTime: " << secTime << std::endl;
-    std::cout<< "parTime: " << parTime << std::endl;
-
-    EXPECT_EQ(multRes.ptrs, multResOMP.ptrs);
-    EXPECT_EQ(multRes.val, multResOMP.val);
-    EXPECT_EQ(multRes.cols_pos, multResOMP.cols_pos);
-}
-
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
