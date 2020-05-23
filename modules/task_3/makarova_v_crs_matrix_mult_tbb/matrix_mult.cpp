@@ -124,7 +124,7 @@ MatrixCRS matrixCRSMult(const MatrixCRS &first, const MatrixCRS &second_a) {
     MatrixCRS out;
     out.rows = first.rows;
     out.cols = second.cols;
-    clock_t Start = clock();
+    // clock_t Start = clock();
 
     int rowNZ = 0;
     out.ptrs.emplace_back(0);
@@ -216,7 +216,7 @@ MatrixCRS matrixCRSMultTBB(const MatrixCRS &first, const MatrixCRS &second_a) {
     out.rows = first.rows;
     out.cols = second.cols;
 
-    clock_t Start = clock();
+    // clock_t Start = clock();
 
     std::vector<int> tmpResultPtrs(first.ptrs.size(), 0);
     std::vector<int>* tmpResultColsPose =
