@@ -7,27 +7,54 @@
 
 #include "./image_filtering.h"
 
-TEST(Filtering_Image, TBB_Function_Works) {
-  // Arrange
-  int rows = 10;
-  int columns = 10;
-  std::vector<int> kernel = {1, 2, 1, 2, 4, 2, 1, 2, 1};
-  const std::vector<int> source = generateImage(rows, columns);
-  std::vector<int> basicFunction = imageFiltering(
-      getTempImage(source, rows, columns), kernel, rows, columns);
-  std::vector<int> tbbFunction = imageFilteringTBB(source, rows, columns);
-  // Assert
-  ASSERT_EQ(basicFunction, tbbFunction);
+double LiToDouble(LARGE_INTEGER x)
+{
+    double result =
+        ((double)x.HighPart) * 4.294967296E9 + (double)((x).LowPart);
+    return result;
 }
 
-TEST(Filtering_Image, DISABLED_TBB_Function_Stress) {
-  // Arrange
-  int rows = 8000;
-  int columns = 8000;
-  std::vector<int> kernel = {1, 2, 1, 2, 4, 2, 1, 2, 1};
-  const std::vector<int> source = generateImage(rows, columns);
-  // Assert
-  ASSERT_NO_THROW(imageFilteringTBB(source, rows, columns));
+double GetTime()
+{
+    LARGE_INTEGER lpFrequency, lpPerfomanceCount;
+    QueryPerformanceFrequency(&lpFrequency);
+    QueryPerformanceCounter(&lpPerfomanceCount);
+    return LiToDouble(lpPerfomanceCount) / LiToDouble(lpFrequency);
+}
+
+TEST(Filtering_Image, DISABLED_Gotta_Go_Fast) {
+    // Arrange
+    int rows = 10000;
+    int columns = 10000;
+    std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+    double t1, t2;
+    // Action
+    const std::vector<int> source = generateImage(rows, columns);
+    const std::vector<int> tempImg = getTempImage(source, rows, columns);
+    t1 = GetTime();
+    std::vector<int> basicFunction = imageFiltering(
+        tempImg, kernel, rows, columns);
+    t2 = GetTime();
+    std::cout << "seq : " << t2 - t1 << std::endl;
+    t1 = GetTime();
+    std::vector<int> tbbFunction = imageFilteringTBB(tempImg, rows, columns);
+    t2 = GetTime();
+    std::cout << "tbb : " << t2 - t1 << std::endl;
+    // Assert
+    ASSERT_EQ(basicFunction, tbbFunction);
+}
+
+TEST(Filtering_Image, DISABLED_Gotta_Go) {
+    // Arrange
+    int rows = 10000;
+    int columns = 10000;
+    std::vector<int> kernel = { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
+    // Action
+    const std::vector<int> source = generateImage(rows, columns);
+    const std::vector<int> tempImg = getTempImage(source, rows, columns);
+
+    // Assert
+    ASSERT_NO_THROW(imageFilteringTBB(tempImg, rows, columns));
 }
 
 TEST(Filtering_Image, Exception_In_Generate_Image_With_Not_Equals_Attributes) {
@@ -42,9 +69,8 @@ TEST(Filtering_Image, Exception_In_Temp_Image_With_Not_Equals_Attributes) {
   // Arrange
   int columns = 0;
   int rows = -1;
-  const std::vector<int> source = generateImage(rows, columns);
   // Assert
-  ASSERT_ANY_THROW(getTempImage(source, rows, columns));
+  ASSERT_ANY_THROW(getTempImage(generateImage(rows, columns), rows, columns));
 }
 
 TEST(Filtering_Image, Exception_In_Filtering_With_Not_Equals_Attributes) {
@@ -52,9 +78,8 @@ TEST(Filtering_Image, Exception_In_Filtering_With_Not_Equals_Attributes) {
   int columns = 0;
   int rows = -1;
   std::vector<int> kernel = {1, 2, 1, 2, 4, 2, 1, 2, 1};
-  const std::vector<int> source = generateImage(rows, columns);
   // Assert
-  ASSERT_ANY_THROW(imageFiltering(source, kernel, rows, columns));
+  ASSERT_ANY_THROW(imageFiltering(generateImage(rows, columns), kernel, rows, columns));
 }
 
 int main(int argc, char **argv) {

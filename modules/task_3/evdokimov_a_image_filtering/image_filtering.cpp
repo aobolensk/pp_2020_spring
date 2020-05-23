@@ -100,8 +100,8 @@ class Filter {
   void operator()(const tbb::blocked_range<int>& blocksCount) const {
     int rowDelta = rows / blocksCount.end();
     int colDelta = columns / blocksCount.end();
-    for (int rowBlock = 0; rowBlock < blocksCount.end(); rowBlock++) {
-      for (int colBlock = 0; colBlock < blocksCount.end(); colBlock++) {
+    for (int rowBlock = blocksCount.begin(); rowBlock < blocksCount.end(); rowBlock++) {
+      for (int colBlock = blocksCount.begin(); colBlock < blocksCount.end(); colBlock++) {
         int rowStart = rowBlock * rowDelta + 1;
         int colStart = colBlock * colDelta + 1;
 
@@ -130,11 +130,9 @@ class Filter {
 
 std::vector<int> imageFilteringTBB(const std::vector<int>& sourceImage,
                                    int rows, int columns) {
-  std::vector<int> tmpImg = getTempImage(sourceImage, rows, columns);
-  const std::vector<int>& sourceImg(tmpImg);
-  std::vector<int> resultImg(sourceImage);
+  std::vector<int> resultImg(rows * columns);
 
-  Filter imageObject(sourceImg, rows, columns, &resultImg);
+  Filter imageObject(sourceImage, rows, columns, &resultImg);
   int streamsCount = 2;
   tbb::parallel_for(tbb::blocked_range<int>(0, streamsCount), imageObject);
   return resultImg;
