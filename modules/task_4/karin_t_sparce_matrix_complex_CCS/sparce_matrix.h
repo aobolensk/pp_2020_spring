@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <complex>
+#include <thread>
 
 struct SparceMatrix {
   int nRow, nCol;
@@ -20,10 +21,10 @@ struct SparceMatrix {
   SparceMatrix operator*(const SparceMatrix &MB);
   bool operator==(const SparceMatrix& SP) const;
   void Print();
-  int colCount(int col);
 };
 
-SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int th_num);
+SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, 
+  int th_num = std::thread::hardware_concurrency());
 void AtomMult(const SparceMatrix* Atr, const SparceMatrix* B,
   std::vector<std::complex<int>>* res_val,
   std::vector<int>* res_row_num, std::vector<int>* res_point, int start, int end);

@@ -163,6 +163,11 @@ bool SparceMatrix::operator==(const SparceMatrix& SP) const {
 SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int th_number) {
   if (A.nRow != B.nCol)
     throw "wrong matrix size";
+  if (th_number <= 0)
+    throw "wrong number of thread";
+  if (th_number > B.nCol)
+    th_number = B.nCol;
+
   SparceMatrix Atr = A.Transpose();
   SparceMatrix Res(B.nCol, A.nRow);
   std::vector<std::vector<std::complex<int>>> res_val(th_number);
@@ -172,24 +177,26 @@ SparceMatrix ParMult(const SparceMatrix& A, const SparceMatrix& B, int th_number
   int delta = B.nCol / th_number;
   int ost = B.nCol % th_number;
 
-  for (int i = 0; i < th_number-1; i++)
-  {
+  for (int i = 0; i < th_number-1; i++) {
     thr[i] = std::thread(AtomMult, &Atr, &B, &res_val[i], &res_row_num[i], 
                           &Res.point, delta*i, delta*(i+1));
   }
+
   thr[th_number-1] = std::thread(AtomMult, &Atr, &B, &res_val[th_number-1], &res_row_num[th_number-1],
     &Res.point, delta * (th_number-1), delta * th_number + ost);
+  
   for (int i = 0; i < th_number; i++)
     thr[i].join();
+  
   for (int i = 0; i < Res.nCol-1; i++) {
     Res.point[i+1] += Res.point[i];
   }
+  
   for (int i = 0; i < th_number; i++) {
     Res.val.insert(Res.val.end(), res_val[i].begin(), res_val[i].end());
     Res.row_number.insert(Res.row_number.end(), res_row_num[i].begin(), res_row_num[i].end());
   }
   delete[] thr;
-  Res.Print();
   return Res;
 }
 
@@ -202,22 +209,13 @@ void AtomMult(const SparceMatrix* Atr, const SparceMatrix* B,
     for (int j = 0; j < Atr->nCol; j++) {
       std::complex<int> sum = ScalarMult(*(Atr), j, *(B), i);
       if (sum != 0) {
-        (*res_val).push_back(sum);
-        (*res_row_num).push_back(j);
+        res_val->push_back(sum);
+        res_row_num->push_back(j);
         count++;
       }
     }
     (*res_point)[i] = count;
   }
-}
-
-int SparceMatrix::colCount(int col) {
-  if (col == 0)
-    return point[0];
-  else if (col == nCol - 1)
-    return val.size() - point[nCol-2];
-  else
-    return point[col] - point[col - 1];
 }
 
 std::complex<int> ScalarMult(const SparceMatrix& A, int i, const SparceMatrix& B, int j) {
