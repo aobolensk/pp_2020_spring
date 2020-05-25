@@ -17,7 +17,7 @@ double GetTime() {
   QueryPerformanceFrequency(&lpFrequency);
   QueryPerformanceCounter(&lpPerfomanceCount);
   return LiToDouble(lpPerfomanceCount) / LiToDouble(lpFrequency);
-} */
+}
 
 TEST(Filtering_Image, DISABLED_Gotta_Go_Fast) {
   // Arrange
@@ -52,7 +52,7 @@ TEST(Filtering_Image, DISABLED_Gotta_Go) {
 
   // Assert
   ASSERT_NO_THROW(imageFilteringTBB(tempImg, rows, columns));
-}
+} */
 
 TEST(Filtering_Image, Exception_In_Generate_Image_With_Not_Equals_Attributes) {
   // Arrange
