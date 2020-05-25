@@ -9,50 +9,11 @@ static int offset = 0;
 
 std::vector<std::size_t> Generate_pic(std::size_t w, std::size_t h) {
   if (h <= 0 || w <= 0) throw "Trying to generate negative-dim pic";
-  std::vector<std::size_t> pic(h * w, 0);
+  std::vector<std::size_t> pic(h * w);
   std::mt19937 gen;
   gen.seed(static_cast<unsigned>(time(0)) + offset++);
-  std::size_t segcount = gen() % w + 1;
-  segcount *= 2;
-  for (size_t i = 0; i < segcount; i++) {
-    size_t curx, cury;
-    curx = gen() % w;
-    cury = gen() % h;
-    size_t segsize = gen() % (h * w / segcount);
-    for (size_t j = 0; j < segsize; j++) {
-      pic[curx + w * cury] = 1;
-      int dir = gen() % 4;
-      switch (dir) {
-      case 0:
-        if (cury != 0) {
-          if (pic[curx + (w - 1) * cury] == 0) {
-            cury--;
-            break;
-          }
-        }
-      case 1:
-        if (curx != 0) {
-          if (pic[curx - 1 + w * cury] == 0) {
-            curx--;
-            break;
-          }
-        }
-      case 2:
-        if (cury != h - 1) {
-          if (pic[curx + (w + 1) * cury] == 0) {
-            cury++;
-            break;
-          }
-        }
-      case 3:
-        if (curx != w - 1) {
-          if (pic[curx + 1 + w * cury] == 0) {
-            curx++;
-            break;
-          }
-        }
-      }
-    }
+  for (int i = 0; i < static_cast<int>(h * w); i++) {
+    pic[i] = gen() % 2;
   }
   return pic;
 }
