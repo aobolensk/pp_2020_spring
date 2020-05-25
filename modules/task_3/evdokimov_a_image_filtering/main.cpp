@@ -7,7 +7,7 @@
 
 #include "./image_filtering.h"
 
-double LiToDouble(LARGE_INTEGER x) {
+/* double LiToDouble(LARGE_INTEGER x) {
   double result = ((double)x.HighPart) * 4.294967296E9 + (double)((x).LowPart);
   return result;
 }
@@ -17,7 +17,7 @@ double GetTime() {
   QueryPerformanceFrequency(&lpFrequency);
   QueryPerformanceCounter(&lpPerfomanceCount);
   return LiToDouble(lpPerfomanceCount) / LiToDouble(lpFrequency);
-}
+} */
 
 TEST(Filtering_Image, DISABLED_Gotta_Go_Fast) {
   // Arrange
