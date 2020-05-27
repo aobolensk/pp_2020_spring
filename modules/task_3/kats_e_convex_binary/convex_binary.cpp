@@ -15,8 +15,6 @@
 
 int** SideClass::getRandomPic(const int a, const int b) {
   if ((a <= 0) || (b <= 0)) throw "\tError_In_Rows_&_Columns\n";
-  fflush(stdout);
-  ;
   int** arr = new int*[a];
   std::mt19937 seed;
   std::uniform_real_distribution<> urd(0, 100);
