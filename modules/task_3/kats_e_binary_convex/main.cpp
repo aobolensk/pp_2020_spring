@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "../../../modules/task_3/kats_binary_convex/convex_binary_tbb.h"
+#include "../../../modules/task_3/kats_e_binary_convex/convex_binary.h"
 
 
 TEST(convex_binary_tbb, random_pic_validation) {

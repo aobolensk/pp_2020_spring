@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../../../modules/task_3/kats_binary_convex/convex_binary_tbb.h"
+#include "../../../modules/task_3/kats_e_binary_convex/convex_binary.h"
 
 
 int** SideClass::getRandomPic(const int a, const int b) {
