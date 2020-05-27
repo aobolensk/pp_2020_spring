@@ -115,7 +115,7 @@ std::vector<int> Shell_with_merge_std(const std::vector<int>& a, int n, int size
   std::vector<std::thread> threads;
   std::vector<std::vector<int>> vec = division(a, n);
 
-  for (unsigned int i = 0; i < n; i++) {
+  for (int i = 0; i < n; i++) {
     threads.push_back(std::thread([&vec, i]() {
         vec[i] = SortShell(vec[i], vec[i].size());
     }));
