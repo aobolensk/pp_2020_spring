@@ -248,14 +248,13 @@ SparseComplexMatrix SparseComplexMatrix::crsParallelMult(const SparseComplexMatr
   for (int thread_num = 0; thread_num < num_threads; ++thread_num)
     threads[thread_num].join();
 
-  for (unsigned i = 0; i < row_index.size(); ++i) {
+  for (unsigned i = 0; i < row_index.size(); ++i) 
     for (unsigned j = 0; j < tmp.row_index.size(); ++j) {
       if (vals[i][j].real() != 0.0 || vals[i][j].imag() != 0.0) {
         result.values.push_back(vals[i][j]);
         result.col_index.push_back(cols[i][j]);
       }
     }
-  }
 
   for (int i = 1; i < rows_num; ++i)
     result.row_index[i + 1] += result.row_index[i];
