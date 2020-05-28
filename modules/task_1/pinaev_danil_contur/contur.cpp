@@ -2,8 +2,6 @@
 
 #include "../../modules/task_1/pinaev_danil_contur/contur.h"
 
-#include <tbb/tbb.h>
-
 #include <algorithm>
 #include <cmath>
 #include <ctime>
