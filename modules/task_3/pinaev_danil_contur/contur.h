@@ -21,8 +21,6 @@ struct Image {
 Image generateRandomImage(int rows, int cols);
 Image getContur(const Image &a);
 
-void print(std::string mes, const Image &img);
-
 class ParallelProcessing {
  private:
     const Image &img;
