@@ -177,30 +177,48 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
     std::vector < std::vector < std::complex < double >> > tempVecValue(B.n);
     std::vector <std::vector<int>> tempVecRowIndex(B.n);
     std::vector<int> tempVecColPtr(B.n, 0);
-    std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
+    printf("here2!");
+    const int nthreads = (B.n >= 4) ? std::thread::hardware_concurrency() : B.n;
+    const int delta = B.n / nthreads;
+    // const int deltaReminder = B.n % nthreads;
+    std::cout << nthreads << std::endl;
+    std::thread *threads = new std::thread[nthreads];
 
-    for (size_t j = 0; j < B.n; j++) {
-            for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
-                tempRowA = B.row_index[k];
-                for (int i = A.col_offsets[tempRowA];
-                     i < A.col_offsets[tempRowA + 1]; i++) {
-                    tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+    for (int s = 0; s < nthreads; s++) {
+        threads[s] = std::thread([&tempRowA, &tempVecValue, &tempVecRowIndex,
+        &tempVecColPtr, A, B, &s, delta](){
+            for (int j = s*delta; j < (s+1)*delta; j++) {
+                std::cout << j << " " << s*delta << " " << (s+1)*delta << " " << std::this_thread::get_id() << std::endl;
+                std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
+                    for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
+                        tempRowA = B.row_index[k];
+                        for (int i = A.col_offsets[tempRowA];
+                            i < A.col_offsets[tempRowA + 1]; i++) {
+                            tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+                        }
+                    }
+                    for (size_t count = 0; count < A.m; count++) {
+                        if (tempDataVec[count].imag() != 0 ||
+                            tempDataVec[count].real() != 0) {
+                            tempVecRowIndex[j].push_back(count);
+                            tempVecValue[j].push_back(tempDataVec[count]);
+                            tempVecColPtr[j]++;
+                        }
+                    }
                 }
-            }
-            for (size_t count = 0; count < A.m; count++) {
-                if (tempDataVec[count].imag() != 0 ||
-                    tempDataVec[count].real() != 0) {
-                    tempVecRowIndex[j].push_back(count);
-                    tempVecValue[j].push_back(tempDataVec[count]);
-                    tempVecColPtr[j]++;
-                }
-            }
-        }
+            });
+        threads[s].join();
+    }
+
+    std::cout << "check" << std::endl;
+
     int varTemp = 0;
     for (size_t i = 0; i < resMatrix.n; i++) {
         varTemp += tempVecColPtr[i];
         resMatrix.col_offsets.push_back(varTemp);
     }
+
+    std::cout << "check2" << std::endl;
 
     for (size_t i = 0; i < tempVecRowIndex.size(); i++)
         for (int j = 0; j < tempVecColPtr[i]; j++) {
@@ -208,44 +226,45 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
             resMatrix.value.push_back(tempVecValue[i][j]);
         }
 
+    std::cout << "check3" << std::endl;
 
     return resMatrix;
 }
 
-void PrintDo(std::promise<std::vector<int>>&& VecMatC){
-    std::vector<int> kek = {3,5,7};
-    printf("check!");
-    VecMatC.set_value(kek);
-}
+// void PrintDo(std::promise<std::vector<int>>&& VecMatC){
+//     std::vector<int> kek = {3,5,7};
+//     printf("check!");
+//     VecMatC.set_value(kek);
+// }
 
-void SparseMatrixCCS::MultiplySparseMatrixPar(
-    const SparseMatrixCCS &A, const SparseMatrixCCS &B) {
+// void SparseMatrixCCS::MultiplySparseMatrixPar(
+//     const SparseMatrixCCS &A, const SparseMatrixCCS &B) {
         
-    const int nthreads = std::thread::hardware_concurrency();
-    // const int delta = B.n / nthreads;
-    printf("here!");
-    std::promise<std::vector<int>>* VecMat = new std::promise<std::vector<int>>[nthreads];
-    std::future<std::vector<int>>* VecMatFuture = new std::future<std::vector<int>>[nthreads];
-    //mtxComplex* tempVecValue = new mtxComplex(B.n);
-    std::thread *threads = new std::thread[nthreads];
-    std::vector<int> s;
-    for (int i = 0; i < nthreads; i++) {
-        std::cout << nthreads;
-        VecMatFuture[i] = VecMat->get_future();
-        threads[i] = std::thread(PrintDo,std::move(VecMat[i]));
-        std::cout << "id = " << threads[i].get_id() << " i = " << i << std::endl;
-        // s.insert(0,VecMatFuture[i].get());
-        for(auto x : s){
-            std::cout << x;
-        }
-    }
+//     const int nthreads = std::thread::hardware_concurrency();
+//     // const int delta = B.n / nthreads;
+//     printf("here!");
+//     std::promise<std::vector<int>>* VecMat = new std::promise<std::vector<int>>[nthreads];
+//     std::future<std::vector<int>>* VecMatFuture = new std::future<std::vector<int>>[nthreads];
+//     //mtxComplex* tempVecValue = new mtxComplex(B.n);
+//     std::thread *threads = new std::thread[nthreads];
+//     std::vector<int> s;
+//     for (int i = 0; i < nthreads; i++) {
+//         std::cout << nthreads;
+//         VecMatFuture[i] = VecMat->get_future();
+//         threads[i] = std::thread(PrintDo,std::move(VecMat[i]));
+//         std::cout << "id = " << threads[i].get_id() << " i = " << i << std::endl;
+//         // s.insert(0,VecMatFuture[i].get());
+//         for(auto x : s){
+//             std::cout << x;
+//         }
+//     }
     
-    for (int i = 0; i < nthreads; i++) {
-        threads[i].join();
-    }
+//     for (int i = 0; i < nthreads; i++) {
+//         threads[i].join();
+//     }
 
 
-}
+// }
 
 
 mtxComplex multiMatrix(const mtxComplex &mtxA, const mtxComplex &mtxB) {

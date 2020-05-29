@@ -9,14 +9,14 @@
 
 
 
-TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
-     SparseMatrixCCS A(4, 2, 0.9);
-     SparseMatrixCCS B(3, 2, 0.9);
-     A = A.transpose();
-     B = B.transpose();
+// TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
+//      SparseMatrixCCS A(4, 2, 0.9);
+//      SparseMatrixCCS B(3, 2, 0.9);
+//      A = A.transpose();
+//      B = B.transpose();
 
-     ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrixPar(A, B));
-}
+//      ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
+// }
 
 
 
@@ -32,12 +32,12 @@ TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
 //     EXPECT_ANY_THROW(SparseMatrixCCS A(4, 3, 0.4));
 // }
 
-// TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
-//     SparseMatrixCCS A(30, 50, 0.8);
-//     SparseMatrixCCS B(50, 30, 0.8);
-//     A = A.transpose();
-//     B = B.transpose();
-
+TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
+    SparseMatrixCCS A(30, 30, 0.8);
+    SparseMatrixCCS B(30, 30, 0.8);
+    printf("work2");
+    A = A.transpose();
+    B = B.transpose();
     // tbb::tick_count start = tbb::tick_count::now();
     // SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB
     // (A, B);
@@ -55,8 +55,9 @@ TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
     // (A, B);
     // tbb::tick_count finish3 = tbb::tick_count::now();
     // printf("Time of multiply matrix with TBB step %f in sec\n", (finish3-start3).seconds());
-//     ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
-// }
+    printf("work");
+    ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
+}
 
 // TEST(multi_matrix, CAN_CREATE_SPARSE_CCS_MATRIX) {
 //     mtxComplex vecA = {{{7, -5}, {0}, {0}},
