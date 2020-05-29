@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <random>
+#include <chrono>
 #include <iostream>
 #include <vector>
 #include "../../../modules/task_4/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
@@ -171,24 +172,27 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
         throw "Error(Size col matrix A not equal size row matrix B)";
     }
 
+    auto begin = std::chrono::high_resolution_clock::now();
     SparseMatrixCCS resMatrix(A.m, B.n);
     int tempRowA;
     resMatrix.col_offsets.push_back(0);
     std::vector < std::vector < std::complex < double >> > tempVecValue(B.n);
     std::vector <std::vector<int>> tempVecRowIndex(B.n);
     std::vector<int> tempVecColPtr(B.n, 0);
-    printf("here2!");
     const int nthreads = (B.n >= 4) ? std::thread::hardware_concurrency() : B.n;
     const int delta = B.n / nthreads;
-    // const int deltaReminder = B.n % nthreads;
-    std::cout << nthreads << std::endl;
+    const int deltaReminder = B.n % nthreads;
     std::thread *threads = new std::thread[nthreads];
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - begin;
+    std::cout << "part 1 =" << elapsed.count() <<"ms"<< std::endl;
 
+    auto begin2 = std::chrono::high_resolution_clock::now();
     for (int s = 0; s < nthreads; s++) {
         threads[s] = std::thread([&tempRowA, &tempVecValue, &tempVecRowIndex,
-        &tempVecColPtr, A, B, &s, delta](){
+        &tempVecColPtr, A, B, s, delta, deltaReminder](){
             for (int j = s*delta; j < (s+1)*delta; j++) {
-                std::cout << j << " " << s*delta << " " << (s+1)*delta << " " << std::this_thread::get_id() << std::endl;
+                // std::cout << j << " " << s*delta << " " << (s+1)*delta << " " << std::this_thread::get_id() << std::endl;
                 std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
                     for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
                         tempRowA = B.row_index[k];
@@ -209,8 +213,10 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
             });
         threads[s].join();
     }
-
-    std::cout << "check" << std::endl;
+    auto end2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed2 = end2 - begin2;
+    std::cout << "part 2 =" << elapsed2.count() <<"ms"<< std::endl;
+    // std::cout << "check" << std::endl;
 
     int varTemp = 0;
     for (size_t i = 0; i < resMatrix.n; i++) {
@@ -218,15 +224,18 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
         resMatrix.col_offsets.push_back(varTemp);
     }
 
-    std::cout << "check2" << std::endl;
-
+    
+    auto begin3 = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < tempVecRowIndex.size(); i++)
         for (int j = 0; j < tempVecColPtr[i]; j++) {
             resMatrix.row_index.push_back(tempVecRowIndex[i][j]);
             resMatrix.value.push_back(tempVecValue[i][j]);
         }
+    auto end3 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed3 = end3 - begin3;
+    std::cout << "part 3 =" << elapsed3.count() <<"ms"<< std::endl;
 
-    std::cout << "check3" << std::endl;
+    // std::cout << "check3" << std::endl;
 
     return resMatrix;
 }

@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include <vector>
+#include <chrono>
 #include "../../../modules/task_4/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
 
 
@@ -33,29 +34,24 @@
 // }
 
 TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
-    SparseMatrixCCS A(30, 30, 0.8);
-    SparseMatrixCCS B(30, 30, 0.8);
-    printf("work2");
+    SparseMatrixCCS A(4222, 100, 0.8);
+    SparseMatrixCCS B(100, 2000, 0.8);
     A = A.transpose();
     B = B.transpose();
-    // tbb::tick_count start = tbb::tick_count::now();
-    // SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB
+    // auto begin = std::chrono::high_resolution_clock::now();
+    // SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrix
     // (A, B);
-    // tbb::tick_count finish = tbb::tick_count::now();
-    // printf("Time of quiksort with parallel %f in sec\n",(finish-start).seconds());
+    // auto end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double>elapsed = end - begin;
+    // std::cout<< elapsed.count() <<"ms"<< std::endl;
 
-    // tbb::tick_count start2 = tbb::tick_count::now();
-    // SparseMatrixCCS result2 = SparseMatrixCCS::MultiplySparseMatrix
+    // auto begin2 = std::chrono::high_resolution_clock::now();
+    // SparseMatrixCCS result2 = SparseMatrixCCS::MultiplySparseMatrixTBB
     // (A, B);
-    // tbb::tick_count finish2 = tbb::tick_count::now();
-    // printf("Time of multiply matrix without parallel %f in sec\n", (finish2-start2).seconds());
+    // auto end2 = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double>elapsed2 = end2 - begin2;
+    // std::cout<< elapsed2.count() <<"ms"<< std::endl;
 
-    // tbb::tick_count start3 = tbb::tick_count::now();
-    // SparseMatrixCCS result3 = SparseMatrixCCS::MultiplySparseMatrixTBB
-    // (A, B);
-    // tbb::tick_count finish3 = tbb::tick_count::now();
-    // printf("Time of multiply matrix with TBB step %f in sec\n", (finish3-start3).seconds());
-    printf("work");
     ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
 }
 
