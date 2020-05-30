@@ -16,6 +16,4 @@ double Simpson_Integr_seq(double(*func)(std::vector<double>), std::vector <doubl
 
 void calc_func_res(double(*func)(std::vector<double>), std::vector <double> x, size_t dimension, double h, std::vector<double>& func_res, int N, int start, int step);
 
-void calc_sum(std::vector<double>& func_res, int N, double& result, int start, int step, std::mutex& mutex);
-
 #endif  // MODULES_TASK_4_SINITSINA_M_SIMPSON_SIMPSON_H_
