@@ -36,6 +36,8 @@ class SparseMatrixCCS {
 
     static SparseMatrixCCS MultiplySparseMatrixTBB(const SparseMatrixCCS &A,
                                                 const SparseMatrixCCS &B);
+    static SparseMatrixCCS MultiplySparseMatrixParallel(const SparseMatrixCCS &A,
+                                                const SparseMatrixCCS &B);
     static void MultiplySparseMatrixPar(const SparseMatrixCCS &A, 
                                                 const SparseMatrixCCS &B);
                                                 
