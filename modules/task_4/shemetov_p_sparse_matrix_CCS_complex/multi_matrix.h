@@ -34,12 +34,9 @@ class SparseMatrixCCS {
     static SparseMatrixCCS MultiplySparseMatrix(const SparseMatrixCCS &A,
                                                 const SparseMatrixCCS &B);
 
-    static SparseMatrixCCS MultiplySparseMatrixTBB(const SparseMatrixCCS &A,
+    static SparseMatrixCCS MultiplySparseMatrixSTD(const SparseMatrixCCS &A,
                                                 const SparseMatrixCCS &B);
-    static SparseMatrixCCS MultiplySparseMatrixParallel(const SparseMatrixCCS &A,
-                                                const SparseMatrixCCS &B);
-    static void MultiplySparseMatrixPar(const SparseMatrixCCS &A, 
-                                                const SparseMatrixCCS &B);
+
                                                 
 
     bool operator==(const SparseMatrixCCS &) const;

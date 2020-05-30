@@ -16,7 +16,7 @@ TEST(multi_matrix, TEST_WRONG_SIZE_FOR_MULTIPLY_MATRIX) {
      A = A.transpose();
      B = B.transpose();
 
-     ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
+     ASSERT_ANY_THROW(SparseMatrixCCS::MultiplySparseMatrixSTD(A, B));
 }
 
 
@@ -34,8 +34,8 @@ TEST(multi_matrix, TEST_NOT_SPARSE_MATRIX) {
 }
 
 TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
-    SparseMatrixCCS A(1700, 200, 0.8);
-    SparseMatrixCCS B(200, 3000, 0.8);
+    SparseMatrixCCS A(20, 20, 0.8);
+    SparseMatrixCCS B(20, 20, 0.8);
     A = A.transpose();
     B = B.transpose();
     // auto begin = std::chrono::high_resolution_clock::now();
@@ -46,13 +46,13 @@ TEST(multi_matrix, TEST_TIME_WITH_LARGE_NUMBERS_RANDOM_MATRIX) {
     // std::cout<< elapsed.count() <<"ms"<< std::endl;
 
     // auto begin2 = std::chrono::high_resolution_clock::now();
-    // SparseMatrixCCS result2 = SparseMatrixCCS::MultiplySparseMatrixTBB
+    // SparseMatrixCCS result2 = SparseMatrixCCS::MultiplySparseMatrixSTD
     // (A, B);
     // auto end2 = std::chrono::high_resolution_clock::now();
     // std::chrono::duration<double>elapsed2 = end2 - begin2;
     // std::cout<< elapsed2.count() <<"ms"<< std::endl;
 
-    ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixTBB(A, B));
+    ASSERT_NO_FATAL_FAILURE(SparseMatrixCCS::MultiplySparseMatrixSTD(A, B));
 }
 
 TEST(multi_matrix, CAN_CREATE_SPARSE_CCS_MATRIX) {
@@ -84,7 +84,7 @@ TEST(multi_matrix, TEST_EQUAL_MULTIPLICATION_NOT_RANDOM_CCS_MATRIX) {
     mtxComplex vec3 = multiMatrix(vecA, vecB);
     SparseMatrixCCS expect(vec3);
     expect = expect.transpose();
-    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB(A, B);
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixSTD(A, B);
     EXPECT_TRUE(expect == result);
 }
 
@@ -103,7 +103,7 @@ TEST(multi_matrix, TEST_MATRIX_CONSISTS_OF_ZERO) {
     std::vector<int> row_indexExpect {};
     std::vector<int> col_ptrExpect {0, 0, 0, 0};
     SparseMatrixCCS expect(3, 3, valueExpect, row_indexExpect, col_ptrExpect);
-    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB(A, B);
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixSTD(A, B);
     EXPECT_TRUE(expect == result);
 }
 
@@ -124,7 +124,7 @@ TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE) {
     std::vector<int> row_indexExpect {0, 1, 2, 1};
     std::vector<int> col_ptrExpect {0, 3, 4};
     SparseMatrixCCS expect(3, 2, valueExpect, row_indexExpect, col_ptrExpect);
-    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB(A, B);
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixSTD(A, B);
     EXPECT_TRUE(expect == result);
 }
 
@@ -144,9 +144,7 @@ TEST(multi_matrix, TEST_EQUAL_NOT_RANDOM_CCS_MATRIX_EXAMPLE_2) {
     std::vector<int> row_indexExpect {0, 1, 2, 1, 1};
     std::vector<int> col_ptrExpect {0, 3, 4, 5};
     SparseMatrixCCS expect(3, 3, valueExpect, row_indexExpect, col_ptrExpect);
-    expect.PrintCCS();
-    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixTBB(A, B);
-    result.PrintCCS();
+    SparseMatrixCCS result = SparseMatrixCCS::MultiplySparseMatrixSTD(A, B);
     EXPECT_TRUE(expect == result);
 }
 
