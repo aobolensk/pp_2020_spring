@@ -76,7 +76,7 @@ TEST(Sort_Shell_Seq, Test_5_Random_Merge) {
 }
 
 TEST(Sort_Shell_STD, Test_6_Random_Merge) {
-  const int size = 100;
+  const int size = 30;
   const int thread_count = 4;
 
   std::vector<int> vec = getRandom(size);
@@ -98,7 +98,7 @@ TEST(Sort_Shell_STD, Test_7_Random_Merge) {
 }
 
 TEST(Sort_Shell_STD, Test_8_Random_Merge) {
-  const int size = 100;
+  const int size = 30;
   const int thread_count = 2;
 
   std::vector<int> vec = getRandom(size);
@@ -108,7 +108,7 @@ TEST(Sort_Shell_STD, Test_8_Random_Merge) {
   ASSERT_EQ(vec, res);
 }
 
-/*TEST(Sort_Shell_STD, Test_9_Random_Merge_10000) {
+/*TEST(Sort_Shell_STD, Test_9_Random_Merge_10000_4) {
   const int size = 10000;
   const int thread_count = 4;
   std::vector<int> vec = getRandom(size);
@@ -132,7 +132,7 @@ TEST(Sort_Shell_STD, Test_8_Random_Merge) {
   ASSERT_EQ(res1, res2);
 }
 
-TEST(Sort_Shell_STD, Test_10_Random_Merge_10000003) {
+TEST(Sort_Shell_STD, Test_10_Random_Merge_10000003_4) {
   const int size = 1000003;
   const int thread_count = 4;
 
@@ -157,7 +157,7 @@ TEST(Sort_Shell_STD, Test_10_Random_Merge_10000003) {
   ASSERT_EQ(res1, res2);
 }
 
-TEST(Sort_Shell_STD, Test_11_Random_Merge_10000002) {
+TEST(Sort_Shell_STD, Test_11_Random_Merge_10000002_4) {
   const int size = 10000002;
   const int thread_count = 4;
 
