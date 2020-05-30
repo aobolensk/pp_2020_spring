@@ -184,7 +184,7 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixSTD(
     for (int s = 0; s < nthreads; s++) {
         int deltaTemp = (s < 3) ? (s+1)*delta : (s+1)*delta + deltaReminder;
         threads[s] = std::thread([&tempVecValue, &tempVecRowIndex,
-        &tempVecColPtr, A, B,deltaTemp, s, delta, deltaReminder]() {
+        &tempVecColPtr, A, B,deltaTemp, s, delta]() {
             for (int j = s*delta; j < deltaTemp; j++) {
                 int tempRowA = 0;
                 std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
