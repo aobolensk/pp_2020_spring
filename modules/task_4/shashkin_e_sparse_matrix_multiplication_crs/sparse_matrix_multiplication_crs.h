@@ -35,8 +35,8 @@ class SparseComplexMatrix {
 };
 
 void MatrixMultiplicator(const SparseComplexMatrix& _matA, const SparseComplexMatrix& _matB,
-  std::vector<std::complex<double>>& _vals, std::vector<int>& _cols, const unsigned& _i,
-  std::atomic<int>& _not_zero_vals, const int _begin, const int _end, const int _thread_num);
+  std::vector<std::vector<std::complex<double>>>& _vals, std::vector<std::vector<int>>& _cols,
+  std::vector<int>& _rows, const int _begin, const int _end);
 std::vector<std::vector<std::complex<double>>> randomMatrix(int _rows_num, int _cols_num, double percent);
 void print(std::vector<std::vector<std::complex<double>>> matrix);
 #endif  // MODULES_TASK_4_SHASHKIN_E_SPARSE_MATRIX_MULTIPLICATION_CRS_SPARSE_MATRIX_MULTIPLICATION_CRS_H_

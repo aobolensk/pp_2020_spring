@@ -170,30 +170,34 @@ SparseComplexMatrix SparseComplexMatrix::operator*(const SparseComplexMatrix& ma
 }
 
 void MatrixMultiplicator(const SparseComplexMatrix& _matA, const SparseComplexMatrix& _matB,
-  std::vector<std::complex<double>>& _vals, std::vector<int>& _cols, const unsigned& _i,
-  std::atomic<int>& _not_zero_vals, int _begin, int _end, const int _thread_num) {
-  for (int j = _begin; j < _end; ++j) {
-    std::complex<double> s = 0;
-    int iter1 = _matA.row_index[_i - 1];
-    int iter2 = _matB.row_index[j - 1];
-    while ((iter1 < _matA.row_index[_i]) && (iter2 < _matB.row_index[j])) {
-      if (_matA.col_index[iter1] == _matB.col_index[iter2]) {
-        s += _matA.values[iter1] * _matB.values[iter2];
-        iter1++;
-        iter2++;
-      } else {
-        if (_matA.col_index[iter1] < _matB.col_index[iter2]) {
+  std::vector <std::vector<std::complex<double>>> &_vals, std::vector<std::vector<int>>& _cols,
+  std::vector<int>& _rows, const int _begin, const int _end) {
+  for (int i = _begin; i < _end; ++i) {
+    int not_zero_vals = 0;
+    for (unsigned j = 1; j < _matB.row_index.size(); ++j) {
+      std::complex<double> s = 0;
+      int iter1 = _matA.row_index[i - 1];
+      int iter2 = _matB.row_index[j - 1];
+      while ((iter1 < _matA.row_index[i]) && (iter2 < _matB.row_index[j])) {
+        if (_matA.col_index[iter1] == _matB.col_index[iter2]) {
+          s += _matA.values[iter1] * _matB.values[iter2];
           iter1++;
-        } else {
           iter2++;
+        } else {
+          if (_matA.col_index[iter1] < _matB.col_index[iter2]) {
+            iter1++;
+          } else {
+            iter2++;
+          }
         }
       }
+      if (s.real() != 0.0 || s.imag() != 0.0) {
+        _vals[i-1][j - 1] = s;
+        _cols[i-1][j - 1] = j - 1;
+        not_zero_vals++;
+      }
     }
-    if (s.real() != 0.0 || s.imag() != 0.0) {
-      _vals[j - 1] = s;
-      _cols[j - 1] = j - 1;
-      _not_zero_vals++;
-    }
+    _rows[i] = not_zero_vals;
   }
 }
 
@@ -202,50 +206,58 @@ SparseComplexMatrix SparseComplexMatrix::crsParallelMult(const SparseComplexMatr
   SparseComplexMatrix tmp;
   tmp = mat;
   tmp = tmp.transposeCRS();
-  int delta = static_cast<int>(tmp.row_index.size() - 1) / num_threads;
-  int rem = static_cast<int>(tmp.row_index.size() - 1) % num_threads;
+  int delta = rows_num / num_threads;
+  int rem = rows_num % num_threads;
   std::vector<std::thread> threads(num_threads);
-  std::atomic<int> not_zero_vals(0);
   if (cols_num != tmp.cols_num)
     throw std::runtime_error("Error! Incorrect numbers of cols!\n");
-  result.row_index.push_back(0);
+  std::vector<std::vector<std::complex<double>>> vals(row_index.size());
+  std::vector<std::vector<int>> cols(row_index.size());
+  result.row_index.resize(row_index.size());
+  result.row_index[0] = 0;
 
-  for (unsigned i = 1; i < row_index.size(); ++i) {
-    std::vector<std::complex<double>> vals(tmp.row_index.size(), std::complex<double>(0.0, 0.0));
-    std::vector<int> cols(tmp.row_index.size(), 0);
-    for (int thread_num = 0; thread_num < num_threads - 1; ++thread_num) {
-      threads[thread_num]=std::thread(MatrixMultiplicator,
-        std::ref(*this),
-        std::ref(tmp),
-        std::ref(vals),
-        std::ref(cols),
-        std::ref(i),
-        std::ref(not_zero_vals),
-        thread_num*delta + 1,
-        (thread_num + 1)*delta + 1,
-        thread_num);
+  for (unsigned i = 0; i < row_index.size(); ++i) {
+    vals[i].resize(tmp.row_index.size());
+    cols[i].resize(tmp.row_index.size());
+  }
+  for (unsigned i = 0; i < row_index.size(); ++i)
+    for (unsigned j = 0; j < tmp.row_index.size(); ++j) {
+      vals[i][j] = std::complex<double>(0.0, 0.0);
+      cols[i][j] = 0;
     }
-    threads[num_threads - 1] = std::thread(MatrixMultiplicator,
+
+  for (int thread_num = 0; thread_num < num_threads - 1; ++thread_num) {
+    threads[thread_num] = std::thread(MatrixMultiplicator,
       std::ref(*this),
       std::ref(tmp),
       std::ref(vals),
       std::ref(cols),
-      std::ref(i),
-      std::ref(not_zero_vals),
-      (num_threads - 1)*delta + 1,
-      (num_threads)*delta + 1 + rem,
-      num_threads - 1);
-
-    for (int thread_num = 0; thread_num < num_threads; ++thread_num)
-      threads[thread_num].join();
-
-    for (unsigned j = 0; j < tmp.row_index.size(); ++j)
-      if (vals[j].real() != 0.0 || vals[j].imag() != 0.0) {
-        result.values.push_back(vals[j]);
-        result.col_index.push_back(cols[j]);
-      }
-    result.row_index.push_back(not_zero_vals);
+      std::ref(result.row_index),
+      thread_num*delta + 1,
+      (thread_num + 1)*delta + 1);
   }
+  threads[num_threads - 1] = std::thread(MatrixMultiplicator,
+    std::ref(*this),
+    std::ref(tmp),
+    std::ref(vals),
+    std::ref(cols),
+    std::ref(result.row_index),
+    (num_threads - 1)*delta + 1,
+    (num_threads)*delta + 1 + rem);
+
+  for (int thread_num = 0; thread_num < num_threads; ++thread_num)
+    threads[thread_num].join();
+
+  for (unsigned i = 0; i < row_index.size(); ++i) 
+    for (unsigned j = 0; j < tmp.row_index.size(); ++j) {
+      if (vals[i][j].real() != 0.0 || vals[i][j].imag() != 0.0) {
+        result.values.push_back(vals[i][j]);
+        result.col_index.push_back(cols[i][j]);
+      }
+    }
+
+  for (int i = 1; i < rows_num; ++i)
+    result.row_index[i + 1] += result.row_index[i];
 
   return result;
 }

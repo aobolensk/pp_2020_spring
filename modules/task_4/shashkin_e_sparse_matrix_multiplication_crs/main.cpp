@@ -53,8 +53,8 @@ TEST(SparseMatrixMultiplication, can_multimply_not_square_crs_matrices) {
   int rows1 = 60;
   int cols1 = 30;
   int rows2 = 30;
-  int cols2 = 40;
-  double percent = 1;
+  int cols2 = 60;
+  double percent = 0.5;
   std::vector<std::vector<std::complex<double>>> mat1;
   std::vector<std::vector<std::complex<double>>> mat2;
   SparseComplexMatrix crsMat1;
@@ -73,7 +73,7 @@ TEST(SparseMatrixMultiplication, can_multimply_not_square_crs_matrices) {
   /*auto end_par = std::chrono::high_resolution_clock::now();*/
   /*std::cout << crsMat1.getValuesNum() << "\n";
   std::cout << crsMat2.getValuesNum() << "\n";*/
-  /*std::cout << "Seq time: " << std::chrono::duration<double>(end_seq - start_seq).count() << "\n";
+ /* std::cout << "Seq time: " << std::chrono::duration<double>(end_seq - start_seq).count() << "\n";
   std::cout << "Par time: " << std::chrono::duration<double>(end_par - start_par).count() << "\n";*/
   ASSERT_TRUE(crsMat3 == crsMat4);
 }
