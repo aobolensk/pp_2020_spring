@@ -8,7 +8,47 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <condition_variable>
+#include <thread>
+#include <chrono>
 #include "../../../modules/task_3/makarikhin_semen_dijkstra_algorithm/dijkstra_algorithm.h"
+
+class my_barrier
+{
+
+public:
+  my_barrier(int count)
+    : thread_count(count)
+    , counter(0)
+    , waiting(0)
+  {}
+
+  void wait()
+  {
+    //fence mechanism
+    std::unique_lock<std::mutex> lk(m);
+    ++counter;
+    ++waiting;
+    cv.wait(lk, [&] {return counter >= thread_count; });
+    cv.notify_one();
+    --waiting;
+    if (waiting == 0)
+    {
+      //reset barrier
+      counter = 0;
+    }
+    lk.unlock();
+  }
+
+private:
+  std::mutex m;
+  std::condition_variable cv;
+  int counter;
+  int waiting;
+  int thread_count;
+};
+
+my_barrier* barrier;
 
 Graph::Graph(int vertex_n) :vertex_num(vertex_n) {
   weight_list.resize(vertex_n);
@@ -61,6 +101,7 @@ std::vector<int> Dijkstra(const Graph& g, int selected_vertex) {
   distance[selected_vertex] = 0;
   std::vector <bool> visit(g.vertex_num, false);
   int v_num;
+  barrier = new my_barrier(g.vertex_num - 1);
   for (v_num = 0; v_num < g.vertex_num - 1; v_num++) {
     tl.push_back(*new (tbb::task::allocate_root()) RooTaskDujkstra(&distance, g, &visit));
   }
@@ -86,6 +127,7 @@ tbb::task* RooTaskDujkstra::execute() {
   lock.acquire(ChangeMinMutex);
   (*visit)[vertex_num] = true;
   lock.release();
+  barrier->wait();
 
   for (int i = 0; i < g.vertex_num; i++) {
     if (!(*visit)[i] && g.weight_list[vertex_num][i] && (*distance)[vertex_num] != INT8_MAX &&
