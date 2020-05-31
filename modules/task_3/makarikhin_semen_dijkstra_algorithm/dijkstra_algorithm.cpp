@@ -13,10 +13,8 @@
 #include <chrono>
 #include "../../../modules/task_3/makarikhin_semen_dijkstra_algorithm/dijkstra_algorithm.h"
 
-class my_barrier
-{
-
-public:
+class my_barrier {
+ public:
   my_barrier(int count)
     : thread_count(count)
     , counter(0)
@@ -25,7 +23,6 @@ public:
 
   void wait()
   {
-    //fence mechanism
     std::unique_lock<std::mutex> lk(m);
     ++counter;
     ++waiting;
@@ -34,13 +31,12 @@ public:
     --waiting;
     if (waiting == 0)
     {
-      //reset barrier
       counter = 0;
     }
     lk.unlock();
   }
 
-private:
+ private:
   std::mutex m;
   std::condition_variable cv;
   int counter;
