@@ -18,7 +18,7 @@ CRS_Matrix::CRS_Matrix(const std::vector<std::vector<cpx>>& matrix) {
 
     for (size_t i = 0; i < row; ++i) {
         for (size_t j = 0; j < col; ++j)
-            if ((std::abs(matrix[i][j].real()) > pow(10, -9)) || (std::abs(matrix[i][j].imag()) > pow(10, -9))) {
+            if ((matrix[i][j].real() != 0) || (matrix[i][j].imag() != 0)) {
                 val.push_back(matrix[i][j]);
                 colIndex.push_back(j);
                 NonZeroCounter++;
@@ -32,8 +32,8 @@ bool CRS_Matrix::operator== (const CRS_Matrix& mat) const& {
        (rowIndex != mat.rowIndex) || (val.size() != mat.val.size()))
         return false;
     for (size_t i = 0; i < val.size(); ++i) {
-        if ((std::abs(val[i].real()-mat.val[i].real()) > pow(10, -9)) ||
-            (std::abs(val[i].imag()-mat.val[i].imag()) > pow(10, -9)) )
+        if ((val[i].real()-mat.val[i].real() != 0) ||
+            (val[i].imag()-mat.val[i].imag()) != 0)
             return false;
     }
     return true;
@@ -63,7 +63,7 @@ CRS_Matrix CRS_Matrix::operator* (const CRS_Matrix& mat) const& {
                         rhsIter++;
                 }
             }
-            if (std::abs(sum.real()) > pow(10, -9) || std::abs(sum.imag()) > pow(10, -9)) {
+            if (sum.real() != 0 || sum.imag() != 0) {
                 tmpVec.push_back(sum);
                 tmpCol.push_back(j-1);
                 NonZeroCounter++;
