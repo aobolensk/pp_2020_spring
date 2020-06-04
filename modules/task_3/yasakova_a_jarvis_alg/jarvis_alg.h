@@ -9,6 +9,8 @@
 std::vector < std::pair<int, int>> GetRandomPoints(int n);
 
 std::vector < std::pair<int, int>> tbb_JarvisAlg(const std::vector<std::pair<int, int>>& points);
+std::pair<int, int> tbb_FindFirstPoint(std::vector<std::pair<int, int>>& points);
+std::pair<int, int> tbb_FindSecondPoint(std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp);
 
 std::vector < std::pair<int, int>> seq_JarvisAlg(const std::vector<std::pair<int, int>>& points);
 std::pair<int, int> seq_FindFirstPoint(const std::vector<std::pair<int, int>>& points);
