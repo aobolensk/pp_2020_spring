@@ -1,17 +1,10 @@
 // Copyright 2020 Makarikhin Semen
 
-#include <tbb/task_scheduler_init.h>
-#include <tbb/task_group.h>
-#include <tbb/task.h>
-#include <tbb/mutex.h>
+#include <tbb/tbb.h>
 #include <random>
+#include <algorithm>
 #include <ctime>
 #include <vector>
-#include <stdexcept>
-#include <iostream>
-#include <condition_variable>
-#include <thread>
-#include <chrono>
 #include "../../../modules/task_3/makarikhin_semen_dijkstra_algorithm/dijkstra_algorithm.h"
 
 Graph::Graph(int vertex_n) :vertex_num(vertex_n) {
@@ -53,50 +46,45 @@ Graph get_Random_Graph(const int& vertex_n, const int& edge_n) {
   return g;
 }
 
-std::vector<int> Dijkstra(const Graph& g, int selected_vertex) {
-
+std::vector<int> Dijkstra_Tbb(const Graph& g, int selected_vertex) {
   if (selected_vertex < 0 || selected_vertex > g.vertex_num - 1) {
     throw std::out_of_range("out of range selected vertex");
   }
 
-  tbb::task_scheduler_init init;
-  tbb::task_list tl;
-
   std::vector<int> distance(g.vertex_num, INT8_MAX);
   distance[selected_vertex] = 0;
   std::vector <bool> visit(g.vertex_num, false);
-  int v_num;
+  int count;
 
-  for (v_num = 0; v_num < g.vertex_num - 1; v_num++) {
-    tl.push_back(*new (tbb::task::allocate_root()) RooTaskDujkstra(&distance, g, &visit));
+  struct min { int val; int index; };
+  min current = { INT8_MAX ,0 };
+  for (count = 0; count < g.vertex_num - 1; count++) {
+    current.val = INT8_MAX;
+    current = tbb::parallel_reduce(
+      tbb::blocked_range<int>(0, g.vertex_num),
+      current,
+      [&](const tbb::blocked_range<int>& range, min cur) ->min {
+      for (int i = range.begin(); i != range.end(); ++i) {
+        if (!visit[i] && distance[i] <= cur.val) {
+          cur.val = distance[i];
+          cur.index = i;
+        }
+      }
+      return cur;
+    }, [](min a, min b) {
+      return a.val < b.val ? a : b;
+    });
+    visit[current.index] = true;
+
+    tbb::parallel_for(
+      tbb::blocked_range<int>(0, g.vertex_num),
+      [&](const tbb::blocked_range<int>& range) {
+      for (int i = range.begin(); i != range.end(); ++i) {
+        if (!visit[i] && g.weight_list[current.index][i] && distance[current.index] != INT8_MAX &&
+          distance[current.index] + g.weight_list[current.index][i] < distance[i])
+          distance[i] = distance[current.index] + g.weight_list[current.index][i];
+      }
+    });
   }
-
-  tbb::task::spawn_root_and_wait(tl);
   return distance;
-}
-
-tbb::task* RooTaskDujkstra::execute() {
-  tbb::mutex::scoped_lock lock;
-  int vertex_num = -1;
-
-  for (int i = 0; i < g.vertex_num; ++i) {
-    if (!(*visit)[i] && (vertex_num == -1 || (*distance)[i] <= (*distance)[vertex_num])) {
-      vertex_num = i;
-    }
-  }
-  if ((*distance)[vertex_num] == INT8_MAX)
-    return NULL;
-
-  lock.acquire(ChangeMinMutex);
-  (*visit)[vertex_num] = true;
-  lock.release();
-  for (int i = 0; i < g.vertex_num; i++) {
-    if (!(*visit)[i] && g.weight_list[vertex_num][i] && (*distance)[vertex_num] != INT8_MAX &&
-      (*distance)[vertex_num] + g.weight_list[vertex_num][i] < (*distance)[i]) {
-      lock.acquire(ChangeMinMutex);
-      (*distance)[i] = (*distance)[vertex_num] + g.weight_list[vertex_num][i];
-      lock.release();
-    }
-  }
-  return NULL;
 }
