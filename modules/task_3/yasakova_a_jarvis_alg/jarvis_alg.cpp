@@ -24,16 +24,15 @@ std::vector < std::pair<int, int>> GetRandomPoints(int n) {
 
 
 std::vector < std::pair<int, int>> tbb_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
-    std::vector<std::pair<int, int>> res, points_ = points;
+    std::vector<std::pair<int, int>> res;
     tbb::concurrent_vector<std::pair<int, int>> res_;
     int size = points.size();
     int nth = 4;
     if (size - 2 < nth) {
         res = seq_JarvisAlg(points);
     } else {
-        std::pair<int, int> tmp1 = tbb_FindFirstPoint(points_);
-        std::pair<int, int> tmp2 = tbb_FindSecondPoint(points_, tmp1);
-        size = points_.size();
+        std::pair<int, int> tmp1 = tbb_FindFirstPoint(points);
+        std::pair<int, int> tmp2 = tbb_FindSecondPoint(points, tmp1);
         tbb::task_scheduler_init init(nth);
         std::vector<std::pair<int, int>> res_ = tbb::parallel_reduce(tbb::blocked_range<int>(0, size,
                 size / nth + size % nth), std::vector<std::pair<int, int>>(), [&](const tbb::blocked_range<int>& r,
@@ -45,13 +44,13 @@ std::vector < std::pair<int, int>> tbb_JarvisAlg(const std::vector<std::pair<int
                 res_loc.push_back(tmp);
                 double min_cos = 1, curr_cos = 1;
                 for (int i = r.begin(); i < r.end(); ++i) {
-                    curr_cos = CountCos(res_loc[res_loc.size() - 1], res_loc[res_loc.size() - 2], points_[i]);
+                    curr_cos = CountCos(res_loc[res_loc.size() - 1], res_loc[res_loc.size() - 2], points[i]);
                     if (curr_cos < min_cos) {
                         min_cos = curr_cos;
-                        tmp = points_[i];
-                    } else if (curr_cos == min_cos && distance(res_loc[res_loc.size() - 1], points_[i])
+                        tmp = points[i];
+                    } else if (curr_cos == min_cos && distance(res_loc[res_loc.size() - 1], points[i])
                         > distance(res_loc[res_loc.size() - 1], tmp)) {
-                        tmp = points_[i];
+                        tmp = points[i];
                     }
                 }
                 curr_cos = CountCos(res_loc[res_loc.size() - 1], res_loc[res_loc.size() - 2], res_loc[0]);
@@ -95,7 +94,7 @@ std::vector < std::pair<int, int>> tbb_JarvisAlg(const std::vector<std::pair<int
     return res;
 }
 
-std::pair<int, int> tbb_FindFirstPoint(std::vector<std::pair<int, int>>& points) {
+std::pair<int, int> tbb_FindFirstPoint(const std::vector<std::pair<int, int>>& points) {
     std::pair<int, int> res = points[0];
     int size = points.size();
     int nth = 4;
@@ -105,18 +104,14 @@ std::pair<int, int> tbb_FindFirstPoint(std::vector<std::pair<int, int>>& points)
            std::vector<std::pair<int, int>>(), [&](const tbb::blocked_range<int>& r,
            std::vector<std::pair<int, int>> res_general) -> std::vector<std::pair<int, int>> {
         std::pair<int, int> res_loc = points[r.begin()];
-        int j = r.begin();
         for (int i = r.begin() + 1; i < r.end(); ++i) {
             if (points[i].second < res_loc.second) {
                 res_loc = points[i];
-                j = i;
             } else if (points[i].second == res_loc.second && points[i].first < res_loc.first) {
                 res_loc = points[i];
-                j = i;
             }
         }
         res_general.push_back(res_loc);
-        res_general.push_back(std::make_pair(j, j));
         return res_general;
         }, [](std::vector<std::pair<int, int>> r1, std::vector<std::pair<int, int>> r2)
             -> std::vector<std::pair<int, int>> {
@@ -125,21 +120,17 @@ std::pair<int, int> tbb_FindFirstPoint(std::vector<std::pair<int, int>>& points)
     });
     init.terminate();
     res = res_[0];
-    int j = res_[1].first;
-    for (int i = 0; i < res_.size(); i = i + 2) {
+    for (int i = 0; i < res_.size(); i++) {
         if (res_[i].second < res.second) {
             res = res_[i];
-            j = res_[i + 1].first;
         } else if (res_[i].second == res.second && res_[i].first < res.first) {
             res = res_[i];
-            j = res_[i + 1].first;
         }
     }
-    points.erase(points.begin() + j);
     return res;
 }
 
-std::pair<int, int> tbb_FindSecondPoint(std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
+std::pair<int, int> tbb_FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
     std::pair<int, int> res = points[0];
     double min = 4;
     int size = points.size();
@@ -150,7 +141,6 @@ std::pair<int, int> tbb_FindSecondPoint(std::vector<std::pair<int, int>>& points
         [&](const tbb::blocked_range<int>& r, std::vector<std::pair<int, int>> res_general)
         -> std::vector<std::pair<int, int>> {
         std::pair<int, int> res_loc = points[r.begin()];
-        int j = 0;
         double min_ = 4;
         for (int i = r.begin(); i < r.end(); ++i) {
             if (points[i] != tmp) {
@@ -159,15 +149,12 @@ std::pair<int, int> tbb_FindSecondPoint(std::vector<std::pair<int, int>>& points
                 if (angle < min_) {
                     min_ = angle;
                     res_loc = points[i];
-                    j = i;
                 } else if (angle == min_ && distance(tmp, points[i]) > distance(tmp, res_loc)) {
                     res_loc = points[i];
-                    j = i;
                 }
             }
         }
         res_general.push_back(res_loc);
-        res_general.push_back(std::make_pair(j, j));
         return res_general;
         }, [](std::vector<std::pair<int, int>> r1, std::vector<std::pair<int, int>> r2)
             -> std::vector<std::pair<int, int>> {
@@ -176,21 +163,17 @@ std::pair<int, int> tbb_FindSecondPoint(std::vector<std::pair<int, int>>& points
     });
     init.terminate();
     res = res_[0];
-    int j = res_[1].first;
     min = 4;
-    for (int i = 0; i < res_.size(); i = i + 2) {
+    for (int i = 0; i < res_.size(); i++) {
         double angle = atan(static_cast<double>(res_[i].second - tmp.second)
             / static_cast<double>(abs(res_[i].first - tmp.first)));
         if (angle < min) {
             min = angle;
             res = res_[i];
-            j = res_[i + 1].first;
         } else if (angle == min && distance(tmp, res_[i]) > distance(tmp, res)) {
             res = res_[i];
-            j = res_[i + 1].first;
         }
     }
-    points.erase(points.begin() + j);
     return res;
 }
 
