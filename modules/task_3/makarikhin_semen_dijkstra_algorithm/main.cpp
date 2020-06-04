@@ -7,7 +7,7 @@ TEST(Dijkstra_Algorithm, Test_En_Exception) {
   int vertex = 5;
   int edge = 8;
   Graph g = get_Random_Graph(vertex, edge);
-  ASSERT_NO_THROW(Dijkstra(g, 0));
+  ASSERT_NO_THROW(Dijkstra_Tbb(g, 0));
 }
 
 TEST(Dijkstra_Algorithm, Test_Out_Max_Num_Edge) {
@@ -36,7 +36,7 @@ TEST(Dijkstra_Algorithm, Test_Const_Six_Vertex_Graph) {
                     {2, 0, 0, 0, 0, 8},
                     {0, 0, 0, 2, 8, 0} };
 
-  ASSERT_EQ(Dijkstra(g, 0), res);
+  ASSERT_EQ(Dijkstra_Tbb(g, 0), res);
 }
 
 TEST(Dijkstra_Algorithm, Test_Const_Four_Vertex_Graph) {
@@ -48,7 +48,7 @@ TEST(Dijkstra_Algorithm, Test_Const_Four_Vertex_Graph) {
                     {0, 4, 0, 1},
                     {7, 32, 1, 0} };
 
-  ASSERT_EQ(Dijkstra(g, 0), res);
+  ASSERT_EQ(Dijkstra_Tbb(g, 0), res);
 }
 
 TEST(Dijkstra_Algorithm, Test_One_Element_Graph) {
@@ -57,7 +57,7 @@ TEST(Dijkstra_Algorithm, Test_One_Element_Graph) {
   Graph g = get_Random_Graph(vertex, edge);
   std::vector<int> res{ 0 };
 
-  ASSERT_EQ(Dijkstra(g, 0), res);
+  ASSERT_EQ(Dijkstra_Tbb(g, 0), res);
 }
 
 TEST(Dijkstra_Algorithm, Test_Out_Serch_Vertex) {
@@ -65,7 +65,7 @@ TEST(Dijkstra_Algorithm, Test_Out_Serch_Vertex) {
   int edge = 24;
   Graph g = get_Random_Graph(vertex, edge);
 
-  ASSERT_ANY_THROW(Dijkstra(g, 14));
+  ASSERT_ANY_THROW(Dijkstra_Tbb(g, 14));
 }
 
 int main(int argc, char** argv) {
