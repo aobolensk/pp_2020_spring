@@ -57,7 +57,7 @@ std::vector<int> Dijkstra_Tbb(const Graph& g, int selected_vertex) {
   int count;
 
   struct min { int val; int index; };
-  min current = { INT8_MAX ,0 };
+  min current = { INT8_MAX , 0 };
   for (count = 0; count < g.vertex_num - 1; count++) {
     current.val = INT8_MAX;
     current = tbb::parallel_reduce(
