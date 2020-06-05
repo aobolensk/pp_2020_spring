@@ -1,6 +1,6 @@
 // Copyright 2020 Nazarov Vladislav
 #include <gtest/gtest.h>
-#include <omp.h>
+#include <chrono>
 #include <vector>
 #include "./sparse_matrix_multiplication.h"
 
@@ -99,13 +99,13 @@ TEST(Sparce_Matrix_Multiplication, Test_Random_CRS_Multiplication) {
 //     CRS_Matrix rand1 = getRandomCRSMatrix(1500, 1499, 0.1);
 //     CRS_Matrix rand2 = getRandomCRSMatrix(1503, 1500, 0.1);
 //     CRS_Matrix trans = rand2.transpose();
-//     auto time1 = omp_get_wtime();
+//     auto time1 = std::chrono::high_resolution_clock::now();
 //     CRS_Matrix multCRSPar = rand1.parallelMultiply(trans);
-//     auto time2 = omp_get_wtime();
-//     printf("PAR %f\n", time2 - time1);
-//     time1 = omp_get_wtime();
+//     auto time2 = std::chrono::high_resolution_clock::now();
+//     printf("PAR %f\n", std::chrono::duration_cast<std::chrono::duration<double>>(time2 - time1).count());
+//     time1 = std::chrono::high_resolution_clock::now();
 //     CRS_Matrix multCRSSeq = rand1 * trans;
-//     time2 = omp_get_wtime();
-//     printf("SEQ %f\n", time2 - time1);
+//     time2 = std::chrono::high_resolution_clock::now();
+//     printf("SEQ %f\n", std::chrono::duration_cast<std::chrono::duration<double>>(time2 - time1).count());
 //     EXPECT_EQ(multCRSSeq, multCRSPar);
 // }
