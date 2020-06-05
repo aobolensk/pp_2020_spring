@@ -120,7 +120,7 @@ std::pair<int, int> tbb_FindFirstPoint(const std::vector<std::pair<int, int>>& p
     });
     init.terminate();
     res = res_[0];
-	int size_ = res_.size();
+    int size_ = res_.size();
     for (int i = 0; i < size_; i++) {
         if (res_[i].second < res.second) {
             res = res_[i];
@@ -165,7 +165,7 @@ std::pair<int, int> tbb_FindSecondPoint(const std::vector<std::pair<int, int>>& 
     init.terminate();
     res = res_[0];
     min = 4;
-	int size_ = res_.size();
+    int size_ = res_.size();
     for (int i = 0; i < size_; i++) {
         double angle = atan(static_cast<double>(res_[i].second - tmp.second)
             / static_cast<double>(abs(res_[i].first - tmp.first)));
