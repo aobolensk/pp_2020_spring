@@ -4,7 +4,7 @@
 #include <vector>
 #include "./matrix_multiplication.h"
 
-TEST(Gaussian_Image_Filtering_seq, Simple_Convert) {
+TEST(CRS_Matrix_Multiplication, Simple_Convert) {
     const int rows = 3, cols = 4;
 
     std::vector<int> mat_val = {1, 0, 2, 0,
@@ -24,7 +24,7 @@ TEST(Gaussian_Image_Filtering_seq, Simple_Convert) {
     EXPECT_EQ(cRSMat.ptrs, c_ptrs);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Convert_first) {
+TEST(CRS_Matrix_Multiplication, Convert_first) {
     const int rows = 4, cols = 4;
     Matrix mat(rows, cols);
 
@@ -45,7 +45,7 @@ TEST(Gaussian_Image_Filtering_seq, Convert_first) {
     EXPECT_EQ(cRSMat.ptrs, c_ptrs);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Random_Mat) {
+TEST(CRS_Matrix_Multiplication, Random_Mat) {
     const int rows = 3;
     const int cols = 4;
 
@@ -54,7 +54,7 @@ TEST(Gaussian_Image_Filtering_seq, Random_Mat) {
     EXPECT_EQ(matrix.val.size(), static_cast<size_t>(rows * cols));
 }
 
-TEST(Gaussian_Image_Filtering_seq, Convert) {
+TEST(CRS_Matrix_Multiplication, Convert) {
     const int rows = 3;
     const int cols = 4;
 
@@ -74,7 +74,7 @@ TEST(Gaussian_Image_Filtering_seq, Convert) {
     EXPECT_EQ(matrixCRS.val, c_val);
 }
 
-TEST(Gaussian_Image_Filtering_seq, Transponation) {
+TEST(CRS_Matrix_Multiplication, Transponation) {
     const int rows = 4, cols = 4;
     Matrix mat(rows, cols);
 
@@ -101,7 +101,7 @@ TEST(Gaussian_Image_Filtering_seq, Transponation) {
     EXPECT_EQ(matrixCRS_tr.ptrs, c_ptrs);
 }
 
-TEST(Gaussian_Image_Filtering_seq, B) {
+TEST(CRS_Matrix_Multiplication, B) {
     Matrix first(3, 3);
     Matrix second(3, 3);
 
@@ -125,7 +125,7 @@ TEST(Gaussian_Image_Filtering_seq, B) {
     EXPECT_EQ(res.val, res_val);
 }
 
-TEST(Gaussian_Image_Filtering_seq, C) {
+TEST(CRS_Matrix_Multiplication, C) {
     std::vector<int> first_val = {1, 0, 2,
                                  -1, 3, 0,
                                   0, 0, 3};
