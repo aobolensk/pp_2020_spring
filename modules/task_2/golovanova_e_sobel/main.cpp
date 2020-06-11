@@ -55,32 +55,32 @@ TEST(sobel, omp_sobel) {
   ASSERT_EQ(result, K.GetMatrix());
 }
 
-TEST(sobel, few_number_of_elements) {
-  image Ex(5, 5);
-  Ex.GetRandom();
-  double time0 = omp_get_wtime();
-  image K = Ex.SeqSobel();
-  double time1 = omp_get_wtime();
-  image KL = Ex.OmpSobel();
-  double time2 = omp_get_wtime();
-  double seq_time = time1 - time0;
-  double omp_time = time2 - time1;
-  std::cout << "SEQ: " << seq_time << std::endl;
-  std::cout << "OMP: " << omp_time << std::endl;
-  ASSERT_TRUE(omp_time > seq_time);
-}
-
-TEST(sobel, large_number_of_elements) {
-  image Ex1(10000, 10000);
-  Ex1.GetRandom();
-  double time0 = omp_get_wtime();
-  image Ex2 = Ex1.SeqSobel();
-  double time1 = omp_get_wtime();
-  image Ex3 = Ex1.OmpSobel();
-  double time2 = omp_get_wtime();
-  double seq_time = time1 - time0;
-  double omp_time = time2 - time1;
-  std::cout << "SEQ: " << seq_time << std::endl;
-  std::cout << "OMP: " << omp_time << std::endl;
-  ASSERT_TRUE(omp_time < seq_time);
-}
+//  TEST(sobel, few_number_of_elements) {
+//  image Ex(5, 5);
+//  Ex.GetRandom();
+//  double time0 = omp_get_wtime();
+//  image K = Ex.SeqSobel();
+//  double time1 = omp_get_wtime();
+//  image KL = Ex.OmpSobel();
+//  double time2 = omp_get_wtime();
+//  double seq_time = time1 - time0;
+//  double omp_time = time2 - time1;
+//  std::cout << "SEQ: " << seq_time << std::endl;
+//  std::cout << "OMP: " << omp_time << std::endl;
+//  ASSERT_TRUE(omp_time > seq_time);
+//  }
+//
+//  TEST(sobel, large_number_of_elements) {
+//  image Ex1(10000, 10000);
+//  Ex1.GetRandom();
+//  double time0 = omp_get_wtime();
+//  image Ex2 = Ex1.SeqSobel();
+//  double time1 = omp_get_wtime();
+//  image Ex3 = Ex1.OmpSobel();
+//  double time2 = omp_get_wtime();
+//  double seq_time = time1 - time0;
+//  double omp_time = time2 - time1;
+//  std::cout << "SEQ: " << seq_time << std::endl;
+//  std::cout << "OMP: " << omp_time << std::endl;
+//  ASSERT_TRUE(omp_time < seq_time);
+//  }
