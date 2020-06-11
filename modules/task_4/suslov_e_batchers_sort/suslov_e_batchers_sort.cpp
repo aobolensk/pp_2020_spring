@@ -5,6 +5,7 @@
 #include <random>
 #include <ctime>
 #include <iostream>
+#include <cstring>
 #include <thread>
 #include <future>
 #include "../../../modules/task_4/suslov_e_batchers_sort/suslov_e_batchers_sort.h"
