@@ -107,10 +107,10 @@ std::vector<std::size_t> Segmentation(const std::vector<std::size_t>& source, st
 
   // Recoloring
   for (size_t i = 0; i < N; i++) {
-    t[i] = std::thread(Recolor, len * i, len * i + len, std::ref(res), tnc);
+    t[i] = std::thread(Recolor, len * i, len * i + len, std::ref(res), std::ref(tnc));
   }
 
-  Recolor(len * N, res.size(), std::ref(res), tnc);
+  Recolor(len * N, res.size(), std::ref(res), std::ref(tnc));
 
   for (size_t i = 0; i < N; i++)
     t[i].join();
