@@ -32,8 +32,6 @@ void image::GetRandom() {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
   for (int i = 0; i < this->width * this->height; i++)
- //   for (int j = 0; i < this->height; i++)
-  //    this->matrix[i * this->width + j] = gen() % 256;
     this->matrix[i] = gen() % 256;
 }
 
@@ -90,7 +88,7 @@ image image::OmpSobel() {
   Gx = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
   Gy = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
   image result(width - 2, height - 2);
- #pragma omp parallel for
+  #pragma omp parallel for
     for (int i = 0; i <= width - 3; i++) {
       for (int j = 0; j <= height - 3; j++) {
         int ind = i * (height-2) + j;

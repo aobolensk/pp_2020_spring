@@ -1,9 +1,9 @@
 // Copyright 2020 Golovanova Elena
+#include <omp.h>
 #include <iostream>
 #include <vector>
 #include <ctime>
 #include "../../../modules/task_2/golovanova_e_sobel/sobel.h"
-#include <omp.h>
 #include "gtest/gtest.h"
 
 TEST(sobel, get_matrix) {
@@ -46,7 +46,6 @@ TEST(sobel, seq_sobel) {
   image K = Example.SeqSobel();
   ASSERT_EQ(result, K.GetMatrix());
 }
-
 
 TEST(sobel, omp_sobel) {
   std::vector<int> example = { 1, 0, 2, 1, 0, 2, 1, 0, 2 };
