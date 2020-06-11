@@ -33,8 +33,6 @@ void image::GetRandom() {
   std::mt19937 gen;
   gen.seed(static_cast<unsigned int>(time(0)));
   for (int i = 0; i < this->width * this->height; i++)
- //   for (int j = 0; i < this->height; i++)
-  //    this->matrix[i * this->width + j] = gen() % 256;
     this->matrix[i] = gen() % 256;
 }
 

@@ -2,9 +2,9 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <time.h> 
 #include "../../../modules/task_3/golovanova_e_sobel/sobel.h"
 #include "gtest/gtest.h"
+#include <time.h>
 
 TEST(sobel, get_matrix) {
   std::vector<int> example = { 1, 5, 4, 3 };
