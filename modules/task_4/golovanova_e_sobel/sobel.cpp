@@ -82,27 +82,27 @@ image image::SeqSobel() {
   return result;
 }
 
-image image::ThreadSobel(image ex, int countThreads) {
+image image::ThreadSobel(int countThreads) {
   std::vector<int> Gx, Gy;
   Gx.resize(9);
   Gy.resize(9);
   Gx = { -1, 0, 1, -2, 0, 2, -1, 0, 1 };
   Gy = { -1, -2, -1, 0, 0, 0, 1, 2, 1 };
-  image result(ex.width - 2, ex.height - 2);
+  image result(width - 2, height - 2);
   std::thread* threads = new std::thread[countThreads];
-  if (countThreads < ex.width - 3)
+  if (countThreads < width - 3)
     throw "Uncorrert count threads";
   int delta = (width - 3) / countThreads;
   for (int idThread = 0; idThread < countThreads; idThread++) {
-    threads[idThread] = std::thread([idThread, delta, &Gx, &Gy, &result, &ex, threads]() {
+    threads[idThread] = std::thread([idThread, delta, &Gx, &Gy, &result, this, threads]() {
       for (int i = idThread * delta; i <= (idThread + 1) * delta; i++) {
-        for (int j = 0; j <= ex.height - 3; j++) {
-          int ind = i * (ex.height - 2) + j;
+        for (int j = 0; j <= height - 3; j++) {
+          int ind = i * (height - 2) + j;
           int X = 0, Y = 0, Ind_G = 0;
           for (int a = 0; a < 3; a++) {
             for (int b = 0; b < 3; b++) {
-              X = Gx[Ind_G] * ex.matrix[(i + a) * ex.height + j + b] + X;
-              Y = Gy[Ind_G] * ex.matrix[(i + a) * ex.height + j + b] + Y;
+              X = Gx[Ind_G] * matrix[(i + a) * height + j + b] + X;
+              Y = Gy[Ind_G] * matrix[(i + a) * height + j + b] + Y;
               Ind_G++;
             }
           }
@@ -117,13 +117,13 @@ image image::ThreadSobel(image ex, int countThreads) {
     delete[] threads;
     if (delta != 0) {
       for (int i = countThreads * delta; i <= (width - 3); i++)
-        for (int j = 0; j <= ex.height - 3; j++) {
-          int ind = i * (ex.height - 2) + j;
+        for (int j = 0; j <= height - 3; j++) {
+          int ind = i * (height - 2) + j;
           int X = 0, Y = 0, Ind_G = 0;
           for (int a = 0; a < 3; a++) {
             for (int b = 0; b < 3; b++) {
-              X = Gx[Ind_G] * ex.matrix[(i + a) * ex.height + j + b] + X;
-              Y = Gy[Ind_G] * ex.matrix[(i + a) * ex.height + j + b] + Y;
+              X = Gx[Ind_G] * matrix[(i + a) * height + j + b] + X;
+              Y = Gy[Ind_G] * matrix[(i + a) * height + j + b] + Y;
               Ind_G++;
             }
           }

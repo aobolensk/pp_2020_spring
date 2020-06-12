@@ -17,7 +17,7 @@ class image {
   void GetRandom();
   virtual image& operator=(const image& Example);
   image SeqSobel();
-  image ThreadSobel(image ex, int countThreads);
+  image ThreadSobel(int countThreads);
 };
 
 #endif  // MODULES_TASK_4_GOLOVANOVA_E_SOBEL_SOBEL_H_

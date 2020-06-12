@@ -47,29 +47,21 @@ TEST(sobel, seq_sobel) {
   ASSERT_EQ(result, K.GetMatrix());
 }
 
-TEST(sobel, thread_sobel) {
-  std::vector<int> example = { 1, 0, 2, 1, 0, 2, 1, 0, 2 };
-  std::vector<int> result = { 4 };
-  image Example(3, 3, example);
-  image K = Example.ThreadSobel(Example, 3);
-  ASSERT_EQ(result, K.GetMatrix());
-}
-
-//  TEST(sobel, few_number_of_elements) {
-//  image Ex(5, 5);
-//  Ex.GetRandom();
-//  double time0 = omp_get_wtime();
-//  image K = Ex.SeqSobel();
-//  double time1 = omp_get_wtime();
-//  image KL = Ex.OmpSobel();
-//  double time2 = omp_get_wtime();
-//  double seq_time = time1 - time0;
-//  double omp_time = time2 - time1;
-//  std::cout << "SEQ: " << seq_time << std::endl;
-//  std::cout << "OMP: " << omp_time << std::endl;
-//  ASSERT_TRUE(omp_time > seq_time);
+//  TEST(sobel, uncorrect_count_thread) {
+//  std::vector<int> example = { 1, 0, 2, 1, 0, 2, 1, 0, 2 };
+//  std::vector<int> result = { 4 };
+//  image Example(3, 3, example);
+//  ASSERT_ANY_THROW(Example.ThreadSobel(0));
 //  }
-//
+
+//  TEST(sobel, thread_sobel) {
+//  std::vector<int> example = { 1, 0, 2, 1, 0, 2, 1, 0, 2 };
+//  std::vector<int> result = { 4 };
+//  image Example(3, 3, example);
+//  image K = Example.ThreadSobel(3);
+//  ASSERT_EQ(result, K.GetMatrix());
+//  }
+
 //  TEST(sobel, large_number_of_elements) {
 //  image Ex1(10000, 10000);
 //  Ex1.GetRandom();
