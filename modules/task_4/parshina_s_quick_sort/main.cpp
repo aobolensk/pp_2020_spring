@@ -10,7 +10,7 @@
 #include "gtest/gtest.h"
 #include "../../../modules/task_4/parshina_s_quick_sort/quick_sort.h"
 
-#define N 10000000
+#define N 100000
 #define THREADS_NUMBER 4
 
 TEST(Hoare_Quick_Sort_THREADS, Can_Sort_Correctly) {
