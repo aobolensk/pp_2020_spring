@@ -1,7 +1,7 @@
 // Copyright 2020 Shemetov Philipp
 
-#ifndef MODULES_TASK_3_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
-#define MODULES_TASK_3_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
+#ifndef MODULES_TASK_4_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
+#define MODULES_TASK_4_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
 
 #include <vector>
 #include <complex>
@@ -34,8 +34,10 @@ class SparseMatrixCCS {
     static SparseMatrixCCS MultiplySparseMatrix(const SparseMatrixCCS &A,
                                                 const SparseMatrixCCS &B);
 
-    static SparseMatrixCCS MultiplySparseMatrixTBB(const SparseMatrixCCS &A,
+    static SparseMatrixCCS MultiplySparseMatrixSTD(const SparseMatrixCCS &A,
                                                 const SparseMatrixCCS &B);
+
+                                                
 
     bool operator==(const SparseMatrixCCS &) const;
 
@@ -52,4 +54,4 @@ void Print(const mtxComplex &);
 mtxComplex multiMatrix(const mtxComplex &mtxA, const mtxComplex &mtxB);
 
 
-#endif  //  MODULES_TASK_3_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
+#endif  //  MODULES_TASK_4_SHEMETOV_P_SPARSE_MATRIX_CCS_COMPLEX_MULTI_MATRIX_H_
