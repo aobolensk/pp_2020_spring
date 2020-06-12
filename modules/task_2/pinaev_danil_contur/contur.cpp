@@ -1,6 +1,8 @@
 // Copyright 2020 Pinaev Danil
 
-#include "../../modules/task_3/pinaev_danil_contur/contur.h"
+#include "../../modules/task_2/pinaev_danil_contur/contur.h"
+
+#include <omp.h>
 
 #include <algorithm>
 #include <cmath>
@@ -62,6 +64,7 @@ Image getContur(const Image &in) {
     // 8  - (i + 2)*(cols + 2) + (j + 1)
     // 9  - (i + 2)*(cols + 2) + (j + 2)
 
+#pragma omp parallel for
     for (int i = 0; i < rows - 2; ++i) {
         // Main pixel index is [i][j] (rows * i + j) now
         // Now wee need to check all neighboring pixels
@@ -81,37 +84,5 @@ Image getContur(const Image &in) {
         }
     }
 
-    return res;
-}
-
-// cols and rows its a real data sizes!!
-void ParallelProcessing::operator()(const tbb::blocked_range<int> &r) const {
-    int cols = img.cols;
-//    int rows = img.rows;
-    for (int i = r.begin(); i != r.end(); ++i) {
-        // Main pixel index is [i][j] (rows * i + j) now
-        // Now wee need to check all neighboring pixels
-        for (int j = 0; j < cols - 2; ++j) {
-            if (img.data[(i + 1)*(cols) + (j + 1)] == 255) {
-                if (img.data[(i + 0)*(cols) + (j + 0)] == 0 ||
-                    img.data[(i + 0)*(cols) + (j + 1)] == 0 ||
-                    img.data[(i + 0)*(cols) + (j + 2)] == 0 ||
-                    img.data[(i + 1)*(cols) + (j + 0)] == 0 ||
-                    img.data[(i + 1)*(cols) + (j + 2)] == 0 ||
-                    img.data[(i + 2)*(cols) + (j + 0)] == 0 ||
-                    img.data[(i + 2)*(cols) + (j + 1)] == 0 ||
-                    img.data[(i + 2)*(cols) + (j + 2)] == 0) {
-                    res->data[(i + 1)*(cols) + (j + 1)] = 127;
-                }
-            }
-        }
-    }
-}
-
-Image pattalelContur(const Image &a) {
-    Image res(a.cols /* + 2 */, a.rows /* + 2 */);  // ??
-
-    ParallelProcessing pp(a, &res);
-    tbb::parallel_for(tbb::blocked_range<int>(0, a.rows - 2 /*!!!*/), pp);
     return res;
 }
