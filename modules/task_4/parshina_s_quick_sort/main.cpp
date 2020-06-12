@@ -15,7 +15,6 @@
 
 TEST(Hoare_Quick_Sort_THREADS, Can_Sort_Correctly) {
   double* arr = new double[N];
-  double* buf = new double[N];
   Get_Random_Array(arr, N);
   qHoareSortThreads(arr, N, THREADS_NUMBER);
   ASSERT_EQ(1, IsSorted(arr, N));
@@ -73,7 +72,6 @@ TEST(Hoare_Quick_Sort_THREADS, Can_Sort_Mixed_Array) {
 TEST(Hoare_Quick_Sort_THREADS, DISABLED_Compare_Seq_and_Threads_Average_Time) {
   double* arr = new double[N];
   double* arr2 = new double[N];
-  double time = 0;
   std::vector<bool> sorted;
 
   Get_Random_Array(arr, N);
