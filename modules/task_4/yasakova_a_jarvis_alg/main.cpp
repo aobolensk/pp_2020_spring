@@ -56,8 +56,16 @@ TEST(STD_Test, test5) {
 TEST(STD_Test, test6) {
     std::vector<std::pair<int, int>> points = GetRandomPoints(100);
 
+    // auto start1 = clock();
     std::vector<std::pair<int, int>> res_std = std_JarvisAlg(points);
+    // auto end1 = clock();
+
+    // auto start2 = clock();
     std::vector<std::pair<int, int>> res_seq = seq_JarvisAlg(points);
+    // auto end2 = clock();
+
+    // std::cout << "Parallel: " << static_cast<double>(end1 - start1) / CLOCKS_PER_SEC << std::endl;
+    // std::cout << "Sequential:   " << static_cast<double>(end2 - start2) / CLOCKS_PER_SEC << std::endl;
 
     ASSERT_EQ(res_std, res_seq);
 }
