@@ -8,7 +8,6 @@
 #include <vector>
 #include <thread>
 #include <iostream>
-#include <mutex>
 
 
 
@@ -28,7 +27,7 @@ std::vector < std::pair<int, int>> std_JarvisAlg(const std::vector<std::pair<int
     std::vector<std::pair<int, int>> res;
     int size = points.size();
     res.push_back(std_FindFirstPoint(points));
-    std::pair<int, int> tmp = seq_FindSecondPoint(points, res[0]);
+    std::pair<int, int> tmp = std_FindSecondPoint(points, res[0]);
     int nth = std::min(8, size);
     std::vector<std::thread> t(nth);
     while (tmp != res[0]) {
@@ -109,21 +108,22 @@ std::pair<int, int> std_FindSecondPoint(const std::vector<std::pair<int, int>>& 
     int nth = std::min(8, size);
     std::vector<std::thread> t(nth);
     std::vector<std::pair<int, int>> res_(nth, points[0]);
+    std::vector<double> min_(nth, min);
     int cnt = size / nth, num = 0, rest = size - nth * cnt;
     for (int i = 0; i < nth; ++i) {
         int count = cnt;
         if (i == nth - 1)
             count += rest;
         t[i] = std::thread([&](int cnt, int num, int j) {
-            for (int i = num; i < num + cnt; ++i) {
-                if (points[i] != tmp) {
-                    double angle = atan(static_cast<double>(points[i].second - tmp.second)
-                        / static_cast<double>(abs(points[i].first - tmp.first)));
-                    if (angle < min) {
-                        min = angle;
-                        res = points[i];
-                    } else if (angle == min && distance(tmp, points[i]) > distance(tmp, res)) {
-                        res = points[i];
+            for (int k = num; k < num + cnt; ++k) {
+                if (points[k] != tmp) {
+                    double angle = atan(static_cast<double>(points[k].second - tmp.second)
+                        / static_cast<double>(abs(points[k].first - tmp.first)));
+                    if (angle < min_[j]) {
+                        min_[j] = angle;
+                        res_[j] = points[k];
+                    } else if (angle == min_[j] && distance(tmp, points[k]) > distance(tmp, res_[j])) {
+                        res_[j] = points[k];
                     }
                 }
             }
@@ -131,6 +131,7 @@ std::pair<int, int> std_FindSecondPoint(const std::vector<std::pair<int, int>>& 
         num += cnt;
     }
     min = 4;
+    res = res_[0];
     for (int i = 0; i < nth; ++i) {
         t[i].join();
         double angle = atan(static_cast<double>(res_[i].second - tmp.second)
