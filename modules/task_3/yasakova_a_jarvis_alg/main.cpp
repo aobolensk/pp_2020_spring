@@ -57,8 +57,17 @@ TEST(TBB_Test, test5) {
 TEST(TBB_Test, test6) {
     std::vector<std::pair<int, int>> points = GetRandomPoints(100);
 
+    // tbb::tick_count start1 =tbb:: tick_count::now();
     std::vector<std::pair<int, int>> res_omp = tbb_JarvisAlg(points);
+    // tbb::tick_count end1 = tbb::tick_count::now();
+
+    // tbb::tick_count start2 = tbb::tick_count::now();
     std::vector<std::pair<int, int>> res_seq = seq_JarvisAlg(points);
+    // tbb::tick_count end2 = tbb::tick_count::now();
+
+
+    // std::cout << "Sequential: " << (end1 - start1).seconds() << std::endl;
+    // std::cout << "Parallel:   " << (end2 - start2).seconds() << std::endl;
 
     ASSERT_EQ(res_omp, res_seq);
 }
