@@ -6,7 +6,7 @@
 \usepackage[english, russian]{babel}
 \usepackage[pdftex]{hyperref}
 \pagestyle{plain}
-\usepackage[a4paper, mag=1000, left=2.5cm, right=1cm, top=2cm, bottom=2cm, headsep=0.7cm, footskip=1cm]{geometry}
+\usepackage[a4paper, mag=1000, bottom=3cm, top=2cm, left=2.5cm, right=1cm, top=2cm, bottom=2cm, headsep=0.7cm, footskip=1cm]{geometry}
 \usepackage{listings}
 \usepackage{indentfirst}
 \usepackage{amsmath}
@@ -14,6 +14,10 @@
 \usepackage[]{caption}
 \usetikzlibrary{tikzmark}
 \usepackage{chngcntr}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{multicol}
+\usepackage{enumitem}
 
 
 
@@ -24,7 +28,9 @@
 
 
 
-\setlength{\parskip}{0.2cm}
+
+
+\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
 
 \lstset{language=C++,
 	basicstyle=\footnotesize\ttfamily,
@@ -219,6 +225,39 @@
 	
 	\par Выполнение всех тестов, подтверждает корректность работы кода программы.
 	\newpage
+	
+	\section*{Результаты экспериментов}
+	\addcontentsline{toc}{section}{Результаты экспериментов}
+	Проверка работы алгоритма умножения разрежённой матрицы происходила на персональном компьютере с характеристиками:
+	\begin{itemize}
+		\itemОC:Linux, Kubuntu 19.10
+		\itemПроцессор: Intel® Pentium® CPU G4560 @ 3.50GHz - 4 ядра
+		\itemОперативная память: 12ГБ DDR4 2133 MT/s
+	\end{itemize}
+	
+	Для проведения эксперимента, мы задали две матрицы. Первая матрица размером 4000x1000 с плотностью 0.7(70\% элементов имеет значение нуль) и вторую матрицу с размером 1000x3000 с плотностью 0.7. Результат скорости умножения этих двух разрежённых матриц формата CCS, можно увидеть в таблице №1.
+	
+\begin{table}[!h]
+	\caption{Резултаты вычислительных экспериментов}
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+		\hline
+		\multirow{3}{*}
+		{\begin{tabular}[c]{@{}c@{}}Кол-во\\ потоков\end{tabular}} & 
+		\multirow{2}{*}
+		{\begin{tabular}[c]{@{}c@{}}Последовательный\\ алгоритм\end{tabular}} & 
+		\multicolumn{6}{c|}
+		{Параллельный алгоритм}	\\ 
+		\cline{3-8} & & 
+		\multicolumn{2}{c|}{OpenMP} & 
+		\multicolumn{2}{c|}{TBB} & 
+		\multicolumn{2}{c|}{std::threads} 
+		\\ \cline{2-8}
+		& t, с	    & t, с & speedup		& t, с & speedup		& t, с & speedup		\\ \hline
+		2   & 11.81     & 6.56 & 1.80       	& 6.45 & 1.83        	& 6.37 & 1.85           \\ \hline
+		4   & 11.81     & 5.01 & 2.36       	& 5.00 & 2.36         	& 5.04  & 2.34          \\ \hline
+	\end{tabular}
+\end{table}
 	
 	
 	
