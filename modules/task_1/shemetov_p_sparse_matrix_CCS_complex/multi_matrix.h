@@ -34,14 +34,14 @@ class SparseMatrixCCS {
 
     bool operator==(const SparseMatrixCCS &) const;
 
-    void PrintCCS();
+    // void PrintCCS();
 
     SparseMatrixCCS transpose();
 };
 
 
 
-void Print(const mtxComplex &);
+// void Print(const mtxComplex &);
 
 mtxComplex multiMatrix(const mtxComplex &mtxA, const mtxComplex &mtxB);
 

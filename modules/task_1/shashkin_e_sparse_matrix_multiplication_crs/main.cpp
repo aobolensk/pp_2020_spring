@@ -12,9 +12,9 @@ TEST(SparceMatrixMultiplication, throw_when_num_of_rows_or_num_of_cols_is_negati
 
 TEST(SparceMatrixMultiplication, can_convert_regular_matrix_to_csr) {
   std::vector<std::vector<std::complex<double>>> mat;
-  SparseComplexMatrix csrMat;
+  SparseComplexMatrix crsMat;
   mat = randomMatrix(5, 5);
-  ASSERT_NO_THROW(csrMat.matrixToCRS(mat));
+  ASSERT_NO_THROW(crsMat.matrixToCRS(mat));
 }
 
 TEST(SparceMatrixMultiplication, can_transpose) {
@@ -29,7 +29,7 @@ TEST(SparceMatrixMultiplication, can_transpose) {
   SparseComplexMatrix mat(3, 6, vals, col_ind, row_ind);
   SparseComplexMatrix mat_trans(6, 3, vals_trans, col_ind_trans, row_ind_trans);
   SparseComplexMatrix tmp;
-  tmp = mat.transpose();
+  tmp = mat.transposeCRS();
 
   ASSERT_TRUE(mat_trans == tmp);
 }
@@ -38,15 +38,14 @@ TEST(SparceMatrixMultiplication, can_multimply_square_csr_matrices) {
   int size = 5;
   std::vector<std::vector<std::complex<double>>> mat1;
   std::vector<std::vector<std::complex<double>>> mat2;
-  SparseComplexMatrix csrMat1;
-  SparseComplexMatrix csrMat2;
-  SparseComplexMatrix csrMat3;
+  SparseComplexMatrix crsMat1;
+  SparseComplexMatrix crsMat2;
+  SparseComplexMatrix crsMat3;
   mat1 = randomMatrix(size, size);
   mat2 = randomMatrix(size, size);
-  csrMat1.matrixToCRS(mat1);
-  csrMat2.matrixToCRS(mat2);
-  csrMat2.transpose();
-  ASSERT_NO_THROW(csrMat3 = csrMat1 * csrMat2);
+  crsMat1 = crsMat1.matrixToCRS(mat1);
+  crsMat2 = crsMat2.matrixToCRS(mat2);
+  ASSERT_NO_THROW(crsMat3 = crsMat1 * crsMat2);
 }
 
 TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices) {
@@ -56,16 +55,14 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices) {
   int cols2 = 6;
   std::vector<std::vector<std::complex<double>>> mat1;
   std::vector<std::vector<std::complex<double>>> mat2;
-  SparseComplexMatrix csrMat1;
-  SparseComplexMatrix csrMat2;
-  SparseComplexMatrix csrMat2T;
-  SparseComplexMatrix csrMat3;
+  SparseComplexMatrix crsMat1;
+  SparseComplexMatrix crsMat2;
+  SparseComplexMatrix crsMat3;
   mat1 = randomMatrix(rows1, cols1);
   mat2 = randomMatrix(rows2, cols2);
-  csrMat1.matrixToCRS(mat1);
-  csrMat2.matrixToCRS(mat2);
-  csrMat2T = csrMat2.transpose();
-  ASSERT_NO_THROW(csrMat3 = csrMat1 * csrMat2T);
+  crsMat1 = crsMat1.matrixToCRS(mat1);
+  crsMat2 = crsMat2.matrixToCRS(mat2);
+  ASSERT_NO_THROW(crsMat3 = crsMat1 * crsMat2);
 }
 
 TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly) {
@@ -120,17 +117,16 @@ TEST(SparceMatrixMultiplication, can_multimply_not_square_csr_matrices_correctly
   std::vector<int> col_ind_res = { 6, 9, 10, 6, 9, 10, 11, 5, 6, 7, 6, 9, 10 };
   std::vector<int> row_ind_res = { 0, 0, 3, 6, 7, 7, 7, 11, 11, 11, 14 };
 
-  SparseComplexMatrix csrMat1(rows1, cols1, vals1, col_ind1, row_ind1);
-  SparseComplexMatrix csrMat2(rows2, cols2, vals2, col_ind2, row_ind2);
-  SparseComplexMatrix res_mat(cols1, rows2, res, col_ind_res, row_ind_res);
-  SparseComplexMatrix csrMat2T;
-  SparseComplexMatrix csrMat3;
-  csrMat2T = csrMat2.transpose();
-  csrMat3 = csrMat1 * csrMat2T;
-  ASSERT_TRUE(csrMat3 == res_mat);
+  SparseComplexMatrix crsMat1(rows1, cols1, vals1, col_ind1, row_ind1);
+  SparseComplexMatrix crsMat2(rows2, cols2, vals2, col_ind2, row_ind2);
+  SparseComplexMatrix res_mat(rows1, cols2, res, col_ind_res, row_ind_res);
+  SparseComplexMatrix crsMat3;
+  crsMat3 = crsMat1 * crsMat2;
+  ASSERT_TRUE(crsMat3 == res_mat);
 }
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
+  return 0;
 }
