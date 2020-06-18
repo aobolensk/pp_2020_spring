@@ -2,10 +2,12 @@
 
 #include <cmath>
 #include <random>
+#include <chrono>
 #include <iostream>
 #include <vector>
-#include "tbb/tbb.h"
-#include "../../../modules/task_3/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
+#include <mutex>
+#include "../../../modules/task_4/shemetov_p_sparse_matrix_CCS_complex/multi_matrix.h"
+#include "../../../3rdparty/unapproved/unapproved.h"
 
 typedef std::vector <std::vector<std::complex < double>>> mtxComplex;
 
@@ -163,9 +165,7 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrix(
     return resMatrix;
 }
 
-
-
-SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
+SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixSTD(
         const SparseMatrixCCS &A, const SparseMatrixCCS &B) {
     if (A.n != B.m) {
         throw "Error(Size col matrix A not equal size row matrix B)";
@@ -176,29 +176,40 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
     std::vector < std::vector < std::complex < double >> > tempVecValue(B.n);
     std::vector <std::vector<int>> tempVecRowIndex(B.n);
     std::vector<int> tempVecColPtr(B.n, 0);
+    const int nthreads = (B.n >= 4) ? std::thread::hardware_concurrency() : B.n;
+    const int delta = B.n / nthreads;
+    const int deltaReminder = B.n % nthreads;
+    std::thread *threads = new std::thread[nthreads];
 
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, B.n),
-    [&tempVecValue, &tempVecRowIndex, &tempVecColPtr, A, B](tbb::blocked_range<size_t> r) {
-        int tempRowA = 0;
-        for (size_t j = r.begin(); j < r.end(); j++) {
-            std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
-            for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
-                tempRowA = B.row_index[k];
-                for (int i = A.col_offsets[tempRowA];
-                     i < A.col_offsets[tempRowA + 1]; i++) {
-                    tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+    for (int s = 0; s < nthreads; s++) {
+        int deltaTemp = (s < 3) ? (s+1)*delta : (s+1)*delta + deltaReminder;
+        threads[s] = std::thread([&tempVecValue, &tempVecRowIndex,
+        &tempVecColPtr, A, B,deltaTemp, s, delta]() {
+            for (int j = s*delta; j < deltaTemp; j++) {
+                int tempRowA = 0;
+                std::vector <std::complex<double>> tempDataVec(A.m + 1, {0, 0});
+                    for (int k = B.col_offsets[j]; k < B.col_offsets[j + 1]; k++) {
+                        tempRowA = B.row_index[k];
+                        for (int i = A.col_offsets[tempRowA];
+                            i < A.col_offsets[tempRowA + 1]; i++) {
+                            tempDataVec[A.row_index[i]] += B.value[k] * A.value[i];
+                        }
+                    }
+                    for (size_t count = 0; count < A.m; count++) {
+                        if (tempDataVec[count].imag() != 0 ||
+                            tempDataVec[count].real() != 0) {
+                            tempVecRowIndex[j].push_back(count);
+                            tempVecValue[j].push_back(tempDataVec[count]);
+                            tempVecColPtr[j]++;
+                        }
+                    }
                 }
-            }
-            for (size_t count = 0; count < A.m; count++) {
-                if (tempDataVec[count].imag() != 0 ||
-                    tempDataVec[count].real() != 0) {
-                    tempVecRowIndex[j].push_back(count);
-                    tempVecValue[j].push_back(tempDataVec[count]);
-                    tempVecColPtr[j]++;
-                }
-            }
-        }
-        });
+            });
+    }
+    for (int s = 0; s < nthreads; s++) {
+        threads[s].join();
+    }
+
     int varTemp = 0;
     for (size_t i = 0; i < resMatrix.n; i++) {
         varTemp += tempVecColPtr[i];
@@ -206,16 +217,14 @@ SparseMatrixCCS SparseMatrixCCS::MultiplySparseMatrixTBB(
     }
 
     for (size_t i = 0; i < tempVecRowIndex.size(); i++)
-        for (int j = 0; j < tempVecColPtr[i]; j++) {
-            resMatrix.row_index.push_back(tempVecRowIndex[i][j]);
-            resMatrix.value.push_back(tempVecValue[i][j]);
-        }
+    {
+        resMatrix.row_index.insert(resMatrix.row_index.end(),tempVecRowIndex[i].begin(),tempVecRowIndex[i].end());
+        resMatrix.value.insert(resMatrix.value.end(),tempVecValue[i].begin(),tempVecValue[i].end());
+    }
 
-
+    delete[] threads;
     return resMatrix;
 }
-
-
 
 mtxComplex multiMatrix(const mtxComplex &mtxA, const mtxComplex &mtxB) {
     if (mtxA[0].size() != mtxB.size()) {

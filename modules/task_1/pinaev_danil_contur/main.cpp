@@ -4,8 +4,6 @@
 
 #include <iostream>
 
-#include "tbb/parallel_for.h"
-
 #include "./contur.h"
 
 TEST(Contur_ceq, Can_Make_One_Pixel_Image) {
@@ -53,26 +51,6 @@ TEST(Contur_ceq, Can_Get_Contur_Weird_Size_2) {
 
     Image img = generateRandomImage(width, height);
     Image res = getContur(img);
-
-    ASSERT_NE(img.data, res.data);
-}
-
-TEST(Contur_ceq, Can_Get_Patallel_Contur) {
-    const int width = 640;
-    const int height = 420;
-
-    Image img = generateRandomImage(width, height);
-    Image res = pattalelContur(img);
-
-    ASSERT_NE(img.data, res.data);
-}
-
-TEST(Contur_ceq, Can_Get_Patallel_Contur_OCV) {
-    const int width = 640;
-    const int height = 420;
-
-    Image img = generateRandomImage(width, height);
-    Image res = pattalelContur(img);
 
     ASSERT_NE(img.data, res.data);
 }
