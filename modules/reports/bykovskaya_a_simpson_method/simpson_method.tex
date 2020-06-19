@@ -1,0 +1,220 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{caption}
+
+\geometry{a4paper,top=2cm,bottom=3cm,left=2cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
+
+\lstset{language=C++,
+		basicstyle=\footnotesize,
+		keywordstyle=\color{blue}\ttfamily,
+		stringstyle=\color{red}\ttfamily,
+		commentstyle=\color{green}\ttfamily,
+		morecomment=[l][\color{magenta}]{\#}, 
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации
+\end{center}
+
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики
+\end{center}
+
+\vspace{4em}
+
+\begin{center}
+\textbf{\LargeОтчет по лабораторной работе} \\
+\end{center}
+\begin{center}
+\textbf{\Large«Вычисление многомерных интегралов методом Симпсона»} \\
+\end{center}
+
+\vspace{4em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381708-1 \\ Быковская А. П.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+Метод Симпсона относится к приемам численного интегрирования. Суть метода заключается в приближении подынтегральной функции на отрезке $[a,b]$ интерполяционным многочленом второй степени $p_2(x)$.
+\par Целью данной работы является изучение применения метода Симпсона в вычислении многомерных интегралов с использованием различных технологий для выполнения параллельных вычислений.
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+В рамках данных лабораторных работ ставится задача реализации метода Симпсона для вычисления многомерных интегралов с использованием различных технологий распараллеливания вычислений.
+\par Для решения этой задачи требуется:
+\begin{itemize}
+\item Изучить и реализовать последовательный алгоритм метода Симпсона
+\item Реализовать параллельный алгоритм, используя OpenMP.
+\item Реализовать параллельный алгоритм, используя TBB.
+\item Реализовать параллельный алгоритм, используя std::thread.
+\item Проверить корректность работы и сравнить эффективность реализаций.
+\end{itemize}
+
+\newpage
+
+\section*{Метод решения}
+\addcontentsline{toc}{section}{Метод решения}
+Суть метода Симпсона для вычисления интегралов заключается в следующем:
+\par Отрезок $[a,b]$ разбивается на $2N$ равных частей, вычисляются значения функции $f_i=f(a + \frac{(b-a)i}{2N})$.
+\par Полученные значения функции подставляем в формулу $\int_{a}^{b}{f(x)dx} \approx \frac{h}{3}(f(x_{0}) + 2\sum_{i=1}^{N-1}{f(x_{2i})} + 4\sum_{i=1}^{N}{f(x_{2i-1}} + f(x_{2N}))$, где $h=\frac{b-a}{2N}$ - величина шага.
+\indent D~--- область интегрирования размерности $n$.
+
+\newpage
+
+\section*{Схема распараллеливания}
+\addcontentsline{toc}{section}{Схема распараллеливания}
+Общая схема работы параллельного алгоритма:
+\begin{enumerate}
+\item $2N$ точек разбиваются на $k$ частей, где $k$ - это количество потоков, на которые мы хотим распараллелить вычисления.
+\item В каждом потоке вычисляются значения функций в точках из текущей части.
+\item В мастер потоке суммируются значения, полученные на каждом отдельно взятом потоке.
+\end{enumerate}
+\newpage
+
+\section*{Описание программной реализации}
+\addcontentsline{toc}{section}{Описание программной реализации}
+\subsection*{OpenMP}
+\addcontentsline{toc}{subsection}{OpenMP}
+Код, который должен выполняться параллельно, расположен внутри директивы  \verb|#pragma omp| \verb|parallel|.
+\par С помощью директивы \verb|for|, которая позволяет распараллеливать циклы, вычисляются значения функций. Разбиение итераций между потоками происходит в зависимости от параметра \verb|schedule| (по-умолчанию static).
+
+\subsection*{TBB}
+\addcontentsline{toc}{subsection}{TBB}
+С помощью функции \verb|tbb::parallel_for()|, которая позволяет распараллеливать циклы, вычисляются значения функций. Разбиение итераций между потоками происходит в зависимости от параметра \verb|tbb::blocked_range|. Разделение на порции вычислений происходит автоматически благодаря планировщику TBB.
+
+\subsection*{std::thread}
+\addcontentsline{toc}{subsection}{std::thread}
+Для начала необходимо вручную создать объект потока \verb|std::thread| и вычислить объем порции для каждого потока: $\frac{2N}{k}$, где $k$ - количество потоков, может быть определено с помощью функции \verb|std::thread::hardware_concurrency|.
+\par Затем создаются потоки, конструктор  принимает указатель на функцию, которую будет исполнять, и параметры это функции.
+\par Для ожидания завершения вычислений каждого потока мастер-потоком для каждого потока вызывается метод \verb|join()|. 
+\newpage
+
+\section*{Подтверждение корректности}
+\addcontentsline{toc}{section}{Подтверждение корректности}
+Для подтверждения корректности в программе реализован набор тестов, разработанных при помощи библиотеки для модульного тестирования Google C++ Testing Framework. Проверяются случаи вычисления одномерных, двумерных и трехмерных интегралов. Значения, полученные при вычислении методом Симпсона, сравниваются со значениями, полученным аналитически.
+\par Успешное прохождение всех тестов является подтвержением корректной работы программы. 
+
+\newpage
+
+\section*{Результаты экспериментов}
+\addcontentsline{toc}{section}{Результаты экспериментов}
+Конфигурация системы:
+\begin{itemize}
+\item Процессор: Intel(R) Core(TM) i5-6300H CPU @ 2.40GHz
+\item Число ядер: 2
+\item ОС: Windows 10
+\end{itemize}
+
+\par Значение функций вычисляется на 400 точках. 
+\par Результаты экспериментов представлены в Таблице 1.
+
+\begin{table}[htbp]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+                             & 2 \\ \hline
+            Последовательная & 8.03 \\ \hline
+            OpenMP           & 4.21 \\ \hline
+            TBB              & 4.23 \\ \hline
+            std::thread      & 4.01 \\ \hline
+        \end{tabular}
+        \caption{Результаты экспериментов.}
+        \label{tab:results}
+        По вертикали - число потоков. \\
+        По горизонтали - тестируемая реализация. \\
+        Время указано в секундах.
+    \end{table}
+
+\par По данным, полученным в результате экспериментов, можно сделать вывод, что параллельный алгоритм работает быстрее, чем последовательный приблизительно в n раз, где n ~--- количество потоков, при условии, что количество потоков меньше или равно количеству ядер процессора.
+\newpage
+
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+В результате выполнения данных лабораторных работ был изучен метод Симпсона для вычисление многомерных интегралов.
+Реализованы последовательная и параллельные версии алгоритма с использованием технологий: OpenMP, TBB, std::thread.
+\par Разработаны тесты подтверждающие корректность работы программы.
+\par В заключение проведены эксперименты, подтверждающие эффективность параллельных версий алгоритма. По результатам опытов лучшей технологией для реализации параллельного метода Симпсона для вычисление многомерных интегралов оказалась std::thread.
+\newpage
+
+\begin{thebibliography}{1}
+\addcontentsline{toc}{section}{Список литературы}
+\bibitem{Sysoev} Сысоев А.В., Мееров И.Б., Свистунов А.Н., Курылев А.Л., Сенин А.В., Шишков А.В., Корняков К.В., Сиднев А.А. «Параллельное программирование в системах с общей памятью. Инструментальная поддержка». Учебно-методические материалы по программе повышения квалификации «Технологии высокопроизводительных вычислений для обеспечения учебного процесса и научных исследований». Нижний Новгород, 2007, 110 с. 
+\bibitem{Barkalov} Баркалов К.А. Методы параллельных вычислений. Н. Новгород: Изд-во Нижегородского госуниверситета им. Н.И. Лобачевского, 2011
+\bibitem{Wiki1} Wikipedia: the free encyclopedia [Электронный ресурс] // URL: https://en.wikipedia.org/wiki/\verb|Mersenne_Twister| (дата обращения: 20.03.2020)
+\end{thebibliography}
+\newpage
+
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+\centerline{\bfseries Исходный код.} 
+
+
+\lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_1/bykovskaya_a_simpson_method/simpson_method.h}
+\lstinputlisting[language=C++, caption=Последовательная версия. Cpp файл]{../../../../modules/task_1/bykovskaya_a_simpson_method/simpson_method.cpp}
+\lstinputlisting[language=C++, caption=Последовательная версия. Тесты]{../../../../modules/task_1/bykovskaya_a_simpson_method/main.cpp}
+
+\lstinputlisting[language=C++, caption=OpenMP версия. Заголовочный файл]{../../../../modules/task_2/bykovskaya_a_simpson_method/simpson_method.h}
+\lstinputlisting[language=C++, caption=OpenMP версия. Cpp файл]{../../../../modules/task_2/bykovskaya_a_simpson_method/simpson_method.cpp}
+\lstinputlisting[language=C++, caption=OpenMP версия. Тесты]{../../../../modules/task_2/bykovskaya_a_simpson_method/main.cpp}
+
+\lstinputlisting[language=C++, caption=TBB версия. Заголовочный файл]{../../../../modules/task_3/bykovskaya_a_simpson_method/simpson_method.h}
+\lstinputlisting[language=C++, caption=TBB версия. Cpp файл]{../../../../modules/task_3/bykovskaya_a_simpson_method/simpson_method.cpp}
+\lstinputlisting[language=C++, caption=TBB версия. Тесты]{../../../../modules/task_3/bykovskaya_a_simpson_method/main.cpp}
+
+\lstinputlisting[language=C++, caption=std::thread версия. Заголовочный файл]{../../../../modules/task_4/bykovskaya_a_simpson_method/simpson_method.h}
+\lstinputlisting[language=C++, caption=std::thread версия. Cpp файл]{../../../../modules/task_4/bykovskaya_a_simpson_method/simpson_method.cpp}
+\lstinputlisting[language=C++, caption=std::thread версия. Тесты]{../../../../modules/task_4/bykovskaya_a_simpson_method/main.cpp}
+
+
+\end{document}
