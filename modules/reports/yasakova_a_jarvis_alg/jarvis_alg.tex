@@ -33,26 +33,21 @@
 \colorlet{myred}{red!60!blue}
 
 \lstset{
-backgroundcolor=\color{gray!10},
-basicstyle=\fontsize{13}{13}\ttfamily,
-columns=fullflexible,
-breakatwhitespace=false,
-breaklines=true,
-captionpos=b,
-commentstyle=\color{mygreen},
-extendedchars=true,
-frame=single,
-keepspaces=true,
-keywordstyle=\color{blue},
-language=c++,
-numbers=none,
-numbersep=1pt,
-numberstyle=\tiny\color{blue},
-rulecolor=\color{mygray},
-showspaces=false,
-showtabs=false,
-stringstyle=\color{mymauve},
-title=\lstname
+  basicstyle=\fontsize{13}{13}\ttfamily,
+  columns=fullflexible,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen},
+  keywordstyle=\color{blue},
+  language=c++,
+  numbers=none,
+  numbersep=1pt,
+  numberstyle=\tiny\color{blue},
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showtabs=false,
+  stringstyle=\color{mymauve},
+  title=\lstname
 }
 
 \makeatletter
@@ -130,8 +125,7 @@ title=\lstname
 
 \section{Метод решения}
 
-Выпуклой оболочкой множества точек S называется наименьшее
-выпуклое множество, содержащее S.
+Выпуклой оболочкой множества точек S называется наименьшее выпуклое множество, содержащее S.
 
 \par Выберем какую-нибудь точку $p_{0}$, которая гарантированно попадёт в выпуклую оболочку. Например, нижнюю, а если таких несколько, то самую левую из них.
 
@@ -152,10 +146,10 @@ $p[2] =minimum\:positive\:polar\:angle\:from\:p[1]$\;
 $i = 2$\;
 \BlankLine
 \While{p[i] != p[1]} {
-\For{j от 1 до |P|}{
-$p[i+1] = min\:cos(p[i-1],\:p[i],\:P[j])$\;
-}
-$i = i + 1$\;
+	\For{j от 1 до |P|}{
+		$p[i+1] = min\:cos(p[i-1],\:p[i],\:P[j])$\;
+	}
+	$i = i + 1$\;
 }
 $return\:p$\;
 \caption{Построение выпуклой оболочки - проход Джарвиса}
@@ -173,12 +167,12 @@ $return\:p$\;
 
 \par Первым делом распараллеливаем поиск первой и второй точек - два цикла по всем точкам.
 
-\par Далее идет внешний цикл, который заканчивается, когда находим всю выпуклую оболочку, и внутренний цикл по всем точкам. Есть несколько вариантов распараллеливания. Первый способ - поделить точки между потоками и найти выпуклые оболочки для каждого из этих множеств. В результате, у каждого потока будет своя выпуклая оболочка. Далее следует найти результирующую выпулую оболочку на получившемся множестве. Второй способ - распараллелить внутренний цикл по всем точкам. Первый вариант лучше, так как внутри внешнего цикла каждый раз не создаются потоки для работы. Но с другой стороны, второй вариант не делает лишней работы, обходя одни и те же точки по два раза, как делает первый. Первым способом я реализовала данный алгоритм на основе библиотеки TBB. Вторым способом была выполнена программа с помощью OpenMP и std::thread.
+\par Далее идет внешний цикл, который заканчивается, когда находим всю выпуклую оболочку, внутри цикл по всем точкам. Есть несколько вариантов распараллеливания. Первый способ - поделить точки между потоками и найти выпуклые оболочки для каждого из этих множеств. В результате, у каждого потока будет своя выпуклая оболочка. Далее следует найти результирующую выпулую оболочку на получившемся множестве. Второй способ - распараллелить внутренний цикл по всем точкам. Первый вариант лучше, так как внутри внешнего цикла каждый раз не создаются потоки для работы. Но с другой стороны, второй вариант не делает лишней работы, обходя одни и те же точки по два раза, как делает первый. Первым способом я реализовала данный алгоритм на основе библиотеки TBB. Вторым способом была выполнена программа с помощью OpenMP и std::thread.
 
 \newpage
 
 \section{Описание программной реализации}
-Множество точек в программе выглядит как вектора пар значений - {($x_{1}$, $y_{1}$), ($x_{2}$, $y_{2}$), ..., ($x_{n}$, $y_{n}$)}.
+Множество точек в программе выглядит как вектор пар значений - {($x_{1}$, $y_{1}$), ($x_{2}$, $y_{2}$), ..., ($x_{n}$, $y_{n}$)}.
 
 \vspace{10pt}
 \begin{lstlisting}
@@ -190,7 +184,7 @@ $return\:p$\;
 
 \vspace{10pt}
 \begin{lstlisting}
-std::vector <std::pair<int, int>> GetRandomPoints(int n);
+	std::vector <std::pair<int, int>> GetRandomPoints(int n);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -198,7 +192,7 @@ std::vector <std::pair<int, int>> GetRandomPoints(int n);
 
 \vspace{10pt}
 \begin{lstlisting}
-std::vector < std::pair<int, int>> JarvisAlg(cons std::vector<std::pair<int, int>>& points);
+	std::vector < std::pair<int, int>> JarvisAlg(cons std::vector<std::pair<int, int>>& points);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -206,7 +200,7 @@ std::vector < std::pair<int, int>> JarvisAlg(cons std::vector<std::pair<int, int
 
 \vspace{10pt}
 \begin{lstlisting}
-std::pair<int, int> FindFirstPoint(const std::vector<std::pair<int, int>>& points);
+	std::pair<int, int> FindFirstPoint(const std::vector<std::pair<int, int>>& points);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -214,7 +208,7 @@ std::pair<int, int> FindFirstPoint(const std::vector<std::pair<int, int>>& point
 
 \vspace{10pt}
 \begin{lstlisting}
-std::pair<int, int> FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp);
+	std::pair<int, int> FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -222,7 +216,7 @@ std::pair<int, int> FindSecondPoint(const std::vector<std::pair<int, int>>& poin
 
 \vspace{10pt}
 \begin{lstlisting}
-double CountCos(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c);
+	double CountCos(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -230,7 +224,7 @@ double CountCos(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int
 
 \vspace{10pt}
 \begin{lstlisting}
-double distance(std::pair<int, int> a, std::pair<int, int> b);
+	double distance(std::pair<int, int> a, std::pair<int, int> b);
 \end{lstlisting}
 \vspace{-25pt}
 
@@ -240,7 +234,7 @@ double distance(std::pair<int, int> a, std::pair<int, int> b);
 
 \section{Подтверждение корректности}
 
-Для подтверждения корректности в программе реализован набор тестов с использованием библиотеки для модульного тестирования Google C++ Testing Framework. Тесты проверяют корректную работу последовательного и параллельного алгоритмов.
+Для подтверждения корректности в программе реализован набор тестов с использованием библиотеки для модульного тестирования Google C++ Testing Framework. Тесты проверяют корректную работу последовательного и параллельных алгоритмов.
 
 \par Дополнительно для подтверждения корректности в программе реализована демонстрация работы алгоритма визуально с использованием библиотеки OpenCV.
 
@@ -286,8 +280,8 @@ double distance(std::pair<int, int> a, std::pair<int, int> b);
 \multicolumn{2}{c|}{TBB} &
 \multicolumn{2}{c|}{std::thread}
 \\ \cline{1-7}
-t, с & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
-13.58 & 5.66 & 2.4 & 5.92 & 2.29 & 4.38 & 3.1 \\ \hline
+t, с  & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
+13.58 & 5.66 & 2.4     & 5.92 & 2.29    & 4.38 & 3.1 \\ \hline
 \end{tabular}
 \caption{Средние значения результатов экспериментов}
 \end{table}
@@ -300,7 +294,7 @@ t, с & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
 
 \section{Заключение}
 
-В ходе выполнения данной работы все поставленные цели были достигнуты, а именно подробно изучен алгоритм построения выпулой оболочки - проход Джарвиса, разработана реализация эффективной параллельной версии алгоритма с использованием технологий: OpenMP, TBB, std::threads,разработаны и доведены до успешного выполнения тесты, созданные с использованием Google C++ Testing Framework, выполнены замеры времени, по которым было определено, что лучшей технологией для реализации параллельного алгоритма Джарвиса оказалась технология std::thread.
+В ходе выполнения данной работы все поставленные цели были достигнуты, а именно подробно изучен алгоритм построения выпулой оболочки - проход Джарвиса, разработана реализация эффективной параллельной версии алгоритма с использованием технологий: OpenMP, TBB, std::threads, разработаны и доведены до успешного выполнения тесты, созданные с использованием Google C++ Testing Framework, выполнены замеры времени, по которым было определено, что лучшей технологией для реализации параллельного алгоритма Джарвиса оказалась технология std::thread.
 
 \par В заключении нужно отметить, что алгоритм Джарвиса является достаточно простым в понимании и реализации. Его сложность O(n*m), где n - общее количество точек в исходном множестве точек, а m - количество точек в получившейся выпуклой оболочке, что в общем случае дает хороший результат по времени выполнения.
 
@@ -326,23 +320,28 @@ t, с & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
 
 \section{Приложение}
 
-\addcontentsline{toc}{section}{Приложение}
-\centerline{\bfseries Исходный код.} 
+\subsection{Последовательный алгоритм}
 
-\lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.h}
-\lstinputlisting[language=C++, caption=Последовательная версия. Cpp файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.cpp}
-\lstinputlisting[language=C++, caption=Последовательная версия. Тесты]{../../../../modules/task_1/yasakova_a_jarvis_alg/main.cpp}
+\lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_1/yasakova_a_jarvis_alg/main.cpp}
 
-\lstinputlisting[language=C++, caption=OpenMP версия. Заголовочный файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.h}
-\lstinputlisting[language=C++, caption=OpenMP версия. Cpp файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.cpp}
-\lstinputlisting[language=C++, caption=OpenMP версия. Тесты]{../../../../modules/task_2/yasakova_a_jarvis_alg/main.cpp}
+\subsection{OpenMP}
 
-\lstinputlisting[language=C++, caption=TBB версия. Заголовочный файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.h}
-\lstinputlisting[language=C++, caption=TBB версия. Cpp файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.cpp}
-\lstinputlisting[language=C++, caption=TBB версия. Тесты]{../../../../modules/task_3/yasakova_a_jarvis_alg/main.cpp}
+\lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_2/yasakova_a_jarvis_alg/main.cpp}
 
-\lstinputlisting[language=C++, caption=std::thread версия. Заголовочный файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.h}
-\lstinputlisting[language=C++, caption=std::thread версия. Cpp файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.cpp}
-\lstinputlisting[language=C++, caption=std::thread версия. Тесты]{../../../../modules/task_4/yasakova_a_jarvis_alg/main.cpp}
+\subsection{TBB}
+
+\lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_3/yasakova_a_jarvis_alg/main.cpp}
+
+\subsection{std::thread}
+
+\lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_4/yasakova_a_jarvis_alg/main.cpp}
 
 \end{document}
