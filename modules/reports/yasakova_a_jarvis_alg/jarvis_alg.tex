@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass{article}
 
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{luainputenc}
@@ -13,13 +13,11 @@
 \usepackage{graphicx}
 \usepackage{indentfirst}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
-\usepackage{caption}
-\usepackage{underscore}
 
 \newenvironment{myalgorithm}[1][htb]
-{\renewcommand{\algorithmcfname}{Алгоритм}
-\begin{algorithm}[#1]%
-}{\end{algorithm}}
+  {\renewcommand{\algorithmcfname}{Алгоритм}
+   \begin{algorithm}[#1]%
+  }{\end{algorithm}}
 
 \setlength{\parskip}{3mm}
 \geometry{a4paper,top=20mm,bottom=20mm,left=25mm,right=15mm}
@@ -33,21 +31,23 @@
 \colorlet{myred}{red!60!blue}
 
 \lstset{
+  backgroundcolor=\color{gray!10},  
   basicstyle=\fontsize{13}{13}\ttfamily,
   columns=fullflexible,
-  breakatwhitespace=false,
-  breaklines=true,
-  commentstyle=\color{mygreen},
-  keywordstyle=\color{blue},
-  language=c++,
-  numbers=none,
-  numbersep=1pt,
-  numberstyle=\tiny\color{blue},
-  rulecolor=\color{mygray},
-  showspaces=false,
-  showtabs=false,
-  stringstyle=\color{mymauve},
-  title=\lstname
+  breakatwhitespace=false,      
+  breaklines=true,                           
+  commentstyle=\color{mygreen},                      
+  keepspaces=true,             
+  keywordstyle=\color{blue},      
+  language=c++,                 
+  numbers=none,                
+  numbersep=1pt,                   
+  numberstyle=\tiny\color{blue}, 
+  rulecolor=\color{mygray},        
+  showspaces=false,               
+  showtabs=false,                                  
+  stringstyle=\color{mymauve},                         
+  title=\lstname                
 }
 
 \makeatletter
@@ -68,7 +68,7 @@
 \vspace{5cm}
 \textbf{\large Отчет по лабораторной работе} \\
 \vspace{8mm}
-\textbf{\Large «Построение выпуклой оболочки - проход Джарвиса»} \\
+\textbf{\Large «Построение выпулой оболочки - проход Джарвиса»} \\
 \end{center}
 
 \vspace{3cm}
@@ -85,7 +85,7 @@
 
 \vspace{\fill}
 
-\begin{center}
+\begin{center} 
 Нижний Новгород \\ 2020
 \end{center}
 \end{titlepage}
@@ -97,7 +97,6 @@
 \newpage
 
 \section{Введение}
- 
 Вычислительная геометрия занимается изучением разработки и исследования алгоритмов для решения геометрических проблем. Задача построения выпуклых оболочек, является одной из центральных задач вычислительной геометрии. Важность этой задачи происходит не только из-за огромного количества приложений (в распознавании образов, обработке изображений, базах данных, в задаче раскроя и компоновки материалов, математической статистике), но также и из-за полезности выпуклой оболочки как инструмента решения множества задач вычислительной геометрии.
 
 \par Для практических целей выпуклые оболочки полезны тем, что они компактно хранят всю необходимую информацию о множестве точек, что позволяет быстро отвечать на разнообразные запросы на этом множестве.
@@ -131,12 +130,11 @@
 
 \par Дальше будем действовать так: найдём самую «правую» точку от последней добавленной (то есть точку с минимальным полярным углом) и добавим её в оболочку. Будем так итеративно добавлять точки, пока не «замкнёмся», то есть пока самой правой точкой не станет $p_{0}$.
 
-\begin{center}
-\captionsetup {type = figure}
-\includegraphics[scale=0.75]{../../../../modules/reports/yasakova_a_jarvis_alg/picture.png}
-\captionof{figure}{Иллюстрация алгоритма}
-\vspace{1ex}
-\end{center} 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=1.1]{../../../../modules/reports/yasakova_a_jarvis_alg/picture.png}
+\caption{Иллюстрация алгоритма}
+\end{figure}
 
 \begin{myalgorithm}[H]
 \SetAlgoLined
@@ -157,6 +155,7 @@ $return\:p$\;
 
 \par Для каждой точки выпуклой оболочки (обозначим их количество за h) мы из всех оставшихся O(n) точек будем искать оптимальную, что суммарно будет работать за O(n*h).
 
+
 \newpage
 
 \section{Схема распараллеливания}
@@ -174,66 +173,51 @@ $return\:p$\;
 \section{Описание программной реализации}
 Множество точек в программе выглядит как вектор пар значений - {($x_{1}$, $y_{1}$), ($x_{2}$, $y_{2}$), ..., ($x_{n}$, $y_{n}$)}.
 
-\vspace{10pt}
 \begin{lstlisting}
 	std::vector<std::pair<int, int>> points;
 \end{lstlisting}
-\vspace{-25pt}
 
 \par В программе реализованы следующие методы:
 
-\vspace{10pt}
 \begin{lstlisting}
 	std::vector <std::pair<int, int>> GetRandomPoints(int n);
 \end{lstlisting}
-\vspace{-25pt}
 
 - случайный подбор множества чисел;
 
-\vspace{10pt}
 \begin{lstlisting}
 	std::vector < std::pair<int, int>> JarvisAlg(cons std::vector<std::pair<int, int>>& points);
 \end{lstlisting}
-\vspace{-25pt}
 
 - алгоритм Джарвиса, включает в себя вызов следующих двух функций и цикл, пока не найдем выпуклую оболочку;
 
-\vspace{10pt}
 \begin{lstlisting}
 	std::pair<int, int> FindFirstPoint(const std::vector<std::pair<int, int>>& points);
 \end{lstlisting}
-\vspace{-25pt}
 
 - поиск первой точки - левая из самых нижних;
 
-\vspace{10pt}
 \begin{lstlisting}
 	std::pair<int, int> FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp);
 \end{lstlisting}
-\vspace{-25pt}
 
 - поиск второй точки - наименьший полярный угол;
 
-\vspace{10pt}
 \begin{lstlisting}
 	double CountCos(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c);
 \end{lstlisting}
-\vspace{-25pt}
 
 - подсчет косинуса угла, составленного этими точками;
 
-\vspace{10pt}
 \begin{lstlisting}
 	double distance(std::pair<int, int> a, std::pair<int, int> b);
 \end{lstlisting}
-\vspace{-25pt}
 
 - определение расстояния между двумя точками.
 
 \newpage
 
 \section{Подтверждение корректности}
-
 Для подтверждения корректности в программе реализован набор тестов с использованием библиотеки для модульного тестирования Google C++ Testing Framework. Тесты проверяют корректную работу последовательного и параллельных алгоритмов.
 
 \par Дополнительно для подтверждения корректности в программе реализована демонстрация работы алгоритма визуально с использованием библиотеки OpenCV.
@@ -254,7 +238,6 @@ $return\:p$\;
 \newpage
 
 \section{Результаты экспериментов}
-
 Характеристики ПK:
 
 \begin{itemize}
@@ -290,18 +273,16 @@ t, с  & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
 
 \par По полученным результатам можно заметить, что параллельный алгоритм с использованием технологии std::thread имеет самое лучшее ускорение. Самое маленькое ускорение оказалось у TBB, так как эта технология имеет много функционала, следовательно, большее время обработки: создание среды для работы потоков, создание самих потоков и распределение задач между потоками.
 
+
 \newpage
 
 \section{Заключение}
-
 В ходе выполнения данной работы все поставленные цели были достигнуты, а именно подробно изучен алгоритм построения выпулой оболочки - проход Джарвиса, разработана реализация эффективной параллельной версии алгоритма с использованием технологий: OpenMP, TBB, std::threads, разработаны и доведены до успешного выполнения тесты, созданные с использованием Google C++ Testing Framework, выполнены замеры времени, по которым было определено, что лучшей технологией для реализации параллельного алгоритма Джарвиса оказалась технология std::thread.
 
 \par В заключении нужно отметить, что алгоритм Джарвиса является достаточно простым в понимании и реализации. Его сложность O(n*m), где n - общее количество точек в исходном множестве точек, а m - количество точек в получившейся выпуклой оболочке, что в общем случае дает хороший результат по времени выполнения.
-
 \newpage
 
 \section{Список литературы}
-
 Книги:
 
 \begin{itemize}
@@ -319,29 +300,26 @@ t, с  & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
 \newpage
 
 \section{Приложение}
-
-\subsection{Последовательный алгоритм}
-
+\subsection{Последовательный алгоритм Дейкстры}
 \lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.h}
 \lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.cpp}
 \lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_1/yasakova_a_jarvis_alg/main.cpp}
 
 \subsection{OpenMP}
-
 \lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.h}
 \lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.cpp}
 \lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_2/yasakova_a_jarvis_alg/main.cpp}
 
 \subsection{TBB}
-
 \lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.h}
 \lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.cpp}
 \lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_3/yasakova_a_jarvis_alg/main.cpp}
 
 \subsection{std::thread}
-
 \lstinputlisting[language=C++, caption=Заголовочный файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.h}
 \lstinputlisting[language=C++, caption=Cpp файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.cpp}
 \lstinputlisting[language=C++, caption=Тесты]{../../../../modules/task_4/yasakova_a_jarvis_alg/main.cpp}
+
+
 
 \end{document}
