@@ -1,8 +1,7 @@
-\documentclass{article}
+\documentclass{report}
 
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{luainputenc}
-\usepackage[utf8]{inputenc}
 \usepackage[english, russian]{babel}
 \usepackage[pdftex]{hyperref}
 \usepackage[14pt]{extsizes}
@@ -135,10 +134,10 @@ title=\lstname
 
 \begin{center}
 \captionsetup {type = figure}
-\includegraphics[scale=0.75]{../../../../modules/reports/yasakova_a_jarvis_alg/picture.png}
+\includegraphics[scale=0.75]{picture.png}
 \captionof{figure}{Иллюстрация алгоритма}
 \vspace{1ex}
-\end{center}
+\end{center} 
 
 \begin{myalgorithm}[H]
 \SetAlgoLined
@@ -293,3 +292,41 @@ t, с & t, с & speedup & t, с & speedup & t, с & speedup \\ \hline
 В ходе выполнения данной работы все поставленные цели были достигнуты, а именно подробно изучен алгоритм построения выпулой оболочки - проход Джарвиса, разработана реализация эффективной параллельной версии алгоритма с использованием технологий: OpenMP, TBB, std::threads,разработаны и доведены до успешного выполнения тесты, созданные с использованием Google C++ Testing Framework, выполнены замеры времени, по которым было определено, что лучшей технологией для реализации параллельного алгоритма Джарвиса оказалась технология std::thread.
 
 В заключении нужно
+отметить, что алгоритм Джарвиса является достаточно простым в понимании и реализации. Его сложность O(n*m), где n - общее количество точек в исходном множестве точек, а m - количество точек в получившейся выпуклой оболочке, что в общем случае дает хороший результат по времени выполнения.
+
+\newpage
+
+\section{Список литературы}
+Книги:
+
+\begin{itemize}
+\item Гергель В.П. Учебный курс «Введение в методы параллельного программирования», раздел «Параллельное программирование с использованием OpenMP». Нижний Новгород, ННГУ, 2007, 33 с.
+\item А.А. Сиднев, А.В. Сысоев, И.Б. Мееров. Учебный курс «Технологии разработки параллельных программ», раздел «Создание параллельной программы», «Библиотека Intel Threading Building Blocks~-— краткое описание». Нижний Новгород, ННГУ, 2007, 29 с.
+\end{itemize}
+
+\par Интернет-ресурсы:
+
+\begin{itemize}
+\item Выпуклые оболочки \\ URL: https://algorithmica.org/ru/convex-hulls
+\item std::thread \\ URL: https://en.cppreference.com/w/cpp/thread/thread
+\end{itemize}
+
+\newpage
+
+\section{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+\centerline{\bfseries Исходный код.} 
+
+\lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=Последовательная версия. Cpp файл]{../../../../modules/task_1/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=Последовательная версия. Тесты]{../../../../modules/task_1/yasakova_a_jarvis_alg/main.cpp}
+
+\lstinputlisting[language=C++, caption=TBB версия. Заголовочный файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=TBB версия. Cpp файл]{../../../../modules/task_3/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=TBB версия. Тесты]{../../../../modules/task_3/yasakova_a_jarvis_alg/main.cpp}
+
+\lstinputlisting[language=C++, caption=std::thread версия. Заголовочный файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.h}
+\lstinputlisting[language=C++, caption=std::thread версия. Cpp файл]{../../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.cpp}
+\lstinputlisting[language=C++, caption=std::thread версия. Тесты]{../../../../modules/task_4/yasakova_a_jarvis_alg/main.cpp}
+
+\end{document}
