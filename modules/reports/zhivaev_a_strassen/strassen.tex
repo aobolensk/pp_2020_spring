@@ -13,33 +13,32 @@
 \usepackage{graphicx}
 \usepackage{indentfirst}
 \usepackage{amsmath}
+\usepackage{xcolor}
 
-% Устанавливаю поля, отступы между абзацами, отступы в списке
-\geometry{a4paper,top=2cm,bottom=3cm,left=2cm,right=1.5cm}
-\setlength{\parskip}{0.5cm}
-\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
+\renewcommand{\thesection}{\arabic{section}}
+\setlength{\parskip}{3mm}
+\geometry{a4paper,top=20mm,bottom=20mm,left=20mm,right=15mm}
+\setlist{nolistsep, itemsep=0.5cm,parsep=0pt}
 
-% Мой стиль для листинга кода
-\lstset{language=C++,
-		basicstyle=\footnotesize,
-		keywordstyle=\color{blue}\ttfamily,
-		stringstyle=\color{red}\ttfamily,
-		commentstyle=\color{green}\ttfamily,
-		morecomment=[l][\color{magenta}]{\#}, 
-		tabsize=4,
-		breaklines=true,
-  		breakatwhitespace=true,
-  		title=\lstname,       
+\lstset{
+  language=c++,
+  backgroundcolor=\color{gray!5},
+  basicstyle=\fontsize{12}{12}\ttfamily,
+  columns=fullflexible,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{green},
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  numbers=none,
+  stringstyle=\color{red},
+  title=\lstname
 }
 
-% Замена [1] -> 1. в списке литературы
-\makeatletter
-\renewcommand\@biblabel[1]{#1.\hfil}
-\makeatother
 
 \begin{document}
 
-% Титульный лист
 \begin{titlepage}
 
 \begin{center}
@@ -87,7 +86,6 @@
 \newpage
 
 \section{Введение}
-\addcontentsline{toc}{section}{Введение}
 \par Умножение матриц~--- это одна из основных вычислительных операций. Вычислительная сложность стандартного алгоритма умножения матриц порядка N составляет O($N^{3}$
 ). Существует более сложное для программирования решение на основе алгоритма Штрассена, которое позволяет сократить вычислительную сложность до $O(N^{log_{2}7}) \approx O(N^{2.81})$, что дает существенное ускорение при умножении больших матриц.
 \par Для достижения большего ускорения предлагается распараллелить вычисления. Для этого используются такие инструменты параллельного программирования как TBB, OpenMP и C++ std::thread.
@@ -120,7 +118,7 @@ C_{21} & C_{22}
 \par В таком случае, чтобы получить матрицу C, достаточно найти блоки (подматрицы) $C_{11}$, $C_{12}$, $C_{21}$, $C_{22}$.
 \begin{center}
 $C_{ij}=A_{i1}*B_{1j}+A_{i2}*B_{2j}$
-\par Видно, что для вычисления одного блока потребуется произвести две операции умножения, а для целой матрицы~-- 8. Алгоритм Штрассена позволяет сократить это число до 7. Для этого понадобится вычислить несколько вспомогательных матриц:
+\par Видно, что для вычисления одного блока потребуется произвести две операции умножения, а для целой матрицы~-- 8. Алгоритм Штрассена позволяет сократить это число до 7. Для этого понадобится вычислить несколько вспомогательных матриц:\\
 \begin{minipage}{0.5\textwidth}
 $M1=(A_{11} + A_{22})*(B_{11} + B_{22})$
 
@@ -146,6 +144,7 @@ $C_{22}=M_2+M_4$
 
 $C_{22}=M_1-M_2+M_3+M)6$
 \end{minipage}
+\end{center}
 \par Алгоритм Штрассена применяется рекурсивно при вычислении подматриц $M_k$. Рекурсия продолжается до тех пор, пока размеры матриц не стунут достаточно малыми. Далее применяется обычный алгоритм умножения. Так делают потому что алгоритм Штрассена эффективен только для матриц больших размеров.
 \par На входные данные накладываются некоторые ограничения: матрицы должны быть квадратные и их размер должен быть равен $2^n$ (n~-- натуральное число).
 
@@ -155,8 +154,8 @@ $C_{22}=M_1-M_2+M_3+M)6$
 
 
 
-
-\section*{Описание программной реализации}
+\newpage
+\section{Описание программной реализации}
 \par Все матрицы хранятся в памяти как последовательность строк. Например, матрица $\begin{pmatrix}1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9\end{pmatrix}$ будет храниться в памяти как вектор \\ $\begin{pmatrix}1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\end{pmatrix}$.
 \par Для реализации параллельной версии понадобятся следующие функции:
 \begin{enumerate}
@@ -181,6 +180,7 @@ void splitMatrix(int size, const double* a,
 \item \textit{size}~-- размер матрицы a (длина стороны, N=a)
 \item \textit{a}~-- указатель на начало исходной матрицы (массив длины $N^2$)
 \item \textit{a11, a12, a21, a22}~-- пустые массивы, в которые после разбиения исходной матрицы будут записаны соответствующие им блоки (длина каждого массива~-- $(N/2)^2$)
+
 \underline{Пример:}\\
 Если в функцию передать матрицу $\begin{pmatrix}1 & 2 & 3 & 4 \\ 5 & 6 & 7 & 8 \\ 9 & 10 & 11 & 12 \\ 13 & 14 & 15 & 16\end{pmatrix}$, то в a11 будет записана подматрица $\begin{pmatrix}1 & 2 \\ 5 & 6\end{pmatrix}$, в a12~-- $\begin{pmatrix}3 & 4 \\7 & 8\end{pmatrix}$, в a21~-- $\begin{pmatrix}9 & 10 \\ 13 & 14\end{pmatrix}$, в a22~-- $\begin{pmatrix}11 & 12 \\ 15 & 16\end{pmatrix}$.
 \end{itemize}
@@ -205,6 +205,7 @@ void assembleMatrix(int size, double* a,
 \item \textit{size}~-- размер матрицы a (длина стороны, N=a)
 \item \textit{a}~-- пустой массив, в который будет записана собранная из блоков матрица (массив длины $N^2$)
 \item \textit{a11, a12, a21, a22}~-- блоки, из которых необходимо собрать матрицу
+
 \underline{Пример:}\\
 Если в функцию передать матрицы a11=$\begin{pmatrix}1 & 2 \\ 5 & 6\end{pmatrix}$, a12=$\begin{pmatrix}3 & 4 \\7 & 8\end{pmatrix}$, a21=$\begin{pmatrix}9 & 10 \\ 13 & 14\end{pmatrix}$, a22=$\begin{pmatrix}11 & 12 \\ 15 & 16\end{pmatrix}$, то в a будет записана матрица \\
 $\begin{pmatrix}1 & 2 & 3 & 4 \\ 5 & 6 & 7 & 8 \\ 9 & 10 & 11 & 12 \\ 13 & 14 & 15 & 16\end{pmatrix}$.
@@ -298,7 +299,8 @@ void strassen1(int size, double* result,
 \end{enumerate}
 
 \item Рекурсивная функция умножения двух матриц
-\par Выполняет умножение матрицы a на матрицу b. Рекурсивные вызовы происходят в функциях strassen1, strassen2, strassen3, strassen4. Матрицы, размер которых 128 или меньше, умножаются с помощью обычного алгоритма.
+
+\par Выполняет умножение матрицы a на матрицу b. Рекурсивные вызовы происходят в функциях \lstinline{strassen1}, \lstinline{strassen2}, \lstinline{strassen3}, \lstinline{strassen4}. Матрицы, размер которых 128 или меньше, умножаются с помощью обычного алгоритма.
 \begin{lstlisting}
 void strassenRecursivePart(int size, const double* a, const double* b,
                            double* result) {
@@ -379,7 +381,8 @@ void strassenRecursivePart(int size, const double* a, const double* b,
 \end{lstlisting}
 
 \item Функция обычного умножения матриц
-Используется, если в функцию strassenRecursivePart переданы матрицы с размерами 128 или меньше.
+
+\par Используется, если в функцию \lstinline{strassenRecursivePart} переданы матрицы с размерами 128 или меньше.
 
 \begin{lstlisting}
 void multSeq(int size, double* result,
@@ -394,7 +397,7 @@ void multSeq(int size, double* result,
   }
 }
 \end{lstlisting}
-\par Схема распараллеливания не зависит от используемой технологии. Меняется только реализация функции \begin{lstinline}strassenRecursivePart\end{lstinline}, а именно способ вызова функций \begin{lstinline}strassen1\end{lstinline}, \begin{lstinline}strassen2\end{lstinline}, \begin{lstinline}strassen3\end{lstinline}, \begin{lstinline}strassen4\end{lstinline}.
+\par Схема распараллеливания не зависит от используемой технологии. Меняется только реализация функции \lstinline{strassenRecursivePart}, а именно способ вызова функций \lstinline{strassen1}, \lstinline{strassen2}, \lstinline{strassen3}, \lstinline{strassen4}.
 
 \end{enumerate}
 
@@ -496,7 +499,7 @@ void strassenRecursivePart(int size, double* result,
 
 
 \subsection{TBB}
-В TBB для параллельного выполнения функций используется класс \lstinline{tbb::task_group}. Чтобы запустить выполнение функции в отдельном потоке нужно вызвать метод \lstinline{run(...)} и передать в него объект типа \lstinline{Func} (в данном случае~-- лямбда-выражение). После всех вызовов \lstinline{run} вызывается метод \lstinline{wait()}, который синхронизирует потоки.
+В TBB для параллельного выполнения функций используется класс\\ \lstinline{tbb::task_group}. Чтобы запустить выполнение функции в отдельном потоке нужно вызвать метод \lstinline{run(...)} и передать в него объект типа \lstinline{Func} (в данном случае~-- лямбда-выражение). После всех вызовов \lstinline{run} вызывается метод \lstinline{wait()}, который синхронизирует потоки.
 \par Для корректного выполнения программы в начале выполнения обязательно должен быть создан объект типа \lstinline{tbb::task_scheduler_init}. В конструктор передается количество потоков, доступных программе.
 
 \begin{lstlisting}
@@ -680,7 +683,7 @@ void strassenRecursivePart(int size, double* result,
 \end{lstlisting}
 
 
-
+\newpage
 \section{Результаты экспериментов}
 \par Условия проведения эксперимента:
 \begin{itemize}[label={}]
@@ -689,6 +692,7 @@ void strassenRecursivePart(int size, double* result,
 \item Количество потоков: 8
 \item Объем RAM: 8GB
 \item ОС: Windows 10 Pro
+\end{itemize}
 \par Время указано в секундах. Эффективность считается относительно однопоточной версии алгоритма Штрассена.
 \begin{center}
 Время выполнения
@@ -703,23 +707,23 @@ OpenMP & TBB & std::thread \\
 \end{tabular}
 \end{center}
 
-
+\newpage
 \section{Заключение}
 \par В результате эксперимента выяснилось, что для реализации параллельной версии алгоритма Штрассена лучше всего применять технологию OpenMP. Прочие реализации оказались менее эффективными из-за наличия накладных расходов на создание объектов \lstinline{std::thread} в C++ std::thread версии и вызов \lstinline{tbb::task_group.run()} в версии с использованием TBB.
 
 
 
-
+\newpage
+\section{Литература}
 \begin{enumerate}
 \item Voss, Michael, Asenjo, Rafael, Reinders, James~--Pro TBB. C++ Parallel Programming with Threading Building Blocks. Первое издание, 2019
 \item Антонов А.С. "Параллельное программирование с использованием технологии OpenMP: Учебное пособие".-М.: Изд-во МГУ, 2009. - 77 с. 19.04.2020)
 \end{enumerate}
+
+
+
 \newpage
-
-
-
-\section{Приложение}
-\addcontentsline{toc}{section}{Приложение}
+\section*{Приложение}
 В данном разделе находится листинг всего кода, написанного в рамках лабораторной работы.
 
 \lstinputlisting[language=C++]{../../../modules/task_1/zhivaev_a_strassen_mult/strassen_mult.h}
