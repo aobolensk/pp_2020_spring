@@ -1,0 +1,340 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{tocvsec2}
+
+\setcounter{tocdepth}{2}
+\geometry{a4paper,top=2cm,bottom=3cm,left=2cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
+
+\lstset{language=C++,
+		basicstyle=\footnotesize,
+		keywordstyle=\color{blue}\ttfamily,
+		stringstyle=\color{red}\ttfamily,
+		commentstyle=\color{green}\ttfamily,
+		morecomment=[l][\color{magenta}]{\#}, 
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации
+\end{center}
+
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики
+\end{center}
+
+\vspace{3em}
+
+\begin{center}
+\textbf{\Large Отчет по лабораторной работе}
+\end{center}
+\begin{center}
+\textbf{\Large«Умножение плотных матриц. Элементы типа double. Блочная схема, алгоритм Кэннона.»}
+\end{center}
+
+\vspace{3em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381706-1 \\ Нечаева Е.В\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В
+}
+\vspace{\fill}
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+\end{titlepage}
+
+\setcounter{page}{2}
+\setcounter{secnumdepth}{-1}
+\tableofcontents
+
+\newpage
+
+\section{\hspace{0.6cm}Введение}
+Матрица - это таблица, состоящая из элементов, расположение которых определяется при помощи порядкого номера столбца и строки. Существует несколько видов матриц, но остановимся всего на двух основных: квадратная и прямоугольная.\\
+Прямоугольная матрица - это матрица в которой количество строк и столбцов не совпадает.\\
+Квадратная матрица - это матрица состоящая из одинакового количества строк и столбцов.
+\par Плотной матрицей считается матрица, большая часть элементов которой ненулевые.
+\par Результатом произведения двух матриц является также матрица, которая получается при суммировании произведений всех элементов строки i первой матрицы и всех соответствующих элементов колонки j второй матрицы.
+
+\begin{equation}\label{eq:mult}
+c_{ij} =  \sum \limits_{p=1}^{n} a_{ip} * b_{pj}
+\end{equation}
+При этом перемножающиеся матрицы должны удовлетворять критерию размерности. Количество столбцов первой матрицы должно равняться количеству строк во второй матрице. Результирующая матрица же будет иметь столько же строк сколько первая матрица и столько же столбцов сколько имеет вторая матрица.
+\par Существует множество реализаций умножения матриц, как последовательные, так и параллельные. Из последовательных реализаций в данной лабораторной работе приведены наивное и блочное умножения матриц. Паралельная реализация основана на алгоритме Кэннона. Наивный алгоритм как раз таки представлен формулой (1).
+\newpage
+
+\section{\hspace{0.6cm}Постановка задачи}
+В данной лабораторной работе поставлена задача в последовательной и параллельной реализации умножения матриц  с помощью алгоритма Кэннона. Для этого требуется выполнить ряд функций:
+\par Для последоваетльной работы:
+\begin{itemize}
+\item Наивное умножение
+\item Блочное умножение
+\end{itemize}
+\par Для параллельной на основе алгоритма Кэннона с использованием технологий:
+\begin{itemize}
+\item OpenMP
+\item TBB
+\item std::threads
+\end{itemize}
+\par Также некоторые функции для работы с матрицами:
+\begin{itemize}
+\item Сравнение двух элементов на равенство
+\item Сравнение двух матриц на равенство
+\item Сравнение размерности двух матриц
+\end{itemize}
+
+\newpage
+
+\section{\hspace{0.6cm}Метод решения}
+Для того, чтобы изучить алгоритм Кэннона, рассмотрим что представляет из себя блочное разбиение матрицы.
+\parБлочная матрица - представление матрицы, при котором она рассекается вертикальными и горизонтальными линиями на прямоугольные части - блоки. Элементами блочной матрицы A являются матрицы $A_{ij}$ размеров $m_i\times n_j$, где $i=1,2,\ldots,p, j=1,2,\ldots,q$, причем $m_1+m_2+\ldots+m_p=m и n_1+n_2+\ldots+n_q=n$.
+\parТеперь перейдем к самому алгоритму Кэннона.\\
+Будем предполагать, что все матрицы являются квадратными размера $N\times N$, а количество блоков по горизонтали и по вертикали является одинаковым и равным q (при этом размер всех блоков равен $K\times K$, где $K = \frac{N}{q}$). Тогда умножение будет определяться так же, как формула, приведенная во введении, только под знаком суммы фигурируют блоки матриц А и В, а результат записывается в блок матрицы С.\\
+\begin{equation}\label{eq:multblock}
+C_{ij} =  \sum \limits_{p=1}^{n} A_{ip} * B_{pj}
+\end{equation}
+\parАлгоритм Кэннона расчитан только для параллельной реализации, поэтому удобно для каждого потока определить задачу вычисления одного из блоков результирующей матрицы С. Так как для потоков пересылка целых блоков матриц не нужна, поток должен знать свои номера блоков матриц А и В, чтобы в каждый момент времени их перемножить и результат сохранить в блок результирующей матрицы.\\
+Также предполагается, что количество потоков равно $q^2$.
+
+Особенность данного алгоритма заключается в том, что поток сразу знает номера блоков матриц, которые надо перемножить.
+
+\newpage
+
+\section{\hspace{0.6cm}Схема распараллеливания}
+Как было сказано выше, каждый поток должен знать номера блоков матриц, которые нужно умножить.Таким образом, задача сводится к определению этих номеров с помощью формул.
+
+Пошагово алгоритм Кэннона выглядит следующим образом:
+\begin{itemize}
+\item Начальное определение
+\begin{enumerate}
+\item Для каждого потока по формуле высчитывается нужные номера блоков матрицы А и В .
+\end{enumerate}
+\end{itemize}
+\begin{itemize}
+\item Запускается цикл из q итераций и выполняются следующие действия
+\begin{enumerate}
+\item Каждый поток производит умножение матриц с полученными номерами и записывает их в результирующий блок матрицы С.
+\item Заново по формуле высчитываются новые номера блоков матриц.
+\end{enumerate}
+\end{itemize}
+
+После завершения цикла в каждом потоке будет содержаться матрица $C_{ij}$, равная соответствующему блоку произведения A*B. Останется объединить эти блоки в результирующую матрицу С.
+\newpage
+
+\section{\hspace{0.6cm}Описание программной реализации}
+Рассмотрим реализацию алгоритма Кэннона с использованием разных технологий, при этом заметим, что принцип везде одинаков, только меняются инструменты параллелизации.
+\subsection{OpenMP}
+Так как алгоритм основан на циклах, используется директива \verb|#pragma omp parallel for|, которая позволяет распараллеливать циклы.
+Приведу псевдокод, который показывает формулу, по которой каждый поток получает свой блок матрицы А и В в начале пересылок и в самом цикле.
+\begin{lstlisting}
+#pragma omp parallel num_threads(q*q)
+    {
+        int thread_i = omp_get_thread_num() / q;
+        int thread_j = omp_get_thread_num() % q;
+        int block_i_A = 0, block_j_A = 0, block_i_B = 0, block_j_B = 0;
+
+        matrix num1(block_size), num2(block_size),
+            numrez(block_size, std::vector<double>(block_size, 0));
+
+        for (int k = 0; k < block_size; ++k) {
+            block_i_A = thread_i * block_size + k;
+            block_j_A = ((thread_j + thread_i) % q) * block_size;
+            block_j_B = thread_j * block_size;
+            block_i_B = block_j_A + k;
+            num1[k] = std::vector<double>(tempA[block_i_A].begin() + block_j_A,
+                                        tempA[block_i_A].begin() + block_j_A + block_size);
+            num2[k] = std::vector<double>(tempB[block_i_B].begin() + block_j_B,
+                                        tempB[block_i_B].begin() + block_j_B + block_size);
+        }
+        for (int kk = 0; kk < q; ++kk) {
+             
+            for (int k = 0; k < block_size; ++k) {
+                int i_A = thread_i * block_size + k;
+                int j_A = ((block_j_A / block_size + kk + 1) % q) * block_size;
+                int i_B = ((block_i_B / block_size + kk + 1) % q) * block_size + k;
+                int j_B = thread_j * block_size;
+                num1[k] = std::vector<double>(tempA[i_A].begin() + j_A,
+                                            tempA[i_A].begin() + j_A + block_size);
+                num2[k] = std::vector<double>(tempB[i_B].begin() + j_B,
+                                            tempB[i_B].begin() + j_B + block_size);
+            }
+        }
+    }
+\end{lstlisting}
+
+\subsection{TBB}
+Аналогично OpenMP используется функция \verb|tbb::parallel_for|, которая принимает на вход двумерное итерационное пространство \verb|tbb::blocked_range2d| с размером по строкам и столбцам равным 0, n и шагом N(n - размер матрицы, N - размер блока), и лямбда, которая составляет тело функции, то есть алгоритм Кэннона.
+\begin{lstlisting}
+tbb::parallel_for(tbb::blocked_range2d<size_t>(0, n, block_size, 0, n, block_size),
+                        [&](const tbb::blocked_range2d<size_t>& r) {
+        int thread_i = r.rows().begin() / block_size;
+        int thread_j = r.cols().begin() / block_size;
+        int block_i_A = 0, block_j_A = 0, block_i_B = 0, block_j_B = 0;
+
+        matrix num1(block_size), num2(block_size),
+            numrez(block_size, std::vector<double>(block_size, 0));
+
+        for (int k = 0; k < block_size; ++k) {
+            block_i_A = thread_i * block_size + k;
+            block_j_A = ((thread_j + thread_i) % q) * block_size;
+            block_j_B = thread_j * block_size;
+            block_i_B = block_j_A + k;
+            num1[k] = std::vector<double>(tempA[block_i_A].begin() + block_j_A,
+                                        tempA[block_i_A].begin() + block_j_A + block_size);
+            num2[k] = std::vector<double>(tempB[block_i_B].begin() + block_j_B,
+                                        tempB[block_i_B].begin() + block_j_B + block_size);
+        }
+        for (int kk = 0; kk < q; ++kk) {
+             
+            for (int k = 0; k < block_size; ++k) {
+                int i_A = thread_i * block_size + k;
+                int j_A = ((block_j_A / block_size + kk + 1) % q) * block_size;
+                int i_B = ((block_i_B / block_size + kk + 1) % q) * block_size + k;
+                int j_B = thread_j * block_size;
+                num1[k] = std::vector<double>(tempA[i_A].begin() + j_A,
+                                            tempA[i_A].begin() + j_A + block_size);
+                num2[k] = std::vector<double>(tempB[i_B].begin() + j_B,
+                                            tempB[i_B].begin() + j_B + block_size);
+            }
+        }
+            for (int k = 0; k < block_size; ++k) {
+                int i_A = thread_i * block_size + k;
+                int j_A = ((block_j_A / block_size + kk + 1) % q) * block_size;
+                int i_B = ((block_i_B / block_size + kk + 1) % q) * block_size + k;
+                int j_B = thread_j * block_size;
+                num1[k] = std::vector<double>(tempA[i_A].begin() + j_A,
+                                            tempA[i_A].begin() + j_A + block_size);
+                num2[k] = std::vector<double>(tempB[i_B].begin() + j_B,
+                                            tempB[i_B].begin() + j_B + block_size);
+            }
+        }
+    });
+\end{lstlisting}
+
+\subsection{std::threads}
+Здесь используется API \verb|std::thread|, которое осуществляется при помощи создания объектов \verb|std::thread|, каждый из которых отвечает за работу одного потока.
+Сначала объявляется лямбда, которая, как и в TBB версии, отвечает за алгоритм Кэннона. Лямбда принимает номера потоков по строчке и столбцу, после чего, по формулам вычисляет нужные блоки. Так как лямбда в точности похожа по коду на TBB, приведу код, который показывает работу с потоками в \verb|std::thread|
+\begin{lstlisting}
+    std::thread* threads = new std::thread[num_threads];
+    int num = 0;
+    for (int i = 0; i < q; ++i) {
+        for (int j = 0; j < q; ++j) {
+            threads[num] = std::thread(func, i, j);
+            num++;
+        }
+    }
+    for (int i = 0; i < num_threads; ++i) {
+        threads[i].join();
+    }
+\end{lstlisting}
+
+\newpage
+
+\section{\hspace{0.6cm}Подтверждение корректности}
+Для того, чтобы подтвердить корректность реализованных функций для работы с матрицами, были написаны тесты, разработанные с помощью Google C++ Testing Framework.
+
+Несколько тестов проверяли корректность для ввода пользователя, то есть, например, ожидается исключение, если пользователь ввел некорректное количество потоков, или применил алгоритм умножения к матрицам разных размеров.
+
+Также присутствуют тесты, которые проверяли корректность полученных результатов при умножении матриц.
+
+\newpage
+
+\section{\hspace{0.6cm}Результаты экспериментов}
+Эксперименты проводились на данном железе:
+\begin{itemize}
+\item Операционная система: Ubuntu 18.04.4 LTS
+\item Процессор: Intel Core i3-8130U
+\item RAM: 6 Gb
+\end{itemize}
+\vspace{3em}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Кол-во данных} & Последовательно & \multicolumn{2}{c|}{OpenMP} & \multicolumn{2}{c|}{TBB} & \multicolumn{2}{c|}{std::thread} \\ \cline{2-8} 
+     & Время & Время & Уск & Время & Уск & Время & Уск \\ \hline
+500  &  3.641 & 1.815 & 2.006 & 1.795 &2.028 & 1.787 & 2.037   \\
+750 & 7.981 & 3.328 & 2.398 & 3.145 & 2.537 & 2.069 & 3.857 \\
+1000 & 33.671 & 16.242 & 2.073 & 16.072 & 2.095 & 14.424 & 2.334 \\
+\hline
+\end{tabular}
+
+Теперь можно сделать несколько выводов:
+\begin{itemize}
+\item Ускорение всех технологий распараллеливания примерно одинаковое. Как и было сказано, схема распараллеливания у них одинаковая, отличается только инструментами реализации.
+\item  Ускорение данного алгоритма основано на кешировании. Тем самым, чем больше данных и больше потоков, тем ускорение будет проявляться выше и выше. Это теоретически, но практически, из-за накладных расходов, планировщика, время работы высчитывается с некоторой погрешностью.
+\end{itemize}
+
+\newpage
+
+\section{\hspace{0.6cm}Заключение}
+Таким образом, мы вспомнили некоторые ключевые моменты, а именно: определение матрицы, умножение матриц. Изучили алгоритм Кэннона, который позволяет реализовать параллельное умножение матриц, технологии распараллеливания OpenMP, TBB, std::thread.
+
+Были реализованы функции, помогающие работать с матрицами, а также решающие поставленную задачу.
+
+Также были написаны тесты на основе Google C++ Testing Framework, которые подтвердили корректность решенной задачи.
+\newpage
+
+\section{\hspace{0.6cm}Список литературы}
+\begin{enumerate}
+\item Алгоритмы умножения матриц [Электронный ресурс]\\$http://edu.mmcs.sfedu.ru/pluginfile.php/4232/mod_resource/content/3/MPIMatr2018.pdf$\\
+\item Блочные матрицы [Электронный ресурс]\\$http://mathhelpplanet.com/static.php?p=blochnye-matritsy$\\
+\item Эффективность параллельных алгоритмов [Электронный ресурс] \\$http://masters.donntu.org/2011/fknt/lyamina/library/conference2011.pdf$
+\end{enumerate}
+
+\newpage
+
+\section{\hspace{0.6cm}Приложение}
+\subsection{Последовательный алгоритм}
+\lstinputlisting[language=C++]{../../../../modules/task_1/nechaeva_e_matrix_m_Cannon/matrix_m_Cannon.h}
+\lstinputlisting[language=C++]{../../../../modules/task_1/nechaeva_e_matrix_m_Cannon/matrix_m_Cannon.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_1/nechaeva_e_matrix_m_Cannon/main.cpp}
+
+\subsection{OpenMP}
+\lstinputlisting[language=C++]{../../../../modules/task_2/nechaeva_e_matrix_Cannon_omp/matrix_m_Cannon.h}
+\lstinputlisting[language=C++]{../../../../modules/task_2/nechaeva_e_matrix_Cannon_omp/matrix_m_Cannon.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_2/nechaeva_e_matrix_Cannon_omp/main.cpp}
+
+\subsection{TBB}
+\lstinputlisting[language=C++]{../../../../modules/task_3/nechaeva_e_matrix_Cannon_TBB/matrix_m_Cannon.h}
+\lstinputlisting[language=C++]{../../../../modules/task_3/nechaeva_e_matrix_Cannon_TBB/matrix_m_Cannon.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_3/nechaeva_e_matrix_Cannon_TBB/main.cpp}
+
+\subsection{std::threads}
+\lstinputlisting[language=C++]{../../../../modules/task_4/nechaeva_e_matrix_Cannon_std/matrix_m_Cannon.h}
+\lstinputlisting[language=C++]{../../../../modules/task_4/nechaeva_e_matrix_Cannon_std/matrix_m_Cannon.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_4/nechaeva_e_matrix_Cannon_std/main.cpp}
+
+\end{document}
