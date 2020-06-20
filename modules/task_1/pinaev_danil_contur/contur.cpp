@@ -1,5 +1,7 @@
 // Copyright 2020 Pinaev Danil
 
+#include "../../modules/task_1/pinaev_danil_contur/contur.h"
+
 #include <algorithm>
 #include <cmath>
 #include <ctime>
@@ -9,7 +11,6 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "../../modules/task_1/pinaev_danil_contur/contur.h"
 
 static int offset = 0;
 
@@ -81,26 +82,4 @@ Image getContur(const Image &in) {
     }
 
     return res;
-}
-
-void print(std::string mes, const Image &img) {
-    int real_rows = img.rows;
-    int real_cols = img.cols;
-
-    std::cout<< mes <<std::endl;
-
-    if (real_rows * real_cols != static_cast<int>(img.data.size())) {
-        std::cout << "real_rows * real_cols: "<< real_rows * real_cols
-                  << " img.data.size(): " << img.data.size()<< std::endl
-                  << "that is all" << std::endl;
-
-        throw std::runtime_error("Alarm!!");
-    }
-
-
-    for (int i = 0; i < real_cols; ++i) {
-        for (int j = 0; j < real_rows; ++j)
-            std::cout<< img.data[i * real_cols + j]<< ", ";
-        std::cout << std::endl;
-    }
 }

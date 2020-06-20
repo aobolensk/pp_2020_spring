@@ -6,13 +6,18 @@ SparseMatrix::SparseMatrix(const Matrix& matrix) {
     rows = matrix.size();
     cols = matrix[0].size();
 
-    size_t elemsInRow{0};
-    constexpr double tolerance{1e-6};
-    rowIndex.reserve(rows + 1);
+    size_t elemsInRow{ 0 };
+    constexpr double tolerance{ 1e-6 };
+    rowIndex = {};
+    colIndex = {};
+    value = {};
+    rowIndex.reserve(rows * cols);
+    colIndex.reserve(rows * cols);
+    value.reserve(rows + 1);
     rowIndex.push_back(0);
 
-    for (size_t idx{0}; idx < rows; ++idx) {
-        for (size_t jdx{0}; jdx < cols; ++jdx) {
+    for (size_t idx{ 0 }; idx < rows; ++idx) {
+        for (size_t jdx{ 0 }; jdx < cols; ++jdx) {
             if (std::fabs(matrix[idx][jdx]) >= tolerance) {
                 value.push_back(matrix[idx][jdx]);
                 colIndex.push_back(jdx);
@@ -69,21 +74,15 @@ bool SparseMatrix::operator== (const SparseMatrix& matrix) const& {
 }
 
 Matrix SparseMatrix::SparseToMatrix() {
-    Matrix result{};
-    result.resize(rows);
-    for (size_t idx{0}; idx < rows; ++idx) {
-        result[idx].resize(cols);
-    }
-    size_t tmpCols{0};
+    Matrix result(rows, std::vector<double>(cols, 0.0));
+
+    int tmpCols{0};
     for (size_t idx{0}; idx < rows; ++idx) {
         size_t tmpRows{rowIndex[idx+1] - rowIndex[idx]};
-        for (size_t jdx{0}; jdx < cols; jdx++) {
-            if (jdx == colIndex[tmpCols] && tmpRows != 0) {
-                tmpRows--;
-                result[idx][jdx] = value[tmpCols++];
-            } else {
-                result[idx][jdx] = 0.0;
-            }
+        while (tmpRows != 0) {
+            result[idx][colIndex[tmpCols]] = value[tmpCols];
+            tmpRows--;
+            tmpCols++;
         }
     }
     return result;
@@ -94,17 +93,16 @@ SparseMatrix SparseMatMul(const SparseMatrix& matrixA, const SparseMatrix& matri
     result.rows = matrixA.rows;
     result.cols = matrixB.cols;
     result.rowIndex.push_back(0);
-    std::vector<double> tmpResultRow(matrixA.rows, 0);
+    std::vector<double> tmpResultRow(matrixB.cols, 0);
 
     for (size_t idx{0}; idx < matrixA.rows; ++idx) {
         for (size_t jdx{matrixA.rowIndex[idx]}; jdx < matrixA.rowIndex[idx + 1]; ++jdx) {
             size_t tmpCol {matrixA.colIndex[jdx]};
-
-            for (size_t kdx{matrixB.rowIndex[tmpCol]}; kdx < matrixB.rowIndex[tmpCol + 1]; ++kdx) {
+            for (size_t kdx{matrixB.rowIndex[tmpCol]}; (kdx < matrixB.rowIndex[tmpCol + 1]); ++kdx) {
                 tmpResultRow[matrixB.colIndex[kdx]] += matrixA.value[jdx] * matrixB.value[kdx];
             }
         }
-        for (size_t kdx{0}; kdx < matrixA.rows; ++kdx) {
+        for (size_t kdx{0}; kdx < matrixB.cols; ++kdx) {
             if (tmpResultRow[kdx] != 0) {
                 result.value.push_back(tmpResultRow[kdx]);
                 result.colIndex.push_back(kdx);

@@ -19,6 +19,4 @@ struct Image {
 Image generateRandomImage(int rows, int cols);
 Image getContur(const Image &a);
 
-void print(std::string mes, const Image &img);
-
 #endif  // MODULES_TASK_1_PINAEV_DANIL_CONTUR_CONTUR_H_

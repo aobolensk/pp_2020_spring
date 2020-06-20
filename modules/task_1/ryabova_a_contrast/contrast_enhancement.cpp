@@ -17,13 +17,15 @@ int F(int x, int xMax, int xMin) {
         return 0;
 }
 
+static int offset = 0;
+
 Image randomImage(int width, int height) {
     std::mt19937 gen;
-    gen.seed(static_cast<unsigned int>(time(0)));
+    gen.seed(static_cast<unsigned int>(time(0)) + ++offset);
 
     Image result(width * height);
     for (int i = 0; i < width * height; i++) {
-        result[i] = gen() % 256;
+        result[i] = gen() % 240;
     }
     return result;
 }

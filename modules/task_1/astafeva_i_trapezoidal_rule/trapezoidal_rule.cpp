@@ -17,7 +17,7 @@ double calculateIntegral(double (*function)(std::vector<double>), std::vector <s
     }
     double result = 0.0;
     std::vector<double> params(dimensionality);
-    for (int i = 0; i < segments - 2 * dimensionality; i++) {
+    for (int i = 0; i < segments; i++) {
         int k = i;
         for (int j = 0; j < dimensionality; j++) {
             params[j] = boundaries[j].first + delta[j] * (k % partition[j]);

@@ -45,7 +45,7 @@ TEST(contrast_enhancement, can_change_big_img) {
 
 TEST(contrast_enhancement, any_throw_when_error_size) {
     int width1 = 100;
-    int width2 = 100;
+    int width2 = 200;
     int height = 100;
 
     Image img = randomImage(width1, height);
@@ -54,6 +54,7 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 }
 
 #else
+#include <omp.h>
 #include <string>
 #include <vector>
 #include "opencv2/core.hpp"
@@ -61,18 +62,17 @@ TEST(contrast_enhancement, any_throw_when_error_size) {
 #include "opencv2/imgproc.hpp"
 #include "opencv2/opencv.hpp"
 
+
 void show_histogram(std::string const& name, cv::Mat1b const& image) {
-    // histogram bins count
     int bins = 256;
     int histSize[] = { bins };
-    // ranges for histogram bins
+
     float lranges[] = { 0, 256 };
     const float* ranges[] = { lranges };
-    // matrix for histogram
+
     cv::Mat hist;
     int channels[] = { 0 };
 
-    // create matrix for histogram visualization
     int const hist_height = 256;
     cv::Mat3b hist_image = cv::Mat3b::zeros(hist_height, bins);
 
@@ -81,7 +81,6 @@ void show_histogram(std::string const& name, cv::Mat1b const& image) {
     double max_val = 0;
     minMaxLoc(hist, 0, &max_val);
 
-    // visualize each bin
     for (int b = 0; b < bins; b++) {
         float const binVal = hist.at<float>(b);
         int   const height = cvRound(binVal * hist_height / max_val);
@@ -100,6 +99,7 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
     #else
+
     cv::Mat img = cv::imread("C:/Users/User/Pictures/4.png");
     cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
     std::vector <int> vec(img.rows * img.cols);
@@ -115,7 +115,13 @@ int main(int argc, char** argv) {
             vec[n++] = static_cast<int>(img.at<uchar>(j, i));
         }
     }
+    double time1 = omp_get_wtime();
+
     vec = contrastImage(vec, img.rows, img.cols);
+
+    double time2 = omp_get_wtime();
+    double timeFin = time2 - time1;
+    std::cout << timeFin << std::endl;
     n = 0;
     for (int j = 0; j < img.rows; j++) {
         for (int i = 0; i < img.cols; i++) {
