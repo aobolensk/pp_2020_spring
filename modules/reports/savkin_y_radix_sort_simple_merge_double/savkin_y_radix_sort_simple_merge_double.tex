@@ -7,6 +7,7 @@
 \usepackage[14pt]{extsizes}
 \usepackage{color}
 \usepackage[table,xcdraw]{xcolor}
+\usepackage{multirow}
 \usepackage{graphicx}
 \usepackage[titles]{tocloft}
 \usepackage[hyphens]{url}
@@ -178,7 +179,7 @@
         \item Компилятор: Visual C++
     \end{itemize}
 
-    \par Эксперимент состоял из сортировки произвольного массива размером 10000000 элементов, при использовании различного числа потоков.
+    \par Эксперимент состоял из сортировки произвольного массива размером 50000000 элементов, при использовании различного числа потоков.
          На графике представлено время работы с использованием OpenMP, TBB и std::thread.
     \begin{figure}[htbp]
         \centering
@@ -196,14 +197,15 @@
     \begin{table}[htbp]
         \centering
         \begin{tabular}{|
-        >{\columncolor[HTML]{EFEFEF}}c |c|c|c|}
-        \hline
-        \cellcolor[HTML]{68CBD0} & \cellcolor[HTML]{68CBD0}OpenMP & \cellcolor[HTML]{68CBD0}TBB & \cellcolor[HTML]{68CBD0}std::thread \\ \hline
-        1                        & 2,63106                        & 3,03474                     & 3,0428                              \\ \hline
-        2                        & 1,80745                        & 1,8875                      & 1,95614                             \\ \hline
-        4                        & 1,37996                        & 1,3068                      & 1,39518                             \\ \hline
-        8                        & 1,35172                        & 1,23227                     & 1,32603                             \\ \hline
-        12                       & 1,34921                        & 1,23803                     & 1,32283                             \\ \hline
+            >{\columncolor[HTML]{EFEFEF}}c |c|c|c|}
+            \hline
+            \cellcolor[HTML]{68CBD0}                                     & \multicolumn{3}{c|}{\cellcolor[HTML]{68CBD0}время работы с.}                                       \\ \cline{2-4}
+            \multirow{-2}{*}{\cellcolor[HTML]{68CBD0}количество потоков} & \cellcolor[HTML]{68CBD0}OpenMP & \cellcolor[HTML]{68CBD0}TBB & \cellcolor[HTML]{68CBD0}std::thread \\ \hline
+            1                                                            & 2,63106                        & 3,03474                     & 3,0428                              \\ \hline
+            2                                                            & 1,80745                        & 1,8875                      & 1,95614                             \\ \hline
+            4                                                            & 1,37996                        & 1,3068                      & 1,39518                             \\ \hline
+            8                                                            & 1,35172                        & 1,23227                     & 1,32603                             \\ \hline
+            12                                                           & 1,34921                        & 1,23803                     & 1,32283                             \\ \hline
         \end{tabular}
         \caption{Результаты экспериментов.}
     \end{table}
