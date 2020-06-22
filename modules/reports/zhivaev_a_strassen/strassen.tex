@@ -1,0 +1,749 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\renewcommand{\thesection}{\arabic{section}}
+\setlength{\parskip}{3mm}
+\geometry{a4paper,top=20mm,bottom=20mm,left=20mm,right=15mm}
+\setlist{nolistsep, itemsep=0.5cm,parsep=0pt}
+
+\lstset{
+  language=c++,
+  backgroundcolor=\color{gray!5},
+  basicstyle=\fontsize{12}{12}\ttfamily,
+  columns=fullflexible,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{green},
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  numbers=none,
+  stringstyle=\color{red},
+  title=\lstname
+}
+
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации
+\end{center}
+
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики
+\end{center}
+
+\vspace{4em}
+
+\begin{center}
+\textbf{\LargeОтчет по лабораторной работе} \\
+\end{center}
+\begin{center}
+\textbf{\Large«Умножение плотных матриц. Алгоритм Штрассена.»} \\
+\end{center}
+
+\vspace{4em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381708-1 \\ Живаев А. Е.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+
+\end{titlepage}
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section{Введение}
+\par Умножение матриц~--- это одна из основных вычислительных операций. Вычислительная сложность стандартного алгоритма умножения матриц порядка N составляет O($N^{3}$
+). Существует более сложное для программирования решение на основе алгоритма Штрассена, которое позволяет сократить вычислительную сложность до $O(N^{log_{2}7}) \approx O(N^{2.81})$, что дает существенное ускорение при умножении больших матриц.
+\par Для достижения большего ускорения предлагается распараллелить вычисления. Для этого используются такие инструменты параллельного программирования как TBB, OpenMP и C++ std::thread.
+\par Цель работы~-- реализация параллельных версий алгоритма Штрассена с использованием технологий параллельного программирования (OpenMP, TBB, C++ std::thread) и сравнение их эффективности.
+
+\newpage
+
+\section{Постановка задачи}
+\par Нужно сравнить эффективность применению различных технологий параллельного программирования для реализации алгоритма Штрассена. Для этого необходимо реализовать однопоточную версию алгоритма, которая будет использоваться для вычисления эффективности параллельных алгоритмов. Так же надо реализовать параллельные версии алгоритма Штрассена с использованием технологий: OpenMP, TBB и C++ std::thread.
+
+
+\newpage
+
+\section{Описание алгоритма}
+\par Пусть A, B и C~-- квадратные матрицы одинаковых размеров. При чем, C=AB. Разделим каждую матрицу на 4 равных по размеру блока.
+\begin{center}
+$A=\begin{bmatrix}
+A_{11} & A_{12}\\
+A_{21} & A_{22}
+\end{bmatrix},
+B=\begin{bmatrix}
+B_{11} & B_{12}\\
+B_{21} & B_{22}
+\end{bmatrix},
+C=\begin{bmatrix}
+C_{11} & C_{12}\\
+C_{21} & C_{22}
+\end{bmatrix}$
+\end{center}
+\par В таком случае, чтобы получить матрицу C, достаточно найти блоки (подматрицы) $C_{11}$, $C_{12}$, $C_{21}$, $C_{22}$.
+\begin{center}
+$C_{ij}=A_{i1}*B_{1j}+A_{i2}*B_{2j}$
+\par Видно, что для вычисления одного блока потребуется произвести две операции умножения, а для целой матрицы~-- 8. Алгоритм Штрассена позволяет сократить это число до 7. Для этого понадобится вычислить несколько вспомогательных матриц:\\
+\begin{minipage}{0.5\textwidth}
+$M1=(A_{11} + A_{22})*(B_{11} + B_{22})$
+
+$M2=(A_{21} + A_{22})*B_{11}$
+
+$M3=A_{11}*(B_{12} - B_{22})$
+
+$M4=A_{22}*(B_{21} - B_{11})$
+
+$M5=(A_{11} + A_{12})*B_{22}$
+
+$M6=(A_{21} - A_{11})*(B_{11} + B_{12})$
+
+$M7=(A_{12} - A_{22})*(B_{21} + B_{22})$
+\end{minipage}
+\par Теперь с помощью блоков $M_k$ можно вычислить $C_{ij}$ следующим образом:
+\begin{minipage}{0.5\textwidth}
+$C_{11}=M_1+M_4-M_5+M_7$
+
+$C_{22}=M_3+M_5$
+
+$C_{22}=M_2+M_4$
+
+$C_{22}=M_1-M_2+M_3+M)6$
+\end{minipage}
+\end{center}
+\par Алгоритм Штрассена применяется рекурсивно при вычислении подматриц $M_k$. Рекурсия продолжается до тех пор, пока размеры матриц не стунут достаточно малыми. Далее применяется обычный алгоритм умножения. Так делают потому что алгоритм Штрассена эффективен только для матриц больших размеров.
+\par На входные данные накладываются некоторые ограничения: матрицы должны быть квадратные и их размер должен быть равен $2^n$ (n~-- натуральное число).
+
+
+\section{Схема распараллеливания}
+\par Данный алгоритм можно распараллелить, запустив вычисления каждой вспомогательной подматрицы $M_k$ параллельно.
+
+
+
+\newpage
+\section{Описание программной реализации}
+\par Все матрицы хранятся в памяти как последовательность строк. Например, матрица $\begin{pmatrix}1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9\end{pmatrix}$ будет храниться в памяти как вектор \\ $\begin{pmatrix}1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\end{pmatrix}$.
+\par Для реализации параллельной версии понадобятся следующие функции:
+\begin{enumerate}
+\item Разбиение матрицы на 4 подматрицы
+\begin{lstlisting}
+void splitMatrix(int size, const double* a,
+                 double* a11, double* a12,
+                 double* a21, double* a22) {
+  int fSize = size / 2;
+  for (int i = 0; i < fSize; i++) {
+    for (int j = 0; j < fSize; j++) {
+      a11[i * fSize + j] = a[i * size + j];
+      a12[i * fSize + j] = a[i * size + fSize + j];
+      a21[i * fSize + j] = a[(fSize + i) * size + j];
+      a22[i * fSize + j] = a[(fSize + i) * size + fSize + j];
+    }
+  }
+}
+\end{lstlisting}
+\par Аргументы функции:
+\begin{itemize}
+\item \textit{size}~-- размер матрицы a (длина стороны, N=a)
+\item \textit{a}~-- указатель на начало исходной матрицы (массив длины $N^2$)
+\item \textit{a11, a12, a21, a22}~-- пустые массивы, в которые после разбиения исходной матрицы будут записаны соответствующие им блоки (длина каждого массива~-- $(N/2)^2$)
+
+\underline{Пример:}\\
+Если в функцию передать матрицу $\begin{pmatrix}1 & 2 & 3 & 4 \\ 5 & 6 & 7 & 8 \\ 9 & 10 & 11 & 12 \\ 13 & 14 & 15 & 16\end{pmatrix}$, то в a11 будет записана подматрица $\begin{pmatrix}1 & 2 \\ 5 & 6\end{pmatrix}$, в a12~-- $\begin{pmatrix}3 & 4 \\7 & 8\end{pmatrix}$, в a21~-- $\begin{pmatrix}9 & 10 \\ 13 & 14\end{pmatrix}$, в a22~-- $\begin{pmatrix}11 & 12 \\ 15 & 16\end{pmatrix}$.
+\end{itemize}
+\item Сбор матрицы из 4 блоков
+\begin{lstlisting}
+void assembleMatrix(int size, double* a,
+                    const double* a11, const double* a12,
+                    const double* a21, const double* a22) {
+  int fSize = size / 2;
+  for (int i = 0; i < fSize; i++) {
+    for (int j = 0; j < fSize; j++) {
+      a[i * size + j] = a11[i * fSize + j];
+      a[i * size + fSize + j] = a12[i * fSize + j];
+      a[(fSize + i) * size + j] = a21[i * fSize + j];
+      a[(fSize + i) * size + fSize + j] = a22[i * fSize + j];
+    }
+  }
+}
+\end{lstlisting}
+\par Аргументы функции:
+\begin{itemize}
+\item \textit{size}~-- размер матрицы a (длина стороны, N=a)
+\item \textit{a}~-- пустой массив, в который будет записана собранная из блоков матрица (массив длины $N^2$)
+\item \textit{a11, a12, a21, a22}~-- блоки, из которых необходимо собрать матрицу
+
+\underline{Пример:}\\
+Если в функцию передать матрицы a11=$\begin{pmatrix}1 & 2 \\ 5 & 6\end{pmatrix}$, a12=$\begin{pmatrix}3 & 4 \\7 & 8\end{pmatrix}$, a21=$\begin{pmatrix}9 & 10 \\ 13 & 14\end{pmatrix}$, a22=$\begin{pmatrix}11 & 12 \\ 15 & 16\end{pmatrix}$, то в a будет записана матрица \\
+$\begin{pmatrix}1 & 2 & 3 & 4 \\ 5 & 6 & 7 & 8 \\ 9 & 10 & 11 & 12 \\ 13 & 14 & 15 & 16\end{pmatrix}$.
+\end{itemize}
+
+\item Функции для вычисления вспомогательных блоков
+\begin{enumerate}[label*=\arabic*.]
+\item \textit{(A + B)*(C + D)}\\
+Используется для вычисления $M_1$
+\begin{lstlisting}
+void strassen1(int size, double* result,
+               const double* a1, const double* a2,
+               const double* b1, const double* b2) {
+  double* t1 = new double[size * size * 2];
+  double* t2 = t1 + size * size;
+  int i;
+  int length = size * size;
+
+  for (i = 0; i < length; i++) {
+    t1[i] = a1[i] + a2[i];
+    t2[i] = b1[i] + b2[i];
+  }
+
+  strassenRecursivePart(size, t1, t2, result);
+
+  delete[] t1;
+}
+\end{lstlisting}
+
+\item \textit{(A + B)*(C + D)}\\
+Используется для вычисления $M_2$ и $M_5$
+\begin{lstlisting}
+void strassen1(int size, double* result,
+               const double* a1, const double* a2,
+               const double* b) {
+  double* t = new double[size * size];
+  int i;
+  int length = size * size;
+
+  for (i = 0; i < length; i++) {
+    t[i] = a1[i] + a2[i];
+  }
+
+  strassenRecursivePart(size, t, b, result);
+
+  delete[] t;
+}
+\end{lstlisting}
+
+\item \textit{(A + B)*(C + D)}\\
+Используется для вычисления $M_3$ и $M_4$
+\begin{lstlisting}
+void strassen1(int size, double* result,
+               const double* a,
+               const double* b1, const double* b2) {
+  double* t = new double[size * size];
+  int i;
+  int length = size * size;
+
+  for (i = 0; i < length; i++) {
+    t[i] = b1[i] - b2[i];
+  }
+
+  strassenRecursivePart(size, a, t, result);
+
+  delete[] t;
+}
+\end{lstlisting}
+
+\item \textit{(A + B)*(C + D)}\\
+Используется для вычисления $M_6$ и $M_7$
+\begin{lstlisting}
+void strassen1(int size, double* result,
+               const double* a1, const double* a2,
+               const double* b1, const double* b2) {
+  double* t1 = new double[size * size * 2];
+  double* t2 = t1 + size * size;
+  int i;
+  int length = size * size;
+
+  for (i = 0; i < length; i++) {
+    t1[i] = a1[i] - a2[i];
+    t2[i] = b1[i] + b2[i];
+  }
+
+  strassenRecursivePart(size, t1, t2, result);
+
+  delete[] t1;
+}
+\end{lstlisting}
+\end{enumerate}
+
+\item Рекурсивная функция умножения двух матриц
+
+\par Выполняет умножение матрицы a на матрицу b. Рекурсивные вызовы происходят в функциях \lstinline{strassen1}, \lstinline{strassen2}, \lstinline{strassen3}, \lstinline{strassen4}. Матрицы, размер которых 128 или меньше, умножаются с помощью обычного алгоритма.
+\begin{lstlisting}
+void strassenRecursivePart(int size, const double* a, const double* b,
+                           double* result) {
+  if (size <= 128) {
+    multSeq(size, a, b, result);
+    return;
+  }
+  int qLength = size * size / 4;
+  int i;
+  double* a11 = new double[size * size];
+  double* a12 = a11 + qLength;
+  double* a21 = a12 + qLength;
+  double* a22 = a21 + qLength;
+  double* b11 = new double[size * size];
+  double* b12 = b11 + qLength;
+  double* b21 = b12 + qLength;
+  double* b22 = b21 + qLength;
+  double* c11 = new double[size * size];
+  double* c12 = c11 + qLength;
+  double* c21 = c12 + qLength;
+  double* c22 = c21 + qLength;
+  double* m1 = new double[qLength * 7];
+  double* m2 = m1 + qLength;
+  double* m3 = m2 + qLength;
+  double* m4 = m3 + qLength;
+  double* m5 = m4 + qLength;
+  double* m6 = m5 + qLength;
+  double* m7 = m6 + qLength;
+
+  splitMatrix(size, a, a11, a12, a21, a22);
+  splitMatrix(size, b, b11, b12, b21, b22);
+
+  // These functions must be called in parallel
+  // The method of calling depends on the
+  // parallel technology used
+  // M1 = (A11 + A22)(B11 + B22)
+  strassen1(size / 2, a11, a22, b11, b22, m1);
+  // M2 = (A21 + A22)B11
+  strassen2(size / 2, a21, a22, b11, m2);
+  // M3 = A11(B12 - B22)
+  strassen3(size / 2, a11, b12, b22, m3);
+  // M4 = A22(B21 - B11)
+  strassen3(size / 2, a22, b21, b11, m4);
+  // M5 = (A11 + A12)B22
+  strassen2(size / 2, a11, a12, b22, m5);
+  // M6 = (A21 - A11)(B11 + B12)
+  strassen4(size / 2, a21, a11, b11, b12, m6);
+  // M7 = (A12 - A22)(B21 + B22)
+  strassen4(size / 2, a12, a22, b21, b22, m7);
+
+  // C11 = M1 + M4 - M5 + M7
+  for (i = 0; i < qLength; i++) {
+    c11[i] = m1[i] + m4[i] - m5[i] + m7[i];
+  }
+
+  // C12 = M3 + M5
+  for (i = 0; i < qLength; i++) {
+    c12[i] = m3[i] + m5[i];
+  }
+
+  // C21 = M2 + M4
+  for (i = 0; i < qLength; i++) {
+    c21[i] = m2[i] + m4[i];
+  }
+
+  // C22 = M1 - M2 + M3 + M6
+  for (i = 0; i < qLength; i++) {
+    c22[i] = m1[i] - m2[i] + m3[i] + m6[i];
+  }
+
+  assembleMatrix(size, result, c11, c12, c21, c22);
+
+  delete[] a11;
+  delete[] b11;
+  delete[] c11;
+  delete[] m1;
+}
+\end{lstlisting}
+
+\item Функция обычного умножения матриц
+
+\par Используется, если в функцию \lstinline{strassenRecursivePart} переданы матрицы с размерами 128 или меньше.
+
+\begin{lstlisting}
+void multSeq(int size, double* result,
+             const double* a, const double* b) {
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) {
+      result[i * size + j] = 0.0;
+      for (int k = 0; k < size; k++) {
+        result[i * size + j] += a[i * size + k] * b[k * size + j];
+      }
+    }
+  }
+}
+\end{lstlisting}
+\par Схема распараллеливания не зависит от используемой технологии. Меняется только реализация функции \lstinline{strassenRecursivePart}, а именно способ вызова функций \lstinline{strassen1}, \lstinline{strassen2}, \lstinline{strassen3}, \lstinline{strassen4}.
+
+\end{enumerate}
+
+\subsection{OpenMP}
+\par В реализации с использованием OpenMP за параллельный вызов отвечает директива \lstinline{#pragma omp section}. Блоки кода, отмеченные данной директивой, будут выполняться параллельно. Так же важно, что бы параллельная часть программы была отмечена диррективой \lstinline{#pragma omp parallel sections}.
+
+\begin{lstlisting}
+void strassenRecursivePart(int size, double* result,
+                           const double* a, const double* b) {
+  if (size <= 128) {
+    multSeq(size, a, b, result);
+    return;
+  }
+  int qLength = size * size / 4;
+  int i;
+  double* a11 = new double[size * size];
+  double* a12 = a11 + qLength;
+  double* a21 = a12 + qLength;
+  double* a22 = a21 + qLength;
+  double* b11 = new double[size * size];
+  double* b12 = b11 + qLength;
+  double* b21 = b12 + qLength;
+  double* b22 = b21 + qLength;
+  double* c11 = new double[size * size];
+  double* c12 = c11 + qLength;
+  double* c21 = c12 + qLength;
+  double* c22 = c21 + qLength;
+  double* m1 = new double[qLength * 7];
+  double* m2 = m1 + qLength;
+  double* m3 = m2 + qLength;
+  double* m4 = m3 + qLength;
+  double* m5 = m4 + qLength;
+  double* m6 = m5 + qLength;
+  double* m7 = m6 + qLength;
+
+  splitMatrix(size, a, a11, a12, a21, a22);
+  splitMatrix(size, b, b11, b12, b21, b22);
+
+#pragma omp parallel sections shared(a11, a12, a21, a22, b11, b12, b22)
+  {
+// M1 = (A11 + A22)(B11 + B22)
+#pragma omp section
+    { strassen1(size / 2, a11, a22, b11, b22, m1); }
+
+// M2 = (A21 + A22)B11
+#pragma omp section
+    { strassen2(size / 2, a21, a22, b11, m2); }
+
+// M3 = A11(B12 - B22)
+#pragma omp section
+    { strassen3(size / 2, a11, b12, b22, m3); }
+
+// M4 = A22(B21 - B11)
+#pragma omp section
+    { strassen3(size / 2, a22, b21, b11, m4); }
+
+// M5 = (A11 + A12)B22
+#pragma omp section
+    { strassen2(size / 2, a11, a12, b22, m5); }
+
+// M6 = (A21 - A11)(B11 + B12)
+#pragma omp section
+    { strassen4(size / 2, a21, a11, b11, b12, m6); }
+
+// M7 = (A12 - A22)(B21 + B22)
+#pragma omp section
+    { strassen4(size / 2, a12, a22, b21, b22, m7); }
+  }
+
+
+  // C11 = M1 + M4 - M5 + M7
+  for (i = 0; i < qLength; i++) {
+    c11[i] = m1[i] + m4[i] - m5[i] + m7[i];
+  }
+
+  // C12 = M3 + M5
+  for (i = 0; i < qLength; i++) {
+    c12[i] = m3[i] + m5[i];
+  }
+
+  // C21 = M2 + M4
+  for (i = 0; i < qLength; i++) {
+    c21[i] = m2[i] + m4[i];
+  }
+
+  // C22 = M1 - M2 + M3 + M6
+  for (i = 0; i < qLength; i++) {
+    c22[i] = m1[i] - m2[i] + m3[i] + m6[i];
+  }
+
+  assembleMatrix(size, result, c11, c12, c21, c22);
+
+  delete[] a11;
+  delete[] b11;
+  delete[] c11;
+  delete[] m1;
+}
+\end{lstlisting}
+
+
+\subsection{TBB}
+В TBB для параллельного выполнения функций используется класс\\ \lstinline{tbb::task_group}. Чтобы запустить выполнение функции в отдельном потоке нужно вызвать метод \lstinline{run(...)} и передать в него объект типа \lstinline{Func} (в данном случае~-- лямбда-выражение). После всех вызовов \lstinline{run} вызывается метод \lstinline{wait()}, который синхронизирует потоки.
+\par Для корректного выполнения программы в начале выполнения обязательно должен быть создан объект типа \lstinline{tbb::task_scheduler_init}. В конструктор передается количество потоков, доступных программе.
+
+\begin{lstlisting}
+void strassenRecursivePart(int size, double* result,
+                           const double* a, const double* b) {
+  if (size <= 128) {
+    multSeq(size, a, b, result);
+    return;
+  }
+  int qLength = size * size / 4;
+  int i;
+  double* a11 = new double[size * size];
+  double* a12 = a11 + qLength;
+  double* a21 = a12 + qLength;
+  double* a22 = a21 + qLength;
+  double* b11 = new double[size * size];
+  double* b12 = b11 + qLength;
+  double* b21 = b12 + qLength;
+  double* b22 = b21 + qLength;
+  double* c11 = new double[size * size];
+  double* c12 = c11 + qLength;
+  double* c21 = c12 + qLength;
+  double* c22 = c21 + qLength;
+  double* m1 = new double[qLength * 7];
+  double* m2 = m1 + qLength;
+  double* m3 = m2 + qLength;
+  double* m4 = m3 + qLength;
+  double* m5 = m4 + qLength;
+  double* m6 = m5 + qLength;
+  double* m7 = m6 + qLength;
+
+  splitMatrix(size, a, a11, a12, a21, a22);
+  splitMatrix(size, b, b11, b12, b21, b22);
+
+  tbb::task_group tasks;
+
+  // M1 = (A11 + A22)(B11 + B22)
+  tasks.run([=] { strassen1(size / 2, a11, a22, b11, b22, m1); });
+
+  // M2 = (A21 + A22)B11
+  tasks.run([=] { strassen2(size / 2, a21, a22, b11, m2); });
+
+  // M3 = A11(B12 - B22)
+  tasks.run([=] { strassen3(size / 2, a11, b12, b22, m3); });
+
+  // M4 = A22(B21 - B11)
+  tasks.run([=] { strassen3(size / 2, a22, b21, b11, m4); });
+
+  // M5 = (A11 + A12)B22
+  tasks.run([=] { strassen2(size / 2, a11, a12, b22, m5); });
+
+  // M6 = (A21 - A11)(B11 + B12)
+  tasks.run([=] { strassen4(size / 2, a21, a11, b11, b12, m6); });
+
+  // M7 = (A12 - A22)(B21 + B22)
+  tasks.run([=] { strassen4(size / 2, a12, a22, b21, b22, m7); });
+
+  tasks.wait();
+
+  // C11 = M1 + M4 - M5 + M7
+  for (i = 0; i < qLength; i++) {
+    c11[i] = m1[i] + m4[i] - m5[i] + m7[i];
+  }
+
+  // C12 = M3 + M5
+  for (i = 0; i < qLength; i++) {
+    c12[i] = m3[i] + m5[i];
+  }
+
+  // C21 = M2 + M4
+  for (i = 0; i < qLength; i++) {
+    c21[i] = m2[i] + m4[i];
+  }
+
+  // C22 = M1 - M2 + M3 + M6
+  for (i = 0; i < qLength; i++) {
+    c22[i] = m1[i] - m2[i] + m3[i] + m6[i];
+  }
+
+  assembleMatrix(size, result, c11, c12, c21, c22);
+
+  delete[] a11;
+  delete[] b11;
+  delete[] c11;
+  delete[] m1;
+}
+\end{lstlisting}
+
+\subsection{C++ std::threads}
+
+Реализаци с использованием \lstinline{std::thread} похожа на реализацию через \lstinline{tbb::task_group}. В данном случае создается 7 объектов типа \lstinline{std::thread}, каждому из которых в конструктор передается функция, которую нужно выполнить и список аргументов, с которыми она будет вызвана. После создания потоков они синхронизируются с помощью вызовов метода \lstinline{join()} для каждого потока.
+
+\begin{lstlisting}
+void strassenRecursivePart(int size, double* result,
+                           const double* a, const double* b) {
+  if (size <= 128) {
+    multSeq(size, a, b, result);
+    return;
+  }
+  int qLength = size * size / 4;
+  int i;
+  double* a11 = new double[size * size];
+  double* a12 = a11 + qLength;
+  double* a21 = a12 + qLength;
+  double* a22 = a21 + qLength;
+  double* b11 = new double[size * size];
+  double* b12 = b11 + qLength;
+  double* b21 = b12 + qLength;
+  double* b22 = b21 + qLength;
+  double* c11 = new double[size * size];
+  double* c12 = c11 + qLength;
+  double* c21 = c12 + qLength;
+  double* c22 = c21 + qLength;
+  double* m1 = new double[qLength * 7];
+  double* m2 = m1 + qLength;
+  double* m3 = m2 + qLength;
+  double* m4 = m3 + qLength;
+  double* m5 = m4 + qLength;
+  double* m6 = m5 + qLength;
+  double* m7 = m6 + qLength;
+
+  splitMatrix(size, a, a11, a12, a21, a22);
+  splitMatrix(size, b, b11, b12, b21, b22);
+
+  // M1 = (A11 + A22)(B11 + B22)
+  std::thread thread1(strassen1, size / 2, a11, a22, b11, b22, m1);
+
+  // M2 = (A21 + A22)B11
+  std::thread thread2(strassen2, size / 2, a21, a22, b11, m2);
+
+  // M3 = A11(B12 - B22)
+  std::thread thread3(strassen3, size / 2, a11, b12, b22, m3);
+
+  // M4 = A22(B21 - B11)
+  std::thread thread4(strassen3, size / 2, a22, b21, b11, m4);
+
+  // M5 = (A11 + A12)B22
+  std::thread thread5(strassen2, size / 2, a11, a12, b22, m5);
+
+  // M6 = (A21 - A11)(B11 + B12)
+  std::thread thread6(strassen4, size / 2, a21, a11, b11, b12, m6);
+
+  // M7 = (A12 - A22)(B21 + B22)
+  std::thread thread7(strassen4, size / 2, a12, a22, b21, b22, m7);
+
+  thread1.join();
+  thread2.join();
+  thread3.join();
+  thread4.join();
+  thread5.join();
+  thread6.join();
+  thread7.join();
+
+  // C11 = M1 + M4 - M5 + M7
+  for (i = 0; i < qLength; i++) {
+    c11[i] = m1[i] + m4[i] - m5[i] + m7[i];
+  }
+
+  // C12 = M3 + M5
+  for (i = 0; i < qLength; i++) {
+    c12[i] = m3[i] + m5[i];
+  }
+
+  // C21 = M2 + M4
+  for (i = 0; i < qLength; i++) {
+    c21[i] = m2[i] + m4[i];
+  }
+
+  // C22 = M1 - M2 + M3 + M6
+  for (i = 0; i < qLength; i++) {
+    c22[i] = m1[i] - m2[i] + m3[i] + m6[i];
+  }
+
+  assembleMatrix(size, result, c11, c12, c21, c22);
+
+  delete[] a11;
+  delete[] b11;
+  delete[] c11;
+  delete[] m1;
+}
+\end{lstlisting}
+
+
+\newpage
+\section{Результаты экспериментов}
+\par Условия проведения эксперимента:
+\begin{itemize}[label={}]
+\item Размер матрицы: 2048$\times$2048
+\item Процессов: Intel Xeon E3 1270 3.4GHz
+\item Количество потоков: 8
+\item Объем RAM: 8GB
+\item ОС: Windows 10 Pro
+\end{itemize}
+\par Время указано в секундах. Эффективность считается относительно однопоточной версии алгоритма Штрассена.
+\begin{center}
+Время выполнения
+\begin{tabular}{|c|c|c|c|}
+OpenMP & TBB & std::thread & Однопоточная версия \\
+2.03 & 3.00 & 3.34 & 6.75
+\end{tabular}
+Эффективность
+\begin{tabular}{|c|c|c|}
+OpenMP & TBB & std::thread \\
+3.33 & 2.25 & 2.02
+\end{tabular}
+\end{center}
+
+\newpage
+\section{Заключение}
+\par В результате эксперимента выяснилось, что для реализации параллельной версии алгоритма Штрассена лучше всего применять технологию OpenMP. Прочие реализации оказались менее эффективными из-за наличия накладных расходов на создание объектов \lstinline{std::thread} в C++ std::thread версии и вызов \lstinline{tbb::task_group.run()} в версии с использованием TBB.
+
+
+
+\newpage
+\section{Литература}
+\begin{enumerate}
+\item Voss, Michael, Asenjo, Rafael, Reinders, James~--Pro TBB. C++ Parallel Programming with Threading Building Blocks. Первое издание, 2019
+\item Антонов А.С. "Параллельное программирование с использованием технологии OpenMP: Учебное пособие".-М.: Изд-во МГУ, 2009. - 77 с. 19.04.2020)
+\end{enumerate}
+
+
+
+\newpage
+\section{Приложение}
+В данном разделе находится листинг всего кода, написанного в рамках лабораторной работы.
+
+\subsection{Однопоточная версия}
+\lstinputlisting[language=C++]{../../../modules/task_1/zhivaev_a_strassen_mult/strassen_mult.h}
+\lstinputlisting[language=C++]{../../../modules/task_1/zhivaev_a_strassen_mult/strassen_mult.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_1/zhivaev_a_strassen_mult/main.cpp}
+
+\subsection{OpenMP}
+\lstinputlisting[language=C++]{../../../modules/task_2/zhivaev_a_strassen_mult_openmp/strassen_mult_openmp.h}
+\lstinputlisting[language=C++]{../../../modules/task_2/zhivaev_a_strassen_mult_openmp/strassen_mult_openmp.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_2/zhivaev_a_strassen_mult_openmp/main.cpp}
+
+\subsection{TBB}
+\lstinputlisting[language=C++]{../../../modules/task_3/zhivaev_a_strassen_tbb/strassen_tbb.h}
+\lstinputlisting[language=C++]{../../../modules/task_3/zhivaev_a_strassen_tbb/strassen_tbb.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_3/zhivaev_a_strassen_tbb/main.cpp}
+
+\subsection{C++ std::thread}
+\lstinputlisting[language=C++]{../../../modules/task_4/zhivaev_a_strassen/strassen_std_thread.h}
+\lstinputlisting[language=C++]{../../../modules/task_4/zhivaev_a_strassen/strassen_std_thread.cpp}
+\lstinputlisting[language=C++]{../../../modules/task_4/zhivaev_a_strassen/main.cpp}
+
+\end{document}
