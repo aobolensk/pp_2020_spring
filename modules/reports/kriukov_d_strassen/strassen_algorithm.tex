@@ -1,0 +1,231 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+
+\geometry{a4paper,top=2cm,bottom=3cm,left=2cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
+
+\lstset{language=C++,
+		basicstyle=\footnotesize,
+		keywordstyle=\color{blue}\ttfamily,
+		stringstyle=\color{red}\ttfamily,
+		commentstyle=\color{green}\ttfamily,
+		morecomment=[l][\color{magenta}]{\#}, 
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
+}
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации
+\end{center}
+
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики
+\end{center}
+
+\vspace{4em}
+
+\begin{center}
+\textbf{\LargeОтчет по лабораторной работе} \\
+\end{center}
+\begin{center}
+\textbf{\Large«Умножение плотных матриц. Элементы типа double. Алгоритм Штрассена.»} \\
+\end{center}
+
+\vspace{4em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381706-2 \\ Крюков Д. А.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+Умножение матриц – это одна из основных вычислительных операций. Вычислительная сложность стандартного алгоритма умножения матриц порядка N составляет O(${N^3}$).
+Существует более сложное для программирования решение на основе алгоритма Штрассена, которое позволяет сократить вычислительную сложность до O(${N*log7}$). 
+\par Рекурсивная природа данного алгоритма представляет большую сложность для эффективного распараллеливания на современных вычислительных системах и использования данных из памяти.
+\par В данной работе представлена реализация алгоритма Штрассена с использованием различных технологий распаралелливания
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+
+Целью данной работы является реализация:
+
+\begin{enumerate} 
+
+\item Наивного алгоритма умножения матриц
+\item Алгоритма Штрассена для умножения матриц
+\item Параллельной версии алгоритма Штрассена с использованием OMP
+\item Параллельной версии алгоритма Штрассена с использованием TBB
+\item Параллельной версии алгоритма Штрассена с использованием std:threads
+\item Автоматических тестов для проверки корректности выполнения, а также сравнения времени выполнения
+
+\end{enumerate} 
+
+\newpage
+
+\section*{Описание алгоритма}
+\addcontentsline{toc}{section}{Описание алгоритма}
+
+Пусть A, B — две квадратные матрицы над кольцом R. Матрица C получается по формуле:
+
+${\displaystyle \mathbf {C} =\mathbf {A} \mathbf {B} \qquad \mathbf {A} ,\mathbf {B} ,\mathbf {C} \in R^{2^{n}\times 2^{n}}}{\mathbf  {C}}={\mathbf  {A}}{\mathbf  {B}}\qquad {\mathbf  {A}},{\mathbf  {B}},{\mathbf  {C}}\in R^{{2^{n}\times 2^{n}}}$
+\par Если размер умножаемых матриц n не является натуральной степенью двойки, мы дополняем исходные матрицы дополнительными нулевыми строками и столбцами. При этом мы получаем удобные для рекурсивного умножения размеры, но теряем в эффективности за счёт дополнительных ненужных умножений.
+
+\par Разделим матрицы A, B и C на равные по размеру блочные матрицы, тогда
+
+\par ${\displaystyle \mathbf {C} _{1,1}=\mathbf {A} _{1,1}\mathbf {B} _{1,1}+\mathbf {A} _{1,2}\mathbf {B} _{2,1}}$
+\par ${\displaystyle \mathbf {C} _{1,2}=\mathbf {A} _{1,1}\mathbf {B} _{1,2}+\mathbf {A} _{1,2}\mathbf {B} _{2,2}}$
+\par ${\displaystyle \mathbf {C} _{2,1}=\mathbf {A} _{2,1}\mathbf {B} _{1,1}+\mathbf {A} _{2,2}\mathbf {B} _{2,1}}$
+\par ${\displaystyle \mathbf {C} _{2,2}=\mathbf {A} _{2,1}\mathbf {B} _{1,2}+\mathbf {A} _{2,2}\mathbf {B} _{2,2}}$
+
+\par Однако с помощью этой процедуры нам не удалось уменьшить количество умножений. Как и в обычном методе, нам требуется 8 умножений.
+
+Теперь определим новые элементы
+
+\par ${\displaystyle \mathbf {P} _{1}:=(\mathbf {A} _{1,1}+\mathbf {A} _{2,2})(\mathbf {B} _{1,1}+\mathbf {B} _{2,2})}$
+\par ${\displaystyle \mathbf {P} _{2}:=(\mathbf {A} _{2,1}+\mathbf {A} _{2,2})\mathbf {B} _{1,1}}$
+\par ${\displaystyle \mathbf {P} _{3}:=\mathbf {A} _{1,1}(\mathbf {B} _{1,2}-\mathbf {B} _{2,2})}$
+\par ${\displaystyle \mathbf {P} _{4}:=\mathbf {A} _{2,2}(\mathbf {B} _{2,1}-\mathbf {B} _{1,1})}$
+\par ${\displaystyle \mathbf {P} _{5}:=(\mathbf {A} _{1,1}+\mathbf {A} _{1,2})\mathbf {B} _{2,2}}$
+\par ${\displaystyle \mathbf {P} _{6}:=(\mathbf {A} _{2,1}-\mathbf {A} _{1,1})(\mathbf {B} _{1,1}+\mathbf {B} _{1,2})}$
+\par ${\displaystyle \mathbf {P} _{7}:=(\mathbf {A} _{1,2}-\mathbf {A} _{2,2})(\mathbf {B} _{2,1}+\mathbf {B} _{2,2})}$
+
+\par Которые затем используются для выражения ${{C} _{i ,j}}$. 
+\par Таким образом, нам нужно всего 7 умножений на каждом этапе рекурсии. Элементы матрицы C выражаются из Pk по формулам
+
+\par ${\displaystyle \mathbf {C} _{1,1}=\mathbf {P} _{1}+\mathbf {P} _{4}-\mathbf {P} _{5}+\mathbf {P} _{7}}$
+\par ${\displaystyle \mathbf {C} _{1,2}=\mathbf {P} _{3}+\mathbf {P} _{5}}$
+\par ${\displaystyle \mathbf {C} _{2,1}=\mathbf {P} _{2}+\mathbf {P} _{4}}$
+\par ${\displaystyle \mathbf {C} _{2,2}=\mathbf {P} _{1}-\mathbf {P} _{2}+\mathbf {P} _{3}+\mathbf {P} _{6}}$
+\par Рекурсивный процесс продолжается n раз, до тех пор пока размер матриц Ci, j не станет достаточно малым, далее используют обычный метод умножения матриц.
+
+\newpage
+
+\section*{Схема распараллеливания}
+\addcontentsline{toc}{section}{Схема распараллеливания}
+\subsection*{OpenMP}
+\par В OMP-реализации алгоритма Штрассена каждая итерация умножения выделяется в отдельную задачу, выполняемую отдельным потоком. При запуске функции в пулл задач попадает 7 задач, каждая из которых помещает в пулл еще 7 задач, поток завершивший выполнение своей задачи приступает к выполнению следующей. Для реализации такого способа распаралелливания в OMP используется директива \verb|#omp sections| (смотреть код в приложении)
+
+\subsection*{TBB}
+
+\par Алгоритм распараллеливания в TBB аналоичен алгоритму в OMP, для реализации такого способа распаралелливания в TBB используется структура \verb|tbb::task_group| (смотреть код в приложении)
+
+\subsection*{std::threads}
+
+\par В std:threads отсутствует готовый инструмент для реализации пула задач, поэтому наиболее эффективным способом явлется разделение задачи на 7 параллельно работающих потоков с синхронизацие по завершению выполнения, для этого в std:threads достаточно создать нужное количество потоков при помощи конструктора \verb|std::thread|, определить им задачу и дождаться выполнения работы всех потоков, вызвав в основном потоке команду \verb|join()| для каждого потока.
+
+\newpage
+
+\section*{Эксперименты}
+\addcontentsline{toc}{section}{Результаты экспериментов}
+Конфигурация системы:
+\begin{itemize}
+\item Процессор: AMD Ryzen 5 2600 Six-Core Processor 3.40 GHz 
+\item Оперативная память:  16.0 ГБ;
+\end{itemize}
+
+\par Эксперименты проводились для всех представленных реализаций алгоритма Штрассена на матрицах разлиных размеров, результаты представлены в таблице:
+
+\begin{table}[!h]
+\caption{Результаты экспериментов}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+{\begin{tabular}[c]{@{}c@{}}Matrix\\ size\end{tabular}} & 
+\hbox{Sequential} & 
+\multicolumn{2}{c|}{OpenMP} & 
+\multicolumn{2}{c|}{TBB} & 
+\multicolumn{2}{c|}{std::thread} 
+\\ \cline{2-8}
+	& time, s	    & time, s & speedup		& time, s & speedup		& time, s & speedup		\\ \hline
+2048   & 8.489     & 3.062 & 2,56       	& 1.773 & 4.79         	& 2.411  & 3,52            \\ \hline
+4096   & 58.499     & 20.193 & 2.89       	& 11.725 & 4.99        	& 16.346  & 3,58          \\ \hline
+8192   & 413.63     & 137.994 & 2.99      	& 78.500 & 5.28        	& 98.788 & 4.18          \\ \hline
+\end{tabular}
+\end{table}
+ 
+ 
+\par Как видно из полученных данных, наибольший прирост имеет алгоритм с использованием библиотеки TBB, это объяснется тем, что планировщик задач TBB соптимизирован для использования рекурсий. Также из результатов экспериментов видно, что распределение задач на несколько потоков без использования пулла задач тоже является приемлемым способом распараллеливания, так как планировщик задач может потреблять слишком много ресурсов на распределение, как в случае с OMP. Тем ни менее этот способ не даст дополнительного прироста производительности при увеличении числа потоков больше 7. 
+\par Таким образом, наиболее эффективной реализацией является реализация с использованием библиотеки TBB.
+ 
+\newpage
+
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+
+\par В ходе работы был изучен алгоритм Штрассена для умножения матриц, реализована последовательная версия алгоритма и параллельные версии с использованием библиотек OMP, TBB и std::threads. Корректность всех реализованных алгоритмов доказана при помощи  библиотеки для модульного тестирования Google C++ Testing Framework. Также были проведены эксперименты с замером времени. Из результатов экспериментов был сделан вывод что для реализации рекурсивных алгоритмов наиболее эффективна библиотека TBB
+
+\newpage
+
+\begin{thebibliography}{1}
+\addcontentsline{toc}{section}{Список литературы}
+
+\bibitem{Barkalov} Баркалов К.А. Методы параллельных вычислений. Н. Новгород: Изд-во Нижегородского госуниверситета им. Н.И. Лобачевского, 2011
+
+\bibitem{Wiki1} Wikipedia: the free encyclopedia [Электронный ресурс] // URL: https://ru.wikipedia.org/wiki/ \verb|Алгоритм_Штрассена| (дата обращения: 19.03.2020)
+
+\end{thebibliography}
+\newpage
+
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+
+\lstinputlisting{../../../../modules/task_1/kriukov_strassen_algorithm/strassen_algorithm.h}
+\lstinputlisting{../../../../modules/task_1/kriukov_strassen_algorithm/strassen_algorithm.cpp}
+\lstinputlisting{../../../../modules/task_1/kriukov_strassen_algorithm/main.cpp}
+
+\lstinputlisting{../../../../modules/task_2/kriukov_strassen_algorithm/strassen_algorithm.h}
+\lstinputlisting{../../../../modules/task_2/kriukov_strassen_algorithm/strassen_algorithm.cpp}
+\lstinputlisting{../../../../modules/task_2/kriukov_strassen_algorithm/main.cpp}
+
+\lstinputlisting{../../../../modules/task_3/kriukov_strassen_algorithm/strassen_algorithm.h}
+\lstinputlisting{../../../../modules/task_3/kriukov_strassen_algorithm/strassen_algorithm.cpp}
+\lstinputlisting{../../../../modules/task_3/kriukov_strassen_algorithm/main.cpp}
+
+\lstinputlisting{../../../../modules/task_4/kriukov_strassen_algorithm/strassen_algorithm.h}
+\lstinputlisting{../../../../modules/task_4/kriukov_strassen_algorithm/strassen_algorithm.cpp}
+\lstinputlisting{../../../../modules/task_4/kriukov_strassen_algorithm/main.cpp}
+
+
+\end{document}
