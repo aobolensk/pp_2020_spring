@@ -1,0 +1,415 @@
+\documentclass{article}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\newenvironment{myalgorithm}[1][htb]
+  {\renewcommand{\algorithmcfname}{Алгоритм}
+   \begin{algorithm}[#1]%
+  }{\end{algorithm}}
+
+\setlength{\parskip}{3mm}
+\geometry{a4paper,top=20mm,bottom=20mm,left=25mm,right=15mm}
+\setlist{nolistsep, itemsep=0.5cm,parsep=0pt}
+
+\usepackage{xcolor}
+
+\colorlet{mygray}{black!30}
+\colorlet{mygreen}{green!60!blue}
+\colorlet{mymauve}{red!60!blue}
+\colorlet{myred}{red!60!blue}
+
+\lstset{
+  backgroundcolor=\color{gray!10},  
+  basicstyle=\fontsize{13}{13}\ttfamily,
+  columns=fullflexible,
+  breakatwhitespace=false,      
+  breaklines=true,                
+  captionpos=b,                    
+  commentstyle=\color{mygreen}, 
+  extendedchars=true,              
+  frame=single,                   
+  keepspaces=true,             
+  keywordstyle=\color{blue},      
+  language=c++,                 
+  numbers=none,                
+  numbersep=1pt,                   
+  numberstyle=\tiny\color{blue}, 
+  rulecolor=\color{mygray},        
+  showspaces=false,               
+  showtabs=false,                                  
+  stringstyle=\color{mymauve},                         
+  title=\lstname                
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации \\
+\vspace{5mm}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского \\
+\vspace{1cm}
+Институт информационных технологий, математики и механики \\
+\vspace{5cm}
+\textbf{\large Отчет по лабораторной работе} \\
+\vspace{8mm}
+\textbf{\Large «Алгоритм Штрассена»} \\
+\end{center}
+
+\vspace{3cm}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381706-1 \\ Резанцев С. А.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} 
+Нижний Новгород \\ 2020
+\end{center}
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Введение}
+Алгоритм Штрассена был разработан Фолькером Штрассеном в 1969 году и предназначен для быстрого умножения матриц. Несмотря на то, что алгоритм Штрассена является не самым быстрым из существующих алгоритмов умножения матриц, он довольно прост в реализации. Алгоритм Штрассена имеет меньшую асимптотическую сложность чем традиционный алгоритм умножения и потенциально быстрее на больших размерах матриц. 
+
+\par В настоящее время множество задач требуют проведение трудоемких операций над большими плотными матрицами за минимальное время.  Для решения этой проблемы предлагается ускорить алгоритм Штрассена с помощю распараллеливания вычислений. Однако рекурсивная природа данного алгоритма представляет определенную сложность для эффективного распараллеливания на современных вычислительных системах и использования данных из памяти.
+
+\par Для разработки параллельных программ широко шспользуется применение тех или иных библиотек, обеспечивающих определенный программный интерфейс (API). Наиболее распространенными API являются: OpenMP, TBB и std::thread. 
+
+\par Целью данной лабораторной работы является разработка параллельного алгоритма Штрассена и нахождение наиболее подходящего программного интерфейса для распараллеливания данной задачи.
+
+\newpage
+
+\section{Постановка задачи}
+В рамках данной лабораторной работы нужно реализовать параллельный алгоритм решения задачи глобальной оптимизации.
+
+\par Необходимо реализовать следующие компоненты:
+ 
+\begin{enumerate}
+\item Последовательный алгоритм Штрассена.
+\item Параллельный алгоритм Штрассена с использованием технологий OpenMP, TBB и std::threads.
+\item Вспомогательные функции для проверки работоспособности и эффективности
+\end{enumerate}
+
+\par Программное решение будет выглядеть следующим образом: 
+ 
+\begin{enumerate}
+\item Модули, содержащие реализацию библиотек. 
+\item Наборы автоматических тестов с использованием Google C++ Testing Framework.
+\end{enumerate}
+
+
+\newpage
+
+\section{Метод решения}
+Метод Штрассена для умножения матриц размера $2^n$ основан на рекурсивном делении каждой перемножаемой матрицы на 4 подматрицы и выполнении операций над ними.  Если размер умножаемых матриц не является натуральной степенью двойки, мы дополняем исходные матрицы дополнительными нулевыми строками и столбцами. При этом мы получаем удобные для рекурсивного умножения размеры, но теряем в эффективности за счёт дополнительных ненужных умножений.
+
+\par Пусть \verb|A, B| ~--- две квадратные матрицы размера $2^n$. Матрица \verb|C| получается по формуле:
+
+\begin{center} 
+ $C=AB$
+\end{center}
+
+\par Тогда подматрицы матрицы \verb|C| можно описать следующими формулами:
+
+\begin{center} 
+$C_{11}=P_1+P_4-P_5+P_7$
+
+$C_{12}=P_3+P_5$
+
+$C_{21}=P_2+P_4$
+
+$C_{22}=P_1-P_2+P_3+P_6,$
+\end{center}
+
+где
+
+\begin{center} 
+$P_1=(A_{11}+A_{22})*(B_{11}+B_{22})$
+
+$P_2=(A_{21}+A_{22})*B_{11}$
+
+$P_3=A_{11}*(B_{12}-B_{22})$
+
+$P_4=A_{22}*(B_{21}-B_{11})$
+
+$P_5=(A_{11}+A_{12})*B_{22}$
+
+$P_6=(A_{21}-A_{11})*(B_{11}+B_{12})$
+
+$P_7=(A_{12}-A_{22})*(B_{21}+B_{22})$
+\end{center}
+
+\par Рекурсивный процесс продолжается n раз, до тех пор пока размер матриц  $C_{ij}$ не станет достаточно малым, далее используют обычный метод умножения матриц. Это делают из-за того, что алгоритм Штрассена теряет эффективность по сравнению с обычным на малых матрицах в силу большего числа сложений. Оптимальный размер матриц для перехода к обычному умножению зависит от характеристик процессора и языка программирования и на практике лежит в пределах от 32 до 128.
+
+\newpage
+
+\section{Схема распараллеливания}
+Для распараллеливания данного алгоритма вполне достаточно выполнить параллельно семь операций: 
+
+\begin{center} 
+$P_1=(A_{11}+A_{22})*(B_{11}+B_{22})$
+
+$P_2=(A_{21}+A_{22})*B_{11}$
+
+$P_3=A_{11}*(B_{12}-B_{22})$
+
+$P_4=A_{22}*(B_{21}-B_{11})$
+
+$P_5=(A_{11}+A_{12})*B_{22}$
+
+$P_6=(A_{21}-A_{11})*(B_{11}+B_{12})$
+
+$P_7=(A_{12}-A_{22})*(B_{21}+B_{22})$
+\end{center}
+
+\par Кроме того, возможно параллельное выполнение последующих операций сложения, а также разделения и слияния подматриц, однако распараллеливание данных операций не дает значительного ускорения.
+
+\newpage
+
+\section{Описание программной реализации}
+Для реалицации параллельной версии алгоритма Штрассена будут использоваться: OpenMP, TBB и std::threads. Стоит уточнить, что схема распараллеливания для каждой из технологий одна и таже, менятся будут лишь методы.
+
+\subsection{OpenMP}
+Для параллелизации используется директива 
+\verb|#pragma omp parallel sections|. 
+\par Реализация алгоритма Штрассена с помощью OpenMP:
+
+\vspace{10pt}
+\begin{lstlisting}
+#pragma omp parallel sections default(shared)
+  {
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      std::vector<double> t2(h * h);
+      sumMatrix(a11, a22, &t1);
+      sumMatrix(b11, b22, &t2);
+      strassen_omp(t1, t2, &p1);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      sumMatrix(a21, a22, &t1);
+      strassen_omp(t1, b11, &p2);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      subtMatrix(b12, b22, &t1);
+      strassen_omp(a11, t1, &p3);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      subtMatrix(b21, b11, &t1);
+      strassen_omp(a22, t1, &p4);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      sumMatrix(a11, a12, &t1);
+      strassen_omp(t1, b22, &p5);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      std::vector<double> t2(h * h);
+      subtMatrix(a21, a11, &t1);
+      sumMatrix(b11, b12, &t2);
+      strassen_omp(t1, t2, &p6);
+    }
+#pragma omp section
+    {
+      std::vector<double> t1(h * h);
+      std::vector<double> t2(h * h);
+      subtMatrix(a12, a22, &t1);
+      sumMatrix(b21, b22, &t2);
+      strassen_omp(t1, t2, &p7);
+    }
+  }
+\end{lstlisting}
+\vspace{-25pt}
+
+\subsection{TBB}
+Для параллелизации используется \verb|tbb::task_group|.
+
+\par Реализация алгоритма Штрассена с помощью TBB:
+
+\vspace{10pt}
+\begin{lstlisting}
+  tbb::task_scheduler_init init(8);
+  tbb::task_group tasks;
+  tasks.run(
+      [=] { strassen(sumMatrix(a11, a22, n), sumMatrix(b11, b22, n), p1); });
+  tasks.run([=] { strassen(sumMatrix(a21, a22, n), b11, p2); });
+
+  tasks.run([=] { strassen(a11, subtMatrix(b12, b22, n), p3); });
+  tasks.run([=] { strassen(a22, subtMatrix(b21, b11, n), p4); });
+
+  tasks.run([=] { strassen(sumMatrix(a11, a12, n), b22, p5); });
+  tasks.run(
+      [=] { strassen(subtMatrix(a21, a11, n), sumMatrix(b11, b12, n), p6); });
+  tasks.run(
+      [=] { strassen(subtMatrix(a12, a22, n), sumMatrix(b21, b22, n), p7); });
+  tasks.wait();
+\end{lstlisting}
+\vspace{-25pt}
+
+\subsection{std::threads}
+Для параллелизации используются объекты \verb|std::thread|.
+
+\par  Реализация алгоритма Штрассена с помощью std::threads:
+
+\vspace{10pt}
+\begin{lstlisting}
+  std::thread tread1(strassen, sumMatrix(a11, a22, n),
+                     sumMatrix(b11, b22, n), &p1);
+  std::thread tread2(strassen, sumMatrix(a21, a22, n), b11, &p2);
+  
+  std::thread tread3(strassen, a11, subtMatrix(b12, b22, n), &p3);
+  std::thread tread4(strassen, a22, subtMatrix(b21, b11, n), &p4);
+  
+  std::thread tread5(strassen, sumMatrix(a11, a12, n), b22, &p5);
+  std::thread tread6(strassen, subtMatrix(a21, a11, n),
+                     sumMatrix(b11, b12, n), &p6);
+  std::thread tread7(strassen, subtMatrix(a12, a22, n),
+                     sumMatrix(b21, b22, n), &p7);
+  tread1.join();
+  tread2.join();
+  tread3.join();
+  tread4.join();
+  tread5.join();
+  tread6.join();
+  tread7.join();
+\end{lstlisting}
+\vspace{-25pt}
+
+\newpage
+
+\section{Подтверждение корректности}
+Для подтверждения корректности в программе представлен набор тестов, разработанных с помощью использования Google C++ Testing Framework.
+
+
+\par Тесты проверяют корректную работу последовательного и параллельного алгоритмов Штрассена и сравнивают с результатами традиционного алгоритма умножения матриц.
+
+
+\newpage
+
+\section{Результаты экспериментов}
+Вычислительные эксперименты проводились на ПК со следующей аппаратной конфигурацией:
+
+\begin{itemize}
+\item Операционная система: Windows 10 Home, версия 1903, сборка 18362.535
+\item Процессор: Intel Core i5-8250U 1.6GHz
+\item Число ядер: 4;
+\item Оперативная память: 8 ГБ
+\item Версия Visual Studio: 2017
+\end{itemize}
+
+\par В таблице 1 приведены результаты экспериментов. 
+
+\par Размер матрицы: 1024x1024.
+
+\begin{table}[!h]
+\caption{Ускорение алгоритма в зависимости от числа потоков.}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+	{\begin{tabular}[c]{@{}c@{}}Количество\\ потоков\end{tabular}} & 
+	{\begin{tabular}[c]{@{}c@{}}Ускорение\\OpenMP\end{tabular}} & 
+	{\begin{tabular}[c]{@{}c@{}}Ускорение\\TBB\end{tabular}} & 
+	{\begin{tabular}[c]{@{}c@{}}Ускорение\\std\end{tabular}}
+\\ \cline{1-4}
+
+1	& 0.997	 & 1.007	& 0.980	\\ \hline
+2   & 1.678     & 1.642    	& 1.599     \\ \hline
+4   & 2.514     & 2.444    	& 2.386     \\ \hline
+\end{tabular}
+\end{table}
+
+\par Следовательно, для распараллеливания алгоритма Штрассена лучшей является технология OpenMP.
+
+\par Следует отметить, что распараллеливане слияния и разделения матриц, а также операций сложения, не дают существенных преимуществ: изменение времени выполнения программы на уровне погрешностей. Проверено с использованием технологии OpenMP.
+
+\newpage
+
+\section{Заключение}
+В результате лабораторной работы были разработаны библиотеки, реализующие алгоритм Штрассена.
+
+\par Реализация параллельной версии алгоритма с использованием технологий OpenMP, TBB и std::threads была успешно достигнута, о чем говорят результаты экспериментов, проведенных в ходе работы. Они показывают, что лучшей технологией для реализации параллельного алгоритма Штрассена является OpenMP.
+
+\par Для подтверждения корректности работы программы были разработаны и доведены до успешного выполнения тесты, созданные с использованием Google C++ Testing Framework.
+
+\newpage
+
+\section{Список литературы}
+\begin{enumerate}
+\bibitem{OMP} Гергель В.П. Учебный курс «Введение в методы параллельного программирования», раздел «Параллельное программирование с использованием OpenMP». Нижний Новгород, ННГУ, 2007, 33 с.
+
+\bibitem{TBB} А.А. Сиднев, А.В. Сысоев, И.Б. Мееров. Учебный курс «Технологии разработки параллельных программ», раздел «Создание параллельной программы», «Библиотека Intel Threading Building Blocks~--- краткое описание». Нижний Новгород, ННГУ, 2007, 29 с. 
+
+\bibitem{STD} Справочник по конструкциям языка C++, раздел std::thread // URL: https://ru.cppreference.com/
+
+\end{enumerate}
+
+\newpage
+
+\section{Приложение}
+
+\subsection{Последовательный алгоритм Штрассена}
+
+\lstinputlisting[language=C++]{../../../../modules/task_1/rezantsev_s_strassen/strassen.h}
+\lstinputlisting[language=C++]{../../../../modules/task_1/rezantsev_s_strassen/strassen.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_1/rezantsev_s_strassen/main.cpp}
+
+\subsection{OpenMP}
+
+\lstinputlisting[language=C++]{../../../../modules/task_2/rezantsev_s_strassen_omp/strassen.h}
+\lstinputlisting[language=C++]{../../../../modules/task_2/rezantsev_s_strassen_omp/strassen.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_2/rezantsev_s_strassen_omp/main.cpp}
+
+\subsection{TBB}
+
+\lstinputlisting[language=C++]{../../../../modules/task_3/rezantsev_s_strassen_tbb/strassen.h}
+\lstinputlisting[language=C++]{../../../../modules/task_3/rezantsev_s_strassen_tbb/strassen.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_3/rezantsev_s_strassen_tbb/main.cpp}
+
+\subsection{std::threads}
+
+\lstinputlisting[language=C++]{../../../../modules/task_4/rezantsev_s_strassen_std/strassen.h}
+\lstinputlisting[language=C++]{../../../../modules/task_4/rezantsev_s_strassen_std/strassen.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_4/rezantsev_s_strassen_std/main.cpp}
+
+
+\end{document}
