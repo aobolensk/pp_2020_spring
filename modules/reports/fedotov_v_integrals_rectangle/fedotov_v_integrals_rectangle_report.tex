@@ -1,0 +1,422 @@
+\documentclass{article}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+\setlength{\parskip}{3mm}
+\geometry{a4paper,top=20mm,bottom=20mm,left=25mm,right=15mm}
+\setlist{nolistsep, itemsep=0.5cm,parsep=0pt}
+
+\usepackage{xcolor}
+
+\colorlet{mygray}{black!30}
+\colorlet{mygreen}{green!60!blue}
+\colorlet{mymauve}{red!60!blue}
+\colorlet{myred}{red!60!blue}
+
+\lstset{
+  backgroundcolor=\color{gray!10},  
+  basicstyle=\fontsize{13}{13}\ttfamily,
+  columns=fullflexible,
+  breakatwhitespace=false,      
+  breaklines=true,                
+  captionpos=b,                    
+  commentstyle=\color{mygreen}, 
+  extendedchars=true,              
+  frame=single,                   
+  keepspaces=true,             
+  keywordstyle=\color{blue},      
+  language=c++,                 
+  numbers=none,                
+  numbersep=1pt,                   
+  numberstyle=\tiny\color{blue}, 
+  rulecolor=\color{mygray},        
+  showspaces=false,               
+  showtabs=false,                                  
+  stringstyle=\color{mymauve},                         
+  title=\lstname                
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации \\
+\vspace{5mm}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского \\
+\vspace{1cm}
+Институт информационных технологий, математики и механики \\
+\vspace{5cm}
+\textbf{\large Отчет по лабораторной работе} \\
+\vspace{8mm}
+\textbf{\Large «Вычисление многомерных интегралов с использованием многошаговой схемы (метод прямоугольников)»} \\
+\end{center}
+
+\vspace{3cm}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381708-1 \\ Федотов В. И.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} 
+Нижний Новгород \\ 2020
+\end{center}
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\tableofcontents
+
+\newpage
+
+\section{Введение}
+
+\par Вычисление определенного интеграла — в общем случае нетривиальная задача, особенно, если интеграл кратный. Сложность заключается в том, что далеко не для каждой функции ее первообразную можно представить в аналитическом виде. Для нахождения значения определенного интеграла разработаны различные численные методы. Процесс их использования называется численным интегрированием. Оно применяется тогда, когда не представляется возможным аналитическое вычисление интеграла по формуле Ньютона — Лейбница.
+
+\par Целью данной работы является изучение одного из таких методов, а именно — метода прямоугольников, являющегося одним из наиболее известных, понятных и в то же время эффективных.
+
+\newpage
+
+\section{Постановка задачи}
+
+\par Целью данной лабораторной работы является реализация вычислительного метода прямоугольников для вычисления многомерных интегралов 
+\begin{equation}
+I = \int\int\limits_D \, f(x,y) \,dx\,dy
+\end{equation}
+где f(x,y) — непрерывная в области D функция двух переменных x и y.
+
+\par Кроме того, требуется оценить эффективность полученного решения, сравнив параллельные реализации с последовательной и друг с другом.
+
+\par Для достижения данной цели необходимо выполнение ряда задач:
+ 
+\begin{enumerate}
+\item Изучение теоретической базы для понимания формальной постановки задачи и метода её решения с помощью математического аппарата.
+\item Разработать последовательную версию метода прямоугольников.
+\item Разработать параллельную версию метода прямоугольников с использованием OpenMP.
+\item Разработать параллельную версию метода прямоугольников c использованием TBB.
+\item Разработать параллельную версию метода прямоугольников c использованием std::thread.
+\item Убедиться в корректности работы путем модульного тестирования с использованием фреймворка Google Test.
+\item Оценить эффективность каждой из четырех версий программы.
+\end{enumerate}
+
+\newpage
+
+\section{Описание алгоритма}
+
+\par Для вычисления кратного интеграла методом прямоугольников покроем область D сеткой из прямоугольных ячеек.
+
+\par Для приближенного вычисления интеграла в каждой прямоугольной ячейке используется формула средних:
+\begin{equation}
+I = \int\int\limits_D \, f(x,y) \,dx\,dy \approx \sum_{i=1}^{N} f(\overline{x_{i}}, \overline{y_{i}}) \cdot S_i
+\end{equation}
+
+\par Здесь $\overline{x_{i}}, \overline{y_{i}}$ — координаты центра масс ячейки; $S_i$ — площадь ячейки.
+
+\par Если область D имеет прямоугольные границы, то формула приобретает вид:
+\begin{equation}
+I \approx \sum_{i=1}^{N} \sum_{i=1}^{M} f(\overline{x_{i}}, \overline{y_{i}}) \cdot S_{ij}
+\end{equation}
+
+\par Метод прямоугольников эффективен для областей с прямоугольными границами.
+
+\newpage
+
+\section{Описание схемы распараллеливания}
+
+\par Схема распараллеливания данного вычислительного метода сводится к распараллеливанию вложенного цикла с редукцией (редукция представляет собой суммирование локальных интегралов потоков в общий). 
+
+\par Более подробная информация приведена в соответствующих подразделах, посвященных программной реализации задачи с применением конкретных технологий параллельного программирования (OpenMP, TBB, std::thread).
+
+\newpage
+
+\section{Описание программной реализации}
+
+\subsection{Последовательная версия}
+
+\par Основная функция, выполняющая вычисления, представляет собой двойной цикл и в последовательной реализации выглядит следующим образом:
+\vspace{10pt}
+\begin{lstlisting}
+double getMultipleIntegralUsingRectangleMethod(
+    double (*function)(double, double), double x1, double x2,
+    double y1, double y2, double stepX, double stepY) {
+    double resultIntegral = 0;
+    double cellSquare = stepX * stepY;
+
+    for (double i = x1; i < x2; i += stepX) {
+        for (double j = y1; j < y2; j += stepY) {
+            double xMiddle = (i + i + stepX) / 2;
+            double yMiddle = (j + j + stepY) / 2;
+
+            resultIntegral += function(xMiddle, yMiddle);
+        }
+    }
+
+    return resultIntegral * cellSquare;  // common factor
+}
+\end{lstlisting}
+
+\par На каждой итерации цикла происходит вычисление серединных координат, после чего от них берется значение подынтегральной функции.
+
+\par Поскольку площадь прямоугольника является общим множителем, то после накопления суммы значений функции от серединных координат мы можем умножить на него общий результат. Результат будет представлять собой не что иное, как искомый интеграл с заданной точностью.
+
+\newpage
+
+\subsection{OpenMP}
+
+\par Для OpenMP реализации потребовалось пересмотреть подход к итератору цикла, который в данном случае не может быть вещественного типа в виду особенностей спецификации OpenMP.
+
+\par Распараллеливание цикла происходит при помощи следующей директивы компилятора:
+
+\vspace{10pt}
+\begin{lstlisting}
+#pragma omp parallel for reduction(+: resultIntegral)
+\end{lstlisting}
+
+\par Таким образом, реализация основной функции выглядит следующим образом:
+
+\vspace{10pt}
+\begin{lstlisting}
+double getMultipleIntegralUsingRectangleMethod(
+    double (*function)(double, double), double x1, double x2,
+    double y1, double y2, double stepX, double stepY) {
+    double resultIntegral = 0;
+    double cellSquare = stepX * stepY;
+    int xStepsNumber = (x2 - x1) / stepX;
+    int yStepsNumber = (y2 - y1) / stepY;
+
+    #pragma omp parallel for reduction(+: resultIntegral)
+    for (int i = 0; i < xStepsNumber; i++) {
+        for (int j = 0; j < yStepsNumber; j++) {
+            double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;
+            double yMiddle = (y1 + j*stepY + y1 + j*stepY + stepY) / 2;
+
+            resultIntegral += function(xMiddle, yMiddle);
+        }
+    }
+
+    return resultIntegral * cellSquare;  // common factor
+}
+\end{lstlisting}
+
+\newpage
+
+\subsection{TBB}
+
+\par Библиотека TBB предоставляет нам функцию \verb|tbb::parallel_reduce|, осуществляющего распараллеливание цикла с редукцией.
+
+\par В качестве аргументов \verb|tbb::parallel_reduce| принимает итерационное пространство (в данном случае двумерное), лямбда-выражение, в котором происходят основные вычисления, и ещё одно лямбда-выражение, выполняющее операцию редукции.
+
+\vspace{10pt}
+\begin{lstlisting}
+double getMultipleIntegralUsingRectangleMethodTBB(
+    double (*function)(double, double), double x1, double x2,
+    double y1, double y2, double stepX, double stepY) {
+    double resultIntegral = 0;
+    double cellSquare = stepX * stepY;
+    int xStepsNumber = (x2 - x1) / stepX;
+    int yStepsNumber = (y2 - y1) / stepY;
+
+    resultIntegral = tbb::parallel_reduce(
+        tbb::blocked_range2d<int, int>{0, xStepsNumber, 0, yStepsNumber},
+         0.f, [&](const tbb::blocked_range2d<int, int> &r,
+          double localIntegral)->double {
+        int x_begin = r.rows().begin();
+        int x_end = r.rows().end();
+        int y_begin = r.cols().begin();
+        int y_end = r.cols().end();
+
+        for (int i = x_begin; i < x_end; i++) {
+            for (int j = y_begin; j < y_end; j++) {
+                double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;
+                double yMiddle = (y1 + j*stepY + y1 + j*stepY + stepY) / 2;
+
+                localIntegral += function(xMiddle, yMiddle);
+            }
+        }
+        return localIntegral;
+    }, [](double localIntegral1, double localIntegral2)-> double {
+            return localIntegral1 + localIntegral2;
+        });
+
+    return resultIntegral * cellSquare;  // common factor
+}
+\end{lstlisting}
+
+\newpage
+
+\subsection{std::threads}
+
+\par Объявим переменную для всех потоков, в которой будет накапливаться "глобальный" интеграл:
+
+\vspace{10pt}
+\begin{lstlisting}
+    double resultIntegral = 0;
+\end{lstlisting}
+
+\par Создадим вектор объектов std::thread и поделим наше вычислительное пространство поровну между потоками, а остаток распределим для последнего потока.
+
+\par При создании потока (объекта std::thread) ему в качестве аргумента передается ссылка на функцию, которая выполняет вычисления.
+
+\vspace{10pt}
+\begin{lstlisting}
+double getMultipleIntegralUsingRectangleMethodSTD(
+    double (*function)(double, double), double x1, double x2,
+    double y1, double y2, double stepX, double stepY) {
+    double resultIntegral = 0;
+    double cellSquare = stepX * stepY;
+    int xStepsNumber = (x2 - x1) / stepX;
+    int yStepsNumber = (y2 - y1) / stepY;
+
+    int numberOfThreads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threadsVector;
+
+    int stepsPerThreadNumber = xStepsNumber / numberOfThreads;
+    int remainderPartOfSteps = xStepsNumber % numberOfThreads;
+
+    for (int i = 0; i < numberOfThreads-1; i++) {
+        threadsVector.push_back(std::thread(increaseResultIntegral,
+            &resultIntegral, i*stepsPerThreadNumber, stepsPerThreadNumber,
+            yStepsNumber, function, x1, x2, y1, y2, stepX, stepY));
+    }
+    threadsVector.push_back(std::thread(increaseResultIntegral,
+        &resultIntegral, (numberOfThreads-1)*stepsPerThreadNumber,
+        stepsPerThreadNumber+remainderPartOfSteps, yStepsNumber,
+        function, x1, x2, y1, y2, stepX, stepY));
+
+    std::for_each(threadsVector.begin(), threadsVector.end(),
+        [](std::thread &thread) {
+        thread.join();
+    });
+
+    return resultIntegral * cellSquare;  // common factor
+}
+
+void increaseResultIntegral(double* resultIntegral, int startStep,
+    int numberOfSteps, int yStepsNumber, double (*function)(double, double),
+    double x1, double x2, double y1, double y2, double stepX, double stepY) {
+        double localIntegral = 0;
+
+        for (int i = startStep; i < startStep + numberOfSteps; i++) {
+            for (int j = 0; j < yStepsNumber; j++) {
+                double xMiddle = (x1 + i*stepX + x1 + i*stepX + stepX) / 2;
+                double yMiddle = (y1 + j*stepY + y1 + j*stepY + stepY) / 2;
+
+                localIntegral += function(xMiddle, yMiddle);
+            }
+        }
+
+        resultIntegralMutex.lock();
+        *resultIntegral += localIntegral;
+        resultIntegralMutex.unlock();
+}
+\end{lstlisting}
+
+\newpage
+
+\section{Подтверждение корректности}
+
+\par Тестирование корректности работы программы осуществлялось при помощи фреймворка Google Test и заключалось в сравнении истинного значения интеграла (который был получен при помощи стороннего онлайн-сервиса) с полученным в результате работы программы.
+
+\par Если заданная точность вычислений достигалась, то считалось, что программа работает корректно. 
+
+\newpage
+
+\section{Результаты экспериментов}
+Конфигурация компьютера, на котором проводились эксперименты:
+
+\begin{itemize}
+\item ОС: Ubuntu 18.04.4 LTS;
+\item Процессор: AMD Ryzen 5 3500U;
+\item Число ядер: 4;
+\item Число потоков: 8;
+\item Оперативная память: 7637 MB;
+\end{itemize}
+\vspace{\baselineskip}
+
+\par Время работы последовательной версии: 2089	
+\vspace{\baselineskip}
+
+\par Время работы OpenMP версии: 498
+\par Ускорение для OpenMP: 4.194779116	
+\vspace{\baselineskip}
+
+\par Время работы TBB версии: 526
+\par Ускорение для TBB: 3.97148289
+\vspace{\baselineskip}
+
+\par Время работы std::thread версии: 493
+\par Ускорение для std::thread: 4.237322515
+\vspace{\baselineskip}
+
+\par Как видно из результатов экспериментов, параллельные реализации оказались примерно одинаково эффективными, показывая четырехкратное ускорение по сравнению с последовательной версией.
+
+\newpage
+
+\section{Заключение}
+
+\par Таким образом, в результате работы реализованы четыре версии одного из численных методов нахождения кратного интеграла, метода прямоугольников. Как показали эксперименты, данная задача очень эффективно распараллеливается, потому что сводится к классической задаче распараллеливания циклов с редукцией, которая давно решена и максимально оптимизирована.
+\newpage
+
+\section{Список литературы}
+\begin{enumerate}
+\bibitem{OMP} А.В. Сысоев. «Параллельное программирование с использованием OpenMP», презентация.
+
+\bibitem{TBB} А.А. Сиднев, А.В. Сысоев, И.Б. Мееров. Учебный курс «Технологии разработки параллельных программ», раздел «Создание параллельной программы», «Библиотека Intel Threading Building Blocks~--- краткое описание». Нижний Новгород, ННГУ, 2007, 29 с. 
+
+\bibitem{Integrals} А.В. Старченко. «Введение в методы параллельных вычислений», презентация. Московский государственный университет.
+
+\bibitem{Integrals2} Блюмин А.Г., Федотов А.А., Храпов П.В. «Численные методы вычисления интегралов и решения задач для обыкновенных дифференциальных уравнений: Методические указания к выполнению лабораторных работ по курсу «Численные методы».» — М.: МГТУ им. Н.Э.Баумана, 2008. — 74 с.
+\end{enumerate}
+
+\newpage
+
+\section{Приложение}
+\subsection{Последовательная версия}
+\lstinputlisting[language=C++]{../../../../modules/task_1/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.h}
+\lstinputlisting[language=C++]{../../../../modules/task_1/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_1/fedotov_v_multidimensional_integrals_rectangle/main.cpp}
+
+\subsection{OpenMP}
+\lstinputlisting[language=C++]{../../../../modules/task_2/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.h}
+\lstinputlisting[language=C++]{../../../../modules/task_2/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_2/fedotov_v_multidimensional_integrals_rectangle/main.cpp}
+
+\subsection{TBB}
+\lstinputlisting[language=C++]{../../../../modules/task_3/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.h}
+\lstinputlisting[language=C++]{../../../../modules/task_3/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_3/fedotov_v_multidimensional_integrals_rectangle/main.cpp}
+
+\subsection{std::threads}
+\lstinputlisting[language=C++]{../../../../modules/task_4/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.h}
+\lstinputlisting[language=C++]{../../../../modules/task_4/fedotov_v_multidimensional_integrals_rectangle/integrals-rectangle.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_4/fedotov_v_multidimensional_integrals_rectangle/main.cpp}
+
+\newpage
+
+
+\end{document}
