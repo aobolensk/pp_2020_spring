@@ -1,0 +1,239 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{caption}
+
+\geometry{a4paper,top=2cm,bottom=2cm,left=2.5cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+
+\lstset{language=C++,
+		basicstyle=\footnotesize,
+		keywordstyle=\color{blue}\ttfamily,
+		stringstyle=\color{red}\ttfamily,
+		commentstyle=\color{green}\ttfamily,
+		morecomment=[l][\color{magenta}]{\#}, 
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
+}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\makeatletter
+\def\@seccntformat#1{\@ifundefined{#1@cntformat}%
+   {\csname the#1\endcsname\quad}
+   {\csname #1@cntformat\endcsname}}
+\newcommand\section@cntformat{}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ \\
+Федеральное государственное автономное образовательное учреждение высшего образования\\
+\textbf{«Нижегородский государственный университет им. Н.И. Лобачевского»} \\
+\textbf{Национальный исследовательский университет} \\
+\textbf{Институт информационных технологий математики и механики}\\
+\end{center}
+
+\vskip 3cm
+
+\begin{center}
+\textbf{\LargeОТЧЕТ}
+\end{center}
+
+\begin{center}
+\textbf{\Large«Умножение плотных матриц. Элементы типа double. Блочная схема, алгоритм Фокса»}
+\end{center}
+
+\vskip 1cm
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381706-2 \\ Исаев И.А. \\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.}
+
+\vskip 7cm
+
+\begin{center}
+Нижний Новгород \\
+2020
+\end{center}
+
+\end{titlepage}
+
+\tableofcontents
+\setcounter{page}{2}
+
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+Умножение матриц – это одна из основных математических операций. Существует множество различных алгоритмов умножения матриц. Сложность вычисления произведения матриц по определению составляет  \( O \left( n^{3} \right)  \) , что неэффективно. Ускорить вычисления возможно, если применить параллельные алгоритмы умножения матриц.\par
+
+Одним из таких параллельных алгоритмов является алгоритм Фокса. Стоит отметить, что данных алгоритм предназначен для распараллеливания для систем с распределённой памятью, однако это вполне применимо и для систем с общей памятью.\par
+
+В рамках данной лабораторной работы мы реализуем алгоритм Фокса, используя различные технологии распараллеливания.\par
+
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+В рамках данной лабораторной работы нам необходимо разработать следующие компоненты:\par
+
+\begin{itemize}
+	\item Реализация последовательного алгоритма умножения матриц\par
+
+	\item Реализация алгоритма Фокса с использованием OpenMP\par
+
+	\item Реализация алгоритма Фокса с использованием TBB\par
+
+	\item Реализация алгоритма Фокса с использованием Threads C++11\par
+
+	\item Разработка модульных тестов для подтверждения корректности данной программной реализации
+\end{itemize}\par
+
+\newpage
+
+\section*{Описание алгоритма}
+\addcontentsline{toc}{section}{Описание алгоритма}
+Алгоритм Фокса основан на блочном разбиении матрицы между вычислителями (checkboard distribution).\par
+
+Пусть  \( A= \left( a_{ij} \right) ,~~ B= \left( b_{ij} \right) ,~ i,j=\overline{0, n-1} \)  – квадратные матрицы размера  \( n \times n \) . Тогда:\par
+
+ \[ C=A \times B,~ c_{ij}=a_{i0}b_{0j}+a_{i1}b_{1j}+ \ldots +a_{i,n-1}b_{n-1,j}= \sum _{k=0}^{n-1}a_{ik}b_{kj} \] \par
+
+ \( c_{ij} \)  – результат скалярного произведения i-ой строки матрицы A и j-ого столбца матрицы B.\par
+
+ Пусть число вычислителей равно 4, а n = 4, тогда блочное разбиение будет выглядеть следующим образом:\par
+
+ \[ A_{00}= \left( \begin{matrix}
+a_{00}  &  a_{01}\\
+a_{10}  &  a_{11}\\
+\end{matrix}
+ \right) ,~~A_{01}= \left( \begin{matrix}
+a_{02}  &   a_{03}\\
+a_{12}  &   a_{13}\\
+\end{matrix}
+ \right)  \]  \[ A_{10}= \left( \begin{matrix}
+a_{20}  &  a_{21}\\
+a_{30}  &  a_{31}\\
+\end{matrix}
+ \right) ,~~A_{11}= \left( \begin{matrix}
+a_{22}  &  a_{23}\\
+a_{32}  &  a_{33}\\
+\end{matrix}
+ \right)  \] \par
+
+
+\vspace{\baselineskip}
+ Аналогично для B и C.\par
+
+Сам алгоритм Фокса заключается в том, что на каждом шаге нужно выбрать подматрицу A в каждой строке, чтобы каждый вычислитель умножил полученную матрицу на имеющуюся подматрицу B, а затем отправил свою подматрицу B вышестоящему в схеме вычислителю.\par
+
+Так как мы реализуем данный алгоритм на потоках, то нужды в передаче-получении подматриц у нас нет, что упрощает алгоритм.\par
+
+\newpage
+
+\section*{Схема распараллеливания}
+\addcontentsline{toc}{section}{Схема распараллеливания}
+\subsection{OpenMP}
+Каждый поток в OMP- реализации каждому потоку присваивается некоторая характеристика – координаты в схеме. Они показывают, в какой блок результирующей матрицы будет записан ответ по завершении работы потока. На каждой итерации step от 0 до q, где  \( q=\sqrt[]{num \_ threads} \) , нужный индекс высчитывается по формуле k\_bar = (thread\_i+step) $\%$  q. Перемножаем соответствующие блоки в строке и столбце и суммируем с результирующей матрицей. Для распараллеливания используется директива $\#$ pragma omp parallel.\par
+
+\subsection{TBB}
+Реализация в TBB, по большому счёту, схожа с таковой на OpenMP, разве что она основана на структуре blocked\_range2d и функции parallel\_for, которая принимает lambda-функцию, работающую точно так же, как и блок в OMP версии.\par
+
+\subsection{Threads C++11}
+В данной реализации мы создаём некоторое число потоков, которым при конструировании в качестве параметра передаём lambda-функцию (логика её работы не изменилась).\par
+
+\newpage
+
+\section*{Проверка корректности}
+\addcontentsline{toc}{section}{Проверка корректности}
+Для проверки корректности была использована библиотека модульного тестирования Google C++ Testing Framework, которая значительно упрощает написание тестов для программы.\par
+
+\newpage
+
+\section*{Результаты экспериментов}
+\addcontentsline{toc}{section}{Результаты экспериментов}
+Тестовая система:\par
+
+\begin{itemize}
+	\item Операционная система: Ubuntu 20.04 LTS (Focal Fossa)\par
+
+	\item Процессор: Intel Core i5-3210M\par
+
+	\item RAM: 6 Gb
+\end{itemize}\par
+
+Получили следующий результат:\par
+
+\begin{table}[!h]
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{Размер матрицы} & Последовательно & \multicolumn{2}{c|}{OpenMP} & \multicolumn{2}{c|}{TBB} & \multicolumn{2}{c|}{Threads C++11} \\ \cline{2-8} 
+     & Время, сек & Время, сек & Ускорение & Время, сек & Ускорение & Время, сек & Ускорение \\ \hline
+500  & 2.64       & 1.23       & 2.14      & 1.24       & 2.12      & 1.22       & 2.16      \\ \hline
+1000 & 21.92      & 12.41      & 1.76      & 12.24      & 1.79      & 11.75      & 1.86      \\ \hline
+1500 & 70.21      & 43.17      & 1.62      & 44.50      & 1.57      & 43.68      & 1.60      \\ \hline
+\end{tabular}
+}
+\caption{Результаты экспериментов}
+\end{table}
+
+\vspace{\baselineskip}
+Как мы можем видеть, результаты с применением разных технологий примерно идентичны, и отклонения можно списать на погрешность. Связано это с тем, что способ распараллеливания, предложенный нами, будет выглядеть примерно одинаково с точки зрения логики в каждой из версий.\par
+
+\newpage
+
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+В результате данной лабораторной работы был изучен алгоритм Фокса параллельного умножения матриц, получен навык работы с OpenMP, TBB, Threads C++11. Поставленные задачи были решены, был проведён эксперимент, сравнивающий время выполнения при использовании разных технологий распараллеливания.\par
+
+\newpage
+
+\begin{thebibliography}{}
+\addcontentsline{toc}{section}{Список литературы и ссылок}
+\bibitem{Sysoev} Сысоев А.В., Мееров И.Б., Свистунов А.Н., Курылев А.Л., Сенин А.В., Шишков А.В., Корняков К.В., Сиднев А.А. «Параллельное программирование в системах с общей памятью. Инструментальная поддержка». Учебно-методические материалы по программе повышения квалификации «Технологии высокопроизводительных вычислений для обеспечения учебного процесса и научных исследований». Нижний Новгород, 2007, 110 с. 
+\bibitem{Fox algorithm} Lab Course II Parallel Computing [Электронный ресурс] // URL: http://csis.uni-wuppertal.de/courses/scripts/\verb|skript_lab2.pdf|
+
+\end{thebibliography}
+
+\newpage
+
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+
+\lstinputlisting[language=C++, caption=Sequential header]{../../../../modules/task_1/isaev_matrix_mult/matrix_mult.h}
+\lstinputlisting[language=C++, caption=Sequential source]{../../../../modules/task_1/isaev_matrix_mult/matrix_mult.cpp}
+
+\lstinputlisting[language=C++, caption=OpenMP header]{../../../../modules/task_2/isaev_fox_alg/fox_alg.h}
+\lstinputlisting[language=C++, caption=OpenMP source]{../../../../modules/task_2/isaev_fox_alg/fox_alg.cpp}
+
+\lstinputlisting[language=C++, caption=TBB header]{../../../../modules/task_3/isaev_fox_alg/fox_alg.h}
+\lstinputlisting[language=C++, caption=TBB source]{../../../../modules/task_3/isaev_fox_alg/fox_alg.cpp}
+
+\lstinputlisting[language=C++, caption=Threads C++11 header]{../../../../modules/task_4/isaev_fox_alg/fox_alg.h}
+\lstinputlisting[language=C++, caption=Threads C++11 source]{../../../../modules/task_4/isaev_fox_alg/fox_alg.cpp}
+
+\end{document}
