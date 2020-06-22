@@ -1,0 +1,256 @@
+\documentclass{report}
+
+\usepackage[english, russian]{babel}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage[T2A]{fontenc}
+\usepackage[14pt]{extsizes}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage[titles]{tocloft}
+\usepackage[hyphens]{url}
+
+\geometry{a4paper,top=2cm,bottom=2cm,left=2cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+\sloppy
+
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\lstset{
+    language=C++,
+    basicstyle=\footnotesize,
+    numbers=left,
+    numberstyle=\tiny,
+    numberfirstline=true,
+    numbersep=5pt,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{darkgreen},
+    stringstyle=\color{red},
+    showspaces=false,
+    showstringspaces=false,
+    captionpos=t,
+    breaklines=true,
+    breakatwhitespace=false,
+    extendedchars=true,
+    frame=tb,
+    title=\lstname,
+}
+
+\begin{document}
+    \begin{titlepage}
+        \begin{center}
+            Федеральное государственное автономное образовательное учреждение высшего образования \\
+            "Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского" (ННГУ) \\
+            Институт информационных технологий, математики и механики
+
+            \vspace{\fill}
+
+            \textbf{\largeОтчет по лабораторной работе}
+            \textbf{\large«Вычисление многомерных интегралов с использованием многошаговой схемы (метод трапеций)»}
+
+            \vspace{\fill}
+
+            \hfill\parbox{8cm}{
+                \hspace*{5cm}\hspace*{-5cm}\textbf{Выполнил:} \\ студент группы 381708-1 \\ Астафьева Ирина Алексеевна \\ \\ \\
+                \hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев Александр Владимирович
+                \hbadness=20000
+            }
+
+            \vspace{\fill}
+
+            Нижний Новгород \\ 2020 г.
+        \end{center}
+    \end{titlepage}
+    
+    \setcounter{page}{2}
+    \setlength{\cftsecindent}{0em}
+    \setlength{\cftsubsecindent}{1.25em}
+    \setlength{\cftsubsubsecindent}{2.5em}
+    \setlength{\cftsubsubsecnumwidth}{1.25em}
+    \tableofcontents
+    
+    \newpage
+    
+    \section*{Введение}
+    \addcontentsline{toc}{section}{Введение}
+    \par Метод трапеций — метод численного интегрирования функции \textit{n} переменных, заключающийся в замене на каждом элементарном отрезке подынтегральной функции на многочлен \textit{n}-ой степени. Площадь под графиком функции аппроксимируется прямоугольными трапециями.
+    \par Разделение пределов интегрирования на элементарные отрезки, для каждого из которых интеграл высчитывается независимо, открывает возможности ускорения работы алгоритма путем распараллеливания вычислений интеграла на элементарных отрезках.
+    
+    \newpage
+    
+    \section*{Постановка задачи}
+    \addcontentsline{toc}{section}{Постановка задачи}
+    \par В ходе данной лабораторной работы неообходимо:
+    \begin{itemize}
+        \item построить алгоритм вычисления многомерных интегралов методом трапеций;
+        \item написать последовательную реализацию алгоритма;
+        \item написать параллельную реализацию алгоритма, используя OpenMP и TBB;
+        \item проверить корректность работы алгоритма;
+        \item провести сравнения времени выполнения вычислений и сделать выводы об эффективности реализаций.
+    \end{itemize}
+    \newpage
+    
+    \section*{Описание алгоритма}
+    \addcontentsline{toc}{section}{Описание алгоритма}
+    \par Для вычисления многомерного интеграла методом трапеций использован алгоритм, схожий с алгоритмом для вычисления одомерного интеграла (\ref{eq:normal}).
+    \begin{equation}
+        \label{eq:normal}
+        \sum^b_a\frac{f(t_i) + f(t_{i-1})}{2}\left(t_i-t_{i-1}\right)
+    \end{equation}
+    \par На вход алгоритм получает функцию, которую необходимо проинтегрировать, пределы интегрирования для каждой переменной функции и параметры разделения, указывающие, на какое количество отрезков должен быть разделен предел интегрирования каждой переменной.
+    \par При каждой итерации вычисляется два набора параметров, различающихся лишь одним параметром на $\delta$. То есть пара наборов параметров для функции трех переменных может выглядеть следующим образом:
+    \begin{itemize}
+        \item ($x_i, y_j, z_k$) и ($x_i, y_j, z_{k-1}$);
+        \item ($x_i, y_j, z_k$) и ($x_i, y_{j-1}, z_k$);
+        \item ($x_i, y_j, z_k$) и ($x_{i-1}, y_j, z_k$).
+    \end{itemize}
+    \par Среднее арифметическое значений функции для этих двух наборов параметров прибавляется к общему результату. После вычисления средних арифметических для всех возможных пар параметров, результат умножается на $\delta$ по каждой переменной.
+    \newpage
+    
+    \section*{Описание схемы распараллеливания}
+    \addcontentsline{toc}{section}{Описание схемы распараллеливания}
+    \par Так как каждая итерация независима от любой другой, необходимо разделить число итераций между потоками. Число итераций всегда равно произведению параметров разделения, поступивших на вход алгоритма.
+    \par Допустим, что на вход алгоритм получил функцию трех переменных и параметры разделения - (10, 10, 10). Алгоритм выполняется 4 потоками. Тогда схема разделения итераций между потоками представлена в таблице 1. Если это же задание выполняется 3 потоками, то схема распределения будет выглядеть как в таблице 2.
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            Поток & Диапазон  \\ \hline
+            0     & 0 - 249   \\ \hline
+            1     & 250 - 499 \\ \hline
+            2     & 500 - 749 \\ \hline
+            3     & 750 - 999 \\ \hline
+        \end{tabular}
+        \caption{Диапазоны итераций для 4 потоков}
+        \label{tab:example}
+    \end{table}
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{|c|c|}
+            \hline
+            Поток & Диапазон  \\ \hline
+            0     & 0 - 333   \\ \hline
+            1     & 334 - 666 \\ \hline
+            2     & 667 - 999 \\ \hline
+        \end{tabular}
+        \caption{Диапазоны итераций для 3 потоков}
+        \label{tab:example}
+    \end{table}
+    \newpage
+    
+    \section*{Описание программной реализации}
+    \addcontentsline{toc}{section}{Описание программной реализации}
+    \par В этом разделе представлены краткие описания параллельных реализации. Полный код можно посмотреть в Приложении.
+    
+    \subsection*{Реализация с использованием OpenMP}
+    \addcontentsline{toc}{subsection}{Реализация с использованием OpenMP}
+    \par Используя функции \verb|omp\_get\_num\_threads()| и \verb|omp\_get\_thread\_num()| определяются количество потоков и номер текущего потока и с помощью этих значений вычисляются итерации, которые должен выполнить текущий поток.
+    
+    \subsection*{Реализация с использованием TBB}
+    \addcontentsline{toc}{subsection}{Реализация с использованием TBB}
+    \par Результат вычисляется с помощью \verb|tbb:parallel_reduce|. Эта функция автоматически разделяет итерации между потоками, а затем собирает результаты со всех потоков и производит над ними конкретную операцию, в данном случае - сложение.
+    \newpage
+    
+    \section*{Сравнение времени выполнения версий}
+    \addcontentsline{toc}{section}{Сравнение времени выполнения версий}
+    \par Конфигурация системы:
+    \begin{itemize}
+        \item Процессор: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz 1.99GHz
+        \item Оперативная память: 20 GB
+        \item Операционная система: Windows 10 Pro
+    \end{itemize}
+    
+    \par Формулировка задания:
+    \begin{itemize}
+        \item Функция: $log_{10}(2x^2) + \sqrt{z} + 5y$
+        \item Пределы интегрирования: \{(1, 2), (-13, 5), (3, 7)\}
+        \item Параметры разделения: (500, 500, 500)
+    \end{itemize}
+    
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+                             & 1       & 2       & 4        \\ \hline
+            Последовательная & \multicolumn{3}{c|}{15.7797} \\ \hline
+            OpenMP           & 15.6586 & 13.6165 & 9.00504  \\ \hline
+            TBB              & 15.6797 & 13.7758 & 7.50737  \\ \hline
+        \end{tabular}
+        \caption{Результаты эксперимента}
+        \label{tab:times}
+        По вертикали - число потоков. \\
+        По горизонтали - тестируемая реализация. \\
+        Время указано в секундах.
+    \end{table}
+    \newpage
+    
+    \section*{Проверка корректности вычислений}
+    \addcontentsline{toc}{section}{Проверка корректности вычислений}
+    \par Погрешность вычислений напрямую зависит от параметров разделения, чем больше параметры разделения тем выше точность. Был проведен эксперимент, который это наглядно показывает.
+    
+    \par Формулировка задания:
+    \begin{itemize}
+        \item Функция: $log_{10}(2x^2) + \sqrt{z} + 5y$
+        \item Пределы интегрирования: \{(1, 2), (-13, 5), (3, 7)\}
+        \item Правильный ответ: -1234.28
+    \end{itemize}
+    
+    \begin{table}[htbp]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            Параметры разделения & 10       & 50       & 100      & 500      & 1000     \\ \hline
+            Последовательная     & -1206.74 & -1229.86 & -1232.14 & -1233.86 & -1234.07 \\ \hline
+            OpenMP               & -1206.74 & -1229.86 & -1232.14 & -1233.86 & -1234.07 \\ \hline
+            TBB                  & -1206.74 & -1229.86 & -1232.14 & -1233.86 & -1234.07 \\ \hline
+        \end{tabular}
+        \caption{Результаты эксперимента}
+        \label{tab:results}
+    
+    \end{table}
+    
+    \par Результаты этого эксперимента также показывают, что при одинаковых входных данных разные версии выдают одинаковый результат, что в свою очередь указывает на корректную реализацию этих версий.
+    \par Программно проверка корректности вычислений осуществляется с помощью UNIT-тестов.
+    \newpage
+    
+    \section*{Заключение}
+    \addcontentsline{toc}{section}{Заключение}
+    \par В процессе данных лабораторных работ были разработаны последовательная и две параллельных реализации алгоритма вычисления многомерных интегралов методом трапеций. Была проведена оценка скорости работы всех трех реализаций и их корректность.
+    \par Технологии OpenMP и TBB оказались одинаково эффективными при решении данной задачи.
+    \newpage
+    
+    \section*{Список литературы}
+    \addcontentsline{toc}{section}{Список литературы}
+    \begin{enumerate}
+        \item Сысоев А.В., Мееров И.Б., Сиднев А.А. Средства разработки параллельных программ для систем с общей памятью. Библиотека Intel Threading Building Blocks. Учебно-методические материалы по программе повышения квалификации «Технологии высокопроизводительных вычислений для обеспечения учебного процесса и научных исследований». Нижний Новгород, 2007, 86 с.
+        \item Clever Students: Метод трапеций URL: \url{http://www.cleverstudents.ru/integral/method_of_trapezoids.html}
+    \end{enumerate}
+    \newpage
+    
+    \section*{Приложение}
+    \addcontentsline{toc}{section}{Приложение}
+    \subsection*{Исходный код}
+    \addcontentsline{toc}{subsection}{Исходный код}
+
+    \subsubsection*{Лабораторная работа №1. Последовательная версия}
+    \addcontentsline{toc}{subsubsection}{Лабораторная работа №1. Последовательная версия}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_1/astafeva_i_trapezoidal_rule/trapezoidal_rule.h}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с реализацией]{../../../../modules/task_1/astafeva_i_trapezoidal_rule/trapezoidal_rule.cpp}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с тестами]{../../../../modules/task_1/astafeva_i_trapezoidal_rule/main.cpp}
+    \newpage
+    
+    \subsubsection*{Лабораторная работа №2. Параллельная версия с использованием OpenMP}
+    \addcontentsline{toc}{subsubsection}{Лабораторная работа №2. Параллельная версия с использованием OpenMP}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_2/astafeva_i_trapezoidal_rule/trapezoidal_rule.h}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с реализацией]{../../../../modules/task_2/astafeva_i_trapezoidal_rule/trapezoidal_rule.cpp}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с тестами]{../../../../modules/task_2/astafeva_i_trapezoidal_rule/main.cpp}
+    \newpage
+    
+    \subsubsection*{Лабораторная работа №3. Параллельная версия с использованием TBB}
+    \addcontentsline{toc}{subsubsection}{Лабораторная работа №3. Параллельная версия с использованием TBB}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Заголовочный файл]{../../../../modules/task_3/astafeva_i_trapezoidal_rule/trapezoidal_rule.h}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с реализацией]{../../../../modules/task_3/astafeva_i_trapezoidal_rule/trapezoidal_rule.cpp}
+    \lstinputlisting[language=C++, caption=Последовательная версия. Файл с тестами]{../../../../modules/task_3/astafeva_i_trapezoidal_rule/main.cpp}
+    
+\end{document}
