@@ -1,0 +1,256 @@
+\documentclass{report}
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{luainputenc}
+\usepackage[english, russian]{babel}
+\usepackage[pdftex]{hyperref}
+\usepackage[14pt]{extsizes}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+
+\DeclareGraphicsExtensions{.jpg}
+
+\geometry{a4paper,top=2cm,bottom=3cm,left=2cm,right=1.5cm}
+\setlength{\parskip}{0.5cm}
+\setlist{nolistsep, itemsep=0.3cm,parsep=0pt}
+
+\lstset{language=C++,
+		basicstyle=\footnotesize,
+		keywordstyle=\color{blue}\ttfamily,
+		stringstyle=\color{red}\ttfamily,
+		commentstyle=\color{green}\ttfamily,
+		morecomment=[l][\color{magenta}]{\#}, 
+		tabsize=4,
+		breaklines=true,
+  		breakatwhitespace=true,
+  		title=\lstname,       
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.\hfil}
+\makeatother
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+Министерство науки и высшего образования Российской Федерации
+\end{center}
+
+\begin{center}
+Федеральное государственное автономное образовательное учреждение высшего образования \\
+Национальный исследовательский Нижегородский государственный университет им. Н.И. Лобачевского
+\end{center}
+
+\begin{center}
+Институт информационных технологий, математики и механики
+\end{center}
+
+\vspace{4em}
+
+\begin{center}
+\textbf{\LargeОтчет по лабораторной работе} \\
+\end{center}
+\begin{center}
+\textbf{\Large«Выделение компонент на бинарном изображении»} \\
+\end{center}
+
+\vspace{4em}
+
+\newbox{\lbox}
+\savebox{\lbox}{\hbox{text}}
+\newlength{\maxl}
+\setlength{\maxl}{\wd\lbox}
+\hfill\parbox{7cm}{
+\hspace*{5cm}\hspace*{-5cm}\textbf{Выполнила:} \\ студент группы 381706-1 \\ Кукушкина К. О.\\
+\\
+\hspace*{5cm}\hspace*{-5cm}\textbf{Проверил:}\\ доцент кафедры МОСТ, \\ кандидат технических наук \\ Сысоев А. В.
+}
+
+\vspace{\fill}
+
+\begin{center} Нижний Новгород \\ 2020 \end{center}
+
+\end{titlepage}
+
+\setcounter{page}{2}
+
+\tableofcontents
+\newpage
+
+\section*{Введение}
+\addcontentsline{toc}{section}{Введение}
+
+Выделение связных компонент на изображении - одна из важнейших задач компьютерного зрения. После разбиения изображения на связные области можно вести дальнейший  геометрический, логический, топологический и любой другой анализ.
+\par Трудоемкость операции достаточно высока, а входные данные в реальных задачах распознавания образов (к примеру) имеют достаточно большой объем. Поэтому целесообразно решать задачу с помощью инструментов параллельного программирования.
+\par В этой работе для исследования были выбраны три инструмента:
+\begin{itemize}
+	\item Open Multi-Processing (OpenMP)
+	\item Intel Threading Building Blocks (TBB)
+	\item Библиотека поддержки потоков std::threads.
+\end{itemize}
+\par Цель работы - исследовать эффективность работы алгоритма в разных реализациях.
+
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+
+Для выполнения цели работы поставлены следующие задачи:
+
+\begin{enumerate} 
+
+\item Реализовать последовательный алгоритм выделения компонент на бинарном изображении
+\item Реализовать последовательные версии алгоритма с использованием трех инструментов параллельного программирования
+\item Написать представительную ситему автоматических тестов для каждой версии алгоритма с помощью Google C++ Testing Framework
+\item Провести вычислительнный эксперимент
+\item Проанализировать результаты эксперимента, сделать выводы об эффективности технологий применительно к задаче выделения компонент на бинарном изображении.
+
+\end{enumerate} 
+
+\newpage
+
+\section*{Описание алгоритма}
+\addcontentsline{toc}{section}{Описание алгоритма}
+На вход алгоритма поступает \verb|std::vector<std::size_t>>| (массив беззнаковых целых чисел) размера \verb|h|*\verb|w|, где \verb|h| - высота картинки, \verb|w| - ширина.
+\par Последовательная версия задачи реализована следующим образом:
+\begin{enumerate}
+	\item Сегментация
+	\begin{itemize}
+		\item Если первый пиксель не пуст, начать новый сегмент
+		\item Для всей первой строки: если текущий пиксель не пуст и левый пиксель "окрашен", окрасить текущий тем же цветом; если текущий пиксель не пуст и левый пиксель пуст, начать новый сегмент
+		\item Для следующих строк:
+		\begin{itemize}
+			\item Для первого пикселя каждой строки: если пиксель не пуст и верхний пиксель не пуст, окрасить текущий тем же цветом; если верхний пиксель пуст, начать новый сегмент
+			\item Для следующих пикселей:
+			\begin{itemize}
+				\item Если пиксель пуст, перейти к следующей итерации
+				\item Если верхний и левый пиксели не окрашены, начать новый сегмент
+				\item Если окрашел левый или верхний пиксель, окрасить текущий тем же цветом
+				\item Если окрашены и левый, и верхний пиксели, окрасить текущий в цвет левого.
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\item Препроцессинг
+\begin{itemize}
+	\item Начиная со второй строки: если найден стык сегментов, сохранить для нижнего цвет верхнего
+\end{itemize}
+\item Перекраска
+\begin{itemize}
+	\item Перекрасить все пиксели в сохраненные для них цвета
+\end{itemize}
+\end{enumerate}
+
+\newpage
+
+\section*{Схема распараллеливания}
+\addcontentsline{toc}{section}{Схема распараллеливания}
+Для всех параллельных версий программ распараллеливаются только секции \verb|Сегментация| и \verb|Перекраска|, т.к. только в них есть возможность разбить циклы на независимые итерации.
+\subsection*{OpenMP}
+\addcontentsline{toc}{subsection}{OpenMP}
+Итерации цикла сегментации динамически распределяются между созданными потоками так, чтобы каждому потоку достался цельный блок из фиксированного количества строк (например, 40*w элементов).
+\par Препроцессинг производится последовательно.
+\par При перекраске уже неоязательно разбивать массив на блоки определенного размера, распределение происходит по умолчанию.
+
+\subsection*{TBB}
+\addcontentsline{toc}{subsection}{TBB}
+Создаются два класса-функтора \verb|Segmentation| и \verb|Recolor|. Тела соответствующих циклов перемещены в реализацию методов \verb|operator()|. Размер блоков, обрабатываемых процессами, кратен w.
+\par Препроцессинг производится последовательно.
+
+\subsection*{std::threads}
+\addcontentsline{toc}{subsection}{std::threads}
+Входной массив примерно поровну (остаток строк обрабатывается главным потоком) разделяется между потоками в секциях \verb|Сегментация| и \verb|Перекраска|.
+\par Препроцессинг производится последовательно.
+
+\newpage
+
+\section*{Доказательство корректности}
+\addcontentsline{toc}{section}{Доказательство корректности}
+Для доказательства кореектности реализована система unit-тестов \verb|Bin_image_segmentation| с использованием Google C++ Testing Framework.
+\par \verb|can_generate_image| - не возникает исключений при генерации большого изображения;
+\par \verb|negative_dim_image| - возникает исключение при генерации изображения отрицательного размера;
+\par \verb|image_dim| - размер сгенерированного изображения совпадает с заданными параметрами;
+\par \verb|empty_space_small| - не закрашиваются лишние пиксели и не стираются существующие на маленьком изображении;
+\par \verb|empty_space_large| - не закрашиваются лишние пиксели и не стираются существующие на большом изображении;
+\par \verb|correctness_square| - корректно обрабатывается квадратное изображение;
+\par \verb|correctness_rectangle| - корректно обрабатывается прямоугольное изображение.
+\par Все тесты проходятся успешно. За 100 запусков на каждой версии программы ни одного проваленного теста зафиксировано не было.
+\newpage
+
+\section*{Вычислительный эксперимент}
+\addcontentsline{toc}{section}{Вычислительный эксперимент}
+Эксперимент проводился на системе со следующими параметрами:
+\begin{itemize}
+\item Процессор: Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz 2.71GHz
+\item ОЗУ: 4,00 Gb
+\item ОС: Microsoft Windows 10 Домашняя
+\end{itemize}
+\par Время работы всех версий программы (усредненное по 10 запускам) на входных данных различного размера занесены в таблицу.
+\begin{center}
+	\begin{tabular} {| c | c  c  c  c |}
+		\hline
+		размер & Seq & OpenMP & TBB & std::threads \\
+		\hline
+		1000*1000 & 0.41s & 0.38s & 0.28s & 0.25s \\
+		1200*1200 & 0.72s & 0.61s & 0.50s & 0.53s \\
+		1400*1400 & 1.53s & 1.30s & 1.08s & 1.03s \\
+		1600*1600 & 2.07s & 1.69s & 1.54s & 1.47s \\
+		1800*1800 & 3.54s & 3.13s & 2.61s & 2.56s \\
+		2000*2000 & 4.91s & 3.60s & 3.27s & 3.18s \\
+		\hline
+	\end{tabular}
+\end{center}
+\par Наименьшую эффективность на данной системе демонстрирует OpenMP-версия программы, наибольшую - версия с использованием std::threads. TBB-версия по эффективности близка к std::threads.
+\par У std::threads-версии есть одна проблема - количество потоков фиксировано. То есть, например, при переносе на систему с 4 ядрами эффективность будет не максимальной. В TBB-версии используется пул управляемых потоков, то есть при переносе программа подстроится под новую систему. При том, что время работы TBB-версии близко к std::threads, ее использование кажется более рациональным.
+
+\newpage
+
+\section*{Заключение}
+\addcontentsline{toc}{section}{Заключение}
+В ходе работы был реализован алгоритм выделения компонент на бинарном изображении в четырех версиях: последовательный и с использованием трех инструментов параллельного программирования.
+\par Для подтверждения корректности работы программ разработана система автоматических тестов, учитывающая их основной функционал.
+\par Эффективность параллельных версий исследованав ходе вычислительного эксперимента. В рамках конкретной системы, на которой проводилось тестирование, наименее эффективной оказалась OpenMP-версия, наиболее эффективной - версия с использованием std::threads. Однако исходя из соображений переносимости использование TBB будет более оправданным.
+
+\newpage
+
+\begin{thebibliography}{1}
+\addcontentsline{toc}{section}{Список литературы}
+
+\bibitem{Gergel} Гергель В.П., Стронгин Р.Г. Основы параллельных вычислений для многопроцессорных вычислительных систем. Учебное пособие – Нижний Новгород: Изд-во ННГУ им. Н.И. Лобачевского, 2003. 184 с. ISBN 5-85746-602-4. 
+
+\bibitem{Habr} Сообщество IT-специалистов Habr. Подсчет числа объектов на бинарном изображении: 
+https://habr.com/ru/post/119244/
+
+\end{thebibliography}
+\newpage
+
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+\subsection*{Sequential}
+\addcontentsline{toc}{subsection}{Sequential}
+	\lstinputlisting[language=C++]{../../../../modules/task_1/kukushkina_k_segmentation/bin_image_segmentation.h}
+	\lstinputlisting[language=C++]{../../../../modules/task_1/kukushkina_k_segmentation/bin_image_segmentation.cpp}
+	\lstinputlisting[language=C++]{../../../../modules/task_1/kukushkina_k_segmentation/main.cpp}
+\subsection*{OpenMP}
+\addcontentsline{toc}{subsection}{OpenMP}
+\lstinputlisting[language=C++]{../../../../modules/task_2/kukushkina_k_segmentation/bin_image_segmentation.h}
+\lstinputlisting[language=C++]{../../../../modules/task_2/kukushkina_k_segmentation/bin_image_segmentation.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_2/kukushkina_k_segmentation/main.cpp}
+\subsection*{TBB}
+\addcontentsline{toc}{subsection}{TBB}
+\lstinputlisting[language=C++]{../../../../modules/task_3/kukushkina_k_segmentation_tbb/bin_image_segmentation.h}
+\lstinputlisting[language=C++]{../../../../modules/task_3/kukushkina_k_segmentation_tbb/bin_image_segmentation.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_3/kukushkina_k_segmentation_tbb/main.cpp}
+\subsection*{std::threads}
+\addcontentsline{toc}{subsection}{std::threads}
+\lstinputlisting[language=C++]{../../../../modules/task_4/kukushkina_k_segmentation/segmentation.h}
+\lstinputlisting[language=C++]{../../../../modules/task_4/kukushkina_k_segmentation/segmentation.cpp}
+\lstinputlisting[language=C++]{../../../../modules/task_4/kukushkina_k_segmentation/main.cpp}
+
+\end{document}
