@@ -1,15 +1,12 @@
 // Copyright 2020 Yasakova Anastasia
-#include "../../../modules/task_4/yasakova_a_jarvis_alg/jarvis_alg.h"
+#include "../../../modules/task_2/yasakova_a_jarvis_alg/jarvis_alg.h"
+#include <omp.h>
 #include <ctime>
 #include <algorithm>
 #include <numeric>
 #include <random>
 #include <utility>
 #include <vector>
-#include <thread>
-#include <iostream>
-
-
 
 std::vector < std::pair<int, int>> GetRandomPoints(int n) {
     std::vector<std::pair<int, int>> res(n);
@@ -23,40 +20,34 @@ std::vector < std::pair<int, int>> GetRandomPoints(int n) {
     return res;
 }
 
-std::vector < std::pair<int, int>> std_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
+std::vector < std::pair<int, int>> omp_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
     std::vector<std::pair<int, int>> res;
     int size = points.size();
-    res.push_back(std_FindFirstPoint(points));
-    std::pair<int, int> tmp = std_FindSecondPoint(points, res[0]);
-    int nth = std::min(8, size);
-    std::vector<std::thread> t(nth);
+    res.push_back(omp_FindFirstPoint(points));
+    std::pair<int, int> tmp = omp_FindSecondPoint(points, res[0]);
     while (tmp != res[0]) {
         res.push_back(tmp);
-        std::vector<std::pair<int, int>> tmp_(nth, res[0]);
-        std::vector<double> min_cos_(nth, 1);
-        int num = 0, cnt = size / nth, rest = size - cnt * nth;
-        for (int i = 0; i < nth; ++i) {
-            int count = cnt;
-            if (i == nth - 1)
-                count += rest;
-            t[i] = std::thread([&](int cnt, int num, int j) {
-                for (int i = num; i < num + cnt; ++i) {
-                     double curr_cos = CountCos(res[res.size() - 1], res[res.size() - 2], points[i]);
-                     if (curr_cos < min_cos_[j]) {
-                         min_cos_[j] = curr_cos;
-                         tmp_[j] = points[i];
-                     } else if (curr_cos == min_cos_[j]
-                          && distance(res[res.size() - 1], points[i]) > distance(res[res.size() - 1], tmp_[j])) {
-                          tmp_[j] = points[i];
-                     }
+        double min_cos = 1;
+        int nthreads = 4;
+        std::vector<std::pair<int, int>> tmp_(nthreads, tmp);
+        std::vector <double> min_cos_(nthreads, min_cos);
+#pragma omp parallel shared(tmp_, min_cos_) num_threads(nthreads)
+        {
+            int tid = omp_get_thread_num();
+#pragma omp for
+            for (int i = 0; i < size; ++i) {
+                double curr_cos = CountCos(res[res.size() - 1], res[res.size() - 2], points[i]);
+                if (curr_cos < min_cos_[tid]) {
+                    min_cos_[tid] = curr_cos;
+                    tmp_[tid] = points[i];
+                } else if (curr_cos == min_cos_[tid] &&
+                    distance(res[res.size() - 1], points[i]) > distance(res[res.size() - 1], tmp_[tid])) {
+                    tmp_[tid] = points[i];
                 }
-            }, count, num, i);
-            num += cnt;
+            }
         }
-        double min_cos = min_cos_[0];
-        tmp = tmp_[0];
-        for (int i = 0; i < nth; ++i) {
-            t[i].join();
+        min_cos = min_cos_[0];
+        for (int i = 0; i < nthreads; ++i) {
             if (min_cos_[i] < min_cos) {
                 min_cos = min_cos_[i];
                 tmp = tmp_[i];
@@ -69,30 +60,24 @@ std::vector < std::pair<int, int>> std_JarvisAlg(const std::vector<std::pair<int
     return res;
 }
 
-std::pair<int, int> std_FindFirstPoint(const std::vector<std::pair<int, int>>& points) {
-    int size = points.size();
-    int nth = std::min(8, size);
-    std::vector<std::thread> t(nth);
+std::pair<int, int> omp_FindFirstPoint(const std::vector<std::pair<int, int>>& points) {
     std::pair<int, int> res = points[0];
-    std::vector<std::pair<int, int>> res_(nth, points[0]);
-    int cnt = size / nth, num = 0, rest = size - nth * cnt;
-    for (int i = 0; i < nth; ++i) {
-        int count = cnt;
-        if (i == nth - 1)
-            count += rest;
-        t[i] = std::thread([&](int cnt, int num, int j) {
-           for (int k = num; k < num + cnt; ++k) {
-               if (points[k].second < res_[j].second)
-                    res_[j] = points[k];
-               else if (points[k].second == res_[j].second && points[k].first < res_[j].first)
-                    res_[j] = points[k];
-           }
-        }, count, num, i);
-        num += cnt;
+    int size = points.size();
+    int nthreads = 4;
+    std::vector<std::pair<int, int>> res_(nthreads, res);
+#pragma omp parallel shared(res) num_threads(nthreads)
+    {
+        int tid = omp_get_thread_num();
+#pragma omp for
+        for (int i = 0; i < size; ++i) {
+            if (points[i].second < res_[tid].second)
+                res_[tid] = points[i];
+            else if (points[i].second == res_[tid].second && points[i].first < res_[tid].first)
+                res_[tid] = points[i];
+        }
     }
     res = res_[0];
-    for (int i = 0; i < nth; ++i) {
-        t[i].join();
+    for (int i = 1; i < nthreads; ++i) {
         if (res_[i].second < res.second)
             res = res_[i];
         else if (res_[i].second == res.second && res_[i].first < res.first)
@@ -101,45 +86,37 @@ std::pair<int, int> std_FindFirstPoint(const std::vector<std::pair<int, int>>& p
     return res;
 }
 
-std::pair<int, int> std_FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
+std::pair<int, int> omp_FindSecondPoint(const std::vector<std::pair<int, int>>& points, std::pair<int, int> tmp) {
+    int nthreads = 4;
     std::pair<int, int> res = points[0];
     double min = 4;
     int size = points.size();
-    int nth = std::min(8, size);
-    std::vector<std::thread> t(nth);
-    std::vector<std::pair<int, int>> res_(nth, points[0]);
-    std::vector<double> min_(nth, min);
-    int cnt = size / nth, num = 0, rest = size - nth * cnt;
-    for (int i = 0; i < nth; ++i) {
-        int count = cnt;
-        if (i == nth - 1)
-            count += rest;
-        t[i] = std::thread([&](int cnt, int num, int j) {
-            for (int k = num; k < num + cnt; ++k) {
-                if (points[k] != tmp) {
-                    double angle = atan(static_cast<double>(points[k].second - tmp.second)
-                        / static_cast<double>(abs(points[k].first - tmp.first)));
-                    if (angle < min_[j]) {
-                        min_[j] = angle;
-                        res_[j] = points[k];
-                    } else if (angle == min_[j] && distance(tmp, points[k]) > distance(tmp, res_[j])) {
-                        res_[j] = points[k];
-                    }
+    std::vector<double>min_(nthreads, min);
+    std::vector<std::pair<int, int>> res_(nthreads, res);
+#pragma omp parallel shared(res_, min_) num_threads(nthreads)
+    {
+        int tid = omp_get_thread_num();
+#pragma omp for
+        for (int i = 0; i < size; ++i) {
+            if (points[i] != tmp) {
+                double angle = atan(static_cast<double>(points[i].second - tmp.second)
+                    / static_cast<double>(abs(points[i].first - tmp.first)));
+                if (angle < min_[tid]) {
+                    min_[tid] = angle;
+                    res_[tid] = points[i];
+                } else if (angle == min_[tid] && distance(tmp, points[i]) > distance(tmp, res_[tid])) {
+                    res_[tid] = points[i];
                 }
             }
-        }, count, num, i);
-        num += cnt;
+        }
     }
-    min = 4;
+    min = min_[0];
     res = res_[0];
-    for (int i = 0; i < nth; ++i) {
-        t[i].join();
-        double angle = atan(static_cast<double>(res_[i].second - tmp.second)
-            / static_cast<double>(abs(res_[i].first - tmp.first)));
-        if (angle < min) {
-            min = angle;
+    for (int i = 1; i < nthreads; ++i) {
+        if (min_[i] < min) {
+            min = min_[i];
             res = res_[i];
-        } else if (angle == min && distance(tmp, res_[i]) > distance(tmp, res)) {
+        } else if (min_[i] == min && distance(tmp, res_[i]) > distance(tmp, res)) {
             res = res_[i];
         }
     }
@@ -158,7 +135,7 @@ double distance(std::pair<int, int> a, std::pair<int, int> b) {
     return res;
 }
 
-std::vector <std::pair<int, int>> seq_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
+std::vector < std::pair<int, int>> seq_JarvisAlg(const std::vector<std::pair<int, int>>& points) {
     std::vector<std::pair<int, int>> res;
     int size = points.size();
     res.push_back(seq_FindFirstPoint(points));
